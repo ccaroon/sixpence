@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, BrowserWindow } from 'electron'
+import { app, Menu, BrowserWindow } from 'electron'
 
 /**
  * Set `__static` path to static files in production
@@ -24,6 +24,56 @@ function createWindow () {
     useContentSize: true,
     width: 1280
   })
+
+  // -------------
+  const template = [
+    {
+      label: 'File',
+      submenu: [
+        {
+          label: 'Open...',
+          click () { console.log(app.getPath('documents')) }
+          // click: () => BrowserWindow.getFocusedWindow().webContents.send('start-find-in-page'),
+        }
+      ]
+    },
+    {
+      role: 'window',
+      submenu: [
+        {role: 'minimize'},
+        {role: 'close'}
+      ]
+    },
+    {
+      role: 'help',
+      submenu: [
+        {
+          label: 'About Sixpence',
+          click () { require('electron').shell.openExternal('https://electron.atom.io') }
+        }
+      ]
+    }
+  ]
+
+  if (process.platform === 'darwin') {
+    // Add Apple Menu
+    template.unshift({
+      label: 'Apple Menu',
+      submenu: [
+        // Other Apple Menu Worthy Item Go HERE
+        { type: 'separator' },
+        { role: 'quit' }
+      ]
+    })
+  } else {
+    //  Add Quit to File menu for all but MacOS
+    template[0].submenu.push({ type: 'separator' })
+    template[0].submenu.push({ role: 'quit' })
+  }
+
+  const menu = Menu.buildFromTemplate(template)
+  Menu.setApplicationMenu(menu)
+  // -------------
 
   mainWindow.loadURL(winURL)
 

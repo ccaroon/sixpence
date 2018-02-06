@@ -29,7 +29,11 @@ export default {
   name: 'DBTest',
 
   mounted () {
-    this.db = new Datastore({ filename: '/Users/ccaroon/Downloads/budget.spx', autoload: true })
+    this.db = new Datastore({
+      filename: '/Users/ccaroon/Downloads/budget.spx',
+      autoload: true,
+      timestampData: true
+    })
   },
 
   methods: {
@@ -44,6 +48,26 @@ export default {
           console.log(err)
         } else {
           console.log(doc.name + '|' + newDoc._id)
+        }
+      })
+
+      // ----------------
+      var doc2 = {
+        budget: [
+          {
+            category: 'Auto:Loan',
+            note: '2017 Honda Civic Sport',
+            frequency: 1, // in months
+            amount: 235.17
+          }
+        ]
+      }
+
+      this.db.insert(doc2, function (err, newDoc) {
+        if (err) {
+          console.log(err)
+        } else {
+          console.log(newDoc)
         }
       })
     }
