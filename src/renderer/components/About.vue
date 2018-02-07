@@ -6,12 +6,12 @@
         {{ appInfo.name }} v{{ appInfo.version }}
       </v-card-title>
       <v-card-text>
-        {{ appInfo.description }}
+        {{ appInfo.description }} &mdash; &copy; {{ appInfo.author }} 2018-{{ new Date().getFullYear() }}
         <v-divider></v-divider>
         <v-subheader>Built With</v-subheader>
         <v-data-table :items="items" hide-actions hide-headers dark>
           <template slot="items" slot-scope="data">
-            <td>{{ data.item.name }}</td>
+            <td><v-icon>mdi-{{ data.item.icon }}</v-icon> {{ data.item.name }}</td>
             <td>{{ data.item.value }}</td>
           </template>
         </v-data-table>
@@ -32,18 +32,26 @@
     },
 
     data () {
-      return {
+      var data = {
         showDialog: false,
         appInfo: pkgJson,
         items: [
-          { name: 'Electron', value: process.versions['atom-shell'] },
-          // { name: 'Route', value: this.$route.name },
-          { name: 'NodeJS', value: process.versions.node },
-          // { name: 'Path', value: this.$route.path },
-          { name: 'Platform', value: require('os').platform() },
-          { name: 'Vue Version', value: require('vue/package.json').version }
+          { name: 'Electron', value: process.versions['atom-shell'], icon: 'atom' },
+          { name: 'NodeJS', value: process.versions.node, icon: 'nodejs' },
+          { name: 'Platform', value: require('os').platform(), icon: 'laptop' },
+          { name: 'Vue Version', value: require('vue/package.json').version, icon: 'vuejs' }
         ]
       }
+
+      if (process.platform === 'darwin') {
+        data.items[2].icon = 'apple'
+      } else if (process.platform === 'win32') {
+        data.items[2].icon = 'windows'
+      } else if (process.platform === 'linux') {
+        data.items[2].icon = 'linux'
+      }
+
+      return (data)
     }
   }
 </script>
