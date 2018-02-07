@@ -7,7 +7,7 @@ import router from './router'
 
 import Vuetify from 'vuetify'
 import('vuetify/dist/vuetify.min.css')
-import('material-icons/css/material-icons.min.css')
+// import('material-icons/css/material-icons.min.css')
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 

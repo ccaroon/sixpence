@@ -33,7 +33,6 @@ function createWindow () {
         {
           label: 'Open...',
           click () { console.log(app.getPath('documents')) }
-          // click: () => BrowserWindow.getFocusedWindow().webContents.send('start-find-in-page'),
         }
       ]
     },
@@ -49,7 +48,8 @@ function createWindow () {
       submenu: [
         {
           label: 'About Sixpence',
-          click () { require('electron').shell.openExternal('https://electron.atom.io') }
+          // click () { require('electron').shell.openExternal('https://electron.atom.io') }
+          click: () => BrowserWindow.getFocusedWindow().webContents.send('menu-help-about')
         }
       ]
     }

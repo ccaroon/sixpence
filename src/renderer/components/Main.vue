@@ -11,10 +11,15 @@
   export default {
     name: 'Main',
     components: { About },
+
     methods: {
       open (link) {
         this.$electron.shell.openExternal(link)
       }
+    },
+
+    data () {
+      return {}
     }
   }
 </script>
