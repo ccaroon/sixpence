@@ -1,6 +1,8 @@
 'use strict'
 
 import { app, Menu, BrowserWindow } from 'electron'
+const fs = require('fs')
+const path = require('path')
 
 /**
  * Set `__static` path to static files in production
@@ -14,6 +16,17 @@ let mainWindow
 const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
   : `file://${__dirname}/index.html`
+
+function initApp () {
+  // Open and read settings; create if necessary
+  // TODO: ^^^^^^^^^
+
+  // Create app documents directory
+  var docPath = path.join(app.getPath('documents'), 'Sixpence')
+  if (!fs.existsSync(docPath)) {
+    fs.mkdirSync(docPath, 750)
+  }
+}
 
 function createWindow () {
   /**
@@ -30,6 +43,10 @@ function createWindow () {
     {
       label: 'File',
       submenu: [
+        {
+          label: 'New',
+          click () { console.log(app.getPath('documents')) }
+        },
         {
           label: 'Open...',
           click () { console.log(app.getPath('documents')) }
@@ -82,7 +99,10 @@ function createWindow () {
   })
 }
 
-app.on('ready', createWindow)
+app.on('ready', () => {
+  initApp()
+  createWindow()
+})
 
 app.on('window-all-closed', () => {
   // if (process.platform !== 'darwin') {
