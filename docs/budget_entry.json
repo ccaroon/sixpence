@@ -1,0 +1,28 @@
+{
+    "type":     "expense",              // income | expense
+    "category": "Bills:Electricity",    // category
+    "amount":    78.12,                 // Budgeted amount
+    "first_due": 1,                     // Month (1-12) first due per year
+    "frequency": 1,                     // Months (1=monthly, 3=quarterly, 6=bi-yearly, 12=yearly)
+    "notes":     "Regular monthly electic bill"
+}
+
+
+{
+    "type":     "income",
+    "category": "Income:Salary",
+    "amount":    4955.42,
+    "first_due": 1,
+    "frequency": 1,
+    "notes":     ""
+}
+
+
+{
+    "type":     "expense",
+    "category": "Auto:Inspection",
+    "amount":    60.00,
+    "first_due": 2,
+    "frequency": 12,
+    "notes":     "Cate & Nate's Cars"
+}
