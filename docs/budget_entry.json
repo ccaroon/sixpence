@@ -1,5 +1,6 @@
 {
     "type":     "expense",              // income | expense
+    "icon":     "plug",
     "category": "Bills:Electricity",    // category
     "amount":    78.12,                 // Budgeted amount
     "first_due": 1,                     // Month (1-12) first due per year
@@ -10,6 +11,7 @@
 
 {
     "type":     "income",
+    "icon":     "cash-usd",
     "category": "Income:Salary",
     "amount":    4955.42,
     "first_due": 1,
@@ -20,9 +22,14 @@
 
 {
     "type":     "expense",
+    "icon":     "auto",
     "category": "Auto:Inspection",
     "amount":    60.00,
     "first_due": 2,
     "frequency": 12,
     "notes":     "Cate & Nate's Cars"
 }
+
+
+// Need 'type'? Maybe just use positive and negative amounts to designate income vs expense
+//

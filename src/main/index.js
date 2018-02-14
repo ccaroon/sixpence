@@ -24,7 +24,7 @@ function initApp () {
   // Create app documents directory
   var docPath = path.join(app.getPath('documents'), 'Sixpence')
   if (!fs.existsSync(docPath)) {
-    fs.mkdirSync(docPath, 750)
+    fs.mkdirSync(docPath, '0750')
   }
 }
 

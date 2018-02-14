@@ -29,11 +29,11 @@ export default {
   name: 'DBTest',
 
   mounted () {
-    this.db = new Datastore({
-      filename: '/Users/ccaroon/Downloads/budget.spx',
-      autoload: true,
-      timestampData: true
-    })
+    // this.db = new Datastore({
+    //   filename: '/Users/ccaroon/Downloads/budget.spx',
+    //   autoload: true,
+    //   timestampData: true
+    // })
   },
 
   methods: {
