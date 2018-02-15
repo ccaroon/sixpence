@@ -8,7 +8,6 @@
 <script>
   import About from './About'
   import Budget from './Budget'
-  // import DBTest from './DBTest'
 
   export default {
     name: 'Main',

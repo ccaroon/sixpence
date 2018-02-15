@@ -26,44 +26,44 @@
       </BudgetEntry>
     </v-list>
 
-    <v-divider></v-divider>
-    <v-subheader>Add Entry</v-subheader>
+    <!-- <v-divider></v-divider>
+    <v-subheader>Add Entry</v-subheader> -->
 
-    <v-container fluid>
-      <v-layout row>
-        <v-flex xs1>
-          <v-select
-            :items="formData.icons"
-            v-model="entry.icon"
-            label="Icon"
-            single-line
-            dense
-            append-icon="mdi-menu-down">
-            <template slot="selection" slot-scope="data">
-              <v-icon>{{ data.item.value }}</v-icon>
-            </template>
-            <template slot="item" slot-scope="data">
-              <v-icon>{{ data.item.value }}</v-icon>
-            </template>
-          </v-select>
-        </v-flex>
-        <v-flex xs2>
+    <v-bottom-nav :value="true" :active.sync="bob" color="grey lighten-2" light class="px-3 my-3">
+        <v-layout row>
+          <v-flex xs1>
+            <v-select
+              :items="formData.icons"
+              v-model="entry.icon"
+              label="Icon"
+              single-line
+              dense
+              append-icon="mdi-menu-down">
+              <template slot="selection" slot-scope="data">
+                <v-icon>{{ data.item.value }}</v-icon>
+              </template>
+              <template slot="item" slot-scope="data">
+                <v-icon>{{ data.item.value }}</v-icon>
+              </template>
+            </v-select>
+          </v-flex>
+          <v-flex xs2>
             <v-text-field
               name="category"
               label="Category"
               id="category"
               v-model="entry.category">
             </v-text-field>
-        </v-flex>
-        <v-flex xs1>
+          </v-flex>
+          <v-flex xs1>
             <v-text-field
               name="amount"
               label="Amount"
               id="amount"
               v-model="entry.amount">
             </v-text-field>
-        </v-flex>
-        <v-flex xs2>
+          </v-flex>
+          <v-flex xs2>
             <v-select
               :items="formData.frequency"
               v-model="entry.frequency"
@@ -72,8 +72,8 @@
               dense
               append-icon="mdi-menu-down">
             </v-select>
-        </v-flex>
-        <v-flex xs2>
+          </v-flex>
+          <v-flex xs2>
             <v-select
               :items="formData.months"
               v-model="entry.first_due"
@@ -82,29 +82,23 @@
               dense
               append-icon="mdi-menu-down">
             </v-select>
-        </v-flex>
-        <v-flex xs3>
+          </v-flex>
+          <v-flex xs3>
             <v-text-field
               name="notes"
               label="Notes"
               id="notes"
               v-model="entry.notes">
             </v-text-field>
-        </v-flex>
-        <v-flex xs1>
-            <v-btn color="primary" @click="saveEntry()">Save</v-btn>
-        </v-flex>
-      </v-layout>
-    </v-container>
-
-
-    <!-- <v-btn
-      color="green"
-      dark
-      fab>
-      <v-icon>mdi-plus-box</v-icon>
-    </v-btn> -->
-
+          </v-flex>
+          <v-flex xs1>
+            <v-btn value="true" flat color="green" @click="saveEntry()">
+              <span>Save</span>
+              <v-icon>mdi-plus-box</v-icon>
+            </v-btn>
+          </v-flex>
+        </v-layout>
+    </v-bottom-nav>
   </div>
 </template>
 
@@ -192,6 +186,7 @@ export default {
         autoload: true,
         timestampData: true
       }),
+      bob: true,
       formData: StaticData,
       utils: Utils,
       budget: [],
