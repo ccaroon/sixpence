@@ -6,15 +6,15 @@
       <v-toolbar-items>
         <v-chip label color="green accent-1" text-color="black">
           <v-icon left>mdi-currency-usd</v-icon>
-          <span class="subheading">{{ formatMoney(totalIncome) }}</span>
+          <span class="subheading">{{ utils.formatMoney(totalIncome) }}</span>
         </v-chip>
         <v-chip label color="red accent-1" text-color="black">
           <v-icon left>mdi-currency-usd-off</v-icon>
-          <span class="subheading">{{ formatMoney(totalExpenses) }}</span>
+          <span class="subheading">{{ utils.formatMoney(totalExpenses) }}</span>
         </v-chip>
-        <v-chip label color="green" text-color="black">
+        <v-chip label :color="totalIncome + totalExpenses >= 0 ? 'green' : 'red'" text-color="black">
           <v-icon left>mdi-cash-multiple</v-icon>
-          <span class="subheading">{{ formatMoney(totalIncome + totalExpenses) }}</span>
+          <span class="subheading">{{ utils.formatMoney(totalIncome + totalExpenses) }}</span>
         </v-chip>
       </v-toolbar-items>
     </v-toolbar>
@@ -33,7 +33,7 @@
       <v-layout row>
         <v-flex xs1>
           <v-select
-            :items="iconList"
+            :items="formData.icons"
             v-model="entry.icon"
             label="Icon"
             single-line
@@ -47,25 +47,53 @@
             </template>
           </v-select>
         </v-flex>
-        <v-text-field
-          name="category"
-          label="Category"
-          id="category"
-          v-model="entry.category">
-        </v-text-field>
-        <v-text-field
-          name="amount"
-          label="Amount"
-          id="amount"
-          v-model="entry.amount">
-        </v-text-field>
-        <v-text-field
-          name="notes"
-          label="Notes"
-          id="notes"
-          v-model="entry.notes">
-        </v-text-field>
-        <v-btn color="primary" @click="saveRecord()">Save</v-btn>
+        <v-flex xs2>
+            <v-text-field
+              name="category"
+              label="Category"
+              id="category"
+              v-model="entry.category">
+            </v-text-field>
+        </v-flex>
+        <v-flex xs1>
+            <v-text-field
+              name="amount"
+              label="Amount"
+              id="amount"
+              v-model="entry.amount">
+            </v-text-field>
+        </v-flex>
+        <v-flex xs2>
+            <v-select
+              :items="formData.frequency"
+              v-model="entry.frequency"
+              label="Frequency"
+              single-line
+              dense
+              append-icon="mdi-menu-down">
+            </v-select>
+        </v-flex>
+        <v-flex xs2>
+            <v-select
+              :items="formData.months"
+              v-model="entry.first_due"
+              label="First Due"
+              single-line
+              dense
+              append-icon="mdi-menu-down">
+            </v-select>
+        </v-flex>
+        <v-flex xs3>
+            <v-text-field
+              name="notes"
+              label="Notes"
+              id="notes"
+              v-model="entry.notes">
+            </v-text-field>
+        </v-flex>
+        <v-flex xs1>
+            <v-btn color="primary" @click="saveEntry()">Save</v-btn>
+        </v-flex>
       </v-layout>
     </v-container>
 
@@ -81,9 +109,12 @@
 </template>
 
 <script>
+// TODO: Add Entry Form Validation
+
 import BudgetEntry from './BudgetEntry'
 import Datastore from 'nedb'
-import Icons from '../lib/icons'
+import StaticData from '../lib/static_data'
+import Utils from '../lib/utils'
 
 const {app} = require('electron').remote
 
@@ -92,11 +123,7 @@ export default {
   components: { BudgetEntry },
 
   mounted () {
-    this.db = new Datastore({
-      filename: this.dbPath,
-      autoload: true,
-      timestampData: true
-    })
+    this._loadBudgetData()
   },
 
   computed: {
@@ -124,93 +151,52 @@ export default {
   },
 
   methods: {
-    formatMoney: function (amount) {
-      return (amount.toLocaleString('en-US', {style: 'currency', currency: 'USD'}))
+    _loadBudgetData: function () {
+      var self = this
+      this.db.find({}, function (err, docs) {
+        if (err) {
+          // TODO: handle errors
+          console.log(err)
+        } else {
+          self.budget = docs
+        }
+      })
+    },
+
+    _clearEntry: function () {
+      this.entry = {}
+    },
+
+    saveEntry: function () {
+      var self = this
+      this.entry.amount = parseFloat(this.entry.amount)
+
+      this.db.insert(this.entry, function (err, newDoc) {
+        if (err) {
+          // TODO: Better error handling, flash or dialog or ?????
+          console.log(err)
+        } else {
+          self.budget.push(newDoc)
+          // console.log(newDoc)
+        }
+      })
+
+      this._clearEntry()
     }
-    // saveEntry: function () {
-    //   var doc = {
-    //     icon: 'cash-usd',
-    //     category: 'Income:Salary',
-    //     amount: 4899.42,
-    //     first_due: 1,
-    //     frequency: 1,
-    //     notes: 'Cengage Learning, Inc'
-    //   }
-    //
-    //   this.db.insert(doc, function (err, newDoc) {
-    //     if (err) {
-    //       // TODO: Better error handling, flash or dialog or ?????
-    //       console.log(err)
-    //     } else {
-    //       console.log(newDoc)
-    //     }
-    //   })
-    // }
   },
 
   data () {
     return {
-      dbPath: app.getPath('documents') + '/Sixpence/budget.spx',
-      db: null,
-      iconList: Icons,
-      budget: [
-        {
-          _id: '000000',
-          icon: 'cash-usd',
-          category: 'Income:Salary',
-          amount: 2500.00,
-          first_due: 1,
-          frequency: 1,
-          notes: 'Jobs R US'
-        },
-        {
-          _id: '000001',
-          icon: 'cash-usd',
-          category: 'Income:Spouse Salary',
-          amount: 1600.00,
-          first_due: 1,
-          frequency: 1,
-          notes: 'Acme Hole Factory'
-        },
-        {
-          _id: '000002',
-          icon: 'fuel',
-          category: 'Personal:Gas',
-          amount: -120.00,
-          first_due: 1,
-          frequency: 1,
-          notes: ''
-        },
-        {
-          _id: '000003',
-          icon: 'towing',
-          category: 'Personal:AAA',
-          amount: -149.00,
-          first_due: 1,
-          frequency: 12,
-          notes: 'Cate, Craig & Nate'
-        },
-        {
-          _id: '000004',
-          icon: 'car',
-          category: 'Auto:Registration',
-          amount: -60.00,
-          first_due: 2,
-          frequency: 12,
-          notes: 'Yaris & G6'
-        },
-        {
-          _id: '000005',
-          icon: 'account',
-          category: 'Bills:Life Insurance',
-          amount: -200.00,
-          first_due: 2,
-          frequency: 3,
-          notes: 'Craig & Cate'
-        }
-      ],
+      db: new Datastore({
+        filename: app.getPath('documents') + '/Sixpence/budget.spx',
+        autoload: true,
+        timestampData: true
+      }),
+      formData: StaticData,
+      utils: Utils,
+      budget: [],
       entry: {
-        _id: null,
+        // _id: null,
         icon: null,
         category: null,
         amount: null,
