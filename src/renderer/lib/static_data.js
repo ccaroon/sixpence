@@ -1,6 +1,7 @@
 export default {
 
   icons: [
+    {text: 'Dollar', value: 'mdi-currency-usd'},
     {text: 'Account', value: 'mdi-account'},
     {text: 'Car', value: 'mdi-car'},
     {text: 'Cash', value: 'mdi-cash-usd'},

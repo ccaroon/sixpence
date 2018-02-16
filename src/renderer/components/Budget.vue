@@ -12,7 +12,7 @@
           <v-icon left>mdi-currency-usd-off</v-icon>
           <span class="subheading">{{ utils.formatMoney(totalExpenses) }}</span>
         </v-chip>
-        <v-chip label :color="totalIncome + totalExpenses >= 0 ? 'green' : 'red'" text-color="black">
+        <v-chip label :color="totalIncome + totalExpenses >= 0 ? 'green accent-3' : 'red accent-3'" text-color="black">
           <v-icon left>mdi-cash-multiple</v-icon>
           <span class="subheading">{{ utils.formatMoney(totalIncome + totalExpenses) }}</span>
         </v-chip>
@@ -26,85 +26,97 @@
       </BudgetEntry>
     </v-list>
 
-    <!-- <v-divider></v-divider>
-    <v-subheader>Add Entry</v-subheader> -->
+    <div class="text-xs-center">
+      <v-bottom-sheet>
+        <v-btn slot="activator" color="green accent-3" dark fab><v-icon>mdi-plus</v-icon></v-btn>
+        <v-card>
+          <v-form ref="budgetForm">
+            <v-layout row>
+              <v-flex xs1>
+                <v-select
+                  :items="formData.icons"
+                  v-model="entry.icon"
+                  label="Icon"
+                  single-line
+                  dense
+                  append-icon="mdi-menu-down">
+                  <template slot="selection" slot-scope="data">
+                    <v-icon>{{ data.item.value }}</v-icon>
+                  </template>
+                  <template slot="item" slot-scope="data">
+                    <v-icon>{{ data.item.value }}</v-icon>
+                  </template>
+                </v-select>
+              </v-flex>
+              <v-flex xs2>
+                <v-text-field
+                  name="category"
+                  label="Category"
+                  id="category"
+                  required
+                  :rules="rules.category"
+                  v-model="entry.category">
+                </v-text-field>
+              </v-flex>
+              <v-flex xs1>
+                <v-text-field
+                  name="amount"
+                  label="Amount"
+                  id="amount"
+                  required
+                  :rules="rules.amount"
+                  v-model="entry.amount">
+                </v-text-field>
+              </v-flex>
+              <v-flex xs2>
+                <v-select
+                  :items="formData.frequency"
+                  v-model="entry.frequency"
+                  label="Frequency"
+                  single-line
+                  dense
+                  required
+                  :rules="rules.frequency"
+                  autocomplete
+                  append-icon="mdi-menu-down">
+                </v-select>
+              </v-flex>
+              <v-flex xs2>
+                <v-select
+                  :items="formData.months"
+                  v-model="entry.first_due"
+                  label="First Due"
+                  single-line
+                  dense
+                  required
+                  :rules="rules.first_due"
+                  autocomplete
+                  append-icon="mdi-menu-down">
+                </v-select>
+              </v-flex>
+              <v-flex xs3>
+                <v-text-field
+                  name="notes"
+                  label="Notes"
+                  id="notes"
+                  v-model="entry.notes">
+                </v-text-field>
+              </v-flex>
+              <v-flex xs1>
+                <v-btn color="green accent-3" fab @click="saveEntry()">
+                  <v-icon>mdi-content-save</v-icon>
+                </v-btn>
+              </v-flex>
+            </v-layout>
+          </v-form>
+        </v-card>
+      </v-bottom-sheet>
+    </div>
 
-    <v-bottom-nav :value="true" :active.sync="bob" color="grey lighten-2" light class="px-3 my-3">
-        <v-layout row>
-          <v-flex xs1>
-            <v-select
-              :items="formData.icons"
-              v-model="entry.icon"
-              label="Icon"
-              single-line
-              dense
-              append-icon="mdi-menu-down">
-              <template slot="selection" slot-scope="data">
-                <v-icon>{{ data.item.value }}</v-icon>
-              </template>
-              <template slot="item" slot-scope="data">
-                <v-icon>{{ data.item.value }}</v-icon>
-              </template>
-            </v-select>
-          </v-flex>
-          <v-flex xs2>
-            <v-text-field
-              name="category"
-              label="Category"
-              id="category"
-              v-model="entry.category">
-            </v-text-field>
-          </v-flex>
-          <v-flex xs1>
-            <v-text-field
-              name="amount"
-              label="Amount"
-              id="amount"
-              v-model="entry.amount">
-            </v-text-field>
-          </v-flex>
-          <v-flex xs2>
-            <v-select
-              :items="formData.frequency"
-              v-model="entry.frequency"
-              label="Frequency"
-              single-line
-              dense
-              append-icon="mdi-menu-down">
-            </v-select>
-          </v-flex>
-          <v-flex xs2>
-            <v-select
-              :items="formData.months"
-              v-model="entry.first_due"
-              label="First Due"
-              single-line
-              dense
-              append-icon="mdi-menu-down">
-            </v-select>
-          </v-flex>
-          <v-flex xs3>
-            <v-text-field
-              name="notes"
-              label="Notes"
-              id="notes"
-              v-model="entry.notes">
-            </v-text-field>
-          </v-flex>
-          <v-flex xs1>
-            <v-btn value="true" flat color="green" @click="saveEntry()">
-              <span>Save</span>
-              <v-icon>mdi-plus-box</v-icon>
-            </v-btn>
-          </v-flex>
-        </v-layout>
-    </v-bottom-nav>
   </div>
 </template>
 
 <script>
-// TODO: Add Entry Form Validation
-
 import BudgetEntry from './BudgetEntry'
 import Datastore from 'nedb'
 import StaticData from '../lib/static_data'
@@ -122,10 +134,10 @@ export default {
 
   computed: {
     totalIncome: function () {
-      var income = 0
+      var income = 0.0
       for (var i = 0; i < this.budget.length; i++) {
         var entry = this.budget[i]
-        if (entry.amount >= 0) {
+        if (entry.amount >= 0.0) {
           income += entry.amount
         }
       }
@@ -133,10 +145,10 @@ export default {
     },
 
     totalExpenses: function () {
-      var expense = 0
+      var expense = 0.0
       for (var i = 0; i < this.budget.length; i++) {
         var entry = this.budget[i]
-        if (entry.amount < 0) {
+        if (entry.amount < 0.0) {
           expense += (entry.amount / entry.frequency)
         }
       }
@@ -147,7 +159,7 @@ export default {
   methods: {
     _loadBudgetData: function () {
       var self = this
-      this.db.find({}, function (err, docs) {
+      this.db.find({}).sort({amount: -1}).exec(function (err, docs) {
         if (err) {
           // TODO: handle errors
           console.log(err)
@@ -163,19 +175,24 @@ export default {
 
     saveEntry: function () {
       var self = this
-      this.entry.amount = parseFloat(this.entry.amount)
 
-      this.db.insert(this.entry, function (err, newDoc) {
-        if (err) {
-          // TODO: Better error handling, flash or dialog or ?????
-          console.log(err)
-        } else {
-          self.budget.push(newDoc)
-          // console.log(newDoc)
-        }
-      })
+      if (this.$refs.budgetForm.validate()) {
+        this.entry.icon = this.entry.icon ? this.entry.icon : StaticData.icons[0].value
+        this.entry.amount = parseFloat(this.entry.amount)
 
-      this._clearEntry()
+        this.db.insert(this.entry, function (err, newDoc) {
+          if (err) {
+            // TODO: Better error handling, flash or dialog or ?????
+            console.log(err)
+          } else {
+            // self.budget.push(newDoc)
+            self._loadBudgetData()
+            // console.log(newDoc)
+          }
+        })
+
+        this._clearEntry()
+      }
     }
   },
 
@@ -186,18 +203,32 @@ export default {
         autoload: true,
         timestampData: true
       }),
-      bob: true,
       formData: StaticData,
       utils: Utils,
       budget: [],
       entry: {
-        // _id: null,
         icon: null,
         category: null,
         amount: null,
         first_due: null,
         frequency: null,
         notes: null
+      },
+      rules: {
+        category: [
+          category => !!category || 'Category is required'
+        ],
+        amount: [
+          amount => !!amount || 'Amount is required',
+          amount => (parseFloat(amount) !== 0.0) || 'Amount cannot be zero',
+          amount => /^[+-]?[0-9]{1,3}(?:,?[0-9]{3})*(?:\.[0-9]{2})?$/.test(amount) || 'Amount must be a dollar amount'
+        ],
+        frequency: [
+          freq => !!freq || 'Frequency is required'
+        ],
+        first_due: [
+          fdue => !!fdue || 'First Due Month is required'
+        ]
       }
     }
   }
