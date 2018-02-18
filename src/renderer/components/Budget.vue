@@ -157,14 +157,28 @@ export default {
   },
 
   methods: {
+    _loadExpenseData: function () {
+      var self = this
+      this.db.find({amount: {$lt: 0}}).sort({category: 1, amount: -1}).exec(function (err, docs) {
+        if (err) {
+          // TODO: handle errors
+          console.log(err)
+        } else {
+          self.budget = self.budget.concat(docs)
+        }
+      })
+    },
     _loadBudgetData: function () {
       var self = this
-      this.db.find({}).sort({amount: -1}).exec(function (err, docs) {
+      // Load Income Data First...
+      this.db.find({amount: {$gt: 0}}).sort({category: 1, amount: -1}).exec(function (err, docs) {
         if (err) {
           // TODO: handle errors
           console.log(err)
         } else {
           self.budget = docs
+          // ...then Load Expense Data
+          self._loadExpenseData()
         }
       })
     },
@@ -185,9 +199,7 @@ export default {
             // TODO: Better error handling, flash or dialog or ?????
             console.log(err)
           } else {
-            // self.budget.push(newDoc)
             self._loadBudgetData()
-            // console.log(newDoc)
           }
         })
 
