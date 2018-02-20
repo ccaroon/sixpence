@@ -39,6 +39,7 @@
                   label="Icon"
                   single-line
                   dense
+                  hint="Choose an Icon"
                   append-icon="mdi-menu-down">
                   <template slot="selection" slot-scope="data">
                     <v-icon>{{ data.item.value }}</v-icon>
@@ -49,14 +50,18 @@
                 </v-select>
               </v-flex>
               <v-flex xs2>
-                <v-text-field
-                  name="category"
+                <v-select
+                  :items="formData.categories"
+                  v-model="entry.category"
                   label="Category"
-                  id="category"
+                  single-line
+                  dense
                   required
                   :rules="rules.category"
-                  v-model="entry.category">
-                </v-text-field>
+                  combobox
+                  hint="Choose a Category or Add a New One"
+                  append-icon="mdi-menu-down">
+                </v-select>
               </v-flex>
               <v-flex xs1>
                 <v-text-field
@@ -64,6 +69,7 @@
                   label="Amount"
                   id="amount"
                   required
+                  hint="Positive for Income, Negative for Expense"
                   :rules="rules.amount"
                   v-model="entry.amount">
                 </v-text-field>
@@ -78,6 +84,7 @@
                   required
                   :rules="rules.frequency"
                   autocomplete
+                  hint="How Frequently Does This Item Occur?"
                   append-icon="mdi-menu-down">
                 </v-select>
               </v-flex>
@@ -91,6 +98,7 @@
                   required
                   :rules="rules.first_due"
                   autocomplete
+                  hint="In What Month Is This Item First Due?"
                   append-icon="mdi-menu-down">
                 </v-select>
               </v-flex>
@@ -157,6 +165,13 @@ export default {
   },
 
   methods: {
+    _loadCategoryData: function () {
+      var cats = this.budget.map(function (entry) {
+        return ({text: entry.category, value: entry.category})
+      })
+      // Set Category List from existing entries
+      this.formData.categories = this.formData.categories.concat(this.formData.categories, cats)
+    },
     _loadExpenseData: function () {
       var self = this
       this.db.find({amount: {$lt: 0}}).sort({category: 1, amount: -1}).exec(function (err, docs) {
@@ -165,6 +180,7 @@ export default {
           console.log(err)
         } else {
           self.budget = self.budget.concat(docs)
+          self._loadCategoryData()
         }
       })
     },
@@ -211,7 +227,7 @@ export default {
   data () {
     return {
       db: new Datastore({
-        filename: app.getPath('documents') + '/Sixpence/budget.spx',
+        filename: app.getPath('documents') + '/Sixpence/budget.sxp',
         autoload: true,
         timestampData: true
       }),

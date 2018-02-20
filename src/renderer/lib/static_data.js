@@ -6,6 +6,7 @@ export default {
     {text: 'Account', value: 'mdi-account'},
     {text: 'Amazon', value: 'mdi-amazon'},
     {text: 'Audiobook', value: 'mdi-audiobook'},
+    {text: 'Bank', value: 'mdi-bank'},
     {text: 'Bug', value: 'mdi-bug'},
     {text: 'Car', value: 'mdi-car'},
     {text: 'Cart', value: 'mdi-cart'},
@@ -59,6 +60,8 @@ export default {
     {text: 'October', value: 10},
     {text: 'November', value: 11},
     {text: 'December', value: 12}
-  ]
+  ],
+
+  categories: []
 
 }
