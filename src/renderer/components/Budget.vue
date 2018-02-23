@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-toolbar color="deep-purple accent-2" dark>
+    <v-toolbar color="deep-purple accent-2" dark dense app fixed>
       <v-toolbar-title>Budget</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>
@@ -28,7 +28,7 @@
 
     <div class="text-xs-center">
       <v-bottom-sheet>
-        <v-btn slot="activator" color="green accent-3" dark fab><v-icon>mdi-plus</v-icon></v-btn>
+        <v-btn slot="activator" color="green accent-3" fixed bottom right dark fab><v-icon>mdi-plus</v-icon></v-btn>
         <v-card>
           <v-form ref="budgetForm">
             <v-layout row>

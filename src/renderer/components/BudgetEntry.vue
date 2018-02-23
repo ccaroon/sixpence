@@ -5,10 +5,15 @@
   </v-list-tile-avatar>
   <v-layout row>
     <v-flex xs1>{{ entryType }}</v-flex>
-    <v-flex xs4>{{ entry.category }}</v-flex>
+    <v-flex xs3>{{ entry.category }}</v-flex>
     <v-flex xs2>{{ utils.formatMoney(entry.amount) }}</v-flex>
-    <v-flex xs2> {{ utils.formatFrequency(entry.frequency) }} / {{ utils.monthNumberToName(entry.first_due - 1 )}}</v-flex>
-    <v-flex>{{ entry.notes }}</v-flex>
+    <v-flex xs2>{{ utils.formatFrequency(entry.frequency) }} / {{ utils.monthNumberToName(entry.first_due - 1 )}}</v-flex>
+    <v-flex xs3>{{ entry.notes }}</v-flex>
+    <v-flex xs1>
+      <!-- <v-btn flat icon color="black"> -->
+        <v-icon>mdi-delete-forever</v-icon>
+      <!-- </v-btn> -->
+    </v-flex>
   </v-layout>
 </v-list-tile>
 </template>
