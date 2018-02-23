@@ -22,7 +22,8 @@
     <v-list dense v-for="entry in budget"
       v-bind:key="entry._id">
       <BudgetEntry
-        v-bind:entry="entry">
+        v-bind:entry="entry"
+        v-on:refreshData="refreshData">
       </BudgetEntry>
     </v-list>
 
@@ -126,11 +127,11 @@
 
 <script>
 import BudgetEntry from './BudgetEntry'
-import Datastore from 'nedb'
+import BudgetDB from '../lib/BudgetDB'
 import StaticData from '../lib/static_data'
 import Utils from '../lib/utils'
 
-const {app} = require('electron').remote
+// const {app} = require('electron').remote
 
 export default {
   name: 'Budget',
@@ -165,38 +166,39 @@ export default {
   },
 
   methods: {
-    _loadCategoryData: function () {
-      var cats = this.budget.map(function (entry) {
-        return ({text: entry.category, value: entry.category})
-      })
-      // Set Category List from existing entries
-      this.formData.categories = this.formData.categories.concat(this.formData.categories, cats)
+    refreshData: function () {
+      this._loadBudgetData()
     },
-    _loadExpenseData: function () {
-      var self = this
-      this.db.find({amount: {$lt: 0}}).sort({category: 1, amount: -1}).exec(function (err, docs) {
-        if (err) {
-          // TODO: handle errors
-          console.log(err)
-        } else {
-          self.budget = self.budget.concat(docs)
-          self._loadCategoryData()
-        }
-      })
-    },
+
     _loadBudgetData: function () {
       var self = this
-      // Load Income Data First...
-      this.db.find({amount: {$gt: 0}}).sort({category: 1, amount: -1}).exec(function (err, docs) {
+
+      BudgetDB.loadIncomeData(function (err, docs) {
         if (err) {
           // TODO: handle errors
           console.log(err)
         } else {
           self.budget = docs
           // ...then Load Expense Data
-          self._loadExpenseData()
+          BudgetDB.loadExpenseData(function (err, docs) {
+            if (err) {
+              // TODO: handle errors
+              console.log(err)
+            } else {
+              self.budget = self.budget.concat(docs)
+              self._loadCategoryData()
+            }
+          })
         }
       })
+    },
+
+    _loadCategoryData: function () {
+      var cats = this.budget.map(function (entry) {
+        return ({text: entry.category, value: entry.category})
+      })
+      // Set Category List from existing entries
+      this.formData.categories = this.formData.categories.concat(this.formData.categories, cats)
     },
 
     _clearEntry: function () {
@@ -210,27 +212,21 @@ export default {
         this.entry.icon = this.entry.icon ? this.entry.icon : StaticData.icons[0].value
         this.entry.amount = parseFloat(this.entry.amount)
 
-        this.db.insert(this.entry, function (err, newDoc) {
+        BudgetDB.save(this.entry, function (err, newDoc) {
           if (err) {
             // TODO: Better error handling, flash or dialog or ?????
             console.log(err)
           } else {
             self._loadBudgetData()
+            self._clearEntry()
           }
         })
-
-        this._clearEntry()
       }
     }
   },
 
   data () {
     return {
-      db: new Datastore({
-        filename: app.getPath('documents') + '/Sixpence/budget.sxp',
-        autoload: true,
-        timestampData: true
-      }),
       formData: StaticData,
       utils: Utils,
       budget: [],
