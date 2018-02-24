@@ -4,15 +4,15 @@
       <v-toolbar-title>Budget</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>
-        <v-chip label color="green accent-1" text-color="black">
+        <v-chip label color="green accent-1" text-color="black" tabindex="-1">
           <v-icon left>mdi-currency-usd</v-icon>
           <span class="subheading">{{ utils.formatMoney(totalIncome) }}</span>
         </v-chip>
-        <v-chip label color="red accent-1" text-color="black">
+        <v-chip label color="red accent-1" text-color="black" tabindex="-1">
           <v-icon left>mdi-currency-usd-off</v-icon>
           <span class="subheading">{{ utils.formatMoney(totalExpenses) }}</span>
         </v-chip>
-        <v-chip label :color="totalIncome + totalExpenses >= 0 ? 'green accent-3' : 'red accent-3'" text-color="black">
+        <v-chip label :color="totalIncome + totalExpenses >= 0 ? 'green accent-3' : 'red accent-3'" text-color="black" tabindex="-1">
           <v-icon left>mdi-cash-multiple</v-icon>
           <span class="subheading">{{ utils.formatMoney(totalIncome + totalExpenses) }}</span>
         </v-chip>
@@ -29,17 +29,24 @@
 
     <div class="text-xs-center">
       <v-bottom-sheet>
-        <v-btn slot="activator" color="green accent-3" fixed bottom right dark fab><v-icon>mdi-plus</v-icon></v-btn>
+        <v-btn
+          slot="activator"
+          color="green accent-3"
+          fixed bottom right dark fab>
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
         <v-card>
           <v-form ref="budgetForm">
             <v-layout row>
               <v-flex xs1>
                 <v-select
+                  ref="iconSelect"
                   :items="formData.icons"
                   v-model="entry.icon"
                   label="Icon"
                   single-line
                   dense
+                  tabindex="1"
                   hint="Choose an Icon"
                   append-icon="mdi-menu-down">
                   <template slot="selection" slot-scope="data">
@@ -60,6 +67,7 @@
                   required
                   :rules="rules.category"
                   combobox
+                  tabindex="2"
                   hint="Choose a Category or Add a New One"
                   append-icon="mdi-menu-down">
                 </v-select>
@@ -69,6 +77,7 @@
                   name="amount"
                   label="Amount"
                   id="amount"
+                  tabindex="3"
                   required
                   hint="Positive for Income, Negative for Expense"
                   :rules="rules.amount"
@@ -83,6 +92,7 @@
                   single-line
                   dense
                   required
+                  tabindex="4"
                   :rules="rules.frequency"
                   autocomplete
                   hint="How Frequently Does This Item Occur?"
@@ -97,6 +107,7 @@
                   single-line
                   dense
                   required
+                  tabindex="5"
                   :rules="rules.first_due"
                   autocomplete
                   hint="In What Month Is This Item First Due?"
@@ -108,11 +119,12 @@
                   name="notes"
                   label="Notes"
                   id="notes"
+                  tabindex="6"
                   v-model="entry.notes">
                 </v-text-field>
               </v-flex>
               <v-flex xs1>
-                <v-btn color="green accent-3" fab @click="saveEntry()">
+                <v-btn color="green accent-3" fab @click="saveEntry()" tabindex="7">
                   <v-icon>mdi-content-save</v-icon>
                 </v-btn>
               </v-flex>
@@ -219,6 +231,7 @@ export default {
           } else {
             self._loadBudgetData()
             self._clearEntry()
+            self.$refs.iconSelect.$el.focus()
           }
         })
       }

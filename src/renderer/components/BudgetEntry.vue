@@ -13,7 +13,7 @@
       <v-flex xs>{{ entry.notes }}</v-flex>
     </v-layout>
     <v-list-tile-action>
-      <v-btn flat icon @click="showDeleteDialog = true">
+      <v-btn flat icon @click="showDeleteDialog = true" tabindex="-1">
         <v-icon>mdi-delete-forever</v-icon>
       </v-btn>
     </v-list-tile-action>
@@ -34,8 +34,14 @@
       </v-card-text>
       <v-divider></v-divider>
       <v-card-actions>
-        <v-btn color="green darken-1" small round @click="deleteEntry(entry._id)">OK</v-btn>
-        <v-btn color="red darken-1"   small round @click.native="showDeleteDialog = false">Cancel</v-btn>
+        <v-btn color="green darken-1"
+          small round @click="deleteEntry(entry._id)" tabindex="-1">
+          OK
+        </v-btn>
+        <v-btn color="red darken-1"
+          small round @click.native="showDeleteDialog = false" tabindex="-1">
+          Cancel
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
