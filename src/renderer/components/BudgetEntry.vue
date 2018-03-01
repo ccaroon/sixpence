@@ -77,10 +77,11 @@ export default {
 
       BudgetDB.delete(id, function (err, numDeleted) {
         if (err) {
-          console.log(err)
+          self.$emit('displayAlert', 'mdi-delete', 'red', err)
         } else {
           console.log('Deleted ' + numDeleted + ' Entries.')
           self.$emit('refreshData')
+          self.$emit('displayAlert', 'mdi-delete', 'green', 'Delete Successful!')
         }
       })
     }

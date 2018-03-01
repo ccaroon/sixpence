@@ -19,11 +19,21 @@
       </v-toolbar-items>
     </v-toolbar>
 
+    <v-alert
+      :color="alert.color"
+      v-model="alert.visible"
+      :icon="alert.icon"
+      class="elevation-24"
+      @click="alert.visible=false">
+      {{ alert.message }}
+    </v-alert>
+
     <v-list dense v-for="entry in budget"
       v-bind:key="entry._id">
       <BudgetEntry
         v-bind:entry="entry"
-        v-on:refreshData="refreshData">
+        v-on:refreshData="refreshData"
+        v-on:displayAlert="displayAlert">
       </BudgetEntry>
     </v-list>
 
@@ -187,15 +197,13 @@ export default {
 
       BudgetDB.loadIncomeData(function (err, docs) {
         if (err) {
-          // TODO: handle errors
-          console.log(err)
+          self.displayAlert('mdi-alert-octagon', 'red', err)
         } else {
           self.budget = docs
           // ...then Load Expense Data
           BudgetDB.loadExpenseData(function (err, docs) {
             if (err) {
-              // TODO: handle errors
-              console.log(err)
+              self.displayAlert('mdi-alert-octagon', 'red', err)
             } else {
               self.budget = self.budget.concat(docs)
               self._loadCategoryData()
@@ -217,6 +225,13 @@ export default {
       this.entry = {}
     },
 
+    displayAlert: function (icon, color, message) {
+      this.alert.icon = icon
+      this.alert.color = color
+      this.alert.message = message
+      this.alert.visible = true
+    },
+
     saveEntry: function () {
       var self = this
 
@@ -226,12 +241,13 @@ export default {
 
         BudgetDB.save(this.entry, function (err, newDoc) {
           if (err) {
-            // TODO: Better error handling, flash or dialog or ?????
-            console.log(err)
+            self.displayAlert('mdi-alert-octagon', 'red', err)
           } else {
             self._loadBudgetData()
             self._clearEntry()
             self.$refs.iconSelect.$el.focus()
+
+            self.displayAlert('mdi-content-save', 'green', 'Entry Successfully Saved [' + newDoc._id + ']')
           }
         })
       }
@@ -243,6 +259,12 @@ export default {
       formData: StaticData,
       utils: Utils,
       budget: [],
+      alert: {
+        visible: false,
+        icon: 'mdi-alert',
+        color: 'green',
+        message: ''
+      },
       entry: {
         icon: null,
         category: null,
