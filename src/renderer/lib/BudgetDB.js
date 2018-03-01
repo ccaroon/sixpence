@@ -23,7 +23,12 @@ export default {
   },
 
   save: function (entry, cb) {
-    this.db.insert(entry, cb)
+    // if (entry._id) {
+    //   this.db.update(entry, db)
+    // } else {
+    //   this.db.update(...)
+    // }
+    this.db.update({_id: entry._id}, entry, { upsert: true }, cb)
   }
 
 }

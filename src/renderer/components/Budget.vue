@@ -32,16 +32,18 @@
       v-bind:key="entry._id">
       <BudgetEntry
         v-bind:entry="entry"
+        v-on:editEntry="editEntry"
         v-on:refreshData="refreshData"
         v-on:displayAlert="displayAlert">
       </BudgetEntry>
     </v-list>
 
     <div class="text-xs-center">
-      <v-bottom-sheet>
+      <v-bottom-sheet v-model="showAddEditSheet">
         <v-btn
           slot="activator"
           color="green accent-3"
+          @click="entry = {}"
           fixed bottom right dark fab>
           <v-icon>mdi-plus</v-icon>
         </v-btn>
@@ -232,6 +234,11 @@ export default {
       this.alert.visible = true
     },
 
+    editEntry: function (entry) {
+      this.entry = entry
+      this.showAddEditSheet = true
+    },
+
     saveEntry: function () {
       var self = this
 
@@ -239,7 +246,7 @@ export default {
         this.entry.icon = this.entry.icon ? this.entry.icon : StaticData.icons[0].value
         this.entry.amount = parseFloat(this.entry.amount)
 
-        BudgetDB.save(this.entry, function (err, newDoc) {
+        BudgetDB.save(this.entry, function (err, numReplaced, upsert) {
           if (err) {
             self.displayAlert('mdi-alert-octagon', 'red', err)
           } else {
@@ -247,7 +254,7 @@ export default {
             self._clearEntry()
             self.$refs.iconSelect.$el.focus()
 
-            self.displayAlert('mdi-content-save', 'green', 'Entry Successfully Saved [' + newDoc._id + ']')
+            self.displayAlert('mdi-content-save', 'green', 'Entry Successfully Saved')
           }
         })
       }
@@ -273,6 +280,7 @@ export default {
         frequency: null,
         notes: null
       },
+      showAddEditSheet: false,
       rules: {
         category: [
           category => !!category || 'Category is required'

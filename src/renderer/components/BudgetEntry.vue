@@ -13,6 +13,11 @@
       <v-flex xs>{{ entry.notes }}</v-flex>
     </v-layout>
     <v-list-tile-action>
+      <v-btn flat icon @click="editEntry()" tabindex="-1">
+        <v-icon>mdi-pencil</v-icon>
+      </v-btn>
+    </v-list-tile-action>
+    <v-list-tile-action>
       <v-btn flat icon @click="showDeleteDialog = true" tabindex="-1">
         <v-icon>mdi-delete-forever</v-icon>
       </v-btn>
@@ -70,6 +75,10 @@ export default {
   },
 
   methods: {
+    editEntry: function () {
+      this.$emit('editEntry', this.entry)
+    },
+
     deleteEntry: function (id) {
       var self = this
 
@@ -79,7 +88,6 @@ export default {
         if (err) {
           self.$emit('displayAlert', 'mdi-delete', 'red', err)
         } else {
-          console.log('Deleted ' + numDeleted + ' Entries.')
           self.$emit('refreshData')
           self.$emit('displayAlert', 'mdi-delete', 'green', 'Delete Successful!')
         }
