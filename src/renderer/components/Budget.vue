@@ -1,0 +1,303 @@
+<template>
+  <div>
+    <v-toolbar color="deep-purple accent-2" dark dense app fixed>
+      <v-toolbar-title>Budget</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-toolbar-items>
+        <v-chip label color="green accent-1" text-color="black" tabindex="-1">
+          <v-icon left>mdi-currency-usd</v-icon>
+          <span class="subheading">{{ utils.formatMoney(totalIncome) }}</span>
+        </v-chip>
+        <v-chip label color="red accent-1" text-color="black" tabindex="-1">
+          <v-icon left>mdi-currency-usd-off</v-icon>
+          <span class="subheading">{{ utils.formatMoney(totalExpenses) }}</span>
+        </v-chip>
+        <v-chip label :color="totalIncome + totalExpenses >= 0 ? 'green accent-3' : 'red accent-3'" text-color="black" tabindex="-1">
+          <v-icon left>mdi-cash-multiple</v-icon>
+          <span class="subheading">{{ utils.formatMoney(totalIncome + totalExpenses) }}</span>
+        </v-chip>
+      </v-toolbar-items>
+    </v-toolbar>
+
+    <v-alert
+      :color="alert.color"
+      v-model="alert.visible"
+      :icon="alert.icon"
+      class="elevation-24"
+      @click="alert.visible=false">
+      {{ alert.message }}
+    </v-alert>
+
+    <v-list dense v-for="entry in budget"
+      v-bind:key="entry._id">
+      <BudgetEntry
+        v-bind:entry="entry"
+        v-on:editEntry="editEntry"
+        v-on:refreshData="refreshData"
+        v-on:displayAlert="displayAlert">
+      </BudgetEntry>
+    </v-list>
+
+    <div class="text-xs-center">
+      <v-bottom-sheet v-model="showAddEditSheet">
+        <v-btn
+          slot="activator"
+          color="green accent-3"
+          @click="entry = {}"
+          fixed bottom right dark fab>
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
+        <v-card>
+          <v-form ref="budgetForm">
+            <v-layout row>
+              <v-flex xs1>
+                <v-select
+                  ref="iconSelect"
+                  :items="formData.icons"
+                  v-model="entry.icon"
+                  label="Icon"
+                  single-line
+                  dense
+                  tabindex="1"
+                  hint="Choose an Icon"
+                  append-icon="mdi-menu-down">
+                  <template slot="selection" slot-scope="data">
+                    <v-icon>{{ data.item.value }}</v-icon>
+                  </template>
+                  <template slot="item" slot-scope="data">
+                    <v-icon>{{ data.item.value }}</v-icon>
+                  </template>
+                </v-select>
+              </v-flex>
+              <v-flex xs2>
+                <v-select
+                  :items="formData.categories"
+                  v-model="entry.category"
+                  label="Category"
+                  single-line
+                  dense
+                  required
+                  :rules="rules.category"
+                  combobox
+                  tabindex="2"
+                  hint="Choose a Category or Add a New One"
+                  append-icon="mdi-menu-down">
+                </v-select>
+              </v-flex>
+              <v-flex xs1>
+                <v-text-field
+                  name="amount"
+                  label="Amount"
+                  id="amount"
+                  tabindex="3"
+                  required
+                  hint="Positive for Income, Negative for Expense"
+                  :rules="rules.amount"
+                  v-model="entry.amount">
+                </v-text-field>
+              </v-flex>
+              <v-flex xs2>
+                <v-select
+                  :items="formData.frequency"
+                  v-model="entry.frequency"
+                  label="Frequency"
+                  single-line
+                  dense
+                  required
+                  tabindex="4"
+                  :rules="rules.frequency"
+                  autocomplete
+                  hint="How Frequently Does This Item Occur?"
+                  append-icon="mdi-menu-down">
+                </v-select>
+              </v-flex>
+              <v-flex xs2>
+                <v-select
+                  :items="formData.months"
+                  v-model="entry.first_due"
+                  label="First Due"
+                  single-line
+                  dense
+                  required
+                  tabindex="5"
+                  :rules="rules.first_due"
+                  autocomplete
+                  hint="In What Month Is This Item First Due?"
+                  append-icon="mdi-menu-down">
+                </v-select>
+              </v-flex>
+              <v-flex xs3>
+                <v-text-field
+                  name="notes"
+                  label="Notes"
+                  id="notes"
+                  tabindex="6"
+                  v-model="entry.notes">
+                </v-text-field>
+              </v-flex>
+              <v-flex xs1>
+                <v-btn color="green accent-3" fab @click="saveEntry()" tabindex="7">
+                  <v-icon>mdi-content-save</v-icon>
+                </v-btn>
+              </v-flex>
+            </v-layout>
+          </v-form>
+        </v-card>
+      </v-bottom-sheet>
+    </div>
+
+  </div>
+</template>
+
+<script>
+import BudgetEntry from './BudgetEntry'
+import BudgetDB from '../lib/BudgetDB'
+import StaticData from '../lib/static_data'
+import Utils from '../lib/utils'
+
+// const {app} = require('electron').remote
+
+export default {
+  name: 'Budget',
+  components: { BudgetEntry },
+
+  mounted () {
+    this._loadBudgetData()
+  },
+
+  computed: {
+    totalIncome: function () {
+      var income = 0.0
+      for (var i = 0; i < this.budget.length; i++) {
+        var entry = this.budget[i]
+        if (entry.amount >= 0.0) {
+          income += entry.amount
+        }
+      }
+      return (income)
+    },
+
+    totalExpenses: function () {
+      var expense = 0.0
+      for (var i = 0; i < this.budget.length; i++) {
+        var entry = this.budget[i]
+        if (entry.amount < 0.0) {
+          expense += (entry.amount / entry.frequency)
+        }
+      }
+      return (expense)
+    }
+  },
+
+  methods: {
+    refreshData: function () {
+      this._loadBudgetData()
+    },
+
+    _loadBudgetData: function () {
+      var self = this
+
+      BudgetDB.loadIncomeData(function (err, docs) {
+        if (err) {
+          self.displayAlert('mdi-alert-octagon', 'red', err)
+        } else {
+          self.budget = docs
+          // ...then Load Expense Data
+          BudgetDB.loadExpenseData(function (err, docs) {
+            if (err) {
+              self.displayAlert('mdi-alert-octagon', 'red', err)
+            } else {
+              self.budget = self.budget.concat(docs)
+              self._loadCategoryData()
+            }
+          })
+        }
+      })
+    },
+
+    _loadCategoryData: function () {
+      var cats = this.budget.map(function (entry) {
+        return ({text: entry.category, value: entry.category})
+      })
+      // Set Category List from existing entries
+      this.formData.categories = this.formData.categories.concat(this.formData.categories, cats)
+    },
+
+    _clearEntry: function () {
+      this.entry = {}
+    },
+
+    displayAlert: function (icon, color, message) {
+      this.alert.icon = icon
+      this.alert.color = color
+      this.alert.message = message
+      this.alert.visible = true
+    },
+
+    editEntry: function (entry) {
+      this.entry = entry
+      this.showAddEditSheet = true
+    },
+
+    saveEntry: function () {
+      var self = this
+
+      if (this.$refs.budgetForm.validate()) {
+        this.entry.icon = this.entry.icon ? this.entry.icon : StaticData.icons[0].value
+        this.entry.amount = parseFloat(this.entry.amount)
+
+        BudgetDB.save(this.entry, function (err, numReplaced, upsert) {
+          if (err) {
+            self.displayAlert('mdi-alert-octagon', 'red', err)
+          } else {
+            self._loadBudgetData()
+            self._clearEntry()
+            self.$refs.iconSelect.$el.focus()
+
+            self.displayAlert('mdi-content-save', 'green', 'Entry Successfully Saved')
+          }
+        })
+      }
+    }
+  },
+
+  data () {
+    return {
+      formData: StaticData,
+      utils: Utils,
+      budget: [],
+      alert: {
+        visible: false,
+        icon: 'mdi-alert',
+        color: 'green',
+        message: ''
+      },
+      entry: {
+        icon: null,
+        category: null,
+        amount: null,
+        first_due: null,
+        frequency: null,
+        notes: null
+      },
+      showAddEditSheet: false,
+      rules: {
+        category: [
+          category => !!category || 'Category is required'
+        ],
+        amount: [
+          amount => !!amount || 'Amount is required',
+          amount => (parseFloat(amount) !== 0.0) || 'Amount cannot be zero',
+          amount => /^[+-]?[0-9]{1,3}(?:,?[0-9]{3})*(?:\.[0-9]{2})?$/.test(amount) || 'Amount must be a dollar amount'
+        ],
+        frequency: [
+          freq => !!freq || 'Frequency is required'
+        ],
+        first_due: [
+          fdue => !!fdue || 'First Due Month is required'
+        ]
+      }
+    }
+  }
+}
+</script>
