@@ -10,12 +10,16 @@ export default {
     timestampData: true
   }),
 
-  loadExpenseData: function (cb) {
-    this.db.find({amount: {$lt: 0}}).sort({category: 1, amount: -1}).exec(cb)
+  loadData: function (cb) {
+    this.db.find({}).sort({type: 1, category: 1, amount: -1}).exec(cb)
   },
 
-  loadIncomeData: function (cb) {
-    this.db.find({amount: {$gt: 0}}).sort({category: 1, amount: -1}).exec(cb)
+  search: function (searchTerms, sort, cb) {
+    if (!sort) {
+      sort = {type: 1, category: 1, amount: -1}
+    }
+
+    this.db.find(searchTerms).sort(sort).exec(cb)
   },
 
   delete: function (id, cb) {
@@ -23,11 +27,6 @@ export default {
   },
 
   save: function (entry, cb) {
-    // if (entry._id) {
-    //   this.db.update(entry, db)
-    // } else {
-    //   this.db.update(...)
-    // }
     this.db.update({_id: entry._id}, entry, { upsert: true }, cb)
   }
 
