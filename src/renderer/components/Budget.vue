@@ -216,11 +216,19 @@ export default {
     },
 
     _loadCategoryData: function () {
-      var cats = this.budget.map(function (entry) {
-        return ({text: entry.category, value: entry.category})
+      var allCats = this.budget.map(function (entry) {
+        return (entry.category)
       })
-      // Set Category List from existing entries
-      this.formData.categories = this.formData.categories.concat(this.formData.categories, cats)
+
+      var uniqueCats = Array.from(new Set(allCats))
+
+      // var catsForSelect = uniqueCats.map(function (category) {
+      //   return ({text: category, value: '*' + category + '*'})
+      // })
+      // console.log(catsForSelect)
+
+      // Set Category List from budget entries
+      this.formData.categories = this.formData.categories.concat(this.formData.categories, uniqueCats)
     },
 
     _clearEntry: function () {

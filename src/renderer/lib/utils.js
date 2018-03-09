@@ -7,7 +7,7 @@ export default {
         freqStr = 'Monthly'
         break
       case 2:
-        freqStr = 'Bi-Montly'
+        freqStr = 'Bi-Monthly'
         break
       case 3:
         freqStr = 'Quarterly'
