@@ -65,7 +65,8 @@ export default {
 
   computed: {
     entryType: function () {
-      var type = this.entry.amount >= 0 ? 'Income' : 'Expense'
+      // TODO: use constant defined in Budget.vue
+      var type = this.type === 0 ? 'Income' : 'Expense'
       return (type)
     },
     entryColor: function () {

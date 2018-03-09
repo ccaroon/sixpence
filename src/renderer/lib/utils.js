@@ -30,6 +30,10 @@ export default {
     return (amount.toLocaleString('en-US', {style: 'currency', currency: 'USD'}))
   },
 
+  formatDate: function (date) {
+    return (date.toLocaleDateString('en-US', {month: 'short', day: '2-digit', year: '2-digit'}))
+  },
+
   monthNumberToName: function (monthNumber) {
     var d = new Date()
     d.setMonth(monthNumber)

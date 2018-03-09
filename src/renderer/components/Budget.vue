@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-toolbar color="deep-purple accent-2" dark dense app fixed>
+    <v-toolbar color="grey darken-2" dark dense app fixed>
       <v-toolbar-title>Budget</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-flex>
