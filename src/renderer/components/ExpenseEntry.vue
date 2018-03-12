@@ -56,6 +56,7 @@
 
 <script>
 import Utils from '../lib/utils'
+import Constants from '../lib/Constants'
 // import ExpensesDB from '../lib/ExpensesDB'
 
 export default {
@@ -65,8 +66,7 @@ export default {
 
   computed: {
     entryType: function () {
-      // TODO: use constant defined in Budget.vue
-      var type = this.type === 0 ? 'Income' : 'Expense'
+      var type = this.entry.type === Constants.TYPE_INCOME ? 'Income' : 'Expense'
       return (type)
     },
     entryColor: function () {

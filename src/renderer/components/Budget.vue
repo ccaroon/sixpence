@@ -192,9 +192,8 @@ import BudgetEntry from './BudgetEntry'
 import BudgetDB from '../lib/BudgetDB'
 import StaticData from '../lib/static_data'
 import Utils from '../lib/utils'
+import Constants from '../lib/Constants'
 
-const BUDGET_TYPE_INCOME = 0
-const BUDGET_TYPE_EXPENSE = 1
 // const {app} = require('electron').remote
 
 export default {
@@ -320,19 +319,15 @@ export default {
     },
 
     _loadCategoryData: function () {
-      var allCats = this.budget.map(function (entry) {
-        return (entry.category)
+      var self = this
+      BudgetDB.loadCategories(function (err, cats) {
+        if (err) {
+          self.displayAlert('mdi-alert-octagon', 'red', err)
+        } else {
+          // Set Category List from budget entries
+          self.formData.categories = self.formData.categories.concat(self.formData.categories, cats)
+        }
       })
-
-      var uniqueCats = Array.from(new Set(allCats))
-
-      // var catsForSelect = uniqueCats.map(function (category) {
-      //   return ({text: category, value: '*' + category + '*'})
-      // })
-      // console.log(catsForSelect)
-
-      // Set Category List from budget entries
-      this.formData.categories = this.formData.categories.concat(this.formData.categories, uniqueCats)
     },
 
     _clearEntry: function () {
@@ -357,7 +352,7 @@ export default {
       if (this.$refs.budgetForm.validate()) {
         this.entry.icon = this.entry.icon ? this.entry.icon : StaticData.icons[0].value
         this.entry.amount = parseFloat(this.entry.amount)
-        this.entry.type = this.entry.amount > 0 ? BUDGET_TYPE_INCOME : BUDGET_TYPE_EXPENSE
+        this.entry.type = this.entry.amount > 0 ? Constants.TYPE_INCOME : Constants.TYPE_EXPENSE
 
         BudgetDB.save(this.entry, function (err, numReplaced, upsert) {
           if (err) {

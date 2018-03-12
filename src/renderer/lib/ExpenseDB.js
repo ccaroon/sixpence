@@ -28,21 +28,6 @@ export default {
 
   save: function (entry, cb) {
     this.db.update({_id: entry._id}, entry, { upsert: true }, cb)
-  },
-
-  writeExampleEntry: function () {
-    var entry = {
-      type: 1,
-      date: new Date(),
-      category: 'Bills:Electricity',
-      amount: -78.34,
-      notes: ''
-    }
-    this.save(entry, function (err, doc) {
-      if (err) {
-        console.log(err)
-      }
-    })
   }
 
 }

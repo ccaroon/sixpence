@@ -45,6 +45,15 @@
       <v-spacer></v-spacer>
     </v-toolbar>
 
+    <v-alert
+      :color="alert.color"
+      v-model="alert.visible"
+      :icon="alert.icon"
+      class="elevation-24"
+      @click="alert.visible=false">
+      {{ alert.message }}
+    </v-alert>
+
     <v-list v-if="viewStyle === 0" dense v-for="entry in expenses"
       v-bind:key="entry._id">
       <ExpenseEntry
@@ -62,44 +71,106 @@
       </ExpenseProgress>
     </v-list>
 
-
-  <!-- <v-menu
-    ref="dateMenu"
-    lazy
-    :close-on-content-click="false"
-    v-model="showDateMenu"
-    transition="scale-transition"
-    offset-y
-    full-width
-    :nudge-right="40"
-    min-width="290px"
-    :return-value.sync="entry.date">
-    <v-text-field
-      slot="activator"
-      label="Date"
-      v-model="entry.date"
-      prepend-icon="mdi-calendar-range"
-      readonly
-    ></v-text-field>
-    <v-date-picker v-model="entry.date"
-      next-icon="mdi-chevron-right"
-      prev-icon="mdi-chevron-left"
-      color="green accent-3">
-      <v-spacer></v-spacer>
-      <v-btn flat color="error" @click="showDateMenu = false">Cancel</v-btn>
-      <v-btn color="success" @click="$refs.dateMenu.save(entry.date)">OK</v-btn>
-    </v-date-picker>
-  </v-menu> -->
+    <div class="text-xs-center">
+      <v-bottom-sheet v-model="showAddEditSheet">
+        <v-btn
+          slot="activator"
+          color="green accent-3"
+          @click="entry = {}"
+          fixed bottom right dark fab>
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
+        <v-card>
+          <v-form ref="expenseForm">
+            <v-layout row>
+              <v-flex xs3>
+                <v-menu
+                  ref="dateMenu"
+                  lazy
+                  :close-on-content-click="false"
+                  v-model="showDateMenu"
+                  transition="scale-transition"
+                  offset-y
+                  full-width
+                  :nudge-right="40"
+                  min-width="290px"
+                  :return-value.sync="entryDateStr">
+                  <v-text-field
+                    slot="activator"
+                    label="Date"
+                    v-model="entryDateStr"
+                    prepend-icon="mdi-calendar-range"
+                    readonly
+                    required
+                  ></v-text-field>
+                  <v-date-picker v-model="entryDateStr"
+                    next-icon="mdi-chevron-right"
+                    prev-icon="mdi-chevron-left"
+                    color="green accent-3">
+                    <v-spacer></v-spacer>
+                    <v-btn flat color="error" @click="showDateMenu = false">Cancel</v-btn>
+                    <v-btn color="success" @click="$refs.dateMenu.save(entryDateStr)">OK</v-btn>
+                  </v-date-picker>
+                </v-menu>
+              </v-flex>
+              <v-flex xs3>
+                <v-select
+                  :items="formData.categories"
+                  v-model="entry.category"
+                  label="Category"
+                  single-line
+                  dense
+                  required
+                  :rules="rules.category"
+                  combobox
+                  tabindex="2"
+                  hint="Choose a Category or Add a New One"
+                  append-icon="mdi-menu-down">
+                </v-select>
+              </v-flex>
+              <v-flex xs1>
+                <v-text-field
+                  name="amount"
+                  label="Amount"
+                  id="amount"
+                  tabindex="3"
+                  required
+                  hint="Positive for Income, Negative for Expense"
+                  :rules="rules.amount"
+                  v-model="entry.amount">
+                </v-text-field>
+              </v-flex>
+              <v-flex xs4>
+                <v-text-field
+                  name="notes"
+                  label="Notes"
+                  id="notes"
+                  tabindex="6"
+                  v-model="entry.notes">
+                </v-text-field>
+              </v-flex>
+              <v-flex xs1>
+                <v-btn color="green accent-3" fab @click="saveEntry()" tabindex="7">
+                  <v-icon>mdi-content-save</v-icon>
+                </v-btn>
+              </v-flex>
+            </v-layout>
+          </v-form>
+        </v-card>
+      </v-bottom-sheet>
+    </div>
 
 </div>
 </template>
 
 <script>
+import BudgetDB from '../lib/BudgetDB'
 import ExpenseEntry from './ExpenseEntry'
 import ExpenseProgress from './ExpenseProgress'
-import ExpensesDB from '../lib/ExpensesDB'
+import ExpenseDB from '../lib/ExpenseDB'
 import StaticData from '../lib/static_data'
 import Utils from '../lib/utils'
+import Constants from '../lib/Constants'
 
 export default {
   name: 'Expenses',
@@ -108,7 +179,7 @@ export default {
   mounted () {
     this.currentMonthName = this.utils.monthNumberToName(new Date().getMonth())
     this._loadExpensesData()
-    // ExpensesDB.writeExampleEntry()
+    this._loadCategoryData()
   },
 
   computed: {
@@ -148,6 +219,32 @@ export default {
       console.log('editEntry')
     },
 
+    saveEntry: function () {
+      var self = this
+
+      if (this.$refs.expenseForm.validate()) {
+        if (!this.entryDateStr) {
+          this.entry.date = new Date()
+        } else {
+          this.entry.date = new Date(this.entryDateStr)
+        }
+        this.entry.amount = parseFloat(this.entry.amount)
+        this.entry.type = this.entry.amount > 0 ? Constants.TYPE_INCOME : Constants.TYPE_EXPENSE
+
+        ExpenseDB.save(this.entry, function (err, numReplaced, upsert) {
+          if (err) {
+            self.displayAlert('mdi-alert-octagon', 'red', err)
+          } else {
+            self._loadExpensesData()
+            self.entry = {}
+            self.entryDateStr = null
+
+            self.displayAlert('mdi-content-save', 'green', 'Entry Successfully Saved')
+          }
+        })
+      }
+    },
+
     refreshData: function () {
       console.log('refreshData')
     },
@@ -160,11 +257,23 @@ export default {
       var self = this
 
       // TODO: restrict data to current month
-      ExpensesDB.loadData(function (err, docs) {
+      ExpenseDB.loadData(function (err, docs) {
         if (err) {
           console.log(err)
         } else {
           self.expenses = docs
+        }
+      })
+    },
+
+    _loadCategoryData: function () {
+      var self = this
+      BudgetDB.loadCategories(function (err, cats) {
+        if (err) {
+          self.displayAlert('mdi-alert-octagon', 'red', err)
+        } else {
+          // Set Category List from budget entries
+          self.formData.categories = self.formData.categories.concat(['UNBUDGETED'], cats)
         }
       })
     }
@@ -178,12 +287,13 @@ export default {
       expenses: [],
       searchText: null,
       currentMonthName: null,
-      // alert: {
-      //   visible: false,
-      //   icon: 'mdi-alert',
-      //   color: 'green',
-      //   message: ''
-      // },
+      alert: {
+        visible: false,
+        icon: 'mdi-alert',
+        color: 'green',
+        message: ''
+      },
+      entryDateStr: null,
       entry: {
         type: null,
         date: null,
