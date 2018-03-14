@@ -31,7 +31,7 @@ export default {
   },
 
   formatDate: function (date) {
-    return (date.toLocaleDateString('en-US', {month: 'short', day: '2-digit', year: '2-digit'}))
+    return (date.toLocaleDateString('en-US', {month: 'short', day: '2-digit', year: 'numeric'}))
   },
 
   monthNumberToName: function (monthNumber) {

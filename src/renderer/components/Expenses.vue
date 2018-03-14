@@ -215,19 +215,25 @@ export default {
       console.log('clearSearch')
     },
 
-    editEntry: function () {
-      console.log('editEntry')
+    editEntry: function (entry) {
+      this.entry = entry
+      this.showAddEditSheet = true
     },
 
     saveEntry: function () {
       var self = this
 
       if (this.$refs.expenseForm.validate()) {
-        if (!this.entryDateStr) {
-          this.entry.date = new Date()
-        } else {
+        if (this.entryDateStr) {
+          console.log(this.entryDateStr)
           this.entry.date = new Date(this.entryDateStr)
+          console.log(this.entry.date)
+        } else {
+          if (!this.entry.date) {
+            this.entry.date = new Date()
+          }
         }
+
         this.entry.amount = parseFloat(this.entry.amount)
         this.entry.type = this.entry.amount > 0 ? Constants.TYPE_INCOME : Constants.TYPE_EXPENSE
 
@@ -246,11 +252,14 @@ export default {
     },
 
     refreshData: function () {
-      console.log('refreshData')
+      this._loadExpensesData()
     },
 
-    displayAlert: function () {
-      console.log('displayAlert')
+    displayAlert: function (icon, color, message) {
+      this.alert.icon = icon
+      this.alert.color = color
+      this.alert.message = message
+      this.alert.visible = true
     },
 
     _loadExpensesData: function () {

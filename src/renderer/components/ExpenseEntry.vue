@@ -24,16 +24,16 @@
     </v-list-tile-action>
   </v-list-tile>
 
-  <!-- <v-dialog v-model="showDeleteDialog" persistent max-width="65%">
+  <v-dialog v-model="showDeleteDialog" persistent max-width="65%">
     <v-card>
       <v-card-title class="headline">Delete Entry</v-card-title>
       <v-divider></v-divider>
       <v-card-text :class="entryColor">
         <v-layout row>
           <v-flex>{{ entryType }}</v-flex>
+          <v-flex>{{ utils.formatDate(entry.date) }}</v-flex>
           <v-flex>{{ entry.category }}</v-flex>
           <v-flex>{{ utils.formatMoney(entry.amount) }}</v-flex>
-          <v-flex>{{ utils.formatFrequency(entry.frequency) }} / {{ utils.monthNumberToName(entry.first_due - 1 )}}</v-flex>
           <v-flex>{{ entry.notes }}</v-flex>
         </v-layout>
       </v-card-text>
@@ -49,7 +49,7 @@
         </v-btn>
       </v-card-actions>
     </v-card>
-  </v-dialog> -->
+  </v-dialog>
 
 </div>
 </template>
@@ -57,7 +57,7 @@
 <script>
 import Utils from '../lib/utils'
 import Constants from '../lib/Constants'
-// import ExpensesDB from '../lib/ExpensesDB'
+import ExpenseDB from '../lib/ExpenseDB'
 
 export default {
   name: 'ExpenseEntry',
@@ -77,24 +77,23 @@ export default {
 
   methods: {
     editEntry: function () {
-      console.log('editEntry')
-      // this.$emit('editEntry', this.entry)
-    }
+      this.$emit('editEntry', this.entry)
+    },
 
-    // deleteEntry: function (id) {
-    //   var self = this
-    //
-    //   this.showDeleteDialog = false
-    //
-    //   ExpensesDB.delete(id, function (err, numDeleted) {
-    //     if (err) {
-    //       self.$emit('displayAlert', 'mdi-delete', 'red', err)
-    //     } else {
-    //       self.$emit('refreshData')
-    //       self.$emit('displayAlert', 'mdi-delete', 'green', 'Delete Successful!')
-    //     }
-    //   })
-    // }
+    deleteEntry: function (id) {
+      var self = this
+
+      this.showDeleteDialog = false
+
+      ExpenseDB.delete(id, function (err, numDeleted) {
+        if (err) {
+          self.$emit('displayAlert', 'mdi-delete', 'red', err)
+        } else {
+          self.$emit('refreshData')
+          self.$emit('displayAlert', 'mdi-delete', 'green', 'Delete Successful!')
+        }
+      })
+    }
   },
 
   data () {
