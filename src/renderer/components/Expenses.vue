@@ -9,6 +9,9 @@
             <v-icon>mdi-view-list</v-icon>
           </v-btn>
           <v-btn flat>
+            <v-icon>mdi-group</v-icon>
+          </v-btn>
+          <v-btn flat>
             <v-icon>mdi-chart-bar</v-icon>
           </v-btn>
         </v-btn-toggle>
@@ -54,17 +57,26 @@
       {{ alert.message }}
     </v-alert>
 
-    <v-list v-if="viewStyle === 0" dense v-for="entry in expenses"
+    <v-list v-if="viewStyle === constants.VIEW_STYLE_LIST" dense v-for="entry in expenses"
       v-bind:key="entry._id">
       <ExpenseEntry
       v-bind:entry="entry"
+      v-bind:readOnly="false"
       v-on:editEntry="editEntry"
       v-on:refreshData="refreshData"
       v-on:displayAlert="displayAlert">
       </ExpenseEntry>
     </v-list>
 
-    <v-list v-if="viewStyle === 1" dense v-for="entry in expenses"
+    <v-list v-if="viewStyle === constants.VIEW_STYLE_LIST_GROUP" dense v-for="entry in expenses"
+      v-bind:key="entry._id">
+      <ExpenseEntry
+      v-bind:entry="entry"
+      v-bind:readOnly="true">
+      </ExpenseEntry>
+    </v-list>
+
+    <v-list v-if="viewStyle === constants.VIEW_STYLE_PROGRESS" dense v-for="entry in expenses"
       v-bind:key="entry._id">
       <ExpenseProgress
         v-bind:entry="entry">
@@ -177,7 +189,12 @@ export default {
   components: { ExpenseEntry, ExpenseProgress },
 
   mounted () {
-    this.currentMonthName = this.utils.monthNumberToName(new Date().getMonth())
+    var today = new Date()
+
+    this.startDate = new Date(today.getFullYear(), today.getMonth(), 1)
+    this.endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0)
+    this.currentMonthName = this.utils.monthNumberToName(this.startDate.getMonth())
+
     this._loadExpensesData()
     this._loadCategoryData()
   },
@@ -262,17 +279,23 @@ export default {
       this.alert.visible = true
     },
 
-    _loadExpensesData: function () {
+    _loadExpensesData: function (group = false) {
       var self = this
 
-      // TODO: restrict data to current month
-      ExpenseDB.loadData(function (err, docs) {
+      ExpenseDB.loadData(this.startDate, this.endDate, function (err, docs) {
         if (err) {
-          console.log(err)
+          self.displayAlert('mdi-alert-octagon', 'red', err)
         } else {
           self.expenses = docs
+          if (group) {
+            self._groupExpensesData()
+          }
         }
       })
+    },
+
+    _groupExpensesData: function () {
+      console.log('_groupExpensesData')
     },
 
     _loadCategoryData: function () {
@@ -290,12 +313,15 @@ export default {
 
   data () {
     return {
+      constants: Constants,
       formData: StaticData,
       utils: Utils,
-      viewStyle: 0,
+      viewStyle: Constants.VIEW_STYLE_LIST,
       expenses: [],
       searchText: null,
       currentMonthName: null,
+      startDate: null,
+      endDate: null,
       alert: {
         visible: false,
         icon: 'mdi-alert',

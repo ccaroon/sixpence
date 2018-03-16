@@ -10,8 +10,13 @@ export default {
     timestampData: true
   }),
 
-  loadData: function (cb) {
-    this.db.find({}).sort({type: 1, date: 1, category: 1, amount: -1}).exec(cb)
+  loadData: function (startDate, endDate, cb) {
+    var query = {}
+    if (startDate && endDate) {
+      query = { $where: function () { return this.date >= startDate && this.date <= endDate } }
+    }
+
+    this.db.find(query).sort({type: 1, category: 1, date: 1, amount: -1}).exec(cb)
   },
 
   search: function (searchTerms, sort, cb) {
