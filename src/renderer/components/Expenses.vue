@@ -72,7 +72,7 @@
       v-bind:key="entry._id">
       <ExpenseEntry
       v-bind:entry="entry"
-      v-bind:readOnly="true">
+      v-bind:isGrouped="true">
       </ExpenseEntry>
     </v-list>
 
@@ -268,8 +268,8 @@ export default {
       }
     },
 
-    refreshData: function () {
-      this._loadExpensesData()
+    refreshData: function (group = false) {
+      this._loadExpensesData(group)
     },
 
     displayAlert: function (icon, color, message) {
@@ -286,16 +286,34 @@ export default {
         if (err) {
           self.displayAlert('mdi-alert-octagon', 'red', err)
         } else {
-          self.expenses = docs
           if (group) {
-            self._groupExpensesData()
+            self._groupExpensesData(docs)
+          } else {
+            self.expenses = docs
           }
         }
       })
     },
 
-    _groupExpensesData: function () {
-      console.log('_groupExpensesData')
+    _groupExpensesData: function (entries) {
+      var groupedEntries = {}
+      var newEntries = []
+      // TODO: restrict to categories that are DUE for the current month
+      this.formData.categories.forEach(function (category) {
+        groupedEntries[category] = entries.filter(entry => entry.category === category)
+      })
+
+      Object.entries(groupedEntries).forEach(([cat, catEntries]) => {
+        var totalAmount = 0
+        if (catEntries.length > 0) {
+          catEntries.forEach(function (entry) {
+            totalAmount += entry.amount
+          })
+        }
+        newEntries.push({type: 1, category: cat, amount: totalAmount, date: new Date()})
+      })
+
+      this.expenses = newEntries
     },
 
     _loadCategoryData: function () {
@@ -308,7 +326,20 @@ export default {
           self.formData.categories = self.formData.categories.concat(['UNBUDGETED'], cats)
         }
       })
+    },
+
+    viewStyleChange: function () {
+      console.log('view style change')
+      if (this.viewStyle === Constants.VIEW_STYLE_LIST_GROUP) {
+        this.refreshData(true)
+      } else {
+        this.refreshData(false)
+      }
     }
+  },
+
+  watch: {
+    viewStyle: 'viewStyleChange'
   },
 
   data () {
