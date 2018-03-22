@@ -287,19 +287,22 @@ export default {
     _groupExpensesData: function (entries) {
       var groupedEntries = {}
       var newEntries = []
-      // TODO: restrict to categories that are DUE for the current month
-      this.formData.categories.forEach(function (category) {
+
+      Object.keys(this.categoriesForMonth).forEach(function (category) {
         groupedEntries[category] = entries.filter(entry => entry.category === category)
       })
 
       Object.entries(groupedEntries).forEach(([cat, catEntries]) => {
-        var totalAmount = 0
+        var totalAmount = 0.0
+        var budgetedAmount = this.categoriesForMonth[cat]
+        var type = budgetedAmount > 0.0 ? Constants.TYPE_INCOME : Constants.TYPE_EXPENSE
+
         if (catEntries.length > 0) {
           catEntries.forEach(function (entry) {
             totalAmount += entry.amount
           })
         }
-        newEntries.push({type: 1, category: cat, amount: totalAmount, date: new Date()})
+        newEntries.push({type: type, category: cat, amount: totalAmount, budgetedAmount: budgetedAmount})
       })
 
       this.expenses = newEntries
@@ -323,9 +326,7 @@ export default {
         if (err) {
           self.displayAlert('mdi-alert-octagon', 'red', err)
         } else {
-          // Set Category List from budget entries
-          // self.formData.categories = self.formData.categories.concat(['UNBUDGETED'], cats)
-          console.log(cats)
+          self.categoriesForMonth = cats
         }
       })
     },
@@ -348,6 +349,7 @@ export default {
     return {
       constants: Constants,
       formData: StaticData,
+      categoriesForMonth: null,
       utils: Utils,
       viewStyle: Constants.VIEW_STYLE_LIST,
       expenses: [],
