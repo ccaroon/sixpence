@@ -9,9 +9,6 @@
             <v-icon>mdi-view-list</v-icon>
           </v-btn>
           <v-btn flat>
-            <v-icon>mdi-group</v-icon>
-          </v-btn>
-          <v-btn flat>
             <v-icon>mdi-chart-bar</v-icon>
           </v-btn>
         </v-btn-toggle>
@@ -60,27 +57,18 @@
     <v-list v-if="viewStyle === constants.VIEW_STYLE_LIST" dense v-for="entry in expenses"
       v-bind:key="entry._id">
       <ExpenseEntry
-      v-bind:entry="entry"
-      v-bind:readOnly="false"
-      v-on:editEntry="editEntry"
-      v-on:refreshData="refreshData"
-      v-on:displayAlert="displayAlert">
+        v-bind:entry="entry"
+        v-on:editEntry="editEntry"
+        v-on:refreshData="refreshData"
+        v-on:displayAlert="displayAlert">
       </ExpenseEntry>
     </v-list>
 
     <v-list v-if="viewStyle === constants.VIEW_STYLE_LIST_GROUP" dense v-for="entry in expenses"
       v-bind:key="entry._id">
-      <ExpenseEntry
-      v-bind:entry="entry"
-      v-bind:isGrouped="true">
-      </ExpenseEntry>
-    </v-list>
-
-    <v-list v-if="viewStyle === constants.VIEW_STYLE_PROGRESS" dense v-for="entry in expenses"
-      v-bind:key="entry._id">
-      <ExpenseProgress
+      <ExpenseCategory
         v-bind:entry="entry">
-      </ExpenseProgress>
+      </ExpenseCategory>
     </v-list>
 
     <div class="text-xs-center">
@@ -178,7 +166,7 @@
 <script>
 import BudgetDB from '../lib/BudgetDB'
 import ExpenseEntry from './ExpenseEntry'
-import ExpenseProgress from './ExpenseProgress'
+import ExpenseCategory from './ExpenseCategory'
 import ExpenseDB from '../lib/ExpenseDB'
 import StaticData from '../lib/static_data'
 import Utils from '../lib/utils'
@@ -186,7 +174,7 @@ import Constants from '../lib/Constants'
 
 export default {
   name: 'Expenses',
-  components: { ExpenseEntry, ExpenseProgress },
+  components: { ExpenseEntry, ExpenseCategory },
 
   mounted () {
     var today = new Date()
@@ -197,6 +185,7 @@ export default {
 
     this._loadExpensesData()
     this._loadCategoryData()
+    this._loadCategoryDataByMonth(this.startDate.getMonth() + 1)
   },
 
   computed: {
@@ -324,6 +313,19 @@ export default {
         } else {
           // Set Category List from budget entries
           self.formData.categories = self.formData.categories.concat(['UNBUDGETED'], cats)
+        }
+      })
+    },
+
+    _loadCategoryDataByMonth: function (month) {
+      var self = this
+      BudgetDB.loadCategoryDataByMonth(month, function (err, cats) {
+        if (err) {
+          self.displayAlert('mdi-alert-octagon', 'red', err)
+        } else {
+          // Set Category List from budget entries
+          // self.formData.categories = self.formData.categories.concat(['UNBUDGETED'], cats)
+          console.log(cats)
         }
       })
     },

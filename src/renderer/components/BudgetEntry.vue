@@ -9,7 +9,7 @@
       <v-flex xs1>{{ entryType }}</v-flex>
       <v-flex xs3>{{ entry.category }}</v-flex>
       <v-flex xs2>{{ utils.formatMoney(entry.amount) }}</v-flex>
-      <v-flex xs2>{{ utils.formatFrequency(entry.frequency) }} / {{ utils.monthNumberToName(entry.first_due - 1 )}}</v-flex>
+      <v-flex xs2>{{ utils.formatFrequency(entry.frequency) }} / {{ utils.monthNumberToName(entry.firstDue - 1 )}}</v-flex>
       <v-flex xs>{{ entry.notes }}</v-flex>
     </v-layout>
     <v-list-tile-action>
@@ -33,7 +33,7 @@
           <v-flex>{{ entryType }}</v-flex>
           <v-flex>{{ entry.category }}</v-flex>
           <v-flex>{{ utils.formatMoney(entry.amount) }}</v-flex>
-          <v-flex>{{ utils.formatFrequency(entry.frequency) }} / {{ utils.monthNumberToName(entry.first_due - 1 )}}</v-flex>
+          <v-flex>{{ utils.formatFrequency(entry.frequency) }} / {{ utils.monthNumberToName(entry.firstDue - 1 )}}</v-flex>
           <v-flex>{{ entry.notes }}</v-flex>
         </v-layout>
       </v-card-text>

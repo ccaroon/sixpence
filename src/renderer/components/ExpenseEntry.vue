@@ -8,16 +8,16 @@
     <v-layout row>
       <v-flex xs1>{{ entryType }}</v-flex>
       <v-flex xs3>{{ entry.category }}</v-flex>
-      <v-flex xs3 v-show="!isGrouped">{{ utils.formatDate(entry.date) }}</v-flex>
+      <v-flex xs3>{{ utils.formatDate(entry.date) }}</v-flex>
       <v-flex xs2>{{ utils.formatMoney(entry.amount) }}</v-flex>
       <v-flex xs>{{ entry.notes }}</v-flex>
     </v-layout>
-    <v-list-tile-action v-show="!isGrouped">
+    <v-list-tile-action>
       <v-btn flat icon @click="editEntry()" tabindex="-1">
         <v-icon>mdi-pencil</v-icon>
       </v-btn>
     </v-list-tile-action>
-    <v-list-tile-action v-show="!isGrouped">
+    <v-list-tile-action>
       <v-btn flat icon @click="showDeleteDialog = true" tabindex="-1">
         <v-icon>mdi-delete-forever</v-icon>
       </v-btn>
@@ -62,7 +62,7 @@ import ExpenseDB from '../lib/ExpenseDB'
 export default {
   name: 'ExpenseEntry',
 
-  props: ['entry', 'isGrouped'],
+  props: ['entry'],
 
   computed: {
     entryType: function () {
@@ -70,14 +70,7 @@ export default {
       return (type)
     },
     entryColor: function () {
-      var color
-      if (this.entry.amount === 0) {
-        color = 'grey lighten-2'
-      } else if (this.entry.amount > 0) {
-        color = 'green accent-1'
-      } else {
-        color = 'red accent-1'
-      }
+      var color = this.entry.amount >= 0 ? 'green accent-1' : 'red accent-1'
       return (color)
     }
   },

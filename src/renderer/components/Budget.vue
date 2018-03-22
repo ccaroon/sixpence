@@ -152,13 +152,13 @@
               <v-flex xs2>
                 <v-select
                   :items="formData.months"
-                  v-model="entry.first_due"
+                  v-model="entry.firstDue"
                   label="First Due"
                   single-line
                   dense
                   required
                   tabindex="5"
-                  :rules="rules.first_due"
+                  :rules="rules.firstDue"
                   autocomplete
                   hint="In What Month Is This Item First Due?"
                   append-icon="mdi-menu-down">
@@ -391,7 +391,7 @@ export default {
         icon: null,
         category: null,
         amount: null,
-        first_due: null,
+        firstDue: null,
         frequency: null,
         notes: null
       },
@@ -408,7 +408,7 @@ export default {
         frequency: [
           freq => !!freq || 'Frequency is required'
         ],
-        first_due: [
+        firstDue: [
           fdue => !!fdue || 'First Due Month is required'
         ]
       }
