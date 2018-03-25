@@ -5,14 +5,14 @@
     <v-list-tile-avatar>
       <v-icon>mdi-currency-usd-off</v-icon>
     </v-list-tile-avatar>
-    <v-layout row>
+    <v-layout row align-center>
       <v-flex xs1>{{ entryType }}</v-flex>
       <v-flex xs2>{{ entry.category }}</v-flex>
       <v-flex xs2>{{ utils.formatMoney(entry.amount) }} / {{ utils.formatMoney(entry.budgetedAmount+0.0) }}</v-flex>
-      <v-flex xs1>{{ progressPercent }}%</v-flex>
-      <v-flex>
-        <v-progress-linear v-model="progressPercent" height="10" :color="progressColor"></v-progress-linear>
+      <v-flex xs6>
+        <v-progress-linear v-model="progressPercent" height="20" :color="progressColor"></v-progress-linear>
       </v-flex>
+      <v-flex xs1 text-xs-center>{{ progressPercent }}%</v-flex>
     </v-layout>
   </v-list-tile>
 
@@ -35,18 +35,21 @@ export default {
     },
     entryColor: function () {
       var color
-      if (this.entry.amount === 0) {
-        color = 'grey lighten-5'
-      } else if (this.entry.amount > 0) {
-        color = 'green lighten-5'
-      } else {
-        color = 'red lighten-5'
-      }
+      // if (this.entry.amount === 0) {
+      //   color = 'grey lighten-5'
+      // } else if (this.entry.amount > 0) {
+      //   color = 'green lighten-5'
+      // } else {
+      //   color = 'red lighten-5'
+      // }
+
+      color = this.entry.amount === 0 ? 'grey lighten-5' : 'grey lighten-1'
+
       return (color)
     },
     progressPercent: function () {
       var p = (this.entry.amount / this.entry.budgetedAmount) * 100
-      return Math.round(p)
+      return Math.round(Math.abs(p))
     },
     progressColor: function () {
       var p = this.progressPercent

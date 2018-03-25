@@ -6,10 +6,10 @@
       <v-flex>
         <v-btn-toggle v-model="viewStyle" dark class="orange lighten-2">
           <v-btn flat>
-            <v-icon>mdi-view-list</v-icon>
+            <v-icon>mdi-chart-bar</v-icon>
           </v-btn>
           <v-btn flat>
-            <v-icon>mdi-chart-bar</v-icon>
+            <v-icon>mdi-view-list</v-icon>
           </v-btn>
         </v-btn-toggle>
       </v-flex>
@@ -288,13 +288,21 @@ export default {
       var groupedEntries = {}
       var newEntries = []
 
+      // Seed with Budget Categories Due for Current Month
       Object.keys(this.categoriesForMonth).forEach(function (category) {
-        groupedEntries[category] = entries.filter(entry => entry.category === category)
+        groupedEntries[category] = [] // entries.filter(entry => entry.category === category)
+      })
+
+      entries.forEach(function (entry) {
+        if (!groupedEntries[entry.category]) {
+          groupedEntries[entry.category] = []
+        }
+        groupedEntries[entry.category].push(entry)
       })
 
       Object.entries(groupedEntries).forEach(([cat, catEntries]) => {
         var totalAmount = 0.0
-        var budgetedAmount = this.categoriesForMonth[cat]
+        var budgetedAmount = this.categoriesForMonth[cat] || 0.0
         var type = budgetedAmount > 0.0 ? Constants.TYPE_INCOME : Constants.TYPE_EXPENSE
 
         if (catEntries.length > 0) {
@@ -351,7 +359,7 @@ export default {
       formData: StaticData,
       categoriesForMonth: null,
       utils: Utils,
-      viewStyle: Constants.VIEW_STYLE_LIST,
+      viewStyle: Constants.VIEW_STYLE_LIST_GROUP,
       expenses: [],
       searchText: null,
       currentMonthName: null,
