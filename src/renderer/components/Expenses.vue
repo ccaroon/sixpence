@@ -230,9 +230,9 @@ export default {
 
       if (this.$refs.expenseForm.validate()) {
         if (this.entryDateStr) {
-          console.log(this.entryDateStr)
-          this.entry.date = new Date(this.entryDateStr)
-          console.log(this.entry.date)
+          var parts = this.entryDateStr.split('-', 3)
+          parts = parts.map(p => Number.parseInt(p))
+          this.entry.date = new Date(parts)
         } else {
           if (!this.entry.date) {
             this.entry.date = new Date()
