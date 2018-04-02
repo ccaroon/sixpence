@@ -8,11 +8,16 @@
     <v-layout row align-center>
       <v-flex xs1>{{ entryType }}</v-flex>
       <v-flex xs2>{{ entry.category }}</v-flex>
-      <v-flex xs2>{{ format.formatMoney(entry.amount) }} / {{ format.formatMoney(entry.budgetedAmount+0.0) }}</v-flex>
-      <v-flex xs6>
-        <v-progress-linear v-model="progressPercent" height="20" :color="progressColor"></v-progress-linear>
-      </v-flex>
-      <v-flex xs1 text-xs-center>{{ progressPercent }}%</v-flex>
+      <template v-if="entry.category.startsWith('UNBUDGETED')">
+        <v-flex xs2 text-xs-center>{{ format.formatMoney(entry.amount) }}</v-flex>
+        <v-flex xs6><v-progress-linear value="100" height="20" color="red accent-1"></v-progress-linear></v-flex>
+        <v-flex xs1 text-xs-center>N/A</v-flex>
+      </template>
+      <template v-else>
+        <v-flex xs2 text-xs-center>{{ format.formatMoney(entry.amount) }} / {{ format.formatMoney(entry.budgetedAmount+0.0) }}</v-flex>
+        <v-flex xs6><v-progress-linear v-model="progressPercent" height="20" :color="progressColor"></v-progress-linear></v-flex>
+        <v-flex xs1 text-xs-center>{{ progressPercent }}%</v-flex>
+      </template>
     </v-layout>
   </v-list-tile>
 
