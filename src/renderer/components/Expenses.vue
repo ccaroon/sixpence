@@ -213,11 +213,39 @@ export default {
 
   methods: {
     search: function () {
-      console.log('search')
+      var self = this
+
+      if (this.searchText) {
+        var parts = this.searchText.split(/:/, 2)
+
+        var query = {}
+        if (parts.length === 2) {
+          query[parts[0].trim()] = new RegExp(parts[1].trim(), 'i')
+        } else {
+          query['category'] = new RegExp(parts[0].trim(), 'i')
+        }
+
+        this.dataLoaded = false
+        ExpenseDB.search(this.startDate, this.endDate, query, null, function (err, docs) {
+          if (err) {
+            self.displayAlert('mdi-alert-octagon', 'red', err)
+          } else {
+            if (self.viewStyle === Constants.VIEW_STYLE_GROUP) {
+              self._groupExpensesData(docs, false)
+            } else {
+              self.expenses = docs
+            }
+            self.dataLoaded = true
+          }
+        })
+      }
     },
 
     clearSearch: function () {
-      console.log('clearSearch')
+      if (this.searchText) {
+        this.searchText = null
+        this.refreshData()
+      }
     },
 
     editEntry: function (entry) {
@@ -256,8 +284,8 @@ export default {
       }
     },
 
-    refreshData: function (group = false) {
-      this._loadExpensesData(group)
+    refreshData: function () {
+      this._loadExpensesData()
     },
 
     displayAlert: function (icon, color, message) {
@@ -267,14 +295,14 @@ export default {
       this.alert.visible = true
     },
 
-    _loadExpensesData: function (group = false) {
+    _loadExpensesData: function () {
       var self = this
       this.dataLoaded = false
       ExpenseDB.loadData(this.startDate, this.endDate, function (err, docs) {
         if (err) {
           self.displayAlert('mdi-alert-octagon', 'red', err)
         } else {
-          if (group) {
+          if (self.viewStyle === Constants.VIEW_STYLE_GROUP) {
             self._groupExpensesData(docs)
           } else {
             self.expenses = docs
@@ -284,14 +312,16 @@ export default {
       })
     },
 
-    _groupExpensesData: function (entries) {
+    _groupExpensesData: function (entries, seed = true) {
       var groupedEntries = {}
       var newEntries = []
 
       // Seed with Budget Categories Due for Current Month
-      Object.keys(this.categoriesForMonth).forEach(function (category) {
-        groupedEntries[category] = [] // entries.filter(entry => entry.category === category)
-      })
+      if (seed) {
+        Object.keys(this.categoriesForMonth).forEach(function (category) {
+          groupedEntries[category] = []
+        })
+      }
 
       entries.forEach(function (entry) {
         if (!groupedEntries[entry.category]) {
@@ -340,10 +370,10 @@ export default {
     },
 
     viewStyleChange: function () {
-      if (this.viewStyle === Constants.VIEW_STYLE_GROUP) {
-        this.refreshData(true)
+      if (this.searchText) {
+        this.search()
       } else {
-        this.refreshData(false)
+        this.refreshData()
       }
     }
   },
