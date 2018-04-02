@@ -17,15 +17,15 @@
         <v-toolbar-items>
           <v-chip color="green accent-1" text-color="black" tabindex="-1" disabled>
             <v-icon left>mdi-currency-usd</v-icon>
-            <span class="subheading">{{ utils.formatMoney(totalIncome) }}</span>
+            <span class="subheading">{{ format.formatMoney(totalIncome) }}</span>
           </v-chip>
           <v-chip color="red accent-1" text-color="black" tabindex="-1" disabled>
             <v-icon left>mdi-currency-usd-off</v-icon>
-            <span class="subheading">{{ utils.formatMoney(totalExpenses) }}</span>
+            <span class="subheading">{{ format.formatMoney(totalExpenses) }}</span>
           </v-chip>
           <v-chip :color="totalIncome + totalExpenses >= 0 ? 'green accent-3' : 'red accent-3'" text-color="black" tabindex="-1" disabled>
             <v-icon left>mdi-cash-multiple</v-icon>
-            <span class="subheading">{{ utils.formatMoney(totalIncome + totalExpenses) }}</span>
+            <span class="subheading">{{ format.formatMoney(totalIncome + totalExpenses) }}</span>
           </v-chip>
         </v-toolbar-items>
       </v-flex>
@@ -54,7 +54,7 @@
       {{ alert.message }}
     </v-alert>
 
-    <v-list v-if="viewStyle === constants.VIEW_STYLE_LIST" dense v-for="entry in expenses"
+    <v-list v-if="dataLoaded && viewStyle === constants.VIEW_STYLE_LIST" dense v-for="entry in expenses"
       v-bind:key="entry._id">
       <ExpenseEntry
         v-bind:entry="entry"
@@ -64,7 +64,7 @@
       </ExpenseEntry>
     </v-list>
 
-    <v-list v-if="viewStyle === constants.VIEW_STYLE_LIST_GROUP" dense v-for="entry in expenses"
+    <v-list v-if="dataLoaded && viewStyle === constants.VIEW_STYLE_GROUP" dense v-for="entry in expenses"
       v-bind:key="entry._id">
       <ExpenseCategory
         v-bind:entry="entry">
@@ -115,7 +115,7 @@
               </v-flex>
               <v-flex xs3>
                 <v-select
-                  :items="formData.categories"
+                  :items="categories"
                   v-model="entry.category"
                   label="Category"
                   single-line
@@ -168,8 +168,7 @@ import BudgetDB from '../lib/BudgetDB'
 import ExpenseEntry from './ExpenseEntry'
 import ExpenseCategory from './ExpenseCategory'
 import ExpenseDB from '../lib/ExpenseDB'
-import StaticData from '../lib/static_data'
-import Utils from '../lib/utils'
+import Format from '../lib/Format'
 import Constants from '../lib/Constants'
 
 export default {
@@ -181,7 +180,7 @@ export default {
 
     this.startDate = new Date(today.getFullYear(), today.getMonth(), 1)
     this.endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0)
-    this.currentMonthName = this.utils.monthNumberToName(this.startDate.getMonth())
+    this.currentMonthName = Format.monthNumberToName(this.startDate.getMonth())
 
     this._loadExpensesData()
     this._loadCategoryData()
@@ -270,7 +269,7 @@ export default {
 
     _loadExpensesData: function (group = false) {
       var self = this
-
+      this.dataLoaded = false
       ExpenseDB.loadData(this.startDate, this.endDate, function (err, docs) {
         if (err) {
           self.displayAlert('mdi-alert-octagon', 'red', err)
@@ -280,6 +279,7 @@ export default {
           } else {
             self.expenses = docs
           }
+          self.dataLoaded = true
         }
       })
     },
@@ -323,7 +323,7 @@ export default {
           self.displayAlert('mdi-alert-octagon', 'red', err)
         } else {
           // Set Category List from budget entries
-          self.formData.categories = self.formData.categories.concat(['UNBUDGETED'], cats)
+          self.categories = cats.concat(['UNBUDGETED'])
         }
       })
     },
@@ -340,8 +340,7 @@ export default {
     },
 
     viewStyleChange: function () {
-      console.log('view style change')
-      if (this.viewStyle === Constants.VIEW_STYLE_LIST_GROUP) {
+      if (this.viewStyle === Constants.VIEW_STYLE_GROUP) {
         this.refreshData(true)
       } else {
         this.refreshData(false)
@@ -356,11 +355,12 @@ export default {
   data () {
     return {
       constants: Constants,
-      formData: StaticData,
       categoriesForMonth: null,
-      utils: Utils,
-      viewStyle: Constants.VIEW_STYLE_LIST_GROUP,
+      categories: [],
+      format: Format,
+      viewStyle: Constants.VIEW_STYLE_LIST,
       expenses: [],
+      dataLoaded: false,
       searchText: null,
       currentMonthName: null,
       startDate: null,

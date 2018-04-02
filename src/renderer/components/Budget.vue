@@ -29,15 +29,15 @@
         <v-toolbar-items>
           <v-chip color="green accent-1" text-color="black" tabindex="-1" disabled>
             <v-icon left>mdi-currency-usd</v-icon>
-            <span class="subheading">{{ utils.formatMoney(totalIncome) }}</span>
+            <span class="subheading">{{ format.formatMoney(totalIncome) }}</span>
           </v-chip>
           <v-chip color="red accent-1" text-color="black" tabindex="-1" disabled>
             <v-icon left>mdi-currency-usd-off</v-icon>
-            <span class="subheading">{{ utils.formatMoney(totalExpenses) }}</span>
+            <span class="subheading">{{ format.formatMoney(totalExpenses) }}</span>
           </v-chip>
           <v-chip :color="totalIncome + totalExpenses >= 0 ? 'green accent-3' : 'red accent-3'" text-color="black" tabindex="-1" disabled>
             <v-icon left>mdi-cash-multiple</v-icon>
-            <span class="subheading">{{ utils.formatMoney(totalIncome + totalExpenses) }}</span>
+            <span class="subheading">{{ format.formatMoney(totalIncome + totalExpenses) }}</span>
           </v-chip>
         </v-toolbar-items>
       </v-flex>
@@ -91,7 +91,7 @@
               <v-flex xs1>
                 <v-select
                   ref="iconSelect"
-                  :items="formData.icons"
+                  :items="constants.ICONS"
                   v-model="entry.icon"
                   label="Icon"
                   single-line
@@ -109,7 +109,7 @@
               </v-flex>
               <v-flex xs2>
                 <v-select
-                  :items="formData.categories"
+                  :items="categories"
                   v-model="entry.category"
                   label="Category"
                   single-line
@@ -136,7 +136,7 @@
               </v-flex>
               <v-flex xs2>
                 <v-select
-                  :items="formData.frequency"
+                  :items="constants.FREQUENCY"
                   v-model="entry.frequency"
                   label="Frequency"
                   single-line
@@ -151,7 +151,7 @@
               </v-flex>
               <v-flex xs2>
                 <v-select
-                  :items="formData.months"
+                  :items="constants.MONTHS"
                   v-model="entry.firstDue"
                   label="First Due"
                   single-line
@@ -190,8 +190,7 @@
 <script>
 import BudgetEntry from './BudgetEntry'
 import BudgetDB from '../lib/BudgetDB'
-import StaticData from '../lib/static_data'
-import Utils from '../lib/utils'
+import Format from '../lib/Format'
 import Constants from '../lib/Constants'
 
 // const {app} = require('electron').remote
@@ -325,7 +324,7 @@ export default {
           self.displayAlert('mdi-alert-octagon', 'red', err)
         } else {
           // Set Category List from budget entries
-          self.formData.categories = self.formData.categories.concat(self.formData.categories, cats)
+          self.categories = cats
         }
       })
     },
@@ -350,7 +349,7 @@ export default {
       var self = this
 
       if (this.$refs.budgetForm.validate()) {
-        this.entry.icon = this.entry.icon ? this.entry.icon : StaticData.icons[0].value
+        this.entry.icon = this.entry.icon ? this.entry.icon : Constants.ICONS[0].value
         this.entry.amount = parseFloat(this.entry.amount)
         this.entry.type = this.entry.amount > 0 ? Constants.TYPE_INCOME : Constants.TYPE_EXPENSE
 
@@ -375,8 +374,9 @@ export default {
 
   data () {
     return {
-      formData: StaticData,
-      utils: Utils,
+      constants: Constants,
+      categories: [],
+      format: Format,
       searchText: null,
       freqFilter: 5,
       budget: [],

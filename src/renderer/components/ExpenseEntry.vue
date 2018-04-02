@@ -8,8 +8,8 @@
     <v-layout row>
       <v-flex xs1>{{ entryType }}</v-flex>
       <v-flex xs3>{{ entry.category }}</v-flex>
-      <v-flex xs3>{{ utils.formatDate(entry.date) }}</v-flex>
-      <v-flex xs2>{{ utils.formatMoney(entry.amount) }}</v-flex>
+      <v-flex xs3>{{ format.formatDate(entry.date) }}</v-flex>
+      <v-flex xs2>{{ format.formatMoney(entry.amount) }}</v-flex>
       <v-flex xs>{{ entry.notes }}</v-flex>
     </v-layout>
     <v-list-tile-action>
@@ -31,9 +31,9 @@
       <v-card-text :class="entryColor">
         <v-layout row>
           <v-flex>{{ entryType }}</v-flex>
-          <v-flex>{{ utils.formatDate(entry.date) }}</v-flex>
+          <v-flex>{{ format.formatDate(entry.date) }}</v-flex>
           <v-flex>{{ entry.category }}</v-flex>
-          <v-flex>{{ utils.formatMoney(entry.amount) }}</v-flex>
+          <v-flex>{{ format.formatMoney(entry.amount) }}</v-flex>
           <v-flex>{{ entry.notes }}</v-flex>
         </v-layout>
       </v-card-text>
@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import Utils from '../lib/utils'
+import Format from '../lib/Format'
 import Constants from '../lib/Constants'
 import ExpenseDB from '../lib/ExpenseDB'
 
@@ -98,7 +98,7 @@ export default {
 
   data () {
     return {
-      utils: Utils,
+      format: Format,
       showDeleteDialog: false
     }
   }

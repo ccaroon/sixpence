@@ -8,8 +8,8 @@
     <v-layout row>
       <v-flex xs1>{{ entryType }}</v-flex>
       <v-flex xs3>{{ entry.category }}</v-flex>
-      <v-flex xs2>{{ utils.formatMoney(entry.amount) }}</v-flex>
-      <v-flex xs2>{{ utils.formatFrequency(entry.frequency) }} / {{ utils.monthNumberToName(entry.firstDue - 1 )}}</v-flex>
+      <v-flex xs2>{{ format.formatMoney(entry.amount) }}</v-flex>
+      <v-flex xs2>{{ format.formatFrequency(entry.frequency) }} / {{ format.monthNumberToName(entry.firstDue - 1 )}}</v-flex>
       <v-flex xs>{{ entry.notes }}</v-flex>
     </v-layout>
     <v-list-tile-action>
@@ -32,8 +32,8 @@
         <v-layout row>
           <v-flex>{{ entryType }}</v-flex>
           <v-flex>{{ entry.category }}</v-flex>
-          <v-flex>{{ utils.formatMoney(entry.amount) }}</v-flex>
-          <v-flex>{{ utils.formatFrequency(entry.frequency) }} / {{ utils.monthNumberToName(entry.firstDue - 1 )}}</v-flex>
+          <v-flex>{{ format.formatMoney(entry.amount) }}</v-flex>
+          <v-flex>{{ format.formatFrequency(entry.frequency) }} / {{ format.monthNumberToName(entry.firstDue - 1 )}}</v-flex>
           <v-flex>{{ entry.notes }}</v-flex>
         </v-layout>
       </v-card-text>
@@ -57,7 +57,7 @@
 <script>
 import Constants from '../lib/Constants'
 import BudgetDB from '../lib/BudgetDB'
-import Utils from '../lib/utils'
+import Format from '../lib/Format'
 
 export default {
   name: 'BudgetEntry',
@@ -98,7 +98,7 @@ export default {
 
   data () {
     return {
-      utils: Utils,
+      format: Format,
       showDeleteDialog: false
     }
   }

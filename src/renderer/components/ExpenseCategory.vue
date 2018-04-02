@@ -8,7 +8,7 @@
     <v-layout row align-center>
       <v-flex xs1>{{ entryType }}</v-flex>
       <v-flex xs2>{{ entry.category }}</v-flex>
-      <v-flex xs2>{{ utils.formatMoney(entry.amount) }} / {{ utils.formatMoney(entry.budgetedAmount+0.0) }}</v-flex>
+      <v-flex xs2>{{ format.formatMoney(entry.amount) }} / {{ format.formatMoney(entry.budgetedAmount+0.0) }}</v-flex>
       <v-flex xs6>
         <v-progress-linear v-model="progressPercent" height="20" :color="progressColor"></v-progress-linear>
       </v-flex>
@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import Utils from '../lib/utils'
+import Format from '../lib/Format'
 import Constants from '../lib/Constants'
 
 export default {
@@ -33,24 +33,20 @@ export default {
       var type = this.entry.type === Constants.TYPE_INCOME ? 'Income' : 'Expense'
       return (type)
     },
+
     entryColor: function () {
       var color
-      // if (this.entry.amount === 0) {
-      //   color = 'grey lighten-5'
-      // } else if (this.entry.amount > 0) {
-      //   color = 'green lighten-5'
-      // } else {
-      //   color = 'red lighten-5'
-      // }
 
       color = this.entry.amount === 0 ? 'grey lighten-5' : 'grey lighten-1'
 
       return (color)
     },
+
     progressPercent: function () {
       var p = (this.entry.amount / this.entry.budgetedAmount) * 100
       return Math.round(Math.abs(p))
     },
+
     progressColor: function () {
       var p = this.progressPercent
       var color
@@ -73,7 +69,7 @@ export default {
 
   data () {
     return {
-      utils: Utils
+      format: Format
     }
   }
 }
