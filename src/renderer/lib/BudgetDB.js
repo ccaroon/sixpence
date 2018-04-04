@@ -51,7 +51,7 @@ export default {
         if (err) {
           cb(err, null)
         } else {
-          var entries = docs.filter(entry => due(month, entry.frequency, entry.firstDue))
+          var entries = docs.filter(entry => due(month + 1, entry.frequency, entry.firstDue))
           var catMap = {}
 
           entries.forEach(function (entry) {

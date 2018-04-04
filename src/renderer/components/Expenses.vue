@@ -1,7 +1,29 @@
 <template>
 <div>
     <v-toolbar color="grey darken-2" dark dense app fixed>
-      <v-toolbar-title>Expenses - {{ currentMonthName }}</v-toolbar-title>
+      <v-toolbar-title>
+        Expenses - {{ currentMonthName }}
+      </v-toolbar-title>
+      <v-dialog
+        ref="monthDialog"
+        persistent
+        v-model="showMonthDialog"
+        lazy
+        full-width
+        width="290px"
+        :return-value.sync="monthToView">
+        <v-btn slot="activator" icon color="orange lighten-2"><v-icon>mdi-calendar-range</v-icon></v-btn>
+        <v-date-picker
+          type="month"
+          v-model="monthToView"
+          next-icon="mdi-chevron-right"
+          prev-icon="mdi-chevron-left"
+          color="green accent-3">
+          <v-spacer></v-spacer>
+          <v-btn flat color="primary" @click="showMonthDialog = false">Cancel</v-btn>
+          <v-btn flat color="primary" @click="$refs.monthDialog.save(monthToView)">OK</v-btn>
+        </v-date-picker>
+      </v-dialog>
       <v-spacer></v-spacer>
       <v-flex>
         <v-btn-toggle v-model="viewStyle" dark class="orange lighten-2">
@@ -178,13 +200,8 @@ export default {
   mounted () {
     var today = new Date()
 
-    this.startDate = new Date(today.getFullYear(), today.getMonth(), 1)
-    this.endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0)
-    this.currentMonthName = Format.monthNumberToName(this.startDate.getMonth())
-
-    this._loadExpensesData()
-    this._loadCategoryData()
-    this._loadCategoryDataByMonth(this.startDate.getMonth() + 1)
+    // Setting this value triggers the changeMonth() method below
+    this.monthToView = today.getFullYear() + '-' + (today.getMonth() + 1)
   },
 
   computed: {
@@ -285,6 +302,10 @@ export default {
     },
 
     refreshData: function () {
+      // TODO: data loads are dependent on each other in order to get the correct
+      // per Month data shown...FIX IT
+      this._loadCategoryData()
+      this._loadCategoryDataByMonth(this.startDate.getMonth())
       this._loadExpensesData()
     },
 
@@ -375,11 +396,26 @@ export default {
       } else {
         this.refreshData()
       }
+    },
+
+    changeMonth: function () {
+      var parts = this.monthToView.split('-', 2).map(p => Number.parseInt(p))
+
+      this.startDate = new Date(parts[0], parts[1] - 1, 1)
+      this.endDate = new Date(parts[0], parts[1], 0)
+      this.currentMonthName = Format.monthNumberToName(this.startDate.getMonth())
+
+      // console.log('S: ' + this.startDate)
+      // console.log('E: ' + this.endDate)
+      // console.log('N: ' + this.currentMonthName)
+      this.refreshData()
     }
+
   },
 
   watch: {
-    viewStyle: 'viewStyleChange'
+    viewStyle: 'viewStyleChange',
+    monthToView: 'changeMonth'
   },
 
   data () {
@@ -392,9 +428,11 @@ export default {
       expenses: [],
       dataLoaded: false,
       searchText: null,
+      monthToView: null,
       currentMonthName: null,
       startDate: null,
       endDate: null,
+      showMonthDialog: false,
       alert: {
         visible: false,
         icon: 'mdi-alert',
