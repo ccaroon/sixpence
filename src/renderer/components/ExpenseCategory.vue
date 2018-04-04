@@ -10,7 +10,7 @@
       <v-flex xs2>{{ entry.category }}</v-flex>
       <template v-if="entry.category.startsWith('UNBUDGETED')">
         <v-flex xs2 text-xs-center>{{ format.formatMoney(entry.amount) }}</v-flex>
-        <v-flex xs6><v-progress-linear value="100" height="20" color="red accent-1"></v-progress-linear></v-flex>
+        <v-flex xs6><v-progress-linear value="100" height="20" color="red accent-2"></v-progress-linear></v-flex>
         <v-flex xs1 text-xs-center>N/A</v-flex>
       </template>
       <template v-else>
@@ -59,10 +59,12 @@ export default {
         color = 'white'
       } else if (p <= 75) {
         color = 'green accent-1'
-      } else if (p > 75 && p <= 100) {
+      } else if (p > 75 && p < 100) {
         color = 'yellow accent-1'
+      } else if (p === 100) {
+        color = 'green accent-3'
       } else {
-        color = 'red accent-1'
+        color = 'red accent-2'
       }
 
       return color
