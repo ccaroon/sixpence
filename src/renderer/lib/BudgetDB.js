@@ -55,7 +55,11 @@ export default {
           var catMap = {}
 
           entries.forEach(function (entry) {
-            catMap[entry.category] = entry.amount
+            if (!catMap.hasOwnProperty(entry.category)) {
+              catMap[entry.category] = 0.0
+            }
+
+            catMap[entry.category] += entry.amount
           })
 
           cb(null, catMap)
