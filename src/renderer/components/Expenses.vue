@@ -200,6 +200,8 @@ export default {
   mounted () {
     var today = new Date()
 
+    this._loadCategoryData()
+
     // Setting this value triggers the changeMonth() method below
     this.monthToView = today.getFullYear() + '-' + (today.getMonth() + 1)
   },
@@ -302,35 +304,51 @@ export default {
     },
 
     refreshData: function () {
-      // TODO: data loads are dependent on each other in order to get the correct
-      // per Month data shown...FIX IT
-      this._loadCategoryData()
-      this._loadCategoryDataByMonth(this.startDate.getMonth())
       this._loadExpensesData()
     },
 
     displayAlert: function (icon, color, message) {
       this.alert.icon = icon
       this.alert.color = color
-      this.alert.message = message
+      this.alert.message = message.toString()
       this.alert.visible = true
     },
 
     _loadExpensesData: function () {
       var self = this
       this.dataLoaded = false
-      ExpenseDB.loadData(this.startDate, this.endDate, function (err, docs) {
-        if (err) {
-          self.displayAlert('mdi-alert-octagon', 'red', err)
-        } else {
+
+      var promise = new Promise(function (resolve, reject) {
+        ExpenseDB.loadData(self.startDate, self.endDate, function (err, docs) {
+          if (err) {
+            reject(err)
+          } else {
+            resolve(docs)
+          }
+        })
+      })
+
+      promise
+        .then(function (docs) {
           if (self.viewStyle === Constants.VIEW_STYLE_GROUP) {
-            self._groupExpensesData(docs)
+            var loadCatData = self._loadCategoryDataByMonth(self.startDate.getMonth())
+            loadCatData
+              .then(function (cats) {
+                self.categoriesForMonth = cats
+                self._groupExpensesData(docs)
+              })
+              // Not sure if this will propagate the error to the catch() below
+              .catch(function (err) {
+                return (err)
+              })
           } else {
             self.expenses = docs
           }
           self.dataLoaded = true
-        }
-      })
+        })
+        .catch(function (err) {
+          self.displayAlert('mdi-alert-octagon', 'red', err)
+        })
     },
 
     _groupExpensesData: function (entries, seed = true) {
@@ -380,14 +398,17 @@ export default {
     },
 
     _loadCategoryDataByMonth: function (month) {
-      var self = this
-      BudgetDB.loadCategoryDataByMonth(month, function (err, cats) {
-        if (err) {
-          self.displayAlert('mdi-alert-octagon', 'red', err)
-        } else {
-          self.categoriesForMonth = cats
-        }
+      var promise = new Promise(function (resolve, reject) {
+        BudgetDB.loadCategoryDataByMonth(month, function (err, cats) {
+          if (err) {
+            reject(err)
+          } else {
+            resolve(cats)
+          }
+        })
       })
+
+      return (promise)
     },
 
     viewStyleChange: function () {
