@@ -12,6 +12,7 @@ const constants = {
     {text: 'Amazon', value: 'mdi-amazon'},
     {text: 'Audiobook', value: 'mdi-audiobook'},
     {text: 'Bank', value: 'mdi-bank'},
+    {text: 'Book', value: 'mdi-book-open-variant'},
     {text: 'Bug', value: 'mdi-bug'},
     {text: 'Car', value: 'mdi-car'},
     {text: 'Cart', value: 'mdi-cart'},
@@ -31,6 +32,7 @@ const constants = {
     {text: 'Needle', value: 'mdi-needle'},
     {text: 'Network', value: 'mdi-lan-connect'},
     {text: 'Pets', value: 'mdi-paw'},
+    {text: 'Playstation', value: 'mdi-playstation'},
     {text: 'Radiator', value: 'mdi-radiator'},
     {text: 'RV', value: 'mdi-caravan'},
     {text: 'Spotify', value: 'mdi-spotify'},
@@ -41,6 +43,7 @@ const constants = {
     {text: 'TV', value: 'mdi-television-classic'},
     {text: 'Towing', value: 'mdi-towing'},
     {text: 'Transfer', value: 'mdi-transfer'},
+    {text: 'Video Games', value: 'mdi-gamepad-variant'},
     {text: 'Water', value: 'mdi-water'}
   ],
 
