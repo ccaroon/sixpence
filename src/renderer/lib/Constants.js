@@ -5,6 +5,9 @@ const constants = {
   VIEW_STYLE_GROUP: 0,
   VIEW_STYLE_LIST: 1,
 
+  IE_VIEW_BUDGETED: null,
+  IE_VIEW_TO_DATE: 0,
+
   ICONS: [
     {text: 'Dollar', value: 'mdi-currency-usd'},
     {text: 'Android Phone', value: 'mdi-cellphone-android'},

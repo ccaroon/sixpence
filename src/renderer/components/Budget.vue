@@ -4,7 +4,7 @@
       <v-toolbar-title>Budget</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-flex>
-        <v-btn-toggle v-model="freqFilter" dark class="orange lighten-2">
+        <v-btn-toggle v-model="freqFilter" mandatory dark class="orange lighten-2">
           <v-btn flat>
             <v-icon>mdi-numeric-1-box</v-icon>
           </v-btn>

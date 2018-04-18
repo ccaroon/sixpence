@@ -26,7 +26,7 @@
       </v-dialog>
       <v-spacer></v-spacer>
       <v-flex>
-        <v-btn-toggle v-model="viewStyle" dark class="orange lighten-2">
+        <v-btn-toggle v-model="viewStyle" mandatory class="orange lighten-2">
           <v-btn flat>
             <v-icon>mdi-chart-bar</v-icon>
           </v-btn>
@@ -39,16 +39,21 @@
         <v-toolbar-items>
           <v-chip color="green accent-1" text-color="black" tabindex="-1" disabled>
             <v-icon left>mdi-currency-usd</v-icon>
-            <span class="subheading">{{ format.formatMoney(totalIncome) }}</span>
+            <span class="subheading">{{ format.formatMoney(incomeAmount) }}</span>
           </v-chip>
           <v-chip color="red accent-1" text-color="black" tabindex="-1" disabled>
             <v-icon left>mdi-currency-usd-off</v-icon>
-            <span class="subheading">{{ format.formatMoney(totalExpenses) }}</span>
+            <span class="subheading">{{ format.formatMoney(expensesAmount) }}</span>
           </v-chip>
-          <v-chip :color="totalIncome + totalExpenses >= 0 ? 'green accent-3' : 'red accent-3'" text-color="black" tabindex="-1" disabled>
+          <v-chip :color="incomeAmount + expensesAmount >= 0 ? 'green accent-3' : 'red accent-3'" text-color="black" tabindex="-1" disabled>
             <v-icon left>mdi-cash-multiple</v-icon>
-            <span class="subheading">{{ format.formatMoney(totalIncome + totalExpenses) }}</span>
+            <span class="subheading">{{ format.formatMoney(incomeAmount + expensesAmount) }}</span>
           </v-chip>
+          <v-btn-toggle v-model="incomeExpenseView" class="green">
+            <v-btn flat>
+              <v-icon>mdi-coin</v-icon>
+            </v-btn>
+          </v-btn-toggle>
         </v-toolbar-items>
       </v-flex>
       <v-flex>
@@ -207,7 +212,75 @@ export default {
   },
 
   computed: {
-    totalIncome: function () {
+    incomeAmount: function () {
+      var amount = null
+
+      if (this.incomeExpenseView === Constants.IE_VIEW_TO_DATE) {
+        amount = this.incomeExpenseData('toDate', Constants.TYPE_INCOME)
+      } else if (this.incomeExpenseView === Constants.IE_VIEW_BUDGETED) {
+        amount = this.incomeExpenseData('budgeted', Constants.TYPE_INCOME)
+      }
+
+      return (amount)
+    },
+
+    expensesAmount: function () {
+      var amount = null
+
+      if (this.incomeExpenseView === Constants.IE_VIEW_TO_DATE) {
+        amount = this.incomeExpenseData('toDate', Constants.TYPE_EXPENSE)
+      } else if (this.incomeExpenseView === Constants.IE_VIEW_BUDGETED) {
+        amount = this.incomeExpenseData('budgeted', Constants.TYPE_EXPENSE)
+      }
+
+      return (amount)
+    }
+  },
+
+  methods: {
+    incomeExpenseData: function (type, iORe) {
+      var value = null
+
+      if (type === 'budgeted') {
+        if (iORe === Constants.TYPE_INCOME) {
+          value = this.budgetedIncome()
+        } else if (iORe === Constants.TYPE_EXPENSE) {
+          value = this.budgetedExpenses()
+        }
+      } else if (type === 'toDate') {
+        if (iORe === Constants.TYPE_INCOME) {
+          value = this.toDateIncome()
+        } else if (iORe === Constants.TYPE_EXPENSE) {
+          value = this.toDateExpenses()
+        }
+      }
+
+      return (value)
+    },
+
+    budgetedIncome: function () {
+      var amount = 0.0
+      Object.values(this.categoriesForMonth).forEach(amt => {
+        if (amt > 0.0) {
+          amount += amt
+        }
+      })
+
+      return (amount)
+    },
+
+    budgetedExpenses: function () {
+      var amount = 0.0
+      Object.values(this.categoriesForMonth).forEach(amt => {
+        if (amt < 0.0) {
+          amount += amt
+        }
+      })
+
+      return (amount)
+    },
+
+    toDateIncome: function () {
       var income = 0.0
       for (var i = 0; i < this.expenses.length; i++) {
         var entry = this.expenses[i]
@@ -218,7 +291,7 @@ export default {
       return (income)
     },
 
-    totalExpenses: function () {
+    toDateExpenses: function () {
       var expense = 0.0
       for (var i = 0; i < this.expenses.length; i++) {
         var entry = this.expenses[i]
@@ -227,10 +300,8 @@ export default {
         }
       }
       return (expense)
-    }
-  },
+    },
 
-  methods: {
     search: function () {
       var self = this
 
@@ -445,7 +516,8 @@ export default {
       categoriesForMonth: null,
       categories: [],
       format: Format,
-      viewStyle: Constants.VIEW_STYLE_LIST,
+      viewStyle: Constants.VIEW_STYLE_GROUP,
+      incomeExpenseView: Constants.IE_VIEW_TO_DATE,
       expenses: [],
       dataLoaded: false,
       searchText: null,
