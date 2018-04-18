@@ -7,7 +7,7 @@ export default {
         freqStr = 'Monthly'
         break
       case 2:
-        freqStr = 'Bi-Montly'
+        freqStr = 'Bi-Monthly'
         break
       case 3:
         freqStr = 'Quarterly'
@@ -28,6 +28,10 @@ export default {
 
   formatMoney: function (amount) {
     return (amount.toLocaleString('en-US', {style: 'currency', currency: 'USD'}))
+  },
+
+  formatDate: function (date) {
+    return (date.toLocaleDateString('en-US', {month: 'short', day: '2-digit', year: 'numeric'}))
   },
 
   monthNumberToName: function (monthNumber) {

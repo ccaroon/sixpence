@@ -11,6 +11,16 @@ export default new Router({
       component: require('@/components/Main').default
     },
     {
+      path: '/budget',
+      name: 'budget-screen',
+      component: require('@/components/Budget').default
+    },
+    {
+      path: '/expenses',
+      name: 'expenses-screen',
+      component: require('@/components/Expenses').default
+    },
+    {
       path: '*',
       redirect: '/'
     }

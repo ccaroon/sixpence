@@ -45,11 +45,28 @@ function createWindow () {
       submenu: [
         {
           label: 'New',
-          click () { console.log(app.getPath('documents')) }
+          click () { console.log('New... (not yet implemented)') }
         },
         {
           label: 'Open...',
-          click () { console.log(app.getPath('documents')) }
+          click () { console.log('Open... (not yet implemented)') }
+        }
+      ]
+    },
+    {
+      label: 'View',
+      submenu: [
+        {
+          label: 'Main',
+          click: () => BrowserWindow.getFocusedWindow().webContents.send('menu-view-main')
+        },
+        {
+          label: 'Budget',
+          click: () => BrowserWindow.getFocusedWindow().webContents.send('menu-view-budget')
+        },
+        {
+          label: 'Expenses',
+          click: () => BrowserWindow.getFocusedWindow().webContents.send('menu-view-expenses')
         }
       ]
     },
@@ -65,8 +82,11 @@ function createWindow () {
       submenu: [
         {
           label: 'About Sixpence',
-          // click () { require('electron').shell.openExternal('https://electron.atom.io') }
           click: () => BrowserWindow.getFocusedWindow().webContents.send('menu-help-about')
+        },
+        {
+          label: 'View on GitHub',
+          click () { require('electron').shell.openExternal('https://github.com/ccaroon/sixpence') }
         }
       ]
     }
