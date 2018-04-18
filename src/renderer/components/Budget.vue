@@ -82,7 +82,7 @@
           slot="activator"
           color="green accent-3"
           @click="entry = {}"
-          fixed bottom right dark fab>
+          fixed bottom right dark fab small>
           <v-icon>mdi-plus</v-icon>
         </v-btn>
         <v-card>

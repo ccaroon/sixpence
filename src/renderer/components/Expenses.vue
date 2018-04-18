@@ -104,7 +104,7 @@
           slot="activator"
           color="green accent-3"
           @click="entry = {}"
-          fixed bottom right dark fab>
+          fixed bottom right dark fab small>
           <v-icon>mdi-plus</v-icon>
         </v-btn>
         <v-card>
@@ -440,6 +440,7 @@ export default {
         groupedEntries[entry.category].push(entry)
       })
 
+      var unbudgtedEntries = []
       Object.entries(groupedEntries).forEach(([cat, catEntries]) => {
         var totalAmount = 0.0
         var budgetedAmount = this.categoriesForMonth[cat] || 0.0
@@ -450,8 +451,17 @@ export default {
             totalAmount += entry.amount
           })
         }
-        newEntries.push({type: type, category: cat, amount: totalAmount, budgetedAmount: budgetedAmount})
+
+        var newEntry = {type: type, category: cat, amount: totalAmount, budgetedAmount: budgetedAmount}
+
+        if (cat.startsWith('UNBUDGETED')) {
+          unbudgtedEntries.push(newEntry)
+        } else {
+          newEntries.push(newEntry)
+        }
       })
+
+      newEntries.push(unbudgtedEntries)
 
       this.expenses = newEntries
     },
