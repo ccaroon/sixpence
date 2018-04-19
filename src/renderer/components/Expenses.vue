@@ -284,8 +284,16 @@ export default {
       var income = 0.0
       for (var i = 0; i < this.expenses.length; i++) {
         var entry = this.expenses[i]
-        if (entry.amount >= 0.0) {
-          income += entry.amount
+        var amount = 0.0
+        // Grouped (UNBUDGETED) entries
+        if (Array.isArray(entry)) {
+          entry.forEach(e => { amount += e.amount })
+        } else {
+          amount = entry.amount
+        }
+
+        if (amount >= 0.0) {
+          income += amount
         }
       }
       return (income)
@@ -295,8 +303,16 @@ export default {
       var expense = 0.0
       for (var i = 0; i < this.expenses.length; i++) {
         var entry = this.expenses[i]
-        if (entry.amount < 0.0) {
-          expense += entry.amount
+        var amount = 0.0
+        // Grouped (UNBUDGETED) entries
+        if (Array.isArray(entry)) {
+          entry.forEach(e => { amount += e.amount })
+        } else {
+          amount = entry.amount
+        }
+
+        if (amount < 0.0) {
+          expense += amount
         }
       }
       return (expense)
