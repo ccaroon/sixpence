@@ -15,7 +15,7 @@
               <v-icon>mdi-currency-usd-off</v-icon>
             </v-list-tile-avatar>
             <v-layout row align-center>
-              <v-flex xs1>Expense</v-flex>
+              <v-flex xs1>{{ entryType }}</v-flex>
               <v-flex xs2>{{ item.category }}</v-flex>
               <v-flex xs2 text-xs-center>{{ format.formatMoney(item.amount) }}</v-flex>
             </v-layout>
@@ -32,7 +32,7 @@
       <v-layout row align-center>
         <v-flex xs1>{{ entryType }}</v-flex>
         <v-flex xs2>{{ entry.category }}</v-flex>
-        <v-flex xs2 text-xs-center>{{ format.formatMoney(entry.amount) }} / {{ format.formatMoney(entry.budgetedAmount+0.0) }}</v-flex>
+        <v-flex xs2 text-xs-center>{{ format.formatMoney(entry.amount) }} / {{ format.formatMoney(Math.abs(entry.budgetedAmount+0.0)) }}</v-flex>
         <v-flex xs6><v-progress-linear v-model="progressPercent" height="20" :color="progressColor"></v-progress-linear></v-flex>
         <v-flex xs1 text-xs-center>{{ progressPercent }}%</v-flex>
       </v-layout>

@@ -203,12 +203,19 @@ export default {
   components: { ExpenseEntry, ExpenseCategory },
 
   mounted () {
+    var self = this
     var today = new Date()
 
-    this._loadCategoryData()
+    ExpenseDB.ensureRollover(today.getMonth() + 1)
+      .then(function () {
+        self._loadCategoryData()
 
-    // Setting this value triggers the changeMonth() method below
-    this.monthToView = today.getFullYear() + '-' + (today.getMonth() + 1)
+        // Setting this value triggers the changeMonth() method below
+        self.monthToView = today.getFullYear() + '-' + (today.getMonth() + 1)
+      })
+      .catch(function (err) {
+        self.displayAlert('mdi-alert-octagon', 'red', err)
+      })
   },
 
   computed: {
@@ -460,7 +467,7 @@ export default {
       Object.entries(groupedEntries).forEach(([cat, catEntries]) => {
         var totalAmount = 0.0
         var budgetedAmount = this.categoriesForMonth[cat] || 0.0
-        var type = budgetedAmount > 0.0 ? Constants.TYPE_INCOME : Constants.TYPE_EXPENSE
+        var type = budgetedAmount >= 0.0 ? Constants.TYPE_INCOME : Constants.TYPE_EXPENSE
 
         if (catEntries.length > 0) {
           catEntries.forEach(function (entry) {
