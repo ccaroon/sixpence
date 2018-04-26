@@ -57,14 +57,15 @@
       <v-spacer></v-spacer>
     </v-toolbar>
 
-    <v-alert
-      :color="alert.color"
+    <v-snackbar
+      top
       v-model="alert.visible"
-      :icon="alert.icon"
-      class="elevation-24"
-      @click="alert.visible=false">
-      {{ alert.message }}
-    </v-alert>
+      :color="alert.color"
+      :timeout="alert.timeout">
+      <v-icon>{{ alert.icon }}</v-icon>
+      &nbsp;{{ alert.message }}
+      <v-btn icon dark @click="alert.visible=false"><v-icon>mdi-close</v-icon></v-btn>
+    </v-snackbar>
 
     <v-list dense v-for="entry in budget"
       v-bind:key="entry._id">
@@ -247,7 +248,7 @@ export default {
 
         BudgetDB.search(query, null, function (err, docs) {
           if (err) {
-            self.displayAlert('mdi-alert-octagon', 'red', err)
+            self.displayAlert('mdi-alert-octagon', 'red', err, 60)
           } else {
             self.budget = docs
           }
@@ -294,7 +295,7 @@ export default {
       if (freq) {
         BudgetDB.search({frequency: freq}, null, function (err, docs) {
           if (err) {
-            self.displayAlert('mdi-alert-octagon', 'red', err)
+            self.displayAlert('mdi-alert-octagon', 'red', err, 60)
           } else {
             self.budget = docs
           }
@@ -309,7 +310,7 @@ export default {
 
       BudgetDB.loadData(function (err, docs) {
         if (err) {
-          self.displayAlert('mdi-alert-octagon', 'red', err)
+          self.displayAlert('mdi-alert-octagon', 'red', err, 60)
         } else {
           self.budget = docs
           self._loadCategoryData()
@@ -321,7 +322,7 @@ export default {
       var self = this
       BudgetDB.loadCategories(function (err, cats) {
         if (err) {
-          self.displayAlert('mdi-alert-octagon', 'red', err)
+          self.displayAlert('mdi-alert-octagon', 'red', err, 60)
         } else {
           // Set Category List from budget entries
           self.categories = cats
@@ -333,10 +334,11 @@ export default {
       this.entry = {}
     },
 
-    displayAlert: function (icon, color, message) {
+    displayAlert: function (icon, color, message, timeout = 6) {
       this.alert.icon = icon
       this.alert.color = color
       this.alert.message = message
+      this.alert.timeout = timeout * 1000
       this.alert.visible = true
     },
 
@@ -355,7 +357,7 @@ export default {
 
         BudgetDB.save(this.entry, function (err, numReplaced, upsert) {
           if (err) {
-            self.displayAlert('mdi-alert-octagon', 'red', err)
+            self.displayAlert('mdi-alert-octagon', 'red', err, 60)
           } else {
             self._loadBudgetData()
             self._clearEntry()
@@ -384,7 +386,8 @@ export default {
         visible: false,
         icon: 'mdi-alert',
         color: 'green',
-        message: ''
+        message: '',
+        timeout: 10000
       },
       entry: {
         type: null,

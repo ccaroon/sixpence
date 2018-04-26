@@ -72,14 +72,15 @@
       <v-spacer></v-spacer>
     </v-toolbar>
 
-    <v-alert
-      :color="alert.color"
+    <v-snackbar
+      top
       v-model="alert.visible"
-      :icon="alert.icon"
-      class="elevation-24"
-      @click="alert.visible=false">
-      {{ alert.message }}
-    </v-alert>
+      :color="alert.color"
+      :timeout="alert.timeout">
+      <v-icon>{{ alert.icon }}</v-icon>
+      &nbsp;{{ alert.message }}
+      <v-btn icon dark @click="alert.visible=false"><v-icon>mdi-close</v-icon></v-btn>
+    </v-snackbar>
 
     <v-list v-if="dataLoaded && viewStyle === constants.VIEW_STYLE_LIST" dense v-for="entry in expenses"
       v-bind:key="entry._id">
@@ -214,7 +215,7 @@ export default {
         self.monthToView = today.getFullYear() + '-' + (today.getMonth() + 1)
       })
       .catch(function (err) {
-        self.displayAlert('mdi-alert-octagon', 'red', err)
+        self.displayAlert('mdi-alert-octagon', 'red', err, 60)
       })
   },
 
@@ -341,7 +342,7 @@ export default {
         this.dataLoaded = false
         ExpenseDB.search(this.startDate, this.endDate, query, null, function (err, docs) {
           if (err) {
-            self.displayAlert('mdi-alert-octagon', 'red', err)
+            self.displayAlert('mdi-alert-octagon', 'red', err, 60)
           } else {
             if (self.viewStyle === Constants.VIEW_STYLE_GROUP) {
               self._groupExpensesData(docs, false)
@@ -385,7 +386,7 @@ export default {
 
         ExpenseDB.save(this.entry, function (err, numReplaced, upsert) {
           if (err) {
-            self.displayAlert('mdi-alert-octagon', 'red', err)
+            self.displayAlert('mdi-alert-octagon', 'red', err, 60)
           } else {
             self._loadExpensesData()
             self.entry = {}
@@ -401,10 +402,11 @@ export default {
       this._loadExpensesData()
     },
 
-    displayAlert: function (icon, color, message) {
+    displayAlert: function (icon, color, message, timeout = 6) {
       this.alert.icon = icon
       this.alert.color = color
       this.alert.message = message.toString()
+      this.alert.timeout = timeout * 1000
       this.alert.visible = true
     },
 
@@ -441,7 +443,7 @@ export default {
           self.dataLoaded = true
         })
         .catch(function (err) {
-          self.displayAlert('mdi-alert-octagon', 'red', err)
+          self.displayAlert('mdi-alert-octagon', 'red', err, 60)
         })
     },
 
@@ -493,7 +495,7 @@ export default {
       var self = this
       BudgetDB.loadCategories(function (err, cats) {
         if (err) {
-          self.displayAlert('mdi-alert-octagon', 'red', err)
+          self.displayAlert('mdi-alert-octagon', 'red', err, 60)
         } else {
           // Set Category List from budget entries
           self.categories = cats.concat(['UNBUDGETED'])
@@ -563,7 +565,8 @@ export default {
         visible: false,
         icon: 'mdi-alert',
         color: 'green',
-        message: ''
+        message: '',
+        timeout: 10000
       },
       entryDateStr: null,
       entry: {
