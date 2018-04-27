@@ -18,7 +18,7 @@ export default {
       query = { $where: function () { return this.date >= startDate && this.date <= endDate } }
     }
 
-    _DB.find(query).sort({type: 1, category: 1, date: 1, amount: -1}).exec(cb)
+    _DB.find(query).sort({date: 1, type: 1, category: 1, amount: -1}).exec(cb)
   },
 
   search: function (startDate, endDate, searchTerms, sort, cb) {
