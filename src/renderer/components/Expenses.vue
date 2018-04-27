@@ -383,6 +383,7 @@ export default {
 
         this.entry.amount = parseFloat(this.entry.amount)
         this.entry.type = this.entry.amount > 0 ? Constants.TYPE_INCOME : Constants.TYPE_EXPENSE
+        this.entry.icon = this.iconMap[this.entry.category] || 'mdi-currency-usd-off'
 
         ExpenseDB.save(this.entry, function (err, numReplaced, upsert) {
           if (err) {
@@ -427,8 +428,7 @@ export default {
       promise
         .then(function (docs) {
           if (self.viewStyle === Constants.VIEW_STYLE_GROUP) {
-            var loadCatData = self._loadCategoryDataByMonth(self.startDate.getMonth())
-            loadCatData
+            self._loadCategoryDataByMonth(self.startDate.getMonth())
               .then(function (cats) {
                 self.categoriesForMonth = cats
                 self._groupExpensesData(docs)
@@ -471,13 +471,15 @@ export default {
         var budgetedAmount = this.categoriesForMonth[cat] || 0.0
         var type = budgetedAmount >= 0.0 ? Constants.TYPE_INCOME : Constants.TYPE_EXPENSE
 
+        var icon = 'mdi-coin'
         if (catEntries.length > 0) {
+          icon = catEntries[0].icon
           catEntries.forEach(function (entry) {
             totalAmount += entry.amount
           })
         }
 
-        var newEntry = {type: type, category: cat, amount: totalAmount, budgetedAmount: budgetedAmount}
+        var newEntry = {type: type, icon: icon, category: cat, amount: totalAmount, budgetedAmount: budgetedAmount}
 
         if (cat.startsWith('UNBUDGETED')) {
           unbudgtedEntries.push(newEntry)
@@ -493,12 +495,16 @@ export default {
 
     _loadCategoryData: function () {
       var self = this
+      // Load Categories (includes icons)
       BudgetDB.loadCategories(function (err, cats) {
         if (err) {
           self.displayAlert('mdi-alert-octagon', 'red', err, 60)
         } else {
+          // Mapping from Category name to Icon
+          self.iconMap = cats
+
           // Set Category List from budget entries
-          self.categories = cats.concat(['UNBUDGETED'])
+          self.categories = Object.keys(cats).concat(['UNBUDGETED'])
         }
       })
     },
@@ -550,6 +556,7 @@ export default {
       constants: Constants,
       categoriesForMonth: null,
       categories: [],
+      iconMap: {},
       format: Format,
       viewStyle: Constants.VIEW_STYLE_GROUP,
       incomeExpenseView: Constants.IE_VIEW_TO_DATE,
@@ -572,6 +579,7 @@ export default {
       entry: {
         type: null,
         date: null,
+        icon: null,
         category: null,
         amount: null,
         notes: null

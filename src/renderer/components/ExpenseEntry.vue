@@ -3,7 +3,7 @@
 
   <v-list-tile :class="entryColor">
     <v-list-tile-avatar>
-      <v-icon>mdi-currency-usd-off</v-icon>
+      <v-icon>{{ entry.icon }}</v-icon>
     </v-list-tile-avatar>
     <v-layout row>
       <v-flex xs1>{{ entryType }}</v-flex>

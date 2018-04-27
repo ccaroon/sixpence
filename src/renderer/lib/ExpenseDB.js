@@ -68,6 +68,7 @@ export default {
         self.save({
           type: Constants.TYPE_INCOME,
           date: currMonthStart,
+          icon: 'mdi-transfer',
           category: CAT_ROLLOVER,
           amount: income + expense,
           notes: 'Balance Rolled Over from Previous Month'
