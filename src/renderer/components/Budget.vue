@@ -325,7 +325,7 @@ export default {
           self.displayAlert('mdi-alert-octagon', 'red', err, 60)
         } else {
           // Set Category List from budget entries
-          self.categories = cats
+          self.categories = Object.keys(cats)
         }
       })
     },

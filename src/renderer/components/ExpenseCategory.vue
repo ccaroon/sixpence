@@ -12,7 +12,7 @@
         <v-list>
           <v-list-tile class="grey lighten-1" v-for="(item,i) in entry" :key="i">
             <v-list-tile-avatar>
-              <v-icon>mdi-currency-usd-off</v-icon>
+              <v-icon>{{ item.icon }}</v-icon>
             </v-list-tile-avatar>
             <v-layout row align-center>
               <v-flex xs1>{{ entryType }}</v-flex>
@@ -27,7 +27,7 @@
   <template v-else>
     <v-list-tile :class="entryColor">
       <v-list-tile-avatar>
-        <v-icon>mdi-currency-usd-off</v-icon>
+        <v-icon>{{ entry.icon }}</v-icon>
       </v-list-tile-avatar>
       <v-layout row align-center>
         <v-flex xs1>{{ entryType }}</v-flex>

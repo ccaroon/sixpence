@@ -68,15 +68,20 @@ export default {
   },
 
   loadCategories: function (cb) {
-    _DB.find({}, {_id: 0, category: 1}).sort({category: 1}).exec(function (err, docs) {
+    var fields = {
+      _id: 0,
+      icon: 1,
+      category: 1
+    }
+
+    _DB.find({}, fields).sort({category: 1}).exec(function (err, docs) {
       if (err) {
         cb(err, null)
       } else {
-        var allCats = docs.map(function (doc) {
-          return (doc.category)
+        var uniqueCats = {}
+        docs.forEach(function (doc) {
+          uniqueCats[doc.category] = doc.icon
         })
-        var uniqueCats = Array.from(new Set(allCats))
-
         cb(null, uniqueCats)
       }
     })
