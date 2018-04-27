@@ -38,6 +38,7 @@ function createWindow () {
     width: 1280
   })
 
+  var mainMetaKey = process.platform === 'darwin' ? 'Cmd' : 'Ctrl'
   // -------------
   const template = [
     {
@@ -46,10 +47,6 @@ function createWindow () {
         {
           label: 'New',
           click () { console.log('New... (not yet implemented)') }
-        },
-        {
-          label: 'Open...',
-          click () { console.log('Open... (not yet implemented)') }
         }
       ]
     },
@@ -58,14 +55,17 @@ function createWindow () {
       submenu: [
         {
           label: 'Main',
+          accelerator: mainMetaKey + '+H',
           click: () => BrowserWindow.getFocusedWindow().webContents.send('menu-view-main')
         },
         {
           label: 'Budget',
+          accelerator: mainMetaKey + '+B',
           click: () => BrowserWindow.getFocusedWindow().webContents.send('menu-view-budget')
         },
         {
           label: 'Expenses',
+          accelerator: mainMetaKey + '+E',
           click: () => BrowserWindow.getFocusedWindow().webContents.send('menu-view-expenses')
         }
       ]
@@ -82,6 +82,7 @@ function createWindow () {
       submenu: [
         {
           label: 'About Sixpence',
+          accelerator: mainMetaKey + '+?',
           click: () => BrowserWindow.getFocusedWindow().webContents.send('menu-help-about')
         },
         {

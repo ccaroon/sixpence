@@ -61,10 +61,13 @@
           <v-btn @click="search()" icon color="orange lighten-2"><v-icon>mdi-magnify</v-icon></v-btn>
           &nbsp;
           <v-text-field
+            ref="searchField"
             v-model="searchText"
             hide-details
             color="black"
-            single-line>
+            single-line
+            @keyup.enter="search()"
+            @keyup.esc="clearSearch()">
           </v-text-field>
           <v-btn @click="clearSearch()" icon color="grey darken-2"><v-icon>mdi-close</v-icon></v-btn>
         </v-toolbar-items>
@@ -113,6 +116,7 @@
             <v-layout row>
               <v-flex xs3>
                 <v-menu
+                  tabindex="-1"
                   ref="dateMenu"
                   lazy
                   :close-on-content-click="false"
@@ -143,6 +147,7 @@
               </v-flex>
               <v-flex xs3>
                 <v-select
+                  ref="categorySelect"
                   :items="categories"
                   v-model="entry.category"
                   label="Category"
@@ -151,7 +156,6 @@
                   required
                   :rules="rules.category"
                   combobox
-                  tabindex="2"
                   hint="Choose a Category or Add a New One"
                   append-icon="mdi-menu-down">
                 </v-select>
@@ -161,7 +165,6 @@
                   name="amount"
                   label="Amount"
                   id="amount"
-                  tabindex="3"
                   required
                   hint="Positive for Income, Negative for Expense"
                   :rules="rules.amount"
@@ -173,12 +176,11 @@
                   name="notes"
                   label="Notes"
                   id="notes"
-                  tabindex="6"
                   v-model="entry.notes">
                 </v-text-field>
               </v-flex>
               <v-flex xs1>
-                <v-btn color="green accent-3" fab @click="saveEntry()" tabindex="7">
+                <v-btn color="green accent-3" fab @click="saveEntry()">
                   <v-icon>mdi-content-save</v-icon>
                 </v-btn>
               </v-flex>
@@ -198,6 +200,7 @@ import ExpenseCategory from './ExpenseCategory'
 import ExpenseDB from '../lib/ExpenseDB'
 import Format from '../lib/Format'
 import Constants from '../lib/Constants'
+import Mousetrap from 'Mousetrap'
 
 export default {
   name: 'Expenses',
@@ -206,6 +209,8 @@ export default {
   mounted () {
     var self = this
     var today = new Date()
+
+    this._bindShortcutKeys()
 
     ExpenseDB.ensureRollover(today.getMonth() + 1)
       .then(function () {
@@ -246,6 +251,23 @@ export default {
   },
 
   methods: {
+    _bindShortcutKeys: function () {
+      Mousetrap.bind(['ctrl+n', 'command+n'], () => {
+        this.newEntry()
+        return false
+      })
+
+      Mousetrap.bind(['ctrl+f', 'command+f'], () => {
+        this.$refs.searchField.focus()
+        return false
+      })
+
+      Mousetrap.bind('esc', () => {
+        this.showAddEditSheet = false
+        return false
+      })
+    },
+
     incomeExpenseData: function (type, iORe) {
       var value = null
 
@@ -360,6 +382,12 @@ export default {
         this.searchText = null
         this.refreshData()
       }
+      this.$refs.searchField.blur()
+    },
+
+    newEntry: function () {
+      this.$refs.categorySelect.$el.focus()
+      this.showAddEditSheet = true
     },
 
     editEntry: function (entry) {

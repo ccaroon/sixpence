@@ -46,10 +46,13 @@
           <v-btn @click="search()" icon color="orange lighten-2"><v-icon>mdi-magnify</v-icon></v-btn>
           &nbsp;
           <v-text-field
+            ref="searchField"
             v-model="searchText"
             hide-details
             color="black"
-            single-line>
+            single-line
+            @keyup.enter="search()"
+            @keyup.esc="clearSearch()">
           </v-text-field>
           <v-btn @click="clearSearch()" icon color="grey darken-2"><v-icon>mdi-close</v-icon></v-btn>
         </v-toolbar-items>
@@ -97,7 +100,6 @@
                   label="Icon"
                   single-line
                   dense
-                  tabindex="1"
                   hint="Choose an Icon"
                   append-icon="mdi-menu-down">
                   <template slot="selection" slot-scope="data">
@@ -118,7 +120,6 @@
                   required
                   :rules="rules.category"
                   combobox
-                  tabindex="2"
                   hint="Choose a Category or Add a New One"
                   append-icon="mdi-menu-down">
                 </v-select>
@@ -128,7 +129,6 @@
                   name="amount"
                   label="Amount"
                   id="amount"
-                  tabindex="3"
                   required
                   hint="Positive for Income, Negative for Expense"
                   :rules="rules.amount"
@@ -143,7 +143,6 @@
                   single-line
                   dense
                   required
-                  tabindex="4"
                   :rules="rules.frequency"
                   autocomplete
                   hint="How Frequently Does This Item Occur?"
@@ -158,7 +157,6 @@
                   single-line
                   dense
                   required
-                  tabindex="5"
                   :rules="rules.firstDue"
                   autocomplete
                   hint="In What Month Is This Item First Due?"
@@ -170,12 +168,11 @@
                   name="notes"
                   label="Notes"
                   id="notes"
-                  tabindex="6"
                   v-model="entry.notes">
                 </v-text-field>
               </v-flex>
               <v-flex xs1>
-                <v-btn color="green accent-3" fab @click="saveEntry()" tabindex="7">
+                <v-btn color="green accent-3" fab @click="saveEntry()">
                   <v-icon>mdi-content-save</v-icon>
                 </v-btn>
               </v-flex>
@@ -193,6 +190,7 @@ import BudgetEntry from './BudgetEntry'
 import BudgetDB from '../lib/BudgetDB'
 import Format from '../lib/Format'
 import Constants from '../lib/Constants'
+import Mousetrap from 'Mousetrap'
 
 // const {app} = require('electron').remote
 
@@ -201,6 +199,7 @@ export default {
   components: { BudgetEntry },
 
   mounted () {
+    this._bindShortcutKeys()
     this._loadBudgetData()
   },
 
@@ -229,6 +228,23 @@ export default {
   },
 
   methods: {
+    _bindShortcutKeys: function () {
+      Mousetrap.bind(['ctrl+n', 'command+n'], () => {
+        this.newEntry()
+        return false
+      })
+
+      Mousetrap.bind(['ctrl+f', 'command+f'], () => {
+        this.$refs.searchField.focus()
+        return false
+      })
+
+      Mousetrap.bind('esc', () => {
+        this.showAddEditSheet = false
+        return false
+      })
+    },
+
     refreshData: function () {
       this._loadBudgetData()
     },
@@ -262,6 +278,7 @@ export default {
         this.freqFilter = 5
         this.refreshData()
       }
+      this.$refs.searchField.blur()
     },
 
     filterByFreq: function () {
@@ -330,10 +347,6 @@ export default {
       })
     },
 
-    _clearEntry: function () {
-      this.entry = {}
-    },
-
     displayAlert: function (icon, color, message, timeout = 6) {
       this.alert.icon = icon
       this.alert.color = color
@@ -342,9 +355,18 @@ export default {
       this.alert.visible = true
     },
 
+    newEntry: function () {
+      this.$refs.iconSelect.$el.focus()
+      this.showAddEditSheet = true
+    },
+
     editEntry: function (entry) {
       this.entry = entry
       this.showAddEditSheet = true
+    },
+
+    _clearEntry: function () {
+      this.entry = {}
     },
 
     saveEntry: function () {
