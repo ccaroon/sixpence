@@ -11,7 +11,7 @@
           <v-flex xs2 class="title red--text" text-xs-left>{{ format.formatMoney(unbudgetedExpense) }}</v-flex>
         </v-layout>
         <v-list>
-          <v-list-tile class="grey lighten-1" v-for="(item,i) in entry" :key="i">
+          <v-list-tile :class="unbudgetedEntryColor(item)" v-for="(item,i) in entry" :key="i">
             <v-list-tile-avatar>
               <v-icon>{{ item.icon }}</v-icon>
             </v-list-tile-avatar>
@@ -120,6 +120,26 @@ export default {
   },
 
   methods: {
+
+    unbudgetedEntryColor: function (entry) {
+      var amount = Math.abs(entry.amount)
+
+      var color
+      if (entry.type === Constants.TYPE_INCOME) {
+        color = 'green accent-1'
+      } else {
+        if (amount <= 100) {
+          color = 'red lighten-5'
+        } else if (amount > 100 && amount <= 200) {
+          color = 'red lighten-3'
+        } else if (amount > 200) {
+          color = 'red lighten-1'
+        }
+      }
+
+      return (color)
+    },
+
     entryType: function (entry) {
       var type = entry.type === Constants.TYPE_INCOME ? 'Income' : 'Expense'
       return (type)
