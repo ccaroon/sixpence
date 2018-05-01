@@ -1,13 +1,14 @@
 <template>
 <div>
 
-  <!-- ASSUME it's the UNBUDGETED entries -->
+  <!-- ASSUME it's the Unbudgeted entries -->
   <template v-if="Array.isArray(entry)">
     <v-expansion-panel>
       <v-expansion-panel-content :class="entryColor" expand-icon="mdi-chevron-down">
         <v-layout row slot="header">
-          <v-flex xs4 class="title">Unbudgeted Expenses</v-flex>
-          <v-flex xs2 class="title" text-xs-left>{{ format.formatMoney(entryTotal) }}</v-flex>
+          <v-flex xs4 class="title">Unbudgeted</v-flex>
+          <v-flex xs2 class="title green--text" text-xs-left>{{ format.formatMoney(unbudgetedIncome) }}</v-flex>
+          <v-flex xs2 class="title red--text" text-xs-left>{{ format.formatMoney(unbudgetedExpense) }}</v-flex>
         </v-layout>
         <v-list>
           <v-list-tile class="grey lighten-1" v-for="(item,i) in entry" :key="i">
@@ -15,7 +16,7 @@
               <v-icon>{{ item.icon }}</v-icon>
             </v-list-tile-avatar>
             <v-layout row align-center>
-              <v-flex xs1>{{ entryType }}</v-flex>
+              <v-flex xs1>{{ entryType(item) }}</v-flex>
               <v-flex xs2>{{ item.category }}</v-flex>
               <v-flex xs2 text-xs-center>{{ format.formatMoney(item.amount) }}</v-flex>
             </v-layout>
@@ -30,7 +31,7 @@
         <v-icon>{{ entry.icon }}</v-icon>
       </v-list-tile-avatar>
       <v-layout row align-center>
-        <v-flex xs1>{{ entryType }}</v-flex>
+        <v-flex xs1>{{ entryType(entry) }}</v-flex>
         <v-flex xs2>{{ entry.category }}</v-flex>
         <v-flex xs2 text-xs-center>{{ format.formatMoney(entry.amount) }} / {{ format.formatMoney(Math.abs(entry.budgetedAmount+0.0)) }}</v-flex>
         <v-flex xs6><v-progress-linear v-model="progressPercent" height="20" :color="progressColor"></v-progress-linear></v-flex>
@@ -52,9 +53,24 @@ export default {
   props: ['entry'],
 
   computed: {
-    entryType: function () {
-      var type = this.entry.type === Constants.TYPE_INCOME ? 'Income' : 'Expense'
-      return (type)
+    unbudgetedIncome: function () {
+      var total = 0.0
+      this.entry.forEach(function (e) {
+        if (e.amount >= 0.0) {
+          total += e.amount
+        }
+      })
+      return (total)
+    },
+
+    unbudgetedExpense: function () {
+      var total = 0.0
+      this.entry.forEach(function (e) {
+        if (e.amount < 0.0) {
+          total += e.amount
+        }
+      })
+      return (total)
     },
 
     entryTotal: function () {
@@ -104,6 +120,10 @@ export default {
   },
 
   methods: {
+    entryType: function (entry) {
+      var type = entry.type === Constants.TYPE_INCOME ? 'Income' : 'Expense'
+      return (type)
+    }
   },
 
   data () {

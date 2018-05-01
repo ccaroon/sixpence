@@ -315,9 +315,13 @@ export default {
       for (var i = 0; i < this.expenses.length; i++) {
         var entry = this.expenses[i]
         var amount = 0.0
-        // Grouped (UNBUDGETED) entries
+        // Grouped Unbudgeted entries
         if (Array.isArray(entry)) {
-          entry.forEach(e => { amount += e.amount })
+          entry.forEach(e => {
+            if (e.amount >= 0.0) {
+              amount += e.amount
+            }
+          })
         } else {
           amount = entry.amount
         }
@@ -334,9 +338,13 @@ export default {
       for (var i = 0; i < this.expenses.length; i++) {
         var entry = this.expenses[i]
         var amount = 0.0
-        // Grouped (UNBUDGETED) entries
+        // Grouped Unbudgeted entries
         if (Array.isArray(entry)) {
-          entry.forEach(e => { amount += e.amount })
+          entry.forEach(e => {
+            if (e.amount < 0.0) {
+              amount += e.amount
+            }
+          })
         } else {
           amount = entry.amount
         }
@@ -494,6 +502,7 @@ export default {
       })
 
       var unbudgtedEntries = []
+      var budgetCategories = Object.keys(this.categoriesForMonth)
       Object.entries(groupedEntries).forEach(([cat, catEntries]) => {
         var totalAmount = 0.0
         var budgetedAmount = this.categoriesForMonth[cat] || 0.0
@@ -509,10 +518,13 @@ export default {
 
         var newEntry = {type: type, icon: icon, category: cat, amount: totalAmount, budgetedAmount: budgetedAmount}
 
-        if (cat.startsWith('UNBUDGETED')) {
-          unbudgtedEntries.push(newEntry)
-        } else {
+        if (budgetCategories.includes(newEntry.category)) {
           newEntries.push(newEntry)
+        } else {
+          // Since it's unbudgeted, we can't decide the type based on +/- so instead
+          // we'll use the type of the first entry in the list of entries
+          newEntry.type = catEntries[0].type
+          unbudgtedEntries.push(newEntry)
         }
       })
 
@@ -532,7 +544,7 @@ export default {
           self.iconMap = cats
 
           // Set Category List from budget entries
-          self.categories = Object.keys(cats).concat(['UNBUDGETED'])
+          self.categories = Object.keys(cats)
         }
       })
     },
