@@ -419,7 +419,7 @@ export default {
 
         this.entry.amount = parseFloat(this.entry.amount)
         this.entry.type = this.entry.amount > 0 ? Constants.TYPE_INCOME : Constants.TYPE_EXPENSE
-        this.entry.icon = this.iconMap[this.entry.category] || 'mdi-currency-usd-off'
+        this.entry.icon = this.findIcon(this.entry)
 
         ExpenseDB.save(this.entry, function (err, numReplaced, upsert) {
           if (err) {
@@ -437,6 +437,45 @@ export default {
 
     refreshData: function () {
       this._loadExpensesData()
+    },
+
+    findIcon: function (entry) {
+      var icon = this.iconMap[entry.category]
+
+      if (icon === undefined) {
+        var parts = entry.category.split(':')
+        parts.reverse()
+
+        var foundIcon = null
+        for (var i = 0; i < parts.length; i++) {
+          var catPart = parts[i]
+          var catPattern = new RegExp(catPart, 'i')
+
+          foundIcon = Constants.ICONS.find(function (iconData) {
+            if (iconData.text.match(catPattern)) {
+              return true
+            } else {
+              var foundInKw = false
+              for (var j = 0; j < iconData.keywords.length; j++) {
+                var keyword = iconData.keywords[j]
+                if (keyword.match(catPattern)) {
+                  foundInKw = true
+                  break
+                }
+              }
+              return foundInKw
+            }
+          })
+
+          if (foundIcon) {
+            break
+          }
+        }
+
+        icon = foundIcon ? foundIcon.value : 'mdi-currency-usd'
+      }
+
+      return (icon)
     },
 
     displayAlert: function (icon, color, message, timeout = 6) {
