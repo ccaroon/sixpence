@@ -18,8 +18,7 @@ const winURL = process.env.NODE_ENV === 'development'
   : `file://${__dirname}/index.html`
 
 function initApp () {
-  // Open and read settings; create if necessary
-  // TODO: ^^^^^^^^^
+  // TODO: Open and read settings; create if necessary
 
   // Create app documents directory
   var docPath = path.join(app.getPath('documents'), 'Sixpence')
@@ -33,23 +32,23 @@ function createWindow () {
    * Initial window options
    */
   mainWindow = new BrowserWindow({
+    width: 1280,
     height: 928,
-    useContentSize: true,
-    width: 1280
+    minWidth: 900,
+    minHeight: 600,
+    useContentSize: true
   })
 
   var mainMetaKey = process.platform === 'darwin' ? 'Cmd' : 'Ctrl'
   // -------------
+  var aboutSubMenu = {
+    label: 'About Sixpence',
+    accelerator: mainMetaKey + '+?',
+    click: () => BrowserWindow.getFocusedWindow().webContents.send('menu-help-about')
+  }
+
   const template = [
-    {
-      label: 'File',
-      submenu: [
-        {
-          label: 'New',
-          click () { console.log('New... (not yet implemented)') }
-        }
-      ]
-    },
+    // 0
     {
       label: 'View',
       submenu: [
@@ -70,21 +69,17 @@ function createWindow () {
         }
       ]
     },
+    // 1
     {
       role: 'window',
       submenu: [
-        {role: 'minimize'},
-        {role: 'close'}
+        {role: 'minimize'}
       ]
     },
+    // 2
     {
       role: 'help',
       submenu: [
-        {
-          label: 'About Sixpence',
-          accelerator: mainMetaKey + '+?',
-          click: () => BrowserWindow.getFocusedWindow().webContents.send('menu-help-about')
-        },
         {
           label: 'View on GitHub',
           click () { require('electron').shell.openExternal('https://github.com/ccaroon/sixpence') }
@@ -98,15 +93,24 @@ function createWindow () {
     template.unshift({
       label: 'Apple Menu',
       submenu: [
+        aboutSubMenu,
         // Other Apple Menu Worthy Item Go HERE
         { type: 'separator' },
         { role: 'quit' }
       ]
     })
   } else {
-    //  Add Quit to File menu for all but MacOS
-    template[0].submenu.push({ type: 'separator' })
-    template[0].submenu.push({ role: 'quit' })
+    // Add About to help menu
+    template[2].submenu.unshift(aboutSubMenu)
+
+    // Add File Menu
+    template.unshift({
+      label: 'File',
+      submenu: [
+        { type: 'separator' },
+        { role: 'quit' }
+      ]
+    })
   }
 
   const menu = Menu.buildFromTemplate(template)
