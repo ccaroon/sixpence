@@ -251,38 +251,7 @@ export default {
 
     search: function () {
       var self = this
-
-      if (this.searchText) {
-        var parts = this.searchText.split(/:/, 2)
-
-        var query = {}
-        if (parts.length === 2) {
-          query[parts[0].trim()] = new RegExp(parts[1].trim(), 'i')
-        } else {
-          query['category'] = new RegExp(parts[0].trim(), 'i')
-        }
-
-        BudgetDB.search(query, null, function (err, docs) {
-          if (err) {
-            self.displayAlert('mdi-alert-octagon', 'red', err, 60)
-          } else {
-            self.budget = docs
-          }
-        })
-      }
-    },
-
-    clearSearch: function () {
-      if (this.searchText) {
-        this.searchText = null
-        this.freqFilter = 5
-        this.refreshData()
-      }
-      this.$refs.searchField.blur()
-    },
-
-    filterByFreq: function () {
-      var self = this
+      var terms = []
 
       var freq = null
       switch (this.freqFilter) {
@@ -310,7 +279,34 @@ export default {
       }
 
       if (freq) {
-        BudgetDB.search({frequency: freq}, null, function (err, docs) {
+        terms.push({frequency: freq})
+      }
+
+      if (this.searchText) {
+        var parts = this.searchText.split(/:/, 2)
+
+        if (parts.length === 2) {
+          var fieldQuery = {}
+          fieldQuery[parts[0].trim()] = new RegExp(parts[1].trim(), 'i')
+
+          terms.push(fieldQuery)
+        } else {
+          terms.push({category: new RegExp(parts[0].trim(), 'i')})
+        }
+      }
+
+      if (terms.length !== 0) {
+        var query = {}
+        if (terms.length > 1) {
+          query = {
+            $and:
+            terms
+          }
+        } else {
+          query = terms[0]
+        }
+
+        BudgetDB.search(query, null, function (err, docs) {
           if (err) {
             self.displayAlert('mdi-alert-octagon', 'red', err, 60)
           } else {
@@ -320,6 +316,19 @@ export default {
       } else {
         this.refreshData()
       }
+    },
+
+    clearSearch: function () {
+      if (this.searchText) {
+        this.searchText = null
+        this.freqFilter = 5
+        this.refreshData()
+      }
+      this.$refs.searchField.blur()
+    },
+
+    filterByFreq: function () {
+      this.search()
     },
 
     _loadBudgetData: function () {
