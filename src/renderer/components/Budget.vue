@@ -246,6 +246,12 @@ export default {
     },
 
     refreshData: function () {
+      // search() will display active search results if any
+      // otherwise it will display all entries
+      this.search()
+    },
+
+    loadAllData: function () {
       this._loadBudgetData()
     },
 
@@ -314,7 +320,7 @@ export default {
           }
         })
       } else {
-        this.refreshData()
+        this.loadAllData()
       }
     },
 
@@ -322,7 +328,7 @@ export default {
       if (this.searchText) {
         this.searchText = null
         this.freqFilter = 5
-        this.refreshData()
+        this.loadAllData()
       }
       this.$refs.searchField.blur()
     },
@@ -390,10 +396,10 @@ export default {
           if (err) {
             self.displayAlert('mdi-alert-octagon', 'red', err, 60)
           } else {
-            self._loadBudgetData()
             self._clearEntry()
             self.$refs.iconSelect.$el.focus()
 
+            self.refreshData()
             self.displayAlert('mdi-content-save', 'green', 'Entry Successfully Saved')
           }
         })

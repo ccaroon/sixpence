@@ -382,13 +382,15 @@ export default {
             self.dataLoaded = true
           }
         })
+      } else {
+        this.loadAllData()
       }
     },
 
     clearSearch: function () {
       if (this.searchText) {
         this.searchText = null
-        this.refreshData()
+        this.loadAllData()
       }
       this.$refs.searchField.blur()
     },
@@ -425,10 +427,10 @@ export default {
           if (err) {
             self.displayAlert('mdi-alert-octagon', 'red', err, 60)
           } else {
-            self._loadExpensesData()
             self.entry = {}
             self.entryDateStr = null
 
+            self.refreshData()
             self.displayAlert('mdi-content-save', 'green', 'Entry Successfully Saved')
           }
         })
@@ -436,6 +438,10 @@ export default {
     },
 
     refreshData: function () {
+      this.search()
+    },
+
+    loadAllData: function () {
       this._loadExpensesData()
     },
 
@@ -617,9 +623,6 @@ export default {
       this.endDate = new Date(parts[0], parts[1], 0)
       this.currentMonthName = Format.monthNumberToName(this.startDate.getMonth())
 
-      // console.log('S: ' + this.startDate)
-      // console.log('E: ' + this.endDate)
-      // console.log('N: ' + this.currentMonthName)
       this.refreshData()
     }
 
