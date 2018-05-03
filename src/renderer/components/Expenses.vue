@@ -98,7 +98,8 @@
     <v-list v-if="dataLoaded && viewStyle === constants.VIEW_STYLE_GROUP" dense v-for="entry in expenses"
       v-bind:key="entry._id">
       <ExpenseCategory
-        v-bind:entry="entry">
+        v-bind:entry="entry"
+        v-on:viewEntriesInGroup="viewEntriesInGroup">
       </ExpenseCategory>
     </v-list>
 
@@ -360,7 +361,7 @@ export default {
       var self = this
 
       if (this.searchText) {
-        var parts = this.searchText.split(/:/, 2)
+        var parts = this.searchText.split(/\?/, 2)
 
         var query = {}
         if (parts.length === 2) {
@@ -624,6 +625,14 @@ export default {
       this.currentMonthName = Format.monthNumberToName(this.startDate.getMonth())
 
       this.refreshData()
+    },
+
+    // This is called from ExpenseCategory when the user clicks on the grouped
+    // expense category name
+    viewEntriesInGroup: function (category) {
+      this.searchText = category
+      this.viewStyle = Constants.VIEW_STYLE_LIST
+      // this.search()
     }
 
   },

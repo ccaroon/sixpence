@@ -17,7 +17,9 @@
             </v-list-tile-avatar>
             <v-layout row align-center>
               <v-flex xs1>{{ entryType(item) }}</v-flex>
-              <v-flex xs2>{{ item.category }}</v-flex>
+              <v-flex xs2>
+                <v-btn flat small class="lowerCaseButton"  @click="viewEntries(item.category)">{{ item.category }}</v-btn>
+              </v-flex>
               <v-flex xs2 text-xs-center>{{ format.formatMoney(item.amount) }}</v-flex>
             </v-layout>
           </v-list-tile>
@@ -32,7 +34,9 @@
       </v-list-tile-avatar>
       <v-layout row align-center>
         <v-flex xs1>{{ entryType(entry) }}</v-flex>
-        <v-flex xs2>{{ entry.category }}</v-flex>
+        <v-flex xs2>
+          <v-btn flat small class="lowerCaseButton" @click="viewEntries(entry.category)">{{ entry.category }}</v-btn>
+        </v-flex>
         <v-flex xs2 text-xs-center>{{ format.formatMoney(entry.amount) }} / {{ format.formatMoney(Math.abs(entry.budgetedAmount+0.0)) }}</v-flex>
         <v-flex xs6><v-progress-linear v-model="progressPercent" height="20" :color="progressColor"></v-progress-linear></v-flex>
         <v-flex xs1 text-xs-center>{{ progressPercent }}%</v-flex>
@@ -143,6 +147,10 @@ export default {
     entryType: function (entry) {
       var type = entry.type === Constants.TYPE_INCOME ? 'Income' : 'Expense'
       return (type)
+    },
+
+    viewEntries: function (category) {
+      this.$emit('viewEntriesInGroup', category)
     }
   },
 
@@ -153,3 +161,10 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.lowerCaseButton{
+  text-transform: none !important;
+  text-align: left !important;
+}
+</style>

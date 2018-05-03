@@ -289,7 +289,7 @@ export default {
       }
 
       if (this.searchText) {
-        var parts = this.searchText.split(/:/, 2)
+        var parts = this.searchText.split(/\?/, 2)
 
         if (parts.length === 2) {
           var fieldQuery = {}
