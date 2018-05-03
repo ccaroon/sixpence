@@ -100,6 +100,7 @@
                   label="Icon"
                   single-line
                   dense
+                  autocomplete
                   hint="Choose an Icon"
                   append-icon="mdi-menu-down">
                   <template slot="selection" slot-scope="data">
