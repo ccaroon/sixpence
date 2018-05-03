@@ -61,7 +61,7 @@
     </v-toolbar>
 
     <v-snackbar
-      top
+      bottom
       v-model="alert.visible"
       :color="alert.color"
       :timeout="alert.timeout">
