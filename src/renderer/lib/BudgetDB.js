@@ -3,8 +3,9 @@ import Datastore from 'nedb'
 const {app} = require('electron').remote
 
 // -----------------------------------------------------------------------------
+const dbFileName = (process.env.NODE_ENV === 'development') ? 'budget-dev.sxp' : 'budget.sxp'
 var _DB = new Datastore({
-  filename: app.getPath('documents') + '/Sixpence/budget.sxp',
+  filename: app.getPath('documents') + '/Sixpence/' + dbFileName,
   autoload: true,
   timestampData: true
 })

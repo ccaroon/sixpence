@@ -4,8 +4,9 @@ import Constants from './Constants'
 const {app} = require('electron').remote
 const CAT_ROLLOVER = 'Sixpence:Rollover'
 
+const dbFileName = (process.env.NODE_ENV === 'development') ? 'expenses-dev.sxp' : 'expenses.sxp'
 var _DB = new Datastore({
-  filename: app.getPath('documents') + '/Sixpence/expenses.sxp',
+  filename: app.getPath('documents') + '/Sixpence/' + dbFileName,
   autoload: true,
   timestampData: true
 })

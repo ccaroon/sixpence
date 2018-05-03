@@ -15,7 +15,7 @@ const constants = {
     {text: 'Amazon', value: 'mdi-amazon', keywords: []},
     {text: 'Audiobook', value: 'mdi-audiobook', keywords: []},
     {text: 'Bank', value: 'mdi-bank', keywords: []},
-    {text: 'Book', value: 'mdi-book-open-variant', keywords: []},
+    {text: 'Book', value: 'mdi-book-open-variant', keywords: ['books']},
     {text: 'Bug', value: 'mdi-bug', keywords: []},
     {text: 'Car', value: 'mdi-car', keywords: ['auto']},
     {text: 'Cart', value: 'mdi-cart', keywords: []},
