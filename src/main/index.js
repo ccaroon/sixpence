@@ -101,13 +101,15 @@ function createWindow () {
     })
   } else {
     // Add About to help menu
-    template[2].submenu.unshift(aboutSubMenu)
+    template[2].submenu.concat([
+      { type: 'separator' },
+      aboutSubMenu
+    ])
 
     // Add File Menu
     template.unshift({
       label: 'File',
       submenu: [
-        { type: 'separator' },
         { role: 'quit' }
       ]
     })
