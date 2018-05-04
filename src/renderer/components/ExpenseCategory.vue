@@ -1,7 +1,7 @@
 <template>
 <div>
 
-  <!-- ASSUME it's the Unbudgeted entries -->
+  <!-- Unbudgeted entries -->
   <template v-if="Array.isArray(entry)">
     <v-expansion-panel>
       <v-expansion-panel-content :class="entryColor" expand-icon="mdi-chevron-down">
@@ -10,16 +10,14 @@
           <v-flex xs2 class="title green--text" text-xs-left>{{ format.formatMoney(unbudgetedIncome) }}</v-flex>
           <v-flex xs2 class="title red--text" text-xs-left>{{ format.formatMoney(unbudgetedExpense) }}</v-flex>
         </v-layout>
-        <v-list>
-          <v-list-tile :class="unbudgetedEntryColor(item)" v-for="(item,i) in entry" :key="i">
+        <v-list dense>
+          <v-list-tile class="ma-1" @click="viewEntries(item.category)" :class="unbudgetedEntryColor(item)" v-for="(item,i) in entry" :key="i">
             <v-list-tile-avatar>
               <v-icon>{{ item.icon }}</v-icon>
             </v-list-tile-avatar>
             <v-layout row align-center>
               <v-flex xs1>{{ entryType(item) }}</v-flex>
-              <v-flex xs2>
-                <v-btn flat small class="lowerCaseButton"  @click="viewEntries(item.category)">{{ item.category }}</v-btn>
-              </v-flex>
+              <v-flex xs2>{{ item.category }}</v-flex>
               <v-flex xs2 text-xs-center>{{ format.formatMoney(item.amount) }}</v-flex>
             </v-layout>
           </v-list-tile>
@@ -28,15 +26,13 @@
     </v-expansion-panel>
   </template>
   <template v-else>
-    <v-list-tile :class="entryColor">
+    <v-list-tile :class="entryColor" @click="viewEntries(entry.category)">
       <v-list-tile-avatar>
         <v-icon>{{ entry.icon }}</v-icon>
       </v-list-tile-avatar>
       <v-layout row align-center>
         <v-flex xs1>{{ entryType(entry) }}</v-flex>
-        <v-flex xs2>
-          <v-btn flat small class="lowerCaseButton" @click="viewEntries(entry.category)">{{ entry.category }}</v-btn>
-        </v-flex>
+        <v-flex xs2>{{ entry.category }}</v-flex>
         <v-flex xs2 text-xs-center>{{ format.formatMoney(entry.amount) }} / {{ format.formatMoney(Math.abs(entry.budgetedAmount+0.0)) }}</v-flex>
         <v-flex xs6><v-progress-linear v-model="progressPercent" height="20" :color="progressColor"></v-progress-linear></v-flex>
         <v-flex xs1 text-xs-center>{{ progressPercent }}%</v-flex>
