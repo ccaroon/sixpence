@@ -101,7 +101,7 @@ function createWindow () {
     })
   } else {
     // Add About to help menu
-    template[2].submenu.concat([
+    template[2].submenu = template[2].submenu.concat([
       { type: 'separator' },
       aboutSubMenu
     ])
