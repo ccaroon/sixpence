@@ -215,10 +215,11 @@ export default {
 
     ExpenseDB.ensureRollover(today.getMonth() + 1)
       .then(function () {
-        self._loadCategoryData()
-
         // Setting this value triggers the changeMonth() method below
         self.monthToView = today.getFullYear() + '-' + (today.getMonth() + 1)
+      })
+      .then(function () {
+        self._loadCategoryData()
       })
       .catch(function (err) {
         self.displayAlert('mdi-alert-octagon', 'red', err, 60)
@@ -581,18 +582,50 @@ export default {
 
     _loadCategoryData: function () {
       var self = this
-      // Load Categories (includes icons)
-      BudgetDB.loadCategories(function (err, cats) {
-        if (err) {
-          self.displayAlert('mdi-alert-octagon', 'red', err, 60)
-        } else {
-          // Mapping from Category name to Icon
-          self.iconMap = cats
 
-          // Set Category List from budget entries
-          self.categories = Object.keys(cats)
-        }
+      // Load Categories (includes icons)
+      var loadBudgetCats = new Promise(function (resolve, reject) {
+        BudgetDB.loadCategories(function (err, cats) {
+          if (err) {
+            reject(err)
+          } else {
+            // Mapping from Category name to Icon
+            self.iconMap = cats
+
+            // Set Category List from budget entries
+            self.categories = Object.keys(cats)
+
+            // Don't care about the resolve value since were setting values on 'self'
+            resolve(true)
+          }
+        })
       })
+
+      // Load Categories used for the current month
+      // The point being to get a list of the categories used for Unbudgeted
+      // entries and make them available for re-use.
+      var loadExpCats = new Promise(function (resolve, reject) {
+        ExpenseDB.loadCategories(self.startDate, self.endDate, function (err, cats) {
+          if (err) {
+            reject(err)
+          } else {
+            var catNames = cats.map(obj => obj.category)
+            var allCats = self.categories.concat(catNames).sort()
+
+            // Filter out dups
+            self.categories = [...new Set(allCats)]
+
+            // Don't care about the resolve value since were setting values on 'self'
+            resolve(true)
+          }
+        })
+      })
+
+      Promise.all([loadBudgetCats, loadExpCats])
+        // .then(function (values) {})
+        .catch(function (err) {
+          self.displayAlert('mdi-alert-octagon', 'red', err, 60)
+        })
     },
 
     _loadCategoryDataByMonth: function (month) {
