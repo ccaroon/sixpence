@@ -621,7 +621,7 @@ export default {
       var parts = this.monthToView.split('-', 2).map(p => Number.parseInt(p))
 
       this.startDate = new Date(parts[0], parts[1] - 1, 1)
-      this.endDate = new Date(parts[0], parts[1], 0)
+      this.endDate = new Date(parts[0], parts[1], 0, 23, 59, 59)
       this.currentMonthName = Format.monthNumberToName(this.startDate.getMonth())
 
       this.refreshData()
