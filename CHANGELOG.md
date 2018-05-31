@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v1.0.3 (May 31, 2018)
+* Fixed *another* date related issue. The `monthNumberToName` function was returning
+  the incorrect name b/c it was using the current day-of-the-month, but changing
+  the month number. This was causing it to rollover to the next month when the current
+  month had more days in it than the next month.
+
 ## v1.0.2 (May 31, 2018)
 * Fixed a bug that was causing expense entries to be excluded when loading data
   b/c the end date for loading data (last day of the month) was using
