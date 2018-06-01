@@ -421,9 +421,29 @@ export default {
           }
         }
 
-        this.entry.amount = parseFloat(this.entry.amount)
-        this.entry.type = this.entry.amount > 0 ? Constants.TYPE_INCOME : Constants.TYPE_EXPENSE
         this.entry.icon = this.findIcon(this.entry)
+        this.entry.amount = parseFloat(this.entry.amount)
+
+        // IF entry.category IS a budgeted category
+        //   use the budgeted category's type for entry.type
+        // ELSE
+        //   decide type based on > 0.0
+        BudgetDB.categoryType(this.entry.category)
+          .then(function (type) {
+            if (type === null) {
+              // category not found
+              self.entry.type = self.entry.amount > 0.0 ? Constants.TYPE_INCOME : Constants.TYPE_EXPENSE
+            } else {
+              self.entry.type = type
+              self.entry.amount = Math.abs(self.entry.amount)
+              if (type === Constants.TYPE_EXPENSE) {
+                self.entry.amount *= -1
+              }
+            }
+          })
+          .catch(function (err) {
+            self.displayAlert('mdi-alert-octagon', 'red', err, 60)
+          })
 
         ExpenseDB.save(this.entry, function (err, numReplaced, upsert) {
           if (err) {

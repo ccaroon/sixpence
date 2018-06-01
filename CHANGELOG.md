@@ -1,7 +1,8 @@
 # CHANGELOG
 
-## v1.1.0 (?????)
+## v1.1.0 (June 01, 2018)
 * Expenses: Include "unbudgeted" categories in Category drop-down.
+* Expenses: Shouldn't need to use +/- sign to indicate Income or Expense
 
 ## v1.0.3 (May 31, 2018)
 * Fixed *another* date related issue. The `monthNumberToName` function was returning

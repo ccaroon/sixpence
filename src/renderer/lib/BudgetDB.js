@@ -96,6 +96,24 @@ export default {
     _DB.find(searchTerms).sort(sort).exec(cb)
   },
 
+  categoryType: function (catName) {
+    return (
+      new Promise(function (resolve, reject) {
+        _DB.find({category: catName}).exec(function (err, docs) {
+          if (err) {
+            reject(err)
+          } else {
+            if (docs.length > 0) {
+              resolve(docs[0].type)
+            } else {
+              resolve(null)
+            }
+          }
+        })
+      })
+    )
+  },
+
   delete: function (id, cb) {
     _DB.remove({ _id: id }, {}, cb)
   },
