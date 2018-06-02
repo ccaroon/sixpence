@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## v1.0.4 (June 2, 2018)
+* Fixed *yet another* date related issue: The start-of-month balance rollover code
+  was using the start of the day on the previous month end date calculations and was
+  therefore missing some transactions in computing the balance to rollover.
+
 ## v1.0.3 (May 31, 2018)
 * Fixed *another* date related issue. The `monthNumberToName` function was returning
   the incorrect name b/c it was using the current day-of-the-month, but changing
