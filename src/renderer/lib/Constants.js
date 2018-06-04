@@ -8,6 +8,10 @@ const constants = {
   IE_VIEW_BUDGETED: null,
   IE_VIEW_TO_DATE: 0,
 
+  FORMATS: {
+    entryDate: 'YYYY-MM-DD'
+  },
+
   ICONS: [
     {text: 'Dollar', value: 'mdi-currency-usd', keywords: ['money', 'cost']},
     {text: 'Android Phone', value: 'mdi-cellphone-android', keywords: ['android']},
