@@ -1,6 +1,17 @@
 <template>
 <div>
+
     <v-toolbar color="grey darken-2" dark dense app fixed>
+      <v-menu bottom offset-y>
+        <v-btn slot="activator" icon>
+          <v-icon>mdi-menu</v-icon>
+        </v-btn>
+        <v-list dense>
+          <v-list-tile @click="viewOverbudgetEntries()">
+            <v-list-tile-title>{{ menu.viewOverbudgetEntries.labels[menu.viewOverbudgetEntries.labelIndex] }}</v-list-tile-title>
+          </v-list-tile>
+        </v-list>
+      </v-menu>
       <v-toolbar-title>
         Expenses - {{ currentMonthName }}
       </v-toolbar-title>
@@ -551,6 +562,7 @@ export default {
     },
 
     _groupExpensesData: function (entries, seed = true) {
+      var self = this
       var groupedEntries = {}
       var newEntries = []
 
@@ -586,7 +598,13 @@ export default {
         var newEntry = {type: type, icon: icon, category: cat, amount: totalAmount, budgetedAmount: budgetedAmount}
 
         if (budgetCategories.includes(newEntry.category)) {
-          newEntries.push(newEntry)
+          if (self.showOverbudget) {
+            if (Math.abs(newEntry.amount) > Math.abs(newEntry.budgetedAmount)) {
+              newEntries.push(newEntry)
+            }
+          } else {
+            newEntries.push(newEntry)
+          }
         } else {
           // Since it's unbudgeted, we can't decide the type based on +/- so instead
           // we'll use the type of the first entry in the list of entries
@@ -686,6 +704,22 @@ export default {
       this.searchText = category
       this.viewStyle = Constants.VIEW_STYLE_LIST
       // this.search()
+    },
+
+    viewOverbudgetEntries: function () {
+      this.showOverbudget = !this.showOverbudget
+
+      if (this.showOverbudget) {
+        this.menu.viewOverbudgetEntries.labelIndex = 1
+      } else {
+        this.menu.viewOverbudgetEntries.labelIndex = 0
+      }
+
+      if (this.viewStyle !== Constants.VIEW_STYLE_GROUP) {
+        this.viewStyle = Constants.VIEW_STYLE_GROUP
+      } else {
+        this.refreshData()
+      }
     }
 
   },
@@ -712,6 +746,12 @@ export default {
       startDate: null,
       endDate: null,
       showMonthDialog: false,
+      menu: {
+        viewOverbudgetEntries: {
+          labels: ['View Overbudget Categories', 'View All Categories'],
+          labelIndex: 0
+        }
+      },
       alert: {
         visible: false,
         icon: 'mdi-alert',
@@ -730,6 +770,7 @@ export default {
       },
       showDateMenu: false,
       showAddEditSheet: false,
+      showOverbudget: false,
       rules: {
         date: [
           date => !!date || 'Date is required'
