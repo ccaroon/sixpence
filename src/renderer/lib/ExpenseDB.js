@@ -54,7 +54,7 @@ export default {
 
     var currMonthStart = new Date(now.getFullYear(), monthNumber - 1, 1)
     var prevMonthStart = new Date(now.getFullYear(), monthNumber - 2, 1)
-    var prevMonthEnd = new Date(now.getFullYear(), monthNumber - 1, 0)
+    var prevMonthEnd = new Date(now.getFullYear(), monthNumber - 1, 0, 23, 59, 59)
 
     this.loadData(prevMonthStart, prevMonthEnd, function (err, docs) {
       if (err) {

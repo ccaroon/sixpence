@@ -1,10 +1,15 @@
 # CHANGELOG
 
-## v1.1.0 (June ??, 2018)
+## v1.1.0 (June 4, 2018)
 * Expenses: Include "unbudgeted" categories in Category drop-down.
 * Expenses: Shouldn't need to use +/- sign to indicate Income or Expense
 * Expenses: View only over-budget items
 * Expenses: Make it easier to change the date
+
+## v1.0.4 (June 2, 2018)
+* Fixed *yet another* date related issue: The start-of-month balance rollover code
+  was using the start of the day on the previous month end date calculations and was
+  therefore missing some transactions in computing the balance to rollover.
 
 ## v1.0.3 (May 31, 2018)
 * Fixed *another* date related issue. The `monthNumberToName` function was returning
