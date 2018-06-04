@@ -1,3 +1,5 @@
+import Moment from 'moment'
+
 export default {
   formatFrequency: function (freq) {
     var freqStr = null
@@ -30,8 +32,8 @@ export default {
     return (amount.toLocaleString('en-US', {style: 'currency', currency: 'USD'}))
   },
 
-  formatDate: function (date) {
-    return (date.toLocaleDateString('en-US', {month: 'short', day: '2-digit', year: 'numeric'}))
+  formatDate: function (date, format = 'MMM DD, YYYY') {
+    return (Moment(date).format(format))
   },
 
   monthNumberToName: function (monthNumber) {

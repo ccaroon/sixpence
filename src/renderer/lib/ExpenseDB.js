@@ -22,6 +22,12 @@ export default {
     _DB.find(query).sort({date: 1, type: 1, category: 1, amount: -1}).exec(cb)
   },
 
+  loadCategories: function (startDate, endDate, cb) {
+    var query = { $where: function () { return this.date >= startDate && this.date <= endDate } }
+
+    _DB.find(query, {_id: 0, category: 1}).exec(cb)
+  },
+
   search: function (startDate, endDate, searchTerms, sort, cb) {
     var query = searchTerms
     if (startDate && endDate) {

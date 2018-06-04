@@ -1,6 +1,17 @@
 <template>
 <div>
+
     <v-toolbar color="grey darken-2" dark dense app fixed>
+      <v-menu bottom offset-y>
+        <v-btn slot="activator" icon>
+          <v-icon>mdi-menu</v-icon>
+        </v-btn>
+        <v-list dense>
+          <v-list-tile @click="viewOverbudgetEntries()">
+            <v-list-tile-title>{{ menu.viewOverbudgetEntries.labels[menu.viewOverbudgetEntries.labelIndex] }}</v-list-tile-title>
+          </v-list-tile>
+        </v-list>
+      </v-menu>
       <v-toolbar-title>
         Expenses - {{ currentMonthName }}
       </v-toolbar-title>
@@ -115,36 +126,14 @@
         <v-card>
           <v-form ref="expenseForm">
             <v-layout row>
-              <v-flex xs3>
-                <v-menu
-                  tabindex="-1"
-                  ref="dateMenu"
-                  lazy
-                  :close-on-content-click="false"
-                  v-model="showDateMenu"
-                  transition="scale-transition"
-                  offset-y
-                  full-width
-                  :nudge-right="40"
-                  min-width="290px"
-                  :return-value.sync="entryDateStr">
-                  <v-text-field
-                    slot="activator"
-                    label="Date"
-                    v-model="entryDateStr"
-                    prepend-icon="mdi-calendar-range"
-                    readonly
-                    required
-                  ></v-text-field>
-                  <v-date-picker v-model="entryDateStr"
-                    next-icon="mdi-chevron-right"
-                    prev-icon="mdi-chevron-left"
-                    color="green accent-3">
-                    <v-spacer></v-spacer>
-                    <v-btn flat color="error" @click="showDateMenu = false">Cancel</v-btn>
-                    <v-btn color="success" @click="$refs.dateMenu.save(entryDateStr)">OK</v-btn>
-                  </v-date-picker>
-                </v-menu>
+              <v-flex xs2>
+                <v-text-field
+                  label="Date"
+                  v-model="entryDateStr"
+                  prepend-icon="mdi-calendar-range"
+                  required
+                  :rules="rules.date">
+                </v-text-field>
               </v-flex>
               <v-flex xs3>
                 <v-select
@@ -172,7 +161,7 @@
                   v-model="entry.amount">
                 </v-text-field>
               </v-flex>
-              <v-flex xs4>
+              <v-flex xs5>
                 <v-text-field
                   name="notes"
                   label="Notes"
@@ -202,6 +191,7 @@ import ExpenseDB from '../lib/ExpenseDB'
 import Format from '../lib/Format'
 import Constants from '../lib/Constants'
 import Mousetrap from 'Mousetrap'
+import Moment from 'moment'
 
 export default {
   name: 'Expenses',
@@ -215,10 +205,11 @@ export default {
 
     ExpenseDB.ensureRollover(today.getMonth() + 1)
       .then(function () {
-        self._loadCategoryData()
-
         // Setting this value triggers the changeMonth() method below
         self.monthToView = today.getFullYear() + '-' + (today.getMonth() + 1)
+      })
+      .then(function () {
+        self._loadCategoryData()
       })
       .catch(function (err) {
         self.displayAlert('mdi-alert-octagon', 'red', err, 60)
@@ -397,6 +388,7 @@ export default {
     },
 
     newEntry: function () {
+      this.entryDateStr = Format.formatDate(new Date(), Constants.FORMATS.entryDate)
       this.$refs.categorySelect.$el.focus()
       this.showAddEditSheet = true
     },
@@ -420,9 +412,29 @@ export default {
           }
         }
 
-        this.entry.amount = parseFloat(this.entry.amount)
-        this.entry.type = this.entry.amount > 0 ? Constants.TYPE_INCOME : Constants.TYPE_EXPENSE
         this.entry.icon = this.findIcon(this.entry)
+        this.entry.amount = parseFloat(this.entry.amount)
+
+        // IF entry.category IS a budgeted category
+        //   use the budgeted category's type for entry.type
+        // ELSE
+        //   decide type based on > 0.0
+        BudgetDB.categoryType(this.entry.category)
+          .then(function (type) {
+            if (type === null) {
+              // category not found
+              self.entry.type = self.entry.amount > 0.0 ? Constants.TYPE_INCOME : Constants.TYPE_EXPENSE
+            } else {
+              self.entry.type = type
+              self.entry.amount = Math.abs(self.entry.amount)
+              if (type === Constants.TYPE_EXPENSE) {
+                self.entry.amount *= -1
+              }
+            }
+          })
+          .catch(function (err) {
+            self.displayAlert('mdi-alert-octagon', 'red', err, 60)
+          })
 
         ExpenseDB.save(this.entry, function (err, numReplaced, upsert) {
           if (err) {
@@ -530,6 +542,7 @@ export default {
     },
 
     _groupExpensesData: function (entries, seed = true) {
+      var self = this
       var groupedEntries = {}
       var newEntries = []
 
@@ -565,7 +578,13 @@ export default {
         var newEntry = {type: type, icon: icon, category: cat, amount: totalAmount, budgetedAmount: budgetedAmount}
 
         if (budgetCategories.includes(newEntry.category)) {
-          newEntries.push(newEntry)
+          if (self.showOverbudget) {
+            if (Math.abs(newEntry.amount) > Math.abs(newEntry.budgetedAmount)) {
+              newEntries.push(newEntry)
+            }
+          } else {
+            newEntries.push(newEntry)
+          }
         } else {
           // Since it's unbudgeted, we can't decide the type based on +/- so instead
           // we'll use the type of the first entry in the list of entries
@@ -581,18 +600,50 @@ export default {
 
     _loadCategoryData: function () {
       var self = this
-      // Load Categories (includes icons)
-      BudgetDB.loadCategories(function (err, cats) {
-        if (err) {
-          self.displayAlert('mdi-alert-octagon', 'red', err, 60)
-        } else {
-          // Mapping from Category name to Icon
-          self.iconMap = cats
 
-          // Set Category List from budget entries
-          self.categories = Object.keys(cats)
-        }
+      // Load Categories (includes icons)
+      var loadBudgetCats = new Promise(function (resolve, reject) {
+        BudgetDB.loadCategories(function (err, cats) {
+          if (err) {
+            reject(err)
+          } else {
+            // Mapping from Category name to Icon
+            self.iconMap = cats
+
+            // Set Category List from budget entries
+            self.categories = Object.keys(cats)
+
+            // Don't care about the resolve value since were setting values on 'self'
+            resolve(true)
+          }
+        })
       })
+
+      // Load Categories used for the current month
+      // The point being to get a list of the categories used for Unbudgeted
+      // entries and make them available for re-use.
+      var loadExpCats = new Promise(function (resolve, reject) {
+        ExpenseDB.loadCategories(self.startDate, self.endDate, function (err, cats) {
+          if (err) {
+            reject(err)
+          } else {
+            var catNames = cats.map(obj => obj.category)
+            var allCats = self.categories.concat(catNames).sort()
+
+            // Filter out dups
+            self.categories = [...new Set(allCats)]
+
+            // Don't care about the resolve value since were setting values on 'self'
+            resolve(true)
+          }
+        })
+      })
+
+      Promise.all([loadBudgetCats, loadExpCats])
+        // .then(function (values) {})
+        .catch(function (err) {
+          self.displayAlert('mdi-alert-octagon', 'red', err, 60)
+        })
     },
 
     _loadCategoryDataByMonth: function (month) {
@@ -633,6 +684,22 @@ export default {
       this.searchText = category
       this.viewStyle = Constants.VIEW_STYLE_LIST
       // this.search()
+    },
+
+    viewOverbudgetEntries: function () {
+      this.showOverbudget = !this.showOverbudget
+
+      if (this.showOverbudget) {
+        this.menu.viewOverbudgetEntries.labelIndex = 1
+      } else {
+        this.menu.viewOverbudgetEntries.labelIndex = 0
+      }
+
+      if (this.viewStyle !== Constants.VIEW_STYLE_GROUP) {
+        this.viewStyle = Constants.VIEW_STYLE_GROUP
+      } else {
+        this.refreshData()
+      }
     }
 
   },
@@ -659,6 +726,12 @@ export default {
       startDate: null,
       endDate: null,
       showMonthDialog: false,
+      menu: {
+        viewOverbudgetEntries: {
+          labels: ['View Overbudget Categories', 'View All Categories'],
+          labelIndex: 0
+        }
+      },
       alert: {
         visible: false,
         icon: 'mdi-alert',
@@ -677,9 +750,11 @@ export default {
       },
       showDateMenu: false,
       showAddEditSheet: false,
+      showOverbudget: false,
       rules: {
         date: [
-          date => !!date || 'Date is required'
+          date => !!date || 'Date is required',
+          date => (Moment(date, Constants.FORMATS.entryDate, true).isValid()) || 'Format as ' + Constants.FORMATS.entryDate
         ],
         category: [
           category => !!category || 'Category is required'
