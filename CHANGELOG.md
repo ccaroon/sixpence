@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v1.2.0 (June 7, 2018)
+* Updated to use Electron 2.0.2
+* Updated several other node modules
+
 ## v1.1.0 (June 4, 2018)
 * Expenses: Include "unbudgeted" categories in Category drop-down.
 * Expenses: Shouldn't need to use +/- sign to indicate Income or Expense
