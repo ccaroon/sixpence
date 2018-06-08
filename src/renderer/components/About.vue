@@ -36,7 +36,7 @@
         showDialog: false,
         appInfo: pkgJson,
         items: [
-          { name: 'Electron', value: process.versions['atom-shell'], icon: 'atom' },
+          { name: 'Electron', value: process.versions.electron, icon: 'atom' },
           { name: 'NodeJS', value: process.versions.node, icon: 'nodejs' },
           { name: 'Chrome', value: process.versions.chrome, icon: 'google-chrome' },
           { name: 'Platform', value: require('os').platform(), icon: 'laptop' },
