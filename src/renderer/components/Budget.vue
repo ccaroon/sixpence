@@ -191,7 +191,7 @@ import BudgetEntry from './BudgetEntry'
 import BudgetDB from '../lib/BudgetDB'
 import Format from '../lib/Format'
 import Constants from '../lib/Constants'
-import Mousetrap from 'Mousetrap'
+import Mousetrap from 'mousetrap'
 
 // const {app} = require('electron').remote
 

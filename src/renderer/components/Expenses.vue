@@ -190,7 +190,7 @@ import ExpenseCategory from './ExpenseCategory'
 import ExpenseDB from '../lib/ExpenseDB'
 import Format from '../lib/Format'
 import Constants from '../lib/Constants'
-import Mousetrap from 'Mousetrap'
+import Mousetrap from 'mousetrap'
 import Moment from 'moment'
 
 export default {
