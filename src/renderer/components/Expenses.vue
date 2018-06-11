@@ -199,14 +199,14 @@ export default {
 
   mounted () {
     var self = this
-    var today = new Date()
+    var today = new Moment()
 
     this._bindShortcutKeys()
 
-    ExpenseDB.ensureRollover(today.getMonth() + 1)
+    ExpenseDB.ensureRollover(today.month())
       .then(function () {
         // Setting this value triggers the changeMonth() method below
-        self.monthToView = today.getFullYear() + '-' + (today.getMonth() + 1)
+        self.monthToView = today.format('YYYY-MM')
       })
       .then(function () {
         self._loadCategoryData()
@@ -404,9 +404,7 @@ export default {
 
       if (this.$refs.expenseForm.validate()) {
         if (this.entryDateStr) {
-          var parts = this.entryDateStr.split('-', 3)
-          parts = parts.map(p => Number.parseInt(p))
-          this.entry.date = new Date(parts)
+          this.entry.date = Moment(this.entryDateStr, Constants.FORMATS.entryDate, true).toDate()
         } else {
           if (!this.entry.date) {
             this.entry.date = new Date()
@@ -670,10 +668,8 @@ export default {
     },
 
     changeMonth: function () {
-      var parts = this.monthToView.split('-', 2).map(p => Number.parseInt(p))
-
-      this.startDate = new Date(parts[0], parts[1] - 1, 1)
-      this.endDate = new Date(parts[0], parts[1], 0, 23, 59, 59)
+      this.startDate = Moment(this.monthToView, 'YYYY-MM', true).startOf('month').toDate()
+      this.endDate = Moment(this.monthToView, 'YYYY-MM', true).endOf('month').toDate()
       this.currentMonthName = Format.monthNumberToName(this.startDate.getMonth())
 
       this.refreshData()

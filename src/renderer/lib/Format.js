@@ -37,8 +37,7 @@ export default {
   },
 
   monthNumberToName: function (monthNumber) {
-    var d = new Date(2000, monthNumber, 1)
-    return (d.toLocaleDateString('en-US', {month: 'long'}))
+    return (Moment().month(monthNumber).format('MMMM'))
   }
 
 }

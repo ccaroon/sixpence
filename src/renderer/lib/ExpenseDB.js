@@ -1,5 +1,6 @@
 import Datastore from 'nedb'
 import Constants from './Constants'
+import Moment from 'moment'
 
 const {app} = require('electron').remote
 const CAT_ROLLOVER = 'Sixpence:Rollover'
@@ -47,14 +48,16 @@ export default {
     _DB.find(query).sort(sort).exec(cb)
   },
 
-  // monthNumber - 1-based
+  // monthNumber - 0-based
   _createRolloverEntry: function (monthNumber, resolve, reject) {
     var self = this
-    var now = new Date()
 
-    var currMonthStart = new Date(now.getFullYear(), monthNumber - 1, 1)
-    var prevMonthStart = new Date(now.getFullYear(), monthNumber - 2, 1)
-    var prevMonthEnd = new Date(now.getFullYear(), monthNumber - 1, 0, 23, 59, 59)
+    var currMonth = Moment().month(monthNumber)
+    var prevMonth = Moment().month(monthNumber).subtract(1, 'month')
+
+    var currMonthStart = currMonth.startOf('month').toDate()
+    var prevMonthStart = prevMonth.startOf('month').toDate()
+    var prevMonthEnd = prevMonth.endOf('month').toDate()
 
     this.loadData(prevMonthStart, prevMonthEnd, function (err, docs) {
       if (err) {
@@ -90,12 +93,12 @@ export default {
     })
   },
 
-  // monthNumber - 1-based
+  // monthNumber - 0-based
   ensureRollover: function (monthNumber) {
     var self = this
-    var now = new Date()
-    var currMonthStart = new Date(now.getFullYear(), monthNumber - 1, 1)
-    var currMonthEnd = new Date(now.getFullYear(), monthNumber, 0)
+
+    var currMonthStart = Moment().month(monthNumber).startOf('month').toDate()
+    var currMonthEnd = Moment().month(monthNumber).endOf('month').toDate()
 
     var promise = new Promise(function (resolve, reject) {
       self.search(currMonthStart, currMonthEnd, {'category': CAT_ROLLOVER}, null, function (err, docs) {

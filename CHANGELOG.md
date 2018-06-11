@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v1.2.2 (June 11, 2018)
+* Swapped out most of the Date/Time manipulation to use MomentJS instead of the
+  `Date()` class. Makes the code easier to understand.
+
 ## v1.2.1 (June 11, 2018)
 * Bug: Expenses: Edit entry does not populate date
 
