@@ -395,6 +395,7 @@ export default {
 
     editEntry: function (entry) {
       this.entry = entry
+      this.entryDateStr = Format.formatDate(this.entry.date, Constants.FORMATS.entryDate)
       this.showAddEditSheet = true
     },
 

@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## v1.2.1 (June 11, 2018)
+* Bug: Expenses: Edit entry does not populate date
+
 ## v1.2.0 (June 8, 2018)
 * Updated to use Electron 2.0.2
 * Updated several other node modules
