@@ -362,18 +362,18 @@ export default {
         }
 
         this.dataLoaded = false
-        ExpenseDB.search(this.startDate, this.endDate, query, null, function (err, docs) {
-          if (err) {
-            self.displayAlert('mdi-alert-octagon', 'red', err, 60)
-          } else {
+        ExpenseDB.search(this.startDate, this.endDate, query)
+          .then(function (docs) {
             if (self.viewStyle === Constants.VIEW_STYLE_GROUP) {
               self._groupExpensesData(docs, false)
             } else {
               self.expenses = docs
             }
             self.dataLoaded = true
-          }
-        })
+          })
+          .catch(function (err) {
+            self.displayAlert('mdi-alert-octagon', 'red', err, 60)
+          })
       } else {
         this.loadAllData()
       }
@@ -435,17 +435,17 @@ export default {
             self.displayAlert('mdi-alert-octagon', 'red', err, 60)
           })
 
-        ExpenseDB.save(this.entry, function (err, numReplaced, upsert) {
-          if (err) {
-            self.displayAlert('mdi-alert-octagon', 'red', err, 60)
-          } else {
+        ExpenseDB.save(this.entry)
+          .then(function (numReplaced, upsert) {
             self.entry = {}
             self.entryDateStr = null
 
             self.refreshData()
             self.displayAlert('mdi-content-save', 'green', 'Entry Successfully Saved')
-          }
-        })
+          })
+          .catch(function (err) {
+            self.displayAlert('mdi-alert-octagon', 'red', err, 60)
+          })
       }
     },
 
@@ -508,27 +508,17 @@ export default {
       var self = this
       this.dataLoaded = false
 
-      var promise = new Promise(function (resolve, reject) {
-        ExpenseDB.loadData(self.startDate, self.endDate, function (err, docs) {
-          if (err) {
-            reject(err)
-          } else {
-            resolve(docs)
-          }
-        })
-      })
-
-      promise
+      ExpenseDB.loadData(self.startDate, self.endDate)
         .then(function (docs) {
           if (self.viewStyle === Constants.VIEW_STYLE_GROUP) {
-            self._loadCategoryDataByMonth(self.startDate.getMonth())
+            BudgetDB.loadCategoryDataByMonth(self.startDate.getMonth())
               .then(function (cats) {
                 self.categoriesForMonth = cats
                 self._groupExpensesData(docs)
               })
-              // Not sure if this will propagate the error to the catch() below
               .catch(function (err) {
-                return (err)
+                console.log(err)
+                return Promise.reject(err)
               })
           } else {
             self.expenses = docs
@@ -601,62 +591,30 @@ export default {
       var self = this
 
       // Load Categories (includes icons)
-      var loadBudgetCats = new Promise(function (resolve, reject) {
-        BudgetDB.loadCategories(function (err, cats) {
-          if (err) {
-            reject(err)
-          } else {
-            // Mapping from Category name to Icon
-            self.iconMap = cats
+      BudgetDB.loadCategories()
+        .then(function (cats) {
+          // Mapping from Category name to Icon
+          self.iconMap = cats
 
-            // Set Category List from budget entries
-            self.categories = Object.keys(cats)
-
-            // Don't care about the resolve value since were setting values on 'self'
-            resolve(true)
-          }
+          // Set Category List from budget entries
+          self.categories = Object.keys(cats)
         })
-      })
+        .then(function () {
+          // Load Categories used for the current month
+          // The point being to get a list of the categories used for Unbudgeted
+          // entries and make them available for re-use.
+          ExpenseDB.loadCategories(self.startDate, self.endDate)
+            .then(function (cats) {
+              var catNames = cats.map(obj => obj.category)
+              var allCats = self.categories.concat(catNames).sort()
 
-      // Load Categories used for the current month
-      // The point being to get a list of the categories used for Unbudgeted
-      // entries and make them available for re-use.
-      var loadExpCats = new Promise(function (resolve, reject) {
-        ExpenseDB.loadCategories(self.startDate, self.endDate, function (err, cats) {
-          if (err) {
-            reject(err)
-          } else {
-            var catNames = cats.map(obj => obj.category)
-            var allCats = self.categories.concat(catNames).sort()
-
-            // Filter out dups
-            self.categories = [...new Set(allCats)]
-
-            // Don't care about the resolve value since were setting values on 'self'
-            resolve(true)
-          }
+              // Filter out dups
+              self.categories = [...new Set(allCats)]
+            })
         })
-      })
-
-      Promise.all([loadBudgetCats, loadExpCats])
-        // .then(function (values) {})
         .catch(function (err) {
           self.displayAlert('mdi-alert-octagon', 'red', err, 60)
         })
-    },
-
-    _loadCategoryDataByMonth: function (month) {
-      var promise = new Promise(function (resolve, reject) {
-        BudgetDB.loadCategoryDataByMonth(month, function (err, cats) {
-          if (err) {
-            reject(err)
-          } else {
-            resolve(cats)
-          }
-        })
-      })
-
-      return (promise)
     },
 
     viewStyleChange: function () {

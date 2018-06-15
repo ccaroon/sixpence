@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v1.2.3 (June 15, 2018)
+* Code: Make better use of Promises - Cleaned up the code a bit by having BudgetDB &
+  ExpenseDB methods create and return promises instead of having to pass in callbacks.
+
 ## v1.2.2 (June 11, 2018)
 * Swapped out most of the Date/Time manipulation to use MomentJS instead of the
   `Date()` class. Makes the code easier to understand.

@@ -35,90 +35,131 @@ function due (month, freq, firstDue) {
 // -----------------------------------------------------------------------------
 export default {
 
-  loadData: function (cb) {
-    _DB.find({}).sort({type: 1, category: 1, amount: -1}).exec(cb)
+  loadData: function () {
+    var promise = new Promise(function (resolve, reject) {
+      _DB.find({}).sort({type: 1, category: 1, amount: -1}).exec(function (err, docs) {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(docs)
+        }
+      })
+    })
+
+    return promise
   },
 
   // Load Budget entries for categories that are due in the given `month` based
   // on each entry's frequency and firstDue.
   // Arrange as look-up table by category
-  loadCategoryDataByMonth: function (month, cb) {
-    // db.find({ planet: { $in: ['Earth', 'Jupiter'] }}, function (err, docs) {
-    //   // docs contains Earth and Jupiter
-    // });
+  loadCategoryDataByMonth: function (month) {
+    var promise = new Promise(function (resolve, reject) {
+      _DB.find({}, {_id: 0, frequency: 1, firstDue: 1, category: 1, amount: 1})
+        .sort({category: 1})
+        .exec(function (err, docs) {
+          if (err) {
+            reject(err)
+          } else {
+            var entries = docs.filter(entry => due(month + 1, entry.frequency, entry.firstDue))
+            var catMap = {}
 
-    _DB.find({}, {_id: 0, frequency: 1, firstDue: 1, category: 1, amount: 1})
-      .sort({category: 1}).exec(function (err, docs) {
-        if (err) {
-          cb(err, null)
-        } else {
-          var entries = docs.filter(entry => due(month + 1, entry.frequency, entry.firstDue))
-          var catMap = {}
+            entries.forEach(function (entry) {
+              if (!catMap.hasOwnProperty(entry.category)) {
+                catMap[entry.category] = 0.0
+              }
 
-          entries.forEach(function (entry) {
-            if (!catMap.hasOwnProperty(entry.category)) {
-              catMap[entry.category] = 0.0
-            }
+              catMap[entry.category] += entry.amount
+            })
 
-            catMap[entry.category] += entry.amount
-          })
+            resolve(catMap)
+          }
+        })
+    })
 
-          cb(null, catMap)
-        }
-      })
+    return promise
   },
 
-  loadCategories: function (cb) {
+  loadCategories: function () {
     var fields = {
       _id: 0,
       icon: 1,
       category: 1
     }
 
-    _DB.find({}, fields).sort({category: 1}).exec(function (err, docs) {
-      if (err) {
-        cb(err, null)
-      } else {
-        var uniqueCats = {}
-        docs.forEach(function (doc) {
-          uniqueCats[doc.category] = doc.icon
-        })
-        cb(null, uniqueCats)
-      }
+    var promise = new Promise(function (resolve, reject) {
+      _DB.find({}, fields).sort({category: 1}).exec(function (err, docs) {
+        if (err) {
+          reject(err)
+        } else {
+          var uniqueCats = {}
+          docs.forEach(function (doc) {
+            uniqueCats[doc.category] = doc.icon
+          })
+          resolve(uniqueCats)
+        }
+      })
     })
+
+    return promise
   },
 
-  search: function (searchTerms, sort, cb) {
-    if (!sort) {
-      sort = {type: 1, category: 1, amount: -1}
-    }
+  search: function (searchTerms, sort = {type: 1, category: 1, amount: -1}) {
+    var promise = new Promise(function (resolve, reject) {
+      _DB.find(searchTerms).sort(sort).exec(function (err, docs) {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(docs)
+        }
+      })
+    })
 
-    _DB.find(searchTerms).sort(sort).exec(cb)
+    return promise
   },
 
   categoryType: function (catName) {
-    return (
-      new Promise(function (resolve, reject) {
-        _DB.find({category: catName}).exec(function (err, docs) {
-          if (err) {
-            reject(err)
+    var promise = new Promise(function (resolve, reject) {
+      _DB.find({category: catName}).exec(function (err, docs) {
+        if (err) {
+          reject(err)
+        } else {
+          if (docs.length > 0) {
+            resolve(docs[0].type)
           } else {
-            if (docs.length > 0) {
-              resolve(docs[0].type)
-            } else {
-              resolve(null)
-            }
+            resolve(null)
           }
-        })
+        }
       })
-    )
+    })
+
+    return promise
   },
 
-  delete: function (id, cb) {
-    _DB.remove({ _id: id }, {}, cb)
+  delete: function (id) {
+    var promise = new Promise(function (resolve, reject) {
+      _DB.remove({ _id: id }, {}, function (err, count) {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(count)
+        }
+      })
+    })
+
+    return promise
   },
 
-  save: function (entry, cb) {
-    _DB.update({_id: entry._id}, entry, { upsert: true }, cb)
+  save: function (entry) {
+    var promise = new Promise(function (resolve, reject) {
+      _DB.update({_id: entry._id}, entry, { upsert: true }, function (err, numReplaced, upsert) {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(numReplaced, upsert)
+        }
+      })
+    })
+
+    return promise
   }
 }
