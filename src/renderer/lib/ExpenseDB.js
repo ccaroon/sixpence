@@ -14,22 +14,44 @@ var _DB = new Datastore({
 // -----------------------------------------------------------------------------
 export default {
 
-  loadData: function (startDate, endDate, cb) {
+  loadData: function (startDate, endDate) {
     var query = {}
     if (startDate && endDate) {
       query = { $where: function () { return this.date >= startDate && this.date <= endDate } }
     }
 
-    _DB.find(query).sort({date: 1, type: 1, category: 1, amount: -1}).exec(cb)
+    var promise = new Promise(function (resolve, reject) {
+      _DB.find(query)
+        .sort({date: 1, type: 1, category: 1, amount: -1})
+        .exec(function (err, docs) {
+          if (err) {
+            reject(err)
+          } else {
+            resolve(docs)
+          }
+        })
+    })
+
+    return promise
   },
 
-  loadCategories: function (startDate, endDate, cb) {
+  loadCategories: function (startDate, endDate) {
     var query = { $where: function () { return this.date >= startDate && this.date <= endDate } }
 
-    _DB.find(query, {_id: 0, category: 1}).exec(cb)
+    var promise = new Promise(function (resolve, reject) {
+      _DB.find(query, {_id: 0, category: 1}).exec(function (err, docs) {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(docs)
+        }
+      })
+    })
+
+    return promise
   },
 
-  search: function (startDate, endDate, searchTerms, sort, cb) {
+  search: function (startDate, endDate, searchTerms, sort = {type: 1, date: 1, category: 1, amount: -1}) {
     var query = searchTerms
     if (startDate && endDate) {
       query = {
@@ -41,15 +63,21 @@ export default {
       }
     }
 
-    if (!sort) {
-      sort = {type: 1, date: 1, category: 1, amount: -1}
-    }
+    var promise = new Promise(function (resolve, reject) {
+      _DB.find(query).sort(sort).exec(function (err, docs) {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(docs)
+        }
+      })
+    })
 
-    _DB.find(query).sort(sort).exec(cb)
+    return promise
   },
 
   // monthNumber - 0-based
-  _createRolloverEntry: function (monthNumber, resolve, reject) {
+  _createRolloverEntry: function (monthNumber) {
     var self = this
 
     var currMonth = Moment().month(monthNumber)
@@ -59,10 +87,8 @@ export default {
     var prevMonthStart = prevMonth.startOf('month').toDate()
     var prevMonthEnd = prevMonth.endOf('month').toDate()
 
-    this.loadData(prevMonthStart, prevMonthEnd, function (err, docs) {
-      if (err) {
-        reject(err)
-      } else {
+    var promise = this.loadData(prevMonthStart, prevMonthEnd)
+      .then(function (docs) {
         var income = 0.0
         var expense = 0.0
         docs.forEach(function (entry) {
@@ -75,22 +101,24 @@ export default {
 
         // insert record for first day of monthNumber
         //  - Income, Category: CAT_ROLLOVER, amount: income + expense
-        self.save({
-          type: Constants.TYPE_INCOME,
-          date: currMonthStart,
-          icon: 'mdi-transfer',
-          category: CAT_ROLLOVER,
-          amount: income + expense,
-          notes: 'Balance Rolled Over from Previous Month'
-        }, function (err, num, upsert) {
-          if (err) {
-            reject(err)
-          } else {
-            resolve()
+        var savePromise = self.save(
+          {
+            type: Constants.TYPE_INCOME,
+            date: currMonthStart,
+            icon: 'mdi-transfer',
+            category: CAT_ROLLOVER,
+            amount: income + expense,
+            notes: 'Balance Rolled Over from Previous Month'
           }
-        })
-      }
-    })
+        )
+
+        return savePromise
+      })
+      .catch(function (err) {
+        return Promise.reject(err)
+      })
+
+    return promise
   },
 
   // monthNumber - 0-based
@@ -100,30 +128,47 @@ export default {
     var currMonthStart = Moment().month(monthNumber).startOf('month').toDate()
     var currMonthEnd = Moment().month(monthNumber).endOf('month').toDate()
 
+    var promise = this.search(currMonthStart, currMonthEnd, {'category': CAT_ROLLOVER})
+      .then(function (docs) {
+        if (docs.length === 0) {
+          return self._createRolloverEntry(monthNumber)
+        } else {
+          return Promise.resolve(true)
+        }
+      })
+      .catch(function (err) {
+        return Promise.reject(err)
+      })
+
+    return promise
+  },
+
+  delete: function (id) {
     var promise = new Promise(function (resolve, reject) {
-      self.search(currMonthStart, currMonthEnd, {'category': CAT_ROLLOVER}, null, function (err, docs) {
+      _DB.remove({ _id: id }, {}, function (err, count) {
         if (err) {
           reject(err)
         } else {
-          if (docs.length === 0) {
-            // TODO: Use another promise here instead of passing along resolve & reject???
-            self._createRolloverEntry(monthNumber, resolve, reject)
-          } else {
-            resolve()
-          }
+          resolve(count)
         }
       })
     })
 
-    return (promise)
+    return promise
   },
 
-  delete: function (id, cb) {
-    _DB.remove({ _id: id }, {}, cb)
-  },
+  save: function (entry) {
+    var promise = new Promise(function (resolve, reject) {
+      _DB.update({_id: entry._id}, entry, { upsert: true }, function (err, numReplaced, upsert) {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(numReplaced, upsert)
+        }
+      })
+    })
 
-  save: function (entry, cb) {
-    _DB.update({_id: entry._id}, entry, { upsert: true }, cb)
+    return promise
   }
 
 }

@@ -313,13 +313,13 @@ export default {
           query = terms[0]
         }
 
-        BudgetDB.search(query, null, function (err, docs) {
-          if (err) {
-            self.displayAlert('mdi-alert-octagon', 'red', err, 60)
-          } else {
+        BudgetDB.search(query)
+          .then(function (docs) {
             self.budget = docs
-          }
-        })
+          })
+          .catch(function (err) {
+            self.displayAlert('mdi-alert-octagon', 'red', err, 60)
+          })
       } else {
         this.loadAllData()
       }
@@ -341,26 +341,27 @@ export default {
     _loadBudgetData: function () {
       var self = this
 
-      BudgetDB.loadData(function (err, docs) {
-        if (err) {
-          self.displayAlert('mdi-alert-octagon', 'red', err, 60)
-        } else {
+      BudgetDB.loadData()
+        .then(function (docs) {
           self.budget = docs
           self._loadCategoryData()
-        }
-      })
+        })
+        .catch(function (err) {
+          self.displayAlert('mdi-alert-octagon', 'red', err, 60)
+        })
     },
 
     _loadCategoryData: function () {
       var self = this
-      BudgetDB.loadCategories(function (err, cats) {
-        if (err) {
-          self.displayAlert('mdi-alert-octagon', 'red', err, 60)
-        } else {
+
+      BudgetDB.loadCategories()
+        .then(function (cats) {
           // Set Category List from budget entries
           self.categories = Object.keys(cats)
-        }
-      })
+        })
+        .catch(function (err) {
+          self.displayAlert('mdi-alert-octagon', 'red', err, 60)
+        })
     },
 
     displayAlert: function (icon, color, message, timeout = 6) {
@@ -393,17 +394,17 @@ export default {
         this.entry.amount = parseFloat(this.entry.amount)
         this.entry.type = this.entry.amount > 0 ? Constants.TYPE_INCOME : Constants.TYPE_EXPENSE
 
-        BudgetDB.save(this.entry, function (err, numReplaced, upsert) {
-          if (err) {
-            self.displayAlert('mdi-alert-octagon', 'red', err, 60)
-          } else {
+        BudgetDB.save(this.entry)
+          .then(function (numReplaced, upsert) {
             self._clearEntry()
             self.$refs.iconSelect.$el.focus()
 
             self.refreshData()
             self.displayAlert('mdi-content-save', 'green', 'Entry Successfully Saved')
-          }
-        })
+          })
+          .catch(function (err) {
+            self.displayAlert('mdi-alert-octagon', 'red', err, 60)
+          })
       }
     }
   },

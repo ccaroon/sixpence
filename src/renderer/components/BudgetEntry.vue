@@ -85,14 +85,14 @@ export default {
 
       this.showDeleteDialog = false
 
-      BudgetDB.delete(id, function (err, numDeleted) {
-        if (err) {
-          self.$emit('displayAlert', 'mdi-delete', 'red', err)
-        } else {
+      BudgetDB.delete(id)
+        .then(function (numDeleted) {
           self.$emit('refreshData')
           self.$emit('displayAlert', 'mdi-delete', 'green', 'Delete Successful!')
-        }
-      })
+        })
+        .catch(function (err) {
+          self.$emit('displayAlert', 'mdi-delete', 'red', err)
+        })
     }
   },
 
