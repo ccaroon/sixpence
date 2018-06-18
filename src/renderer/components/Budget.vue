@@ -95,7 +95,7 @@
               <v-flex xs1>
                 <v-select
                   ref="iconSelect"
-                  :items="constants.ICONS"
+                  :items="icons.ICONS"
                   v-model="entry.icon"
                   label="Icon"
                   single-line
@@ -189,8 +189,9 @@
 <script>
 import BudgetEntry from './BudgetEntry'
 import BudgetDB from '../lib/BudgetDB'
-import Format from '../lib/Format'
 import Constants from '../lib/Constants'
+import Format from '../lib/Format'
+import Icons from '../lib/Icons'
 import Mousetrap from 'mousetrap'
 
 // const {app} = require('electron').remote
@@ -390,7 +391,11 @@ export default {
       var self = this
 
       if (this.$refs.budgetForm.validate()) {
-        this.entry.icon = this.entry.icon ? this.entry.icon : Constants.ICONS[0].value
+        if (!this.entry.icon) {
+          var icon = Icons.superSearch(this.entry.category, ':', true)
+          this.entry.icon = icon ? icon.value : Icons.ICONS[0].value
+        }
+
         this.entry.amount = parseFloat(this.entry.amount)
         this.entry.type = this.entry.amount > 0 ? Constants.TYPE_INCOME : Constants.TYPE_EXPENSE
 
@@ -416,6 +421,7 @@ export default {
   data () {
     return {
       constants: Constants,
+      icons: Icons,
       categories: [],
       format: Format,
       searchText: null,

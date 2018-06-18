@@ -185,11 +185,12 @@
 
 <script>
 import BudgetDB from '../lib/BudgetDB'
+import Constants from '../lib/Constants'
 import ExpenseEntry from './ExpenseEntry'
 import ExpenseCategory from './ExpenseCategory'
 import ExpenseDB from '../lib/ExpenseDB'
 import Format from '../lib/Format'
-import Constants from '../lib/Constants'
+import Icons from '../lib/Icons'
 import Mousetrap from 'mousetrap'
 import Moment from 'moment'
 
@@ -458,38 +459,22 @@ export default {
     },
 
     findIcon: function (entry) {
+      var foundIcon = null
+
+      // Find exact match to category
       var icon = this.iconMap[entry.category]
 
+      // Find match by breaking category down into parts based on ':' divider
+      // with rightmost parts matched first
       if (icon === undefined) {
-        var parts = entry.category.split(':')
-        parts.reverse()
+        foundIcon = Icons.superSearch(entry.category, ':', true)
+        icon = foundIcon ? foundIcon.value : undefined
+      }
 
-        var foundIcon = null
-        for (var i = 0; i < parts.length; i++) {
-          var catPart = parts[i]
-          var catPattern = new RegExp(catPart, 'i')
-
-          foundIcon = Constants.ICONS.find(function (iconData) {
-            if (iconData.text.match(catPattern)) {
-              return true
-            } else {
-              var foundInKw = false
-              for (var j = 0; j < iconData.keywords.length; j++) {
-                var keyword = iconData.keywords[j]
-                if (keyword.match(catPattern)) {
-                  foundInKw = true
-                  break
-                }
-              }
-              return foundInKw
-            }
-          })
-
-          if (foundIcon) {
-            break
-          }
-        }
-
+      // Try to find a match from the Notes field
+      // "paid the dentist"
+      if (icon === undefined) {
+        foundIcon = Icons.superSearch(entry.notes)
         icon = foundIcon ? foundIcon.value : 'mdi-currency-usd'
       }
 
