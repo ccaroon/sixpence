@@ -7,7 +7,7 @@
           <img src="../assets/logo.png"></img>
         </v-flex>
         <v-flex text-xs-center>
-          <h3 class="display-3">Sixpence</h3>
+          <h3 id="app_name" class="display-3">Sixpence</h3>
           A Simple Budget Manager
         </v-flex>
       </v-layout>
