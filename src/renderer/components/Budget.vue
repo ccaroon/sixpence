@@ -1,10 +1,10 @@
 <template>
   <div>
     <v-toolbar color="grey darken-2" dark dense app fixed>
-      <v-toolbar-title>Budget</v-toolbar-title>
+      <v-toolbar-title id="budget-toolbar-title" >Budget</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-flex>
-        <v-btn-toggle v-model="freqFilter" mandatory dark class="orange lighten-2">
+        <v-btn-toggle id="budget-freq-filter" v-model="freqFilter" mandatory dark class="orange lighten-2">
           <v-btn flat>
             <v-icon>mdi-numeric-1-box</v-icon>
           </v-btn>

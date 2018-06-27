@@ -8,6 +8,12 @@ describe('Main.vue', () => {
       render: h => h(Main)
     }).$mount()
 
-    expect(vm.$el.querySelector('#app_name').textContent).to.contain('Sixpence')
+    expect(vm.$el.querySelector('#main-app-name').textContent).to.contain('Sixpence')
+
+    /* eslint-disable no-unused-expressions */
+    expect(vm.$el.querySelector('#main-budget-button')).to.exist
+    expect(vm.$el.querySelector('#main-expense-button')).to.exist
+
+    expect(vm.$el.querySelector('#main-bottom-space').textContent).to.contain('This space intentionally left blank.')
   })
 })

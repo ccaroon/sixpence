@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="showDialog" max-width="768">
     <v-card>
-      <v-card-title class="headline green lighten-1">
+      <v-card-title id="about-title" class="headline green lighten-1">
         <img width="64" src="../assets/logo.png"></img>&nbsp;
         {{ appInfo.name }} v{{ appInfo.version }}
       </v-card-title>
@@ -12,7 +12,7 @@
         <v-data-table :items="items" hide-actions hide-headers dark>
           <template slot="items" slot-scope="data">
             <td><v-icon>mdi-{{ data.item.icon }}</v-icon> {{ data.item.name }}</td>
-            <td>{{ data.item.value }}</td>
+            <td :id="'about-tech-' + data.item.name.toLowerCase().replace(' ', '')">{{ data.item.value }}</td>
           </template>
         </v-data-table>
       </v-card-text>

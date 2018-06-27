@@ -7,7 +7,7 @@
           <img src="../assets/logo.png"></img>
         </v-flex>
         <v-flex text-xs-center>
-          <h3 id="app_name" class="display-3">Sixpence</h3>
+          <h3 id="main-app-name" class="display-3">Sixpence</h3>
           A Simple Budget Manager
         </v-flex>
       </v-layout>
@@ -16,17 +16,17 @@
   <v-container>
     <v-layout align-center row>
       <v-flex text-xs-center>
-        <v-btn large color="green" @click="$router.push(`/budget`)">
+        <v-btn id="main-budget-button" large color="green" @click="$router.push(`/budget`)">
           <v-icon>mdi-format-list-checks</v-icon>&nbsp;&nbsp;Budget
         </v-btn>
-        <v-btn large color="red" @click="$router.push(`/expenses`)">
+        <v-btn id="main-expense-button" large color="red" @click="$router.push(`/expenses`)">
           <v-icon>mdi-currency-usd</v-icon> Expenses
         </v-btn>
       </v-flex>
     </v-layout>
   </v-container>
   <v-divider></v-divider>
-  <div text-xs-center>This space intentionally left blank.</div>
+  <div id="main-bottom-space" text-xs-center>This space intentionally left blank.</div>
 </div>
 </template>
 
