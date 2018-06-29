@@ -2,6 +2,9 @@ const constants = {
   TYPE_INCOME: 0,
   TYPE_EXPENSE: 1,
 
+  BUDGET_VIEW_BYMONTH: 0,
+  BUDGET_VIEW_SUMMARY: 1,
+
   VIEW_STYLE_GROUP: 0,
   VIEW_STYLE_LIST: 1,
 
@@ -21,18 +24,18 @@ const constants = {
   ],
 
   MONTHS: [
-    {text: 'January', value: 1},
-    {text: 'February', value: 2},
-    {text: 'March', value: 3},
-    {text: 'April', value: 4},
-    {text: 'May', value: 5},
-    {text: 'June', value: 6},
-    {text: 'July', value: 7},
-    {text: 'August', value: 8},
-    {text: 'September', value: 9},
-    {text: 'October', value: 10},
-    {text: 'November', value: 11},
-    {text: 'December', value: 12}
+    {text: 'January', value: 1, icon: 'mdi-snowflake'},
+    {text: 'February', value: 2, icon: 'mdi-snowman'},
+    {text: 'March', value: 3, icon: 'mdi-weather-windy'},
+    {text: 'April', value: 4, icon: 'mdi-weather-rainy'},
+    {text: 'May', value: 5, icon: 'mdi-flower'},
+    {text: 'June', value: 6, icon: 'mdi-tree'},
+    {text: 'July', value: 7, icon: 'mdi-beach'},
+    {text: 'August', value: 8, icon: 'mdi-school'},
+    {text: 'September', value: 9, icon: 'mdi-leaf'},
+    {text: 'October', value: 10, icon: 'mdi-ghost'},
+    {text: 'November', value: 11, icon: 'mdi-meteor'},
+    {text: 'December', value: 12, icon: 'mdi-pine-tree'}
   ]
 }
 
