@@ -206,8 +206,14 @@ export default {
 
     ExpenseDB.ensureRollover(today.month())
       .then(function () {
-        // Setting this value triggers the changeMonth() method below
-        self.monthToView = today.format('YYYY-MM')
+        var startMonth = new Moment()
+
+        // Setting `monthToView` triggers the changeMonth() method below
+        if (self.$route.params && self.$route.params.month) {
+          self.monthToView = startMonth.month(self.$route.params.month).format('YYYY-MM')
+        } else {
+          self.monthToView = startMonth.format('YYYY-MM')
+        }
       })
       .then(function () {
         self._loadCategoryData()

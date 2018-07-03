@@ -16,7 +16,7 @@ export default new Router({
       component: require('@/components/Budget').default
     },
     {
-      path: '/expenses',
+      path: '/expenses/:month?',
       name: 'expenses-screen',
       component: require('@/components/Expenses').default
     },

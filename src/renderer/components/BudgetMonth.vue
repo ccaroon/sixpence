@@ -69,7 +69,7 @@ export default {
 
   methods: {
     budgetDetails: function () {
-      alert(this.month.text)
+      this.$router.push({path: `/expenses/${this.month.value - 1}`})
     }
   },
 
