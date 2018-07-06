@@ -1,6 +1,16 @@
 <template>
   <div>
     <v-toolbar color="grey darken-2" dark dense app fixed>
+      <v-menu bottom offset-y>
+        <v-btn slot="activator" icon>
+          <v-icon>mdi-menu</v-icon>
+        </v-btn>
+        <v-list dense>
+          <v-list-tile @click="toggleView()">
+            <v-list-tile-title>{{ menu.viewToggle.labels[menu.viewToggle.labelIndex] }}</v-list-tile-title>
+          </v-list-tile>
+        </v-list>
+      </v-menu>
       <v-toolbar-title id="budget-toolbar-title" >Budget</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-flex>
@@ -70,7 +80,7 @@
       <v-btn icon dark @click="alert.visible=false"><v-icon>mdi-close</v-icon></v-btn>
     </v-snackbar>
 
-    <v-list dense v-for="entry in budget"
+    <v-list v-if="view === constants.BUDGET_VIEW_SUMMARY" dense v-for="entry in budget"
       v-bind:key="entry._id">
       <BudgetEntry
         v-bind:entry="entry"
@@ -78,6 +88,15 @@
         v-on:refreshData="refreshData"
         v-on:displayAlert="displayAlert">
       </BudgetEntry>
+    </v-list>
+
+    <v-list v-if="view === constants.BUDGET_VIEW_BYMONTH" dense v-for="month in constants.MONTHS"
+      v-bind:key="month.value">
+      <BudgetMonth
+        v-bind:month="month"
+        v-bind:average="totalIncome + totalExpenses"
+        v-on:displayAlert="displayAlert">
+      </BudgetMonth>
     </v-list>
 
     <div class="text-xs-center">
@@ -188,6 +207,7 @@
 
 <script>
 import BudgetEntry from './BudgetEntry'
+import BudgetMonth from './BudgetMonth'
 import BudgetDB from '../lib/BudgetDB'
 import Constants from '../lib/Constants'
 import Format from '../lib/Format'
@@ -198,7 +218,7 @@ import Mousetrap from 'mousetrap'
 
 export default {
   name: 'Budget',
-  components: { BudgetEntry },
+  components: { BudgetEntry, BudgetMonth },
 
   mounted () {
     this._bindShortcutKeys()
@@ -387,6 +407,17 @@ export default {
       this.entry = {}
     },
 
+    toggleView: function () {
+      this.menu.viewToggle.labelIndex = this.view
+
+      if (this.view === Constants.BUDGET_VIEW_SUMMARY) {
+        this.view = Constants.BUDGET_VIEW_BYMONTH
+      } else {
+        this.view = Constants.BUDGET_VIEW_SUMMARY
+        this.refreshData()
+      }
+    },
+
     saveEntry: function () {
       var self = this
 
@@ -443,6 +474,13 @@ export default {
         frequency: null,
         notes: null
       },
+      menu: {
+        viewToggle: {
+          labels: ['View By Month', 'View Entries'],
+          labelIndex: 0
+        }
+      },
+      view: Constants.BUDGET_VIEW_SUMMARY,
       showAddEditSheet: false,
       rules: {
         category: [

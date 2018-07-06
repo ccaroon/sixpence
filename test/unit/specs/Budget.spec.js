@@ -1,8 +1,6 @@
 import Vue from 'vue'
 import Budget from '@/components/Budget'
 
-const pkgJson = require(`../../../package.json`)
-
 describe('Budget.vue', () => {
   it('should render correct contents', () => {
     const vm = new Vue({
