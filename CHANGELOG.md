@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v1.4.0 (July 06, 2018)
+* Budget: Ability to show budgeted Income/Expenses for each month in a list.
+
+## v1.3.0 (June 18, 2018)
+* Expenses: Icon Match against Notes
+
 ## v1.2.3 (June 15, 2018)
 * Code: Make better use of Promises - Cleaned up the code a bit by having BudgetDB &
   ExpenseDB methods create and return promises instead of having to pass in callbacks.
