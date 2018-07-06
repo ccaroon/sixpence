@@ -93,7 +93,9 @@
     <v-list v-if="view === constants.BUDGET_VIEW_BYMONTH" dense v-for="month in constants.MONTHS"
       v-bind:key="month.value">
       <BudgetMonth
-        v-bind:month="month">
+        v-bind:month="month"
+        v-bind:average="totalIncome + totalExpenses"
+        v-on:displayAlert="displayAlert">
       </BudgetMonth>
     </v-list>
 
@@ -474,7 +476,7 @@ export default {
       },
       menu: {
         viewToggle: {
-          labels: ['View By Month', 'View Summary'],
+          labels: ['View By Month', 'View Entries'],
           labelIndex: 0
         }
       },
