@@ -28,6 +28,10 @@ export default {
     ipcRenderer.on('menu-view-expenses', (event, arg) => {
       this.$router.push(`/expenses`)
     })
+
+    ipcRenderer.on('menu-view-reports', (event, arg) => {
+      this.$router.push(`/reports`)
+    })
   }
 
 }

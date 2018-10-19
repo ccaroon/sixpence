@@ -186,8 +186,8 @@
 <script>
 import BudgetDB from '../lib/BudgetDB'
 import Constants from '../lib/Constants'
-import ExpenseEntry from './ExpenseEntry'
-import ExpenseCategory from './ExpenseCategory'
+import ExpenseEntry from './Expense/Entry'
+import ExpenseCategory from './Expense/Category'
 import ExpenseDB from '../lib/ExpenseDB'
 import Format from '../lib/Format'
 import Icons from '../lib/Icons'

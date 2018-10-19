@@ -55,9 +55,9 @@
 </template>
 
 <script>
-import Format from '../lib/Format'
-import Constants from '../lib/Constants'
-import ExpenseDB from '../lib/ExpenseDB'
+import Format from '../../lib/Format'
+import Constants from '../../lib/Constants'
+import ExpenseDB from '../../lib/ExpenseDB'
 
 export default {
   name: 'ExpenseEntry',

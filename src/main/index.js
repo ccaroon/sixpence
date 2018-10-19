@@ -66,6 +66,11 @@ function createWindow () {
           label: 'Expenses',
           accelerator: mainMetaKey + '+E',
           click: () => BrowserWindow.getFocusedWindow().webContents.send('menu-view-expenses')
+        },
+        {
+          label: 'Reports',
+          accelerator: mainMetaKey + '+T',
+          click: () => BrowserWindow.getFocusedWindow().webContents.send('menu-view-reports')
         }
       ]
     },

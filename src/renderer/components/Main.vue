@@ -22,6 +22,9 @@
         <v-btn id="main-expense-button" large color="red" @click="$router.push(`/expenses`)">
           <v-icon>mdi-currency-usd</v-icon> Expenses
         </v-btn>
+        <v-btn id="main-report-button" large color="orange lighten-2" @click="$router.push(`/reports`)">
+          <v-icon>mdi-file-chart</v-icon> Reports
+        </v-btn>
       </v-flex>
     </v-layout>
   </v-container>

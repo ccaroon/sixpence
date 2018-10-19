@@ -44,8 +44,8 @@
 </template>
 
 <script>
-import Format from '../lib/Format'
-import Constants from '../lib/Constants'
+import Format from '../../lib/Format'
+import Constants from '../../lib/Constants'
 
 export default {
   name: 'ExpenseCategory',
