@@ -21,9 +21,14 @@ export default new Router({
       component: require('@/components/Expenses').default
     },
     {
-      path: '/reports',
-      name: 'report-main',
+      path: '/report/list',
+      name: 'report-list',
       component: require('@/components/Report/Main').default
+    },
+    {
+      path: '/report/yearly',
+      name: 'report-yearly',
+      component: require('@/components/Report/Yearly').default
     },
     {
       path: '*',

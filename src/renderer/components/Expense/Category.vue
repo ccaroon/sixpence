@@ -146,7 +146,7 @@ export default {
     },
 
     viewEntries: function (category) {
-      this.$emit('viewEntriesInGroup', category)
+      this.$emit('viewEntriesInGroup', category, this.entryTotal)
     }
   },
 
@@ -159,7 +159,7 @@ export default {
 </script>
 
 <style scoped>
-.lowerCaseButton{
+.lowerCaseButton {
   text-transform: none !important;
   text-align: left !important;
 }

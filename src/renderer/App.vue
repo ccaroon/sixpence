@@ -30,7 +30,7 @@ export default {
     })
 
     ipcRenderer.on('menu-view-reports', (event, arg) => {
-      this.$router.push(`/reports`)
+      this.$router.push(`/report/list`)
     })
   }
 
