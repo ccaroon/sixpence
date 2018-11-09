@@ -3,8 +3,8 @@
 ## v1.5.0 (Unreleased)
 * New Feature: __Reports__
     * Button on Home Page to navigate to Reports
+    * Reports added to View menu
     * One report added "Yearly by Category"
-    * TODO: more more more
 
 ## v1.4.0 (July 06, 2018)
 * Budget: Ability to show budgeted Income/Expenses for each month in a list.
