@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## v1.5.0 (Unreleased)
+## v1.5.0 (Nov 09, 2018)
 * New Feature: __Reports__
     * Button on Home Page to navigate to Reports
     * Reports added to View menu
