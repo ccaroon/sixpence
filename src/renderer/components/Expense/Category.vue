@@ -44,8 +44,8 @@
 </template>
 
 <script>
-import Format from '../lib/Format'
-import Constants from '../lib/Constants'
+import Format from '../../lib/Format'
+import Constants from '../../lib/Constants'
 
 export default {
   name: 'ExpenseCategory',
@@ -146,7 +146,7 @@ export default {
     },
 
     viewEntries: function (category) {
-      this.$emit('viewEntriesInGroup', category)
+      this.$emit('viewEntriesInGroup', category, this.entryTotal)
     }
   },
 
@@ -159,7 +159,7 @@ export default {
 </script>
 
 <style scoped>
-.lowerCaseButton{
+.lowerCaseButton {
   text-transform: none !important;
   text-align: left !important;
 }

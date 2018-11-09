@@ -1,6 +1,6 @@
 import Datastore from 'nedb'
 
-const {app} = require('electron').remote
+const { app } = require('electron').remote
 
 // -----------------------------------------------------------------------------
 const dbFileName = (process.env.NODE_ENV === 'development') ? 'budget-dev.sxp' : 'budget.sxp'
@@ -16,7 +16,7 @@ function computePeriod (freq, firstDue) {
   var moreNeeded = 12 - willGet
 
   for (var m = firstDue; m <= 12 + moreNeeded; m += freq) {
-  // for (var m = firstDue; m <= 12; m += freq) {
+    // for (var m = firstDue; m <= 12; m += freq) {
     var dueInMonth = m <= 12 ? m : m - 12
     due.push(dueInMonth)
   }
@@ -37,7 +37,7 @@ export default {
 
   loadData: function () {
     var promise = new Promise(function (resolve, reject) {
-      _DB.find({}).sort({type: 1, category: 1, amount: -1}).exec(function (err, docs) {
+      _DB.find({}).sort({ type: 1, category: 1, amount: -1 }).exec(function (err, docs) {
         if (err) {
           reject(err)
         } else {
@@ -54,8 +54,8 @@ export default {
   // Arrange as look-up table by category
   loadCategoryDataByMonth: function (month) {
     var promise = new Promise(function (resolve, reject) {
-      _DB.find({}, {_id: 0, frequency: 1, firstDue: 1, category: 1, amount: 1})
-        .sort({category: 1})
+      _DB.find({}, { _id: 0, frequency: 1, firstDue: 1, category: 1, amount: 1 })
+        .sort({ category: 1 })
         .exec(function (err, docs) {
           if (err) {
             reject(err)
@@ -87,7 +87,7 @@ export default {
     }
 
     var promise = new Promise(function (resolve, reject) {
-      _DB.find({}, fields).sort({category: 1}).exec(function (err, docs) {
+      _DB.find({}, fields).sort({ category: 1 }).exec(function (err, docs) {
         if (err) {
           reject(err)
         } else {
@@ -103,7 +103,7 @@ export default {
     return promise
   },
 
-  search: function (searchTerms, sort = {type: 1, category: 1, amount: -1}) {
+  search: function (searchTerms, sort = { type: 1, category: 1, amount: -1 }) {
     var promise = new Promise(function (resolve, reject) {
       _DB.find(searchTerms).sort(sort).exec(function (err, docs) {
         if (err) {
@@ -119,7 +119,7 @@ export default {
 
   categoryType: function (catName) {
     var promise = new Promise(function (resolve, reject) {
-      _DB.find({category: catName}).exec(function (err, docs) {
+      _DB.find({ category: catName }).exec(function (err, docs) {
         if (err) {
           reject(err)
         } else {
@@ -151,7 +151,7 @@ export default {
 
   save: function (entry) {
     var promise = new Promise(function (resolve, reject) {
-      _DB.update({_id: entry._id}, entry, { upsert: true }, function (err, numReplaced, upsert) {
+      _DB.update({ _id: entry._id }, entry, { upsert: true }, function (err, numReplaced, upsert) {
         if (err) {
           reject(err)
         } else {
@@ -161,5 +161,7 @@ export default {
     })
 
     return promise
-  }
+  },
+
+  isDue: due
 }

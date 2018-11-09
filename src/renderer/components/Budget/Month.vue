@@ -33,8 +33,8 @@
 </template>
 
 <script>
-import BudgetDB from '../lib/BudgetDB'
-import Format from '../lib/Format'
+import BudgetDB from '../../lib/BudgetDB'
+import Format from '../../lib/Format'
 
 const ICONS = {
   0: 'mdi-approval',

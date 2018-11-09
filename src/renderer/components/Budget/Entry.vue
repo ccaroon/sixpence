@@ -55,9 +55,9 @@
 </template>
 
 <script>
-import Constants from '../lib/Constants'
-import BudgetDB from '../lib/BudgetDB'
-import Format from '../lib/Format'
+import Constants from '../../lib/Constants'
+import BudgetDB from '../../lib/BudgetDB'
+import Format from '../../lib/Format'
 
 export default {
   name: 'BudgetEntry',

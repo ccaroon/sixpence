@@ -206,8 +206,8 @@
 </template>
 
 <script>
-import BudgetEntry from './BudgetEntry'
-import BudgetMonth from './BudgetMonth'
+import BudgetEntry from './Budget/Entry'
+import BudgetMonth from './Budget/Month'
 import BudgetDB from '../lib/BudgetDB'
 import Constants from '../lib/Constants'
 import Format from '../lib/Format'
