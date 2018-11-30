@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## v1.5.1 (Nov ??, 2018)
+* Backend updates:
+    * Upgraded Electron to v3
+    * Misc NodeJS modules updates
+
 ## v1.5.0 (Nov 09, 2018)
 * New Feature: __Reports__
     * Button on Home Page to navigate to Reports
