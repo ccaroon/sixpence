@@ -2,7 +2,8 @@
   <v-dialog v-model="showDialog" max-width="768">
     <v-card>
       <v-card-title id="about-title" class="headline green lighten-1">
-        <img width="64" src="../assets/logo.png"></img>&nbsp;
+        <img width="64" src="../assets/logo.png">
+        &nbsp;
         {{ appInfo.name }} v{{ appInfo.version }}
       </v-card-title>
       <v-card-text>
@@ -11,8 +12,13 @@
         <v-subheader>Built With</v-subheader>
         <v-data-table :items="items" hide-actions hide-headers dark>
           <template slot="items" slot-scope="data">
-            <td><v-icon>mdi-{{ data.item.icon }}</v-icon> {{ data.item.name }}</td>
-            <td :id="'about-tech-' + data.item.name.toLowerCase().replace(' ', '')">{{ data.item.value }}</td>
+            <td>
+              <v-icon>mdi-{{ data.item.icon }}</v-icon>
+              {{ data.item.name }}
+            </td>
+            <td
+              :id="'about-tech-' + data.item.name.toLowerCase().replace(' ', '')"
+            >{{ data.item.value }}</td>
           </template>
         </v-data-table>
       </v-card-text>
