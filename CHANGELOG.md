@@ -1,8 +1,9 @@
 # CHANGELOG
 
-## v1.5.1 (Nov ??, 2018)
+## v1.5.1 (Nov 30, 2018)
 * Backend updates:
-    * Upgraded Electron to v3
+    * Upgraded Electron to v3 (3.0.10)
+    * Upgraded Vuetify to 1.3.11
     * Misc NodeJS modules updates
 
 ## v1.5.0 (Nov 09, 2018)
