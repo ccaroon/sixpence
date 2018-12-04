@@ -3,7 +3,7 @@
 
     <v-toolbar color="grey darken-2" dark dense app fixed>
       <v-menu bottom offset-y>
-        <v-btn slot="activator" icon>
+        <v-btn tabindex="-1" slot="activator" icon>
           <v-icon>mdi-menu</v-icon>
         </v-btn>
         <v-list dense>
@@ -23,7 +23,7 @@
         full-width
         width="290px"
         :return-value.sync="monthToView">
-        <v-btn slot="activator" icon color="orange lighten-2"><v-icon>mdi-calendar-range</v-icon></v-btn>
+        <v-btn tabindex="-1" slot="activator" icon color="orange lighten-2"><v-icon>mdi-calendar-range</v-icon></v-btn>
         <v-date-picker
           type="month"
           v-model="monthToView"
@@ -31,17 +31,17 @@
           prev-icon="mdi-chevron-left"
           color="green accent-3">
           <v-spacer></v-spacer>
-          <v-btn flat color="primary" @click="showMonthDialog = false">Cancel</v-btn>
-          <v-btn flat color="primary" @click="$refs.monthDialog.save(monthToView)">OK</v-btn>
+          <v-btn tabindex="-1" flat color="primary" @click="showMonthDialog = false">Cancel</v-btn>
+          <v-btn tabindex="-1" flat color="primary" @click="$refs.monthDialog.save(monthToView)">OK</v-btn>
         </v-date-picker>
       </v-dialog>
       <v-spacer></v-spacer>
       <v-flex>
         <v-btn-toggle v-model="viewStyle" mandatory class="orange lighten-2">
-          <v-btn flat>
+          <v-btn tabindex="-1" flat>
             <v-icon>mdi-chart-bar</v-icon>
           </v-btn>
-          <v-btn flat>
+          <v-btn tabindex="-1" flat>
             <v-icon>mdi-view-list</v-icon>
           </v-btn>
         </v-btn-toggle>
@@ -60,8 +60,8 @@
             <v-icon left>mdi-cash-multiple</v-icon>
             <span class="subheading">{{ format.formatMoney(incomeAmount + expensesAmount) }}</span>
           </v-chip>
-          <v-btn-toggle v-model="incomeExpenseView" class="green">
-            <v-btn flat>
+          <v-btn-toggle tabindex="-1" v-model="incomeExpenseView" class="green">
+            <v-btn tabindex="-1" flat>
               <v-icon>mdi-coin</v-icon>
             </v-btn>
           </v-btn-toggle>
@@ -69,9 +69,10 @@
       </v-flex>
       <v-flex>
         <v-toolbar-items>
-          <v-btn @click="search()" icon color="orange lighten-2"><v-icon>mdi-magnify</v-icon></v-btn>
+          <v-btn tabindex="-1" @click="search()" icon color="orange lighten-2"><v-icon>mdi-magnify</v-icon></v-btn>
           &nbsp;
           <v-text-field
+            tabindex="-1"
             ref="searchField"
             v-model="searchText"
             hide-details
@@ -80,7 +81,7 @@
             @keyup.enter="search()"
             @keyup.esc="clearSearch()">
           </v-text-field>
-          <v-btn @click="clearSearch()" icon color="grey darken-2"><v-icon>mdi-close</v-icon></v-btn>
+          <v-btn tabindex="-1" @click="clearSearch()" icon color="grey darken-2"><v-icon>mdi-close</v-icon></v-btn>
         </v-toolbar-items>
       </v-flex>
       <v-spacer></v-spacer>
@@ -99,6 +100,7 @@
     <v-list v-if="dataLoaded && viewStyle === constants.VIEW_STYLE_LIST" dense v-for="entry in expenses"
       v-bind:key="entry._id">
       <ExpenseEntry
+        tabindex="-1"
         v-bind:entry="entry"
         v-on:editEntry="editEntry"
         v-on:refreshData="refreshData"
@@ -109,6 +111,7 @@
     <v-list v-if="dataLoaded && viewStyle === constants.VIEW_STYLE_GROUP" dense v-for="entry in expenses"
       v-bind:key="entry._id">
       <ExpenseCategory
+        tabindex="-1"
         v-bind:entry="entry"
         v-on:viewEntriesInGroup="viewEntriesInGroup">
       </ExpenseCategory>
@@ -117,6 +120,7 @@
     <div class="text-xs-center">
       <v-bottom-sheet v-model="showAddEditSheet">
         <v-btn
+          tabindex="-1"
           slot="activator"
           color="green accent-3"
           @click="entry = {}"
@@ -127,16 +131,37 @@
           <v-form ref="expenseForm">
             <v-layout row>
               <v-flex xs2>
-                <v-text-field
-                  label="Date"
-                  v-model="entryDateStr"
-                  prepend-icon="mdi-calendar-range"
-                  required
-                  :rules="rules.date">
-                </v-text-field>
+                <v-menu
+                  :close-on-content-click="false"
+                  v-model="showDateMenu"
+                  :nudge-right="40"
+                  lazy
+                  transition="scale-transition"
+                  offset-y
+                  full-width
+                  min-width="290px">
+                  <v-text-field
+                    ref="dateField"
+                    slot="activator"
+                    v-model="entryDateStr"
+                    label="Date"
+                    prepend-icon="mdi-calendar-range"
+                    disabled
+                    required
+                    :rules="rules.date"
+                  ></v-text-field>
+                  <v-date-picker
+                    v-model="entryDateStr" 
+                    @input="showDateMenu = false"
+                    color="green accent-3"
+                    next-icon="mdi-chevron-right"
+                    prev-icon="mdi-chevron-left">
+                  </v-date-picker>
+                </v-menu>
               </v-flex>
               <v-flex xs3>
-                <v-select
+                <v-combobox
+                  tabindex=0
                   ref="categorySelect"
                   :items="categories"
                   v-model="entry.category"
@@ -145,13 +170,13 @@
                   dense
                   required
                   :rules="rules.category"
-                  combobox
                   hint="Choose a Category or Add a New One"
                   append-icon="mdi-menu-down">
-                </v-select>
+                </v-combobox>
               </v-flex>
               <v-flex xs1>
                 <v-text-field
+                  tabindex=0
                   name="amount"
                   label="Amount"
                   id="amount"
@@ -163,6 +188,7 @@
               </v-flex>
               <v-flex xs5>
                 <v-text-field
+                  tabindex=0
                   name="notes"
                   label="Notes"
                   id="notes"
@@ -170,7 +196,7 @@
                 </v-text-field>
               </v-flex>
               <v-flex xs1>
-                <v-btn color="green accent-3" fab @click="saveEntry()">
+                <v-btn tabindex=0 color="green accent-3" fab @click="saveEntry()">
                   <v-icon>mdi-content-save</v-icon>
                 </v-btn>
               </v-flex>
@@ -251,6 +277,8 @@ export default {
 
   methods: {
     _bindShortcutKeys: function () {
+      var self = this
+
       Mousetrap.bind(['ctrl+n', 'command+n'], () => {
         this.newEntry()
         return false
@@ -263,6 +291,28 @@ export default {
 
       Mousetrap.bind('esc', () => {
         this.showAddEditSheet = false
+        this.entryDateStr = null
+        return false
+      })
+
+      Mousetrap.bind('+', () => {
+        if (self.showAddEditSheet && self.entryDateStr) {
+          self._deltaEntryDate(1, 'days')
+        }
+        return false
+      })
+
+      Mousetrap.bind('=', () => {
+        if (self.showAddEditSheet && self.entryDateStr) {
+          self._deltaEntryDate(1, 'days')
+        }
+        return false
+      })
+
+      Mousetrap.bind('-', () => {
+        if (self.showAddEditSheet && self.entryDateStr) {
+          self._deltaEntryDate(-1, 'days')
+        }
         return false
       })
     },
@@ -396,7 +446,8 @@ export default {
 
     newEntry: function () {
       this.entryDateStr = Format.formatDate(new Date(), Constants.FORMATS.entryDate)
-      this.$refs.categorySelect.$el.focus()
+      // this.$refs.categorySelect.$el.focus()
+      this.$refs.dateField.focus()
       this.showAddEditSheet = true
     },
 
@@ -493,6 +544,13 @@ export default {
       this.alert.message = message.toString()
       this.alert.timeout = timeout * 1000
       this.alert.visible = true
+    },
+
+    _deltaEntryDate: function (amount, units) {
+      var entryDate = Moment(this.entryDateStr, Constants.FORMATS.entryDate)
+      entryDate.add(amount, units)
+
+      this.entryDateStr = entryDate.format(Constants.FORMATS.entryDate)
     },
 
     _loadExpensesData: function () {

@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## v1.6.0 - Frivolous Fruitbat (Dec ??, 2018)
+### Features
+* Entry Date Handling
+    - Re-instated the pop-up calendar
+    - Using the '+' and '-' keys will inc/dec the date
+
+### Bug Fixes
+* Expenses: Fixed broken Income/Expense View Button (The Cent Button)
+* Expenses: Tabbing in the Expense Entry sheet now works much better
+
+## Misc
+* `v-jumbotron` is deprecated; replaced with `v-responsive`
+* `v-select combobox` is deprecated; replaced with `v-combobox`
+
 ## v1.5.1 (Nov 30, 2018)
 * Backend updates:
     * Upgraded Electron to v3 (3.0.10)
