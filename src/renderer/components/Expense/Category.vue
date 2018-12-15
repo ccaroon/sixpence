@@ -3,8 +3,8 @@
 
   <!-- Unbudgeted entries -->
   <template v-if="Array.isArray(entry)">
-    <v-expansion-panel>
-      <v-expansion-panel-content :class="entryColor" expand-icon="mdi-chevron-down">
+    <v-expansion-panel tabindex="-1">
+      <v-expansion-panel-content tabindex="-1" :class="entryColor" expand-icon="mdi-chevron-down">
         <v-layout row slot="header">
           <v-flex xs4 class="title">Unbudgeted</v-flex>
           <v-flex xs2 class="title green--text" text-xs-left>{{ format.formatMoney(unbudgetedIncome) }}</v-flex>

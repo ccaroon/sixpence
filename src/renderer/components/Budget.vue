@@ -131,7 +131,7 @@
                 </v-select>
               </v-flex>
               <v-flex xs2>
-                <v-select
+                <v-combobox
                   :items="categories"
                   v-model="entry.category"
                   label="Category"
@@ -139,10 +139,9 @@
                   dense
                   required
                   :rules="rules.category"
-                  combobox
                   hint="Choose a Category or Add a New One"
                   append-icon="mdi-menu-down">
-                </v-select>
+                </v-combobox>
               </v-flex>
               <v-flex xs1>
                 <v-text-field
