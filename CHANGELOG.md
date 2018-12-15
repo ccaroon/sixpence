@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## v1.6.0 - Frivolous Fruitbat (Dec ??, 2018)
+## v1.6.0 - Frivolous Fruitbat (Dec 14, 2018)
 ### Features
 * Entry Date Handling
     - Re-instated the pop-up calendar
@@ -10,7 +10,7 @@
 * Expenses: Fixed broken Income/Expense View Button (The Cent Button)
 * Expenses: Tabbing in the Expense Entry sheet now works much better
 
-## Misc
+### Misc
 * `v-jumbotron` is deprecated; replaced with `v-responsive`
 * `v-select combobox` is deprecated; replaced with `v-combobox`
 
