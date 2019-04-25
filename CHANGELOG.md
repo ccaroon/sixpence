@@ -1,5 +1,13 @@
 # CHANGELOG
 
+
+## v1.x.y - El Psy Kongroo (May XX, 2019)
+### Features
+
+### Misc
+* Updated a few NodeJS packages; Of note:
+    - Electron --> 4.1.5
+
 ## v1.6.0 - Frivolous Fruitbat (Dec 14, 2018)
 ### Features
 * Entry Date Handling
