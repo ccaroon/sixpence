@@ -1,57 +1,107 @@
 <template>
-<div>
-
-  <v-list-tile :class="entryColor">
-    <v-list-tile-avatar>
-      <v-icon>{{ entry.icon }}</v-icon>
-    </v-list-tile-avatar>
-    <v-layout row>
-      <v-flex xs1>{{ entryType }}</v-flex>
-      <v-flex xs3>{{ entry.category }}</v-flex>
-      <v-flex xs2>{{ format.formatMoney(entry.amount) }}</v-flex>
-      <v-flex xs2>{{ format.formatFrequency(entry.frequency) }} / {{ format.monthNumberToName(entry.firstDue - 1 )}}</v-flex>
-      <v-flex xs>{{ entry.notes }}</v-flex>
-    </v-layout>
-    <v-list-tile-action>
-      <v-btn flat icon @click="editEntry()" tabindex="-1">
-        <v-icon>mdi-pencil</v-icon>
-      </v-btn>
-    </v-list-tile-action>
-    <v-list-tile-action>
-      <v-btn flat icon @click="showDeleteDialog = true" tabindex="-1">
-        <v-icon>mdi-delete-forever</v-icon>
-      </v-btn>
-    </v-list-tile-action>
-  </v-list-tile>
-
-  <v-dialog v-model="showDeleteDialog" persistent max-width="65%">
-    <v-card>
-      <v-card-title class="headline">Delete Entry</v-card-title>
-      <v-divider></v-divider>
-      <v-card-text :class="entryColor">
-        <v-layout row>
-          <v-flex>{{ entryType }}</v-flex>
-          <v-flex>{{ entry.category }}</v-flex>
-          <v-flex>{{ format.formatMoney(entry.amount) }}</v-flex>
-          <v-flex>{{ format.formatFrequency(entry.frequency) }} / {{ format.monthNumberToName(entry.firstDue - 1 )}}</v-flex>
-          <v-flex>{{ entry.notes }}</v-flex>
-        </v-layout>
-      </v-card-text>
-      <v-divider></v-divider>
-      <v-card-actions>
-        <v-btn color="green darken-1"
-          small round @click="deleteEntry(entry._id)" tabindex="-1">
-          OK
+  <div>
+    <v-list-tile :class="entryColor">
+      <v-list-tile-avatar>
+        <v-icon>{{ entry.icon }}</v-icon>
+      </v-list-tile-avatar>
+      <v-layout row>
+        <v-flex xs1>{{ entryType }}</v-flex>
+        <v-flex xs3>{{ entry.category }}</v-flex>
+        <v-flex xs2>{{ format.formatMoney(entry.amount) }}</v-flex>
+        <v-flex
+          xs2
+        >{{ format.formatFrequency(entry.frequency) }} / {{ format.monthNumberToName(entry.firstDue - 1 )}}</v-flex>
+        <v-flex xs>{{ entry.notes }}</v-flex>
+      </v-layout>
+      <v-list-tile-action>
+        <v-btn flat icon :disabled="!entry.history" @click="viewHistory()" tabindex="-1">
+          <v-icon>mdi-history</v-icon>
         </v-btn>
-        <v-btn color="red darken-1"
-          small round @click.native="showDeleteDialog = false" tabindex="-1">
-          Cancel
+      </v-list-tile-action>
+      <v-list-tile-action>
+        <v-btn flat icon @click="editEntry()" tabindex="-1">
+          <v-icon>mdi-pencil</v-icon>
         </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+      </v-list-tile-action>
+      <v-list-tile-action>
+        <v-btn flat icon @click="showDeleteDialog = true" tabindex="-1">
+          <v-icon>mdi-delete-forever</v-icon>
+        </v-btn>
+      </v-list-tile-action>
+    </v-list-tile>
 
-</div>
+    <!--  HISTORY -->
+    <template v-if="entry.history">
+      <v-dialog v-model="showHistory" max-width="768">
+        <v-card>
+          <v-card-title :id="entry._id" :class="entryColor" class="headline">
+            <v-icon color="black">{{ entry.icon }}</v-icon>
+            {{ entry.category }} - Record History
+          </v-card-title>
+          <v-card-text>
+            <v-icon color="info">mdi-alert-circle</v-icon>Currently only tracking changes to budgeted amounts.
+            <v-list>
+              <v-list-tile
+                v-for="(record, index) in entry.history"
+                :key="record.date"
+                :class="altColors(index)"
+              >
+                <v-layout row>
+                  <v-flex xs1>
+                    <v-list-tile-content>
+                      <v-icon>mdi-calendar</v-icon>
+                    </v-list-tile-content>
+                  </v-flex>
+                  <v-flex xs4>
+                    <v-list-tile-content>{{ format.formatDate(record.date, 'MMM DD, YYYY @ hh:mm:ss') }}</v-list-tile-content>
+                  </v-flex>
+                  <v-flex xs7>
+                    <v-list-tile-content v-if="index < entry.history.length-1">
+                      {{ format.formatMoney(record.amount) }}
+                      &rarr;
+                      {{ format.formatMoney(entry.history[index+1].amount) }}
+                    </v-list-tile-content>
+                    <v-list-tile-content v-else>
+                      {{ format.formatMoney(record.amount) }}
+                      &rarr;
+                      {{ format.formatMoney(entry.amount) }}
+                    </v-list-tile-content>
+                  </v-flex>
+                </v-layout>
+              </v-list-tile>
+            </v-list>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
+    </template>
+
+    <v-dialog v-model="showDeleteDialog" persistent max-width="65%">
+      <v-card>
+        <v-card-title class="headline">Delete Entry</v-card-title>
+        <v-divider></v-divider>
+        <v-card-text :class="entryColor">
+          <v-layout row>
+            <v-flex>{{ entryType }}</v-flex>
+            <v-flex>{{ entry.category }}</v-flex>
+            <v-flex>{{ format.formatMoney(entry.amount) }}</v-flex>
+            <v-flex>{{ format.formatFrequency(entry.frequency) }} / {{ format.monthNumberToName(entry.firstDue - 1 )}}</v-flex>
+            <v-flex>{{ entry.notes }}</v-flex>
+          </v-layout>
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-btn color="green darken-1" small round @click="deleteEntry(entry._id)" tabindex="-1">OK</v-btn>
+          <v-btn
+            color="red darken-1"
+            small
+            round
+            @click.native="showDeleteDialog = false"
+            tabindex="-1"
+          >Cancel</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </div>
 </template>
 
 <script>
@@ -61,14 +111,19 @@ import Format from '../../lib/Format'
 
 export default {
   name: 'BudgetEntry',
-
   props: ['entry'],
 
   computed: {
+    hasHistory: function () {
+      var hasHistory = this.entry.history ? '' : 'disabled'
+      return hasHistory
+    },
+
     entryType: function () {
       var type = this.entry.type === Constants.TYPE_INCOME ? 'Income' : 'Expense'
       return (type)
     },
+
     entryColor: function () {
       var color = this.entry.amount >= 0 ? 'green accent-1' : 'red accent-1'
       return (color)
@@ -76,8 +131,21 @@ export default {
   },
 
   methods: {
+    altColors: function (value) {
+      var color = 'grey lighten-5'
+      if (value % 2 === 0) {
+        color = 'grey lighten-2'
+      }
+
+      return (color)
+    },
+
     editEntry: function () {
       this.$emit('editEntry', this.entry)
+    },
+
+    viewHistory: function () {
+      this.showHistory = true
     },
 
     deleteEntry: function (id) {
@@ -99,7 +167,8 @@ export default {
   data () {
     return {
       format: Format,
-      showDeleteDialog: false
+      showDeleteDialog: false,
+      showHistory: false
     }
   }
 }

@@ -1,5 +1,18 @@
 # CHANGELOG
 
+
+## v1.7.0 - El Psy Kongroo (May 28, 2019)
+### Features
+* Budget History
+    - Editing a budget entry now keeps a history of changed amount values.
+    - New Icon on each budget entry allows the user to view history.
+
+### Misc
+* Updated a few NodeJS packages; Of note:
+    - Electron --> 4.1.5
+* Fix a couple Vue-lint issues
+* Misc file re-formatting
+
 ## v1.6.0 - Frivolous Fruitbat (Dec 14, 2018)
 ### Features
 * Entry Date Handling

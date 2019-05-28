@@ -11,10 +11,16 @@
           </v-list-tile>
         </v-list>
       </v-menu>
-      <v-toolbar-title id="budget-toolbar-title" >Budget</v-toolbar-title>
+      <v-toolbar-title id="budget-toolbar-title">Budget</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-flex>
-        <v-btn-toggle id="budget-freq-filter" v-model="freqFilter" mandatory dark class="orange lighten-2">
+        <v-btn-toggle
+          id="budget-freq-filter"
+          v-model="freqFilter"
+          mandatory
+          dark
+          class="orange lighten-2"
+        >
           <v-btn flat>
             <v-icon>mdi-numeric-1-box</v-icon>
           </v-btn>
@@ -45,7 +51,12 @@
             <v-icon left>mdi-currency-usd-off</v-icon>
             <span class="subheading">{{ format.formatMoney(totalExpenses) }}</span>
           </v-chip>
-          <v-chip :color="totalIncome + totalExpenses >= 0 ? 'green accent-3' : 'red accent-3'" text-color="black" tabindex="-1" disabled>
+          <v-chip
+            :color="totalIncome + totalExpenses >= 0 ? 'green accent-3' : 'red accent-3'"
+            text-color="black"
+            tabindex="-1"
+            disabled
+          >
             <v-icon left>mdi-cash-multiple</v-icon>
             <span class="subheading">{{ format.formatMoney(totalIncome + totalExpenses) }}</span>
           </v-chip>
@@ -53,8 +64,9 @@
       </v-flex>
       <v-flex>
         <v-toolbar-items>
-          <v-btn @click="search()" icon color="orange lighten-2"><v-icon>mdi-magnify</v-icon></v-btn>
-          &nbsp;
+          <v-btn @click="search()" icon color="orange lighten-2">
+            <v-icon>mdi-magnify</v-icon>
+          </v-btn>&nbsp;
           <v-text-field
             ref="searchField"
             v-model="searchText"
@@ -62,42 +74,44 @@
             color="black"
             single-line
             @keyup.enter="search()"
-            @keyup.esc="clearSearch()">
-          </v-text-field>
-          <v-btn @click="clearSearch()" icon color="grey darken-2"><v-icon>mdi-close</v-icon></v-btn>
+            @keyup.esc="clearSearch()"
+          ></v-text-field>
+          <v-btn @click="clearSearch()" icon color="grey darken-2">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
         </v-toolbar-items>
       </v-flex>
       <v-spacer></v-spacer>
     </v-toolbar>
 
-    <v-snackbar
-      bottom
-      v-model="alert.visible"
-      :color="alert.color"
-      :timeout="alert.timeout">
+    <v-snackbar bottom v-model="alert.visible" :color="alert.color" :timeout="alert.timeout">
       <v-icon>{{ alert.icon }}</v-icon>
       &nbsp;{{ alert.message }}
-      <v-btn icon dark @click="alert.visible=false"><v-icon>mdi-close</v-icon></v-btn>
+      <v-btn icon dark @click="alert.visible=false">
+        <v-icon>mdi-close</v-icon>
+      </v-btn>
     </v-snackbar>
 
-    <v-list v-if="view === constants.BUDGET_VIEW_SUMMARY" dense v-for="entry in budget"
-      v-bind:key="entry._id">
-      <BudgetEntry
-        v-bind:entry="entry"
-        v-on:editEntry="editEntry"
-        v-on:refreshData="refreshData"
-        v-on:displayAlert="displayAlert">
-      </BudgetEntry>
-    </v-list>
+    <template v-if="view === constants.BUDGET_VIEW_SUMMARY">
+      <v-list dense v-for="entry in budget" v-bind:key="entry._id">
+        <BudgetEntry
+          v-bind:entry="entry"
+          v-on:editEntry="editEntry"
+          v-on:refreshData="refreshData"
+          v-on:displayAlert="displayAlert"
+        ></BudgetEntry>
+      </v-list>
+    </template>
 
-    <v-list v-if="view === constants.BUDGET_VIEW_BYMONTH" dense v-for="month in constants.MONTHS"
-      v-bind:key="month.value">
-      <BudgetMonth
-        v-bind:month="month"
-        v-bind:average="totalIncome + totalExpenses"
-        v-on:displayAlert="displayAlert">
-      </BudgetMonth>
-    </v-list>
+    <template v-if="view === constants.BUDGET_VIEW_BYMONTH">
+      <v-list dense v-for="month in constants.MONTHS" v-bind:key="month.value">
+        <BudgetMonth
+          v-bind:month="month"
+          v-bind:average="totalIncome + totalExpenses"
+          v-on:displayAlert="displayAlert"
+        ></BudgetMonth>
+      </v-list>
+    </template>
 
     <div class="text-xs-center">
       <v-bottom-sheet v-model="showAddEditSheet">
@@ -105,7 +119,13 @@
           slot="activator"
           color="green accent-3"
           @click="entry = {}"
-          fixed bottom right dark fab small>
+          fixed
+          bottom
+          right
+          dark
+          fab
+          small
+        >
           <v-icon>mdi-plus</v-icon>
         </v-btn>
         <v-card>
@@ -121,7 +141,8 @@
                   dense
                   autocomplete
                   hint="Choose an Icon"
-                  append-icon="mdi-menu-down">
+                  append-icon="mdi-menu-down"
+                >
                   <template slot="selection" slot-scope="data">
                     <v-icon>{{ data.item.value }}</v-icon>
                   </template>
@@ -140,8 +161,8 @@
                   required
                   :rules="rules.category"
                   hint="Choose a Category or Add a New One"
-                  append-icon="mdi-menu-down">
-                </v-combobox>
+                  append-icon="mdi-menu-down"
+                ></v-combobox>
               </v-flex>
               <v-flex xs1>
                 <v-text-field
@@ -151,8 +172,8 @@
                   required
                   hint="Positive for Income, Negative for Expense"
                   :rules="rules.amount"
-                  v-model="entry.amount">
-                </v-text-field>
+                  v-model="entry.amount"
+                ></v-text-field>
               </v-flex>
               <v-flex xs2>
                 <v-select
@@ -165,8 +186,8 @@
                   :rules="rules.frequency"
                   autocomplete
                   hint="How Frequently Does This Item Occur?"
-                  append-icon="mdi-menu-down">
-                </v-select>
+                  append-icon="mdi-menu-down"
+                ></v-select>
               </v-flex>
               <v-flex xs2>
                 <v-select
@@ -179,16 +200,11 @@
                   :rules="rules.firstDue"
                   autocomplete
                   hint="In What Month Is This Item First Due?"
-                  append-icon="mdi-menu-down">
-                </v-select>
+                  append-icon="mdi-menu-down"
+                ></v-select>
               </v-flex>
               <v-flex xs3>
-                <v-text-field
-                  name="notes"
-                  label="Notes"
-                  id="notes"
-                  v-model="entry.notes">
-                </v-text-field>
+                <v-text-field name="notes" label="Notes" id="notes" v-model="entry.notes"></v-text-field>
               </v-flex>
               <v-flex xs1>
                 <v-btn color="green accent-3" fab @click="saveEntry()">
@@ -200,7 +216,6 @@
         </v-card>
       </v-bottom-sheet>
     </div>
-
   </div>
 </template>
 
@@ -214,6 +229,7 @@ import Icons from '../lib/Icons'
 import Mousetrap from 'mousetrap'
 
 // const {app} = require('electron').remote
+const HISTORY_FIELDS = ['amount']
 
 export default {
   name: 'Budget',
@@ -399,6 +415,7 @@ export default {
 
     editEntry: function (entry) {
       this.entry = entry
+      this.storeHistory()
       this.showAddEditSheet = true
     },
 
@@ -417,6 +434,42 @@ export default {
       }
     },
 
+    storeHistory: function () {
+      var self = this
+
+      this.oldEntry = {}
+      HISTORY_FIELDS.forEach(function (fld) {
+        self.oldEntry[fld] = self.entry[fld]
+      })
+    },
+
+    updateHistory: function () {
+      var self = this
+      var historyRec = { date: Date.now() }
+      var relevantChange = false
+
+      if (this.oldEntry) {
+        HISTORY_FIELDS.forEach(function (fld) {
+          if (self.entry[fld] !== self.oldEntry[fld]) {
+            historyRec[fld] = self.oldEntry[fld]
+            relevantChange = true
+          }
+        })
+      }
+
+      // Zero out for next use
+      this.oldEntry = null
+
+      if (relevantChange) {
+        // Create history list if not exist
+        if (!this.entry.history) {
+          this.entry.history = []
+        }
+
+        this.entry.history.push(historyRec)
+      }
+    },
+
     saveEntry: function () {
       var self = this
 
@@ -428,6 +481,8 @@ export default {
 
         this.entry.amount = parseFloat(this.entry.amount)
         this.entry.type = this.entry.amount > 0 ? Constants.TYPE_INCOME : Constants.TYPE_EXPENSE
+
+        this.updateHistory()
 
         BudgetDB.save(this.entry)
           .then(function (numReplaced, upsert) {
@@ -473,6 +528,8 @@ export default {
         frequency: null,
         notes: null
       },
+      // Used to temp. track fields for history purposes
+      oldEntry: null,
       menu: {
         viewToggle: {
           labels: ['View By Month', 'View Entries'],
