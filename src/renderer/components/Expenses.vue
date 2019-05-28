@@ -1,6 +1,5 @@
 <template>
-<div>
-
+  <div>
     <v-toolbar color="grey darken-2" dark dense app fixed>
       <v-menu bottom offset-y>
         <v-btn tabindex="-1" slot="activator" icon>
@@ -12,9 +11,7 @@
           </v-list-tile>
         </v-list>
       </v-menu>
-      <v-toolbar-title>
-        Expenses - {{ currentMonthName }}
-      </v-toolbar-title>
+      <v-toolbar-title>Expenses - {{ currentMonthName }}</v-toolbar-title>
       <v-dialog
         ref="monthDialog"
         persistent
@@ -22,14 +19,18 @@
         lazy
         full-width
         width="290px"
-        :return-value.sync="monthToView">
-        <v-btn tabindex="-1" slot="activator" icon color="orange lighten-2"><v-icon>mdi-calendar-range</v-icon></v-btn>
+        :return-value.sync="monthToView"
+      >
+        <v-btn tabindex="-1" slot="activator" icon color="orange lighten-2">
+          <v-icon>mdi-calendar-range</v-icon>
+        </v-btn>
         <v-date-picker
           type="month"
           v-model="monthToView"
           next-icon="mdi-chevron-right"
           prev-icon="mdi-chevron-left"
-          color="green accent-3">
+          color="green accent-3"
+        >
           <v-spacer></v-spacer>
           <v-btn tabindex="-1" flat color="primary" @click="showMonthDialog = false">Cancel</v-btn>
           <v-btn tabindex="-1" flat color="primary" @click="$refs.monthDialog.save(monthToView)">OK</v-btn>
@@ -56,7 +57,12 @@
             <v-icon left>mdi-currency-usd-off</v-icon>
             <span class="subheading">{{ format.formatMoney(expensesAmount) }}</span>
           </v-chip>
-          <v-chip :color="incomeAmount + expensesAmount >= 0 ? 'green accent-3' : 'red accent-3'" text-color="black" tabindex="-1" disabled>
+          <v-chip
+            :color="incomeAmount + expensesAmount >= 0 ? 'green accent-3' : 'red accent-3'"
+            text-color="black"
+            tabindex="-1"
+            disabled
+          >
             <v-icon left>mdi-cash-multiple</v-icon>
             <span class="subheading">{{ format.formatMoney(incomeAmount + expensesAmount) }}</span>
           </v-chip>
@@ -69,8 +75,9 @@
       </v-flex>
       <v-flex>
         <v-toolbar-items>
-          <v-btn tabindex="-1" @click="search()" icon color="orange lighten-2"><v-icon>mdi-magnify</v-icon></v-btn>
-          &nbsp;
+          <v-btn tabindex="-1" @click="search()" icon color="orange lighten-2">
+            <v-icon>mdi-magnify</v-icon>
+          </v-btn>&nbsp;
           <v-text-field
             tabindex="-1"
             ref="searchField"
@@ -79,43 +86,45 @@
             color="black"
             single-line
             @keyup.enter="search()"
-            @keyup.esc="clearSearch()">
-          </v-text-field>
-          <v-btn tabindex="-1" @click="clearSearch()" icon color="grey darken-2"><v-icon>mdi-close</v-icon></v-btn>
+            @keyup.esc="clearSearch()"
+          ></v-text-field>
+          <v-btn tabindex="-1" @click="clearSearch()" icon color="grey darken-2">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
         </v-toolbar-items>
       </v-flex>
       <v-spacer></v-spacer>
     </v-toolbar>
 
-    <v-snackbar
-      bottom
-      v-model="alert.visible"
-      :color="alert.color"
-      :timeout="alert.timeout">
+    <v-snackbar bottom v-model="alert.visible" :color="alert.color" :timeout="alert.timeout">
       <v-icon>{{ alert.icon }}</v-icon>
       &nbsp;{{ alert.message }}
-      <v-btn icon dark @click="alert.visible=false"><v-icon>mdi-close</v-icon></v-btn>
+      <v-btn icon dark @click="alert.visible=false">
+        <v-icon>mdi-close</v-icon>
+      </v-btn>
     </v-snackbar>
 
-    <v-list v-if="dataLoaded && viewStyle === constants.VIEW_STYLE_LIST" dense v-for="entry in expenses"
-      v-bind:key="entry._id">
-      <ExpenseEntry
-        tabindex="-1"
-        v-bind:entry="entry"
-        v-on:editEntry="editEntry"
-        v-on:refreshData="refreshData"
-        v-on:displayAlert="displayAlert">
-      </ExpenseEntry>
-    </v-list>
+    <template v-if="dataLoaded && viewStyle === constants.VIEW_STYLE_LIST">
+      <v-list dense v-for="entry in expenses" v-bind:key="entry._id">
+        <ExpenseEntry
+          tabindex="-1"
+          v-bind:entry="entry"
+          v-on:editEntry="editEntry"
+          v-on:refreshData="refreshData"
+          v-on:displayAlert="displayAlert"
+        ></ExpenseEntry>
+      </v-list>
+    </template>
 
-    <v-list v-if="dataLoaded && viewStyle === constants.VIEW_STYLE_GROUP" dense v-for="entry in expenses"
-      v-bind:key="entry._id">
-      <ExpenseCategory
-        tabindex="-1"
-        v-bind:entry="entry"
-        v-on:viewEntriesInGroup="viewEntriesInGroup">
-      </ExpenseCategory>
-    </v-list>
+    <template v-if="dataLoaded && viewStyle === constants.VIEW_STYLE_GROUP">
+      <v-list dense v-for="entry in expenses" v-bind:key="entry._id">
+        <ExpenseCategory
+          tabindex="-1"
+          v-bind:entry="entry"
+          v-on:viewEntriesInGroup="viewEntriesInGroup"
+        ></ExpenseCategory>
+      </v-list>
+    </template>
 
     <div class="text-xs-center">
       <v-bottom-sheet v-model="showAddEditSheet">
@@ -124,7 +133,13 @@
           slot="activator"
           color="green accent-3"
           @click="entry = {}"
-          fixed bottom right dark fab small>
+          fixed
+          bottom
+          right
+          dark
+          fab
+          small
+        >
           <v-icon>mdi-plus</v-icon>
         </v-btn>
         <v-card>
@@ -139,7 +154,8 @@
                   transition="scale-transition"
                   offset-y
                   full-width
-                  min-width="290px">
+                  min-width="290px"
+                >
                   <v-text-field
                     ref="dateField"
                     slot="activator"
@@ -151,17 +167,17 @@
                     :rules="rules.date"
                   ></v-text-field>
                   <v-date-picker
-                    v-model="entryDateStr" 
+                    v-model="entryDateStr"
                     @input="showDateMenu = false"
                     color="green accent-3"
                     next-icon="mdi-chevron-right"
-                    prev-icon="mdi-chevron-left">
-                  </v-date-picker>
+                    prev-icon="mdi-chevron-left"
+                  ></v-date-picker>
                 </v-menu>
               </v-flex>
               <v-flex xs3>
                 <v-combobox
-                  tabindex=0
+                  tabindex="0"
                   ref="categorySelect"
                   :items="categories"
                   v-model="entry.category"
@@ -171,32 +187,32 @@
                   required
                   :rules="rules.category"
                   hint="Choose a Category or Add a New One"
-                  append-icon="mdi-menu-down">
-                </v-combobox>
+                  append-icon="mdi-menu-down"
+                ></v-combobox>
               </v-flex>
               <v-flex xs1>
                 <v-text-field
-                  tabindex=0
+                  tabindex="0"
                   name="amount"
                   label="Amount"
                   id="amount"
                   required
                   hint="Positive for Income, Negative for Expense"
                   :rules="rules.amount"
-                  v-model="entry.amount">
-                </v-text-field>
+                  v-model="entry.amount"
+                ></v-text-field>
               </v-flex>
               <v-flex xs5>
                 <v-text-field
-                  tabindex=0
+                  tabindex="0"
                   name="notes"
                   label="Notes"
                   id="notes"
-                  v-model="entry.notes">
-                </v-text-field>
+                  v-model="entry.notes"
+                ></v-text-field>
               </v-flex>
               <v-flex xs1>
-                <v-btn tabindex=0 color="green accent-3" fab @click="saveEntry()">
+                <v-btn tabindex="0" color="green accent-3" fab @click="saveEntry()">
                   <v-icon>mdi-content-save</v-icon>
                 </v-btn>
               </v-flex>
@@ -205,8 +221,7 @@
         </v-card>
       </v-bottom-sheet>
     </div>
-
-</div>
+  </div>
 </template>
 
 <script>
