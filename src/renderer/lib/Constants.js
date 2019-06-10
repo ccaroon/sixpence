@@ -8,6 +8,8 @@ const constants = {
   VIEW_STYLE_GROUP: 0,
   VIEW_STYLE_LIST: 1,
 
+  ROLLOVER_CATEGORY: 'Sixpence:Rollover',
+
   IE_VIEW_BUDGETED: undefined,
   IE_VIEW_TO_DATE: 0,
 

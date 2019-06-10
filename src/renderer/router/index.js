@@ -31,6 +31,11 @@ export default new Router({
       component: require('@/components/Report/Yearly').default
     },
     {
+      path: '/report/category_by_year',
+      name: 'report-cat-by-year',
+      component: require('@/components/Report/CategoryByYear').default
+    },
+    {
       path: '*',
       redirect: '/'
     }

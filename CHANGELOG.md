@@ -1,6 +1,10 @@
 # CHANGELOG
 
 
+## v1.8.0 - Atomic Fireball (June ??, 2019)
+### Features
+* New Report: Category by Year
+
 ## v1.7.0 - El Psy Kongroo (May 28, 2019)
 ### Features
 * Budget History
