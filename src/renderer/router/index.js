@@ -21,6 +21,11 @@ export default new Router({
       component: require('@/components/Expenses').default
     },
     {
+      path: '/expenses/category/:category',
+      name: 'expenses-screen-category',
+      component: require('@/components/Expenses').default
+    },
+    {
       path: '/report/list',
       name: 'report-list',
       component: require('@/components/Report/Main').default

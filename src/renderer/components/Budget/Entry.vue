@@ -111,7 +111,7 @@ import Format from '../../lib/Format'
 
 export default {
   name: 'BudgetEntry',
-  props: ['entry'],
+  props: ['entryNum', 'entry'],
 
   computed: {
     hasHistory: function () {
@@ -125,7 +125,14 @@ export default {
     },
 
     entryColor: function () {
-      var color = this.entry.amount >= 0 ? 'green accent-1' : 'red accent-1'
+      var color = null
+
+      if (this.entryNum % 2 === 0) {
+        color = (this.entry.amount >= 0) ? Constants.COLORS.INCOME : Constants.COLORS.EXPENSE
+      } else {
+        color = (this.entry.amount >= 0) ? Constants.COLORS.INCOME_ALT : Constants.COLORS.EXPENSE_ALT
+      }
+
       return (color)
     }
   },

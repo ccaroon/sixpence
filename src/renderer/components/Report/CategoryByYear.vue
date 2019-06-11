@@ -24,10 +24,10 @@
 
       <v-list dense>
         <v-list-tile
-          :class="entryColor(entry.type)"
           v-for="(entry, category, id) in data"
+          :class="entryColor(id, entry.type)"
           :key="id"
-          @click="function(){}"
+          @click="viewEntries(category)"
         >
           <v-list-tile-avatar>
             <v-icon>{{ entry.icon }}</v-icon>
@@ -63,13 +63,24 @@ export default {
   },
 
   methods: {
-    entryColor: function (type) {
-      var color = type === Constants.TYPE_INCOME ? 'green accent-1' : 'red accent-1'
+    entryColor: function (entryNum, type) {
+      var color = null
+
+      if (entryNum % 2 === 0) {
+        color = (type === Constants.TYPE_INCOME) ? Constants.COLORS.INCOME : Constants.COLORS.EXPENSE
+      } else {
+        color = (type === Constants.TYPE_INCOME) ? Constants.COLORS.INCOME_ALT : Constants.COLORS.EXPENSE_ALT
+      }
+
       return (color)
     },
 
     handleBack: function () {
       this.$router.push('/report/list')
+    },
+
+    viewEntries: function (category) {
+      this.$router.push(`/expenses/category/${encodeURIComponent(category)}`)
     },
 
     loadData: function () {

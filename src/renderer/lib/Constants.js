@@ -13,6 +13,14 @@ const constants = {
   IE_VIEW_BUDGETED: undefined,
   IE_VIEW_TO_DATE: 0,
 
+  COLORS: {
+    INCOME: 'green accent-1',
+    INCOME_ALT: 'green accent-3',
+
+    EXPENSE: 'red accent-1',
+    EXPENSE_ALT: 'red lighten-1'
+  },
+
   FORMATS: {
     entryDate: 'YYYY-MM-DD'
   },

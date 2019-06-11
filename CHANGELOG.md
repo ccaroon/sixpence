@@ -3,7 +3,12 @@
 
 ## v1.8.0 - Atomic Fireball (June ??, 2019)
 ### Features
-* New Report: Category by Year
+* Reports
+    - Category by Year - ???????????
+
+### Cleaup
+* Added a few color constants for more consistent colors -- more to do
+* Fixed extra space between list items for most lists -- more to do
 
 ## v1.7.0 - El Psy Kongroo (May 28, 2019)
 ### Features

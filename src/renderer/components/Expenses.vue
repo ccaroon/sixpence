@@ -6,7 +6,7 @@
           <v-icon>mdi-menu</v-icon>
         </v-btn>
         <v-list dense>
-          <v-list-tile @click="viewOverbudgetEntries()">
+          <v-list-tile @click="viewOverbudgetEntries()" :disabled="viewingAll">
             <v-list-tile-title>{{ menu.viewOverbudgetEntries.labels[menu.viewOverbudgetEntries.labelIndex] }}</v-list-tile-title>
           </v-list-tile>
         </v-list>
@@ -39,7 +39,7 @@
       <v-spacer></v-spacer>
       <v-flex>
         <v-btn-toggle v-model="viewStyle" mandatory class="orange lighten-2">
-          <v-btn tabindex="-1" flat>
+          <v-btn tabindex="-1" flat :disabled="viewingAll">
             <v-icon>mdi-chart-bar</v-icon>
           </v-btn>
           <v-btn tabindex="-1" flat>
@@ -49,16 +49,16 @@
       </v-flex>
       <v-flex>
         <v-toolbar-items>
-          <v-chip color="green accent-1" text-color="black" tabindex="-1" disabled>
+          <v-chip :color="constants.COLORS.INCOME" text-color="black" tabindex="-1" disabled>
             <v-icon left>mdi-currency-usd</v-icon>
             <span class="subheading">{{ format.formatMoney(incomeAmount) }}</span>
           </v-chip>
-          <v-chip color="red accent-1" text-color="black" tabindex="-1" disabled>
+          <v-chip :color="constants.COLORS.EXPENSE" text-color="black" tabindex="-1" disabled>
             <v-icon left>mdi-currency-usd-off</v-icon>
             <span class="subheading">{{ format.formatMoney(expensesAmount) }}</span>
           </v-chip>
           <v-chip
-            :color="incomeAmount + expensesAmount >= 0 ? 'green accent-3' : 'red accent-3'"
+            :color="incomeAmount + expensesAmount >= 0 ? constants.COLORS.INCOME_ALT : constants.COLORS.EXPENSE_ALT"
             text-color="black"
             tabindex="-1"
             disabled
@@ -105,9 +105,12 @@
     </v-snackbar>
 
     <template v-if="dataLoaded && viewStyle === constants.VIEW_STYLE_LIST">
-      <v-list dense v-for="entry in expenses" v-bind:key="entry._id">
+      <v-list dense>
         <ExpenseEntry
+          v-for="(entry, index) in expenses"
+          :key="index"
           tabindex="-1"
+          v-bind:entryNum="index"
           v-bind:entry="entry"
           v-on:editEntry="editEntry"
           v-on:refreshData="refreshData"
@@ -117,9 +120,12 @@
     </template>
 
     <template v-if="dataLoaded && viewStyle === constants.VIEW_STYLE_GROUP">
-      <v-list dense v-for="entry in expenses" v-bind:key="entry._id">
+      <v-list dense>
         <ExpenseCategory
+          v-for="(entry, index) in expenses"
+          :key="index"
           tabindex="-1"
+          v-bind:entryNum="index"
           v-bind:entry="entry"
           v-on:viewEntriesInGroup="viewEntriesInGroup"
         ></ExpenseCategory>
@@ -249,9 +255,23 @@ export default {
       .then(function () {
         var startMonth = new Moment()
 
-        // Setting `monthToView` triggers the changeMonth() method below
-        if (self.$route.params && self.$route.params.month) {
-          self.monthToView = startMonth.month(self.$route.params.month).format('YYYY-MM')
+        if (self.$route.params) {
+          if (self.$route.params.category) {
+            self.searchText = self.$route.params.category
+            self.viewStyle = Constants.VIEW_STYLE_LIST
+            self.viewingAll = true
+
+            self.startDate = null
+            self.endDate = null
+            self.currentMonthName = 'All'
+
+            self.refreshData()
+          } else if (self.$route.params.month) {
+            // Setting `monthToView` triggers the changeMonth() method below
+            self.monthToView = startMonth.month(self.$route.params.month).format('YYYY-MM')
+          } else {
+            self.monthToView = startMonth.format('YYYY-MM')
+          }
         } else {
           self.monthToView = startMonth.format('YYYY-MM')
         }
@@ -694,6 +714,9 @@ export default {
       this.endDate = Moment(this.monthToView, 'YYYY-MM', true).endOf('month').toDate()
       this.currentMonthName = Format.monthNumberToName(this.startDate.getMonth())
 
+      this.$route.params.category = null
+      this.viewingAll = false
+
       this.refreshData()
     },
 
@@ -737,6 +760,7 @@ export default {
       format: Format,
       viewStyle: Constants.VIEW_STYLE_GROUP,
       incomeExpenseView: Constants.IE_VIEW_TO_DATE,
+      viewingAll: false,
       expenses: [],
       dataLoaded: false,
       searchText: null,
