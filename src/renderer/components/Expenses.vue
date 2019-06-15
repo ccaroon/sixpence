@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-toolbar color="grey darken-2" dark dense app fixed>
+    <v-toolbar :color="constants.COLORS.TOOLBAR" dark dense app fixed>
       <v-menu bottom offset-y>
         <v-btn tabindex="-1" slot="activator" icon>
           <v-icon>mdi-menu</v-icon>
@@ -21,7 +21,7 @@
         width="290px"
         :return-value.sync="monthToView"
       >
-        <v-btn tabindex="-1" slot="activator" icon color="orange lighten-2">
+        <v-btn tabindex="-1" slot="activator" icon :color="constants.COLORS.TOOLBAR_BUTTON">
           <v-icon>mdi-calendar-range</v-icon>
         </v-btn>
         <v-date-picker
@@ -29,7 +29,7 @@
           v-model="monthToView"
           next-icon="mdi-chevron-right"
           prev-icon="mdi-chevron-left"
-          color="green accent-3"
+          :color="constants.COLORS.OK_BUTTON"
         >
           <v-spacer></v-spacer>
           <v-btn tabindex="-1" flat color="primary" @click="showMonthDialog = false">Cancel</v-btn>
@@ -38,7 +38,7 @@
       </v-dialog>
       <v-spacer></v-spacer>
       <v-flex>
-        <v-btn-toggle v-model="viewStyle" mandatory class="orange lighten-2">
+        <v-btn-toggle v-model="viewStyle" mandatory :class="constants.COLORS.TOOLBAR_BUTTON">
           <v-btn tabindex="-1" flat :disabled="viewingAll">
             <v-icon>mdi-chart-bar</v-icon>
           </v-btn>
@@ -75,7 +75,7 @@
       </v-flex>
       <v-flex>
         <v-toolbar-items>
-          <v-btn tabindex="-1" @click="search()" icon color="orange lighten-2">
+          <v-btn tabindex="-1" @click="search()" icon :color="constants.COLORS.TOOLBAR_BUTTON">
             <v-icon>mdi-magnify</v-icon>
           </v-btn>&nbsp;
           <v-text-field
@@ -88,7 +88,7 @@
             @keyup.enter="search()"
             @keyup.esc="clearSearch()"
           ></v-text-field>
-          <v-btn tabindex="-1" @click="clearSearch()" icon color="grey darken-2">
+          <v-btn tabindex="-1" @click="clearSearch()" icon :color="constants.COLORS.TOOLBAR">
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-toolbar-items>
@@ -137,7 +137,7 @@
         <v-btn
           tabindex="-1"
           slot="activator"
-          color="green accent-3"
+          :color="constants.COLORS.OK_BUTTON"
           @click="entry = {}"
           fixed
           bottom
@@ -175,7 +175,7 @@
                   <v-date-picker
                     v-model="entryDateStr"
                     @input="showDateMenu = false"
-                    color="green accent-3"
+                    :color="constants.COLORS.OK_BUTTON"
                     next-icon="mdi-chevron-right"
                     prev-icon="mdi-chevron-left"
                   ></v-date-picker>
@@ -218,7 +218,7 @@
                 ></v-text-field>
               </v-flex>
               <v-flex xs1>
-                <v-btn tabindex="0" color="green accent-3" fab @click="saveEntry()">
+                <v-btn tabindex="0" :color="constants.COLORS.OK_BUTTON" fab @click="saveEntry()">
                   <v-icon>mdi-content-save</v-icon>
                 </v-btn>
               </v-flex>

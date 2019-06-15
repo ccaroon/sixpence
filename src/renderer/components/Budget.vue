@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-toolbar color="grey darken-2" dark dense app fixed>
+    <v-toolbar :color="constants.COLORS.TOOLBAR" dark dense app fixed>
       <v-menu bottom offset-y>
         <v-btn slot="activator" icon>
           <v-icon>mdi-menu</v-icon>
@@ -19,7 +19,7 @@
           v-model="freqFilter"
           mandatory
           dark
-          class="orange lighten-2"
+          :class="constants.COLORS.TOOLBAR_BUTTON"
         >
           <v-btn flat>
             <v-icon>mdi-numeric-1-box</v-icon>
@@ -43,16 +43,16 @@
       </v-flex>
       <v-flex>
         <v-toolbar-items>
-          <v-chip color="green accent-1" text-color="black" tabindex="-1" disabled>
+          <v-chip :color="constants.COLORS.INCOME" text-color="black" tabindex="-1" disabled>
             <v-icon left>mdi-currency-usd</v-icon>
             <span class="subheading">{{ format.formatMoney(totalIncome) }}</span>
           </v-chip>
-          <v-chip color="red accent-1" text-color="black" tabindex="-1" disabled>
+          <v-chip :color="constants.COLORS.EXPENSE" text-color="black" tabindex="-1" disabled>
             <v-icon left>mdi-currency-usd-off</v-icon>
             <span class="subheading">{{ format.formatMoney(totalExpenses) }}</span>
           </v-chip>
           <v-chip
-            :color="totalIncome + totalExpenses >= 0 ? 'green accent-3' : 'red lighten-1'"
+            :color="totalIncome + totalExpenses >= 0 ? constants.COLORS.INCOME_ALT : constants.COLORS.EXPENSE_ALT"
             text-color="black"
             tabindex="-1"
             disabled
@@ -64,7 +64,7 @@
       </v-flex>
       <v-flex>
         <v-toolbar-items>
-          <v-btn @click="search()" icon color="orange lighten-2">
+          <v-btn @click="search()" icon :color="constants.COLORS.TOOLBAR_BUTTON">
             <v-icon>mdi-magnify</v-icon>
           </v-btn>&nbsp;
           <v-text-field
@@ -76,7 +76,7 @@
             @keyup.enter="search()"
             @keyup.esc="clearSearch()"
           ></v-text-field>
-          <v-btn @click="clearSearch()" icon color="grey darken-2">
+          <v-btn @click="clearSearch()" icon :color="constants.COLORS.TOOLBAR">
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-toolbar-items>
@@ -122,7 +122,7 @@
       <v-bottom-sheet v-model="showAddEditSheet">
         <v-btn
           slot="activator"
-          color="green accent-3"
+          :color="constants.COLORS.OK_BUTTON"
           @click="entry = {}"
           fixed
           bottom
@@ -212,7 +212,7 @@
                 <v-text-field name="notes" label="Notes" id="notes" v-model="entry.notes"></v-text-field>
               </v-flex>
               <v-flex xs1>
-                <v-btn color="green accent-3" fab @click="saveEntry()">
+                <v-btn :color="constants.COLORS.OK_BUTTON" fab @click="saveEntry()">
                   <v-icon>mdi-content-save</v-icon>
                 </v-btn>
               </v-flex>

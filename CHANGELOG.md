@@ -1,14 +1,13 @@
 # CHANGELOG
 
-
 ## v1.8.0 - Atomic Fireball (June ??, 2019)
 ### Features
 * Reports
-    - Category by Year - ???????????
+    - Category by Year - Year by Year Comparison of each Category
 
 ### Cleaup
-* Added a few color constants for more consistent colors -- more to do
-* Fixed extra space between list items for most lists -- more to do
+* Added color constants for more consistent colors
+* Fixed extra space between list items for lists -- tightens lists up a bit
 
 ## v1.7.0 - El Psy Kongroo (May 28, 2019)
 ### Features

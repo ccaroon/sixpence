@@ -139,9 +139,9 @@ export default {
 
   methods: {
     altColors: function (value) {
-      var color = 'grey lighten-5'
+      var color = Constants.COLORS.GREY
       if (value % 2 === 0) {
-        color = 'grey lighten-2'
+        color = Constants.COLORS.GREY_ALT
       }
 
       return (color)

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-toolbar color="grey darken-2" dark dense app fixed>
+    <v-toolbar :color="constants.COLORS.TOOLBAR" dark dense app fixed>
       <v-menu bottom offset-y>
         <v-btn slot="activator" icon @click="handleBack()">
           <v-icon>mdi-arrow-left-thick</v-icon>
@@ -140,7 +140,8 @@ export default {
       yearRange: [],
       data: {},
       dataLoaded: false,
-      format: Format
+      format: Format,
+      constants: Constants
     })
   }
 }

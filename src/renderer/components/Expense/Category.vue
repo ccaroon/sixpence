@@ -106,7 +106,7 @@ export default {
       var color
       var total = this.entryTotal
 
-      color = total === 0 ? 'grey lighten-5' : 'grey lighten-1'
+      color = total === 0 ? Constants.COLORS.GREY_ALT : Constants.COLORS.GREY
 
       return (color)
     },
@@ -122,13 +122,13 @@ export default {
       if (p === 0) {
         color = 'white'
       } else if (p <= 75) {
-        color = 'green accent-1'
+        color = Constants.COLORS.PROGRESS_GOOD
       } else if (p > 75 && p < 100) {
-        color = 'yellow accent-1'
+        color = Constants.COLORS.PROGRESS_WARN
       } else if (p === 100) {
-        color = 'green accent-3'
+        color = Constants.COLORS.PROGRESS_BULLSEYE
       } else {
-        color = 'red accent-2'
+        color = Constants.COLORS.PROGRESS_DANGER
       }
 
       return color
