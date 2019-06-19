@@ -1,6 +1,13 @@
 # CHANGELOG
 
 ## v1.8.0 - Atomic Fireball (June ??, 2019)
+
+TODO:
+- Category by Year
+  - alternating column colors
+  - maybe use data table
+  - ability to view a single catetory by month across years
+
 ### Features
 * Reports
     - Category by Year - Year by Year Comparison of each Category
