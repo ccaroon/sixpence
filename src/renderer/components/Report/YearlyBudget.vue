@@ -8,7 +8,7 @@
       </v-menu>
       <v-toolbar-title
         v-if="view === 'catByYear'"
-      >Report - All Budgeted Categories - {{ this.year }}</v-toolbar-title>
+      >Report - Budget Progress for {{ this.year }}</v-toolbar-title>
       <v-toolbar-title v-if="view === 'catByMonth' && dataLoaded">
         Report - Category by Month
         <v-chip
@@ -67,10 +67,16 @@ import YearlyCatByMonth from './YearlyCatByMonth'
 import Moment from 'moment'
 
 export default {
-  name: 'ReportYearly',
+  name: 'YearlyBudget',
   components: { ExpenseCategory, YearlyCatByMonth },
 
   mounted () {
+    if (this.$route.params.year) {
+      this.year = this.$route.params.year
+      this.yearStart = Moment(`${this.year}-01-01`).toDate()
+      this.yearEnd = Moment(`${this.year}-12-31`).toDate()
+    }
+
     this.viewCategoryByYear()
   },
 

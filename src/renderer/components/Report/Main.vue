@@ -55,14 +55,14 @@ export default {
       constants: Constants,
       reportList: [
         {
-          title: 'Year By Category',
-          url: '/report/yearly',
-          desc: 'Summary of Income/Expenses by Category for an entire Year'
+          title: 'Yearly Budget',
+          url: '/report/yearly-budget',
+          desc: 'Budget Progress for a Year'
         },
         {
-          title: 'Category Across Years',
-          url: '/report/category_by_year',
-          desc: 'Year by Year Comparison of each Category'
+          title: 'Multi-Year Income/Expense Comparison',
+          url: '/report/multi-year-comparison',
+          desc: 'Income & Expense Comparison between Years'
         }
       ]
     }

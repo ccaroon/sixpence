@@ -6,7 +6,9 @@
           <v-icon>mdi-arrow-left-thick</v-icon>
         </v-btn>
       </v-menu>
-      <v-toolbar-title>Report - Category By Year</v-toolbar-title>
+      <v-toolbar-title>Report - Income & Expenses By Year</v-toolbar-title>
+      <v-toolbar-items>
+      </v-toolbar-items>
     </v-toolbar>
 
     <template v-if="dataLoaded">
@@ -16,8 +18,10 @@
             <v-icon>mdi-cash</v-icon>
           </v-list-tile-avatar>
           <v-layout row>
-            <v-flex xs3 class="title">Category</v-flex>
-            <v-flex xs1 class="title" v-for="(year, id) in yearRange" :key="id">{{ year }}</v-flex>
+            <v-flex xs3 align-self-center class="title">Category</v-flex>
+            <v-flex align-self-center xs1 v-for="(year, id) in yearRange" :key="id">
+              <v-btn @click="viewYear(year)">{{ year }}</v-btn>
+            </v-flex>
           </v-layout>
         </v-list-tile>
       </v-list>
@@ -34,7 +38,7 @@
           </v-list-tile-avatar>
           <v-layout row>
             <v-flex xs3>{{ category }}</v-flex>
-            <v-flex xs1 v-for="(year, id) in yearRange" :key="id">
+            <v-flex text-xs-center xs1 v-for="(year, id) in yearRange" :key="id">
               <span v-if="entry[year]">{{ format.formatMoney(entry[year]) }}</span>
               <span v-else>N/A</span>
             </v-flex>
@@ -52,7 +56,7 @@ import Format from '../../lib/Format'
 import Moment from 'moment'
 
 export default {
-  name: 'CategoryByYear',
+  name: 'MultiYearComparison',
 
   computed: {
 
@@ -77,6 +81,10 @@ export default {
 
     handleBack: function () {
       this.$router.push('/report/list')
+    },
+
+    viewYear: function (year) {
+      this.$router.push(`/report/yearly-budget/${year}`)
     },
 
     viewEntries: function (category) {
