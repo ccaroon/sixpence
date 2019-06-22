@@ -10,14 +10,7 @@
         v-if="view === 'catByYear'"
       >Report - Budget Progress for {{ this.year }}</v-toolbar-title>
       <v-toolbar-title v-if="view === 'catByMonth' && dataLoaded">
-        Report - Category by Month
-        <v-chip
-          class="subheading"
-          :color="constants.COLORS.TOOLBAR_BUTTON"
-          label
-          disabled
-        >{{ selectedCategory }}</v-chip>
-        <v-chip class="subheading" color="grey lighten-1" label disabled>{{ this.year }}</v-chip>
+        Report - {{ selectedCategory }} for {{ this.year }}
         <v-chip
           :color="amountColor(reportData.totalSpent,3)"
           text-color="black"
@@ -150,10 +143,16 @@ export default {
       this.selectedCategory = catName
       this.view = 'catByMonth'
       this.dataLoaded = false
+
+      // If viewing the current year, only average up to the current month,
+      // otherwise average across a full year (12 months)
+      var now = Moment()
+      var divisor = this.year === now.year() ? now.month() + 1 : 12.0
+
       this.reportData = {
-        'totalSpent': totalSpent,
-        'avgSpent': totalSpent / 12.0,
-        'data': []
+        totalSpent: totalSpent,
+        avgSpent: totalSpent / divisor,
+        data: []
       }
 
       BudgetDB.search({'category': catName})
