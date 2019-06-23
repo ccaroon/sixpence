@@ -1,12 +1,12 @@
 <template>
   <div>
-    <v-toolbar color="grey darken-2" dark dense app fixed>
+    <v-toolbar :color="constants.COLORS.TOOLBAR" dark dense app fixed>
       <v-menu bottom offset-y>
         <v-btn tabindex="-1" slot="activator" icon>
           <v-icon>mdi-menu</v-icon>
         </v-btn>
         <v-list dense>
-          <v-list-tile @click="viewOverbudgetEntries()">
+          <v-list-tile @click="viewOverbudgetEntries()" :disabled="viewingAll">
             <v-list-tile-title>{{ menu.viewOverbudgetEntries.labels[menu.viewOverbudgetEntries.labelIndex] }}</v-list-tile-title>
           </v-list-tile>
         </v-list>
@@ -21,7 +21,7 @@
         width="290px"
         :return-value.sync="monthToView"
       >
-        <v-btn tabindex="-1" slot="activator" icon color="orange lighten-2">
+        <v-btn tabindex="-1" slot="activator" icon :color="constants.COLORS.TOOLBAR_BUTTON">
           <v-icon>mdi-calendar-range</v-icon>
         </v-btn>
         <v-date-picker
@@ -29,7 +29,7 @@
           v-model="monthToView"
           next-icon="mdi-chevron-right"
           prev-icon="mdi-chevron-left"
-          color="green accent-3"
+          :color="constants.COLORS.OK_BUTTON"
         >
           <v-spacer></v-spacer>
           <v-btn tabindex="-1" flat color="primary" @click="showMonthDialog = false">Cancel</v-btn>
@@ -38,8 +38,8 @@
       </v-dialog>
       <v-spacer></v-spacer>
       <v-flex>
-        <v-btn-toggle v-model="viewStyle" mandatory class="orange lighten-2">
-          <v-btn tabindex="-1" flat>
+        <v-btn-toggle v-model="viewStyle" mandatory :class="constants.COLORS.TOOLBAR_BUTTON">
+          <v-btn tabindex="-1" flat :disabled="viewingAll">
             <v-icon>mdi-chart-bar</v-icon>
           </v-btn>
           <v-btn tabindex="-1" flat>
@@ -49,16 +49,16 @@
       </v-flex>
       <v-flex>
         <v-toolbar-items>
-          <v-chip color="green accent-1" text-color="black" tabindex="-1" disabled>
+          <v-chip :color="constants.COLORS.INCOME" text-color="black" tabindex="-1" disabled>
             <v-icon left>mdi-currency-usd</v-icon>
             <span class="subheading">{{ format.formatMoney(incomeAmount) }}</span>
           </v-chip>
-          <v-chip color="red accent-1" text-color="black" tabindex="-1" disabled>
+          <v-chip :color="constants.COLORS.EXPENSE" text-color="black" tabindex="-1" disabled>
             <v-icon left>mdi-currency-usd-off</v-icon>
             <span class="subheading">{{ format.formatMoney(expensesAmount) }}</span>
           </v-chip>
           <v-chip
-            :color="incomeAmount + expensesAmount >= 0 ? 'green accent-3' : 'red accent-3'"
+            :color="incomeAmount + expensesAmount >= 0 ? constants.COLORS.INCOME_ALT : constants.COLORS.EXPENSE_ALT"
             text-color="black"
             tabindex="-1"
             disabled
@@ -75,7 +75,7 @@
       </v-flex>
       <v-flex>
         <v-toolbar-items>
-          <v-btn tabindex="-1" @click="search()" icon color="orange lighten-2">
+          <v-btn tabindex="-1" @click="search()" icon :color="constants.COLORS.TOOLBAR_BUTTON">
             <v-icon>mdi-magnify</v-icon>
           </v-btn>&nbsp;
           <v-text-field
@@ -88,7 +88,7 @@
             @keyup.enter="search()"
             @keyup.esc="clearSearch()"
           ></v-text-field>
-          <v-btn tabindex="-1" @click="clearSearch()" icon color="grey darken-2">
+          <v-btn tabindex="-1" @click="clearSearch()" icon :color="constants.COLORS.TOOLBAR">
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-toolbar-items>
@@ -105,9 +105,12 @@
     </v-snackbar>
 
     <template v-if="dataLoaded && viewStyle === constants.VIEW_STYLE_LIST">
-      <v-list dense v-for="entry in expenses" v-bind:key="entry._id">
+      <v-list dense>
         <ExpenseEntry
+          v-for="(entry, index) in expenses"
+          :key="index"
           tabindex="-1"
+          v-bind:entryNum="index"
           v-bind:entry="entry"
           v-on:editEntry="editEntry"
           v-on:refreshData="refreshData"
@@ -117,9 +120,12 @@
     </template>
 
     <template v-if="dataLoaded && viewStyle === constants.VIEW_STYLE_GROUP">
-      <v-list dense v-for="entry in expenses" v-bind:key="entry._id">
+      <v-list dense>
         <ExpenseCategory
+          v-for="(entry, index) in expenses"
+          :key="index"
           tabindex="-1"
+          v-bind:entryNum="index"
           v-bind:entry="entry"
           v-on:viewEntriesInGroup="viewEntriesInGroup"
         ></ExpenseCategory>
@@ -131,7 +137,7 @@
         <v-btn
           tabindex="-1"
           slot="activator"
-          color="green accent-3"
+          :color="constants.COLORS.OK_BUTTON"
           @click="entry = {}"
           fixed
           bottom
@@ -169,7 +175,7 @@
                   <v-date-picker
                     v-model="entryDateStr"
                     @input="showDateMenu = false"
-                    color="green accent-3"
+                    :color="constants.COLORS.OK_BUTTON"
                     next-icon="mdi-chevron-right"
                     prev-icon="mdi-chevron-left"
                   ></v-date-picker>
@@ -212,7 +218,7 @@
                 ></v-text-field>
               </v-flex>
               <v-flex xs1>
-                <v-btn tabindex="0" color="green accent-3" fab @click="saveEntry()">
+                <v-btn tabindex="0" :color="constants.COLORS.OK_BUTTON" fab @click="saveEntry()">
                   <v-icon>mdi-content-save</v-icon>
                 </v-btn>
               </v-flex>
@@ -249,9 +255,23 @@ export default {
       .then(function () {
         var startMonth = new Moment()
 
-        // Setting `monthToView` triggers the changeMonth() method below
-        if (self.$route.params && self.$route.params.month) {
-          self.monthToView = startMonth.month(self.$route.params.month).format('YYYY-MM')
+        if (self.$route.params) {
+          if (self.$route.params.category) {
+            self.searchText = self.$route.params.category
+            self.viewStyle = Constants.VIEW_STYLE_LIST
+            self.viewingAll = true
+
+            self.startDate = null
+            self.endDate = null
+            self.currentMonthName = 'All'
+
+            self.refreshData()
+          } else if (self.$route.params.month) {
+            // Setting `monthToView` triggers the changeMonth() method below
+            self.monthToView = startMonth.month(self.$route.params.month).format('YYYY-MM')
+          } else {
+            self.monthToView = startMonth.format('YYYY-MM')
+          }
         } else {
           self.monthToView = startMonth.format('YYYY-MM')
         }
@@ -694,6 +714,9 @@ export default {
       this.endDate = Moment(this.monthToView, 'YYYY-MM', true).endOf('month').toDate()
       this.currentMonthName = Format.monthNumberToName(this.startDate.getMonth())
 
+      this.$route.params.category = null
+      this.viewingAll = false
+
       this.refreshData()
     },
 
@@ -737,6 +760,7 @@ export default {
       format: Format,
       viewStyle: Constants.VIEW_STYLE_GROUP,
       incomeExpenseView: Constants.IE_VIEW_TO_DATE,
+      viewingAll: false,
       expenses: [],
       dataLoaded: false,
       searchText: null,

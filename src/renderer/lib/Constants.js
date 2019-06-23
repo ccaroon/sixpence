@@ -8,8 +8,34 @@ const constants = {
   VIEW_STYLE_GROUP: 0,
   VIEW_STYLE_LIST: 1,
 
+  ROLLOVER_CATEGORY: 'Sixpence:Rollover',
+
   IE_VIEW_BUDGETED: undefined,
   IE_VIEW_TO_DATE: 0,
+
+  COLORS: {
+    INCOME: 'green accent-1',
+    INCOME_ALT: 'green accent-3',
+
+    EXPENSE: 'red accent-1',
+    EXPENSE_ALT: 'red lighten-1',
+
+    OK_BUTTON: 'green accent-3',
+    CANCEL_BUTTON: 'red lighten-1',
+
+    TOOLBAR_BUTTON: 'orange lighten-2',
+    TOOLBAR: 'grey darken-2',
+
+    ITEM_HIGHLIGHT: 'orange lighten-2',
+
+    GREY: 'grey lighten-2',
+    GREY_ALT: 'grey lighten-4',
+
+    PROGRESS_GOOD: 'green accent-1',
+    PROGRESS_WARN: 'yellow accent-1',
+    PROGRESS_BULLSEYE: 'green accent-3',
+    PROGRESS_DANGER: 'red accent-2'
+  },
 
   FORMATS: {
     entryDate: 'YYYY-MM-DD'

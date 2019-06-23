@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## v1.8.0 - Atomic Fireball (June 22, 2019)
+### Features
+* Reports
+    - Multi-year Income/Expense Comparison
+
+### Improvements
+* Fixed extra space between list items for lists -- tightens lists up a bit
+* Reports - Monthly Category breakdown for  year
+    - Removed category name and year from `v-chips` for better readability
+    - Average per month amount for current year only averages up to current month (not across entire year)
+
+### Code Cleanup
+* Added color constants for more consistent colors
 
 ## v1.7.0 - El Psy Kongroo (May 28, 2019)
 ### Features

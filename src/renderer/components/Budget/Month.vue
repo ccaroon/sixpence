@@ -1,39 +1,44 @@
 <template>
-<div>
-
-  <v-list-tile @click="budgetDetails()" :class="rowColor()" v-if="dataLoaded">
-    <v-list-tile-avatar>
-      <v-icon>{{ month.icon }}</v-icon>
-    </v-list-tile-avatar>
-    <v-layout row align-center>
-      <v-flex xs3><span class="subheading">{{ month.text }}</span></v-flex>
-      <v-flex xs3>
-        <v-chip label color="green accent-1" disabled>
-          <v-icon left>mdi-currency-usd</v-icon>
-          <span class="subheading">{{ format.formatMoney(monthData.income) }}</span>
-        </v-chip>
-      </v-flex>
-      <v-flex xs3>
-        <v-chip label color="red accent-1" disabled>
-          <v-icon left>mdi-currency-usd-off</v-icon>
-          <span class="subheading">{{ format.formatMoney(monthData.expense) }}</span>
-        </v-chip>
-      </v-flex>
-      <v-flex xs3>
-        <v-chip label :color="monthData.diff >= 0.0 ? 'green accent-3' : 'red accent-3'" disabled>
+  <div>
+    <v-list-tile @click="budgetDetails()" :class="rowColor()" v-if="dataLoaded">
+      <v-list-tile-avatar>
+        <v-icon>{{ month.icon }}</v-icon>
+      </v-list-tile-avatar>
+      <v-layout row align-center>
+        <v-flex xs3>
+          <span class="subheading">{{ month.text }}</span>
+        </v-flex>
+        <v-flex xs3>
+          <v-chip label :color="constants.COLORS.INCOME" disabled>
+            <v-icon left>mdi-currency-usd</v-icon>
+            <span class="subheading">{{ format.formatMoney(monthData.income) }}</span>
+          </v-chip>
+        </v-flex>
+        <v-flex xs3>
+          <v-chip label :color="constants.COLORS.EXPENSE" disabled>
+            <v-icon left>mdi-currency-usd-off</v-icon>
+            <span class="subheading">{{ format.formatMoney(monthData.expense) }}</span>
+          </v-chip>
+        </v-flex>
+        <v-flex xs3>
+          <v-chip
+            label
+            :color="monthData.diff >= 0.0 ? constants.COLORS.INCOME_ALT : constants.COLORS.EXPENSE_ALT"
+            disabled
+          >
             <v-icon left>mdi-cash-multiple</v-icon>
             <span class="subheading">{{ format.formatMoney(monthData.diff) }}</span>
             <v-icon :color="averageColor()" right>{{ averageIcon() }}</v-icon>
-        </v-chip>
-      </v-flex>
-    </v-layout>
-  </v-list-tile>
-
-</div>
+          </v-chip>
+        </v-flex>
+      </v-layout>
+    </v-list-tile>
+  </div>
 </template>
 
 <script>
 import BudgetDB from '../../lib/BudgetDB'
+import Constants from '../../lib/Constants'
 import Format from '../../lib/Format'
 
 const ICONS = {
@@ -79,11 +84,11 @@ export default {
     },
 
     rowColor: function () {
-      var color = this.month.value % 2 === 0 ? 'grey lighten-4' : 'grey lighten-2'
+      var color = this.month.value % 2 === 0 ? Constants.COLORS.GREY : Constants.COLORS.GREY_ALT
 
       // Highlight Current Month
       if (this.month.value - 1 === (new Date()).getMonth()) {
-        color = 'orange lighten-2'
+        color = Constants.COLORS.ITEM_HIGHLIGHT
       }
 
       return (color)
@@ -97,9 +102,9 @@ export default {
     averageColor: function () {
       var color = 'black'
       if (this.aboveBelowAverage() === -1) {
-        color = 'red accent-1'
+        color = Constants.COLORS.EXPENSE
       } else if (this.aboveBelowAverage() === 1) {
-        color = 'green accent-1'
+        color = Constants.COLORS.INCOME
       }
 
       return (color)
@@ -121,6 +126,7 @@ export default {
 
   data () {
     return {
+      constants: Constants,
       format: Format,
       dataLoaded: false,
       monthData: {}

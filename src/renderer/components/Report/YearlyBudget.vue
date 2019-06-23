@@ -1,50 +1,54 @@
 <template>
-<div>
-  <v-toolbar color="grey darken-2" dark dense app fixed>
-    <v-menu bottom offset-y>
-      <v-btn slot="activator" icon @click="handleBack()">
-        <v-icon>mdi-arrow-left-thick</v-icon>
-      </v-btn>
-    </v-menu>
-    <v-toolbar-title v-if="view === 'catByYear'">Report - All Budgeted Categories - {{ this.year }}</v-toolbar-title>
-    <v-toolbar-title v-if="view === 'catByMonth' && dataLoaded">
-      Report - Category by Month
-      <v-chip class="subheading" color="orange lighten-2" label disabled>
-        {{ selectedCategory }} 
-      </v-chip>
-      <v-chip class="subheading" color="grey lighten-1" label disabled>
-        {{ this.year }}
-      </v-chip>
-      <v-chip :color="amountColor(reportData.totalSpent,3)" text-color="black" tabindex="-1" disabled>
-        <v-icon left>fa-calendar</v-icon>
-        <span class="subheading">{{ format.formatMoney(Math.abs(reportData.totalSpent)) }}</span>
-      </v-chip>
-      <v-chip :color="amountColor(reportData.avgSpent)" text-color="black" tabindex="-1" disabled>
-        <v-icon left>mdi-cash-multiple</v-icon>
-        <span class="subheading">{{ format.formatMoney(Math.abs(reportData.avgSpent)) }} / Month</span>
-      </v-chip>
-    </v-toolbar-title>
-  </v-toolbar>
+  <div>
+    <v-toolbar :color="constants.COLORS.TOOLBAR" dark dense app fixed>
+      <v-menu bottom offset-y>
+        <v-btn slot="activator" icon @click="handleBack()">
+          <v-icon>mdi-arrow-left-thick</v-icon>
+        </v-btn>
+      </v-menu>
+      <v-toolbar-title
+        v-if="view === 'catByYear'"
+      >Report - Budget Progress for {{ this.year }}</v-toolbar-title>
+      <v-toolbar-title v-if="view === 'catByMonth' && dataLoaded">
+        Report - {{ selectedCategory }} for {{ this.year }}
+        <v-chip
+          :color="amountColor(reportData.totalSpent,3)"
+          text-color="black"
+          tabindex="-1"
+          disabled
+        >
+          <v-icon left>fa-calendar</v-icon>
+          <span class="subheading">{{ format.formatMoney(Math.abs(reportData.totalSpent)) }}</span>
+        </v-chip>
+        <v-chip :color="amountColor(reportData.avgSpent)" text-color="black" tabindex="-1" disabled>
+          <v-icon left>mdi-cash-multiple</v-icon>
+          <span class="subheading">{{ format.formatMoney(Math.abs(reportData.avgSpent)) }} / Month</span>
+        </v-chip>
+      </v-toolbar-title>
+    </v-toolbar>
 
-  <template v-if="view === 'catByMonth' && dataLoaded">
-    <v-list dense v-for="month in constants.MONTHS" :key="month.value">
-      <YearlyCatByMonth
-        v-bind:month="month"
-        v-bind:data="reportData.data[month.value]">
-      </YearlyCatByMonth>
-    </v-list>
-  </template>
-  
-  <template v-else-if="view === 'catByYear' && dataLoaded">
-    <v-list dense v-for="(entry, id) in reportData" :key="id">
-      <ExpenseCategory
-        v-bind:entry="entry"
-        v-on:viewEntriesInGroup="viewCategoryByMonth">
-      </ExpenseCategory>
-    </v-list>
-  </template>
+    <template v-if="view === 'catByMonth' && dataLoaded">
+      <v-list dense>
+        <YearlyCatByMonth
+          v-for="month in constants.MONTHS"
+          :key="month.value"
+          v-bind:month="month"
+          v-bind:data="reportData.data[month.value]"
+        ></YearlyCatByMonth>
+      </v-list>
+    </template>
 
-</div>
+    <template v-else-if="view === 'catByYear' && dataLoaded">
+      <v-list dense>
+        <ExpenseCategory
+          v-for="(entry, id) in reportData"
+          :key="id"
+          v-bind:entry="entry"
+          v-on:viewEntriesInGroup="viewCategoryByMonth"
+        ></ExpenseCategory>
+      </v-list>
+    </template>
+  </div>
 </template>
 <script>
 import BudgetDB from '../../lib/BudgetDB'
@@ -56,10 +60,16 @@ import YearlyCatByMonth from './YearlyCatByMonth'
 import Moment from 'moment'
 
 export default {
-  name: 'ReportYearly',
+  name: 'YearlyBudget',
   components: { ExpenseCategory, YearlyCatByMonth },
 
   mounted () {
+    if (this.$route.params.year) {
+      this.year = this.$route.params.year
+      this.yearStart = Moment(`${this.year}-01-01`).toDate()
+      this.yearEnd = Moment(`${this.year}-12-31`).toDate()
+    }
+
     this.viewCategoryByYear()
   },
 
@@ -133,10 +143,16 @@ export default {
       this.selectedCategory = catName
       this.view = 'catByMonth'
       this.dataLoaded = false
+
+      // If viewing the current year, only average up to the current month,
+      // otherwise average across a full year (12 months)
+      var now = Moment()
+      var divisor = this.year === now.year() ? now.month() + 1 : 12.0
+
       this.reportData = {
-        'totalSpent': totalSpent,
-        'avgSpent': totalSpent / 12.0,
-        'data': []
+        totalSpent: totalSpent,
+        avgSpent: totalSpent / divisor,
+        data: []
       }
 
       BudgetDB.search({'category': catName})
