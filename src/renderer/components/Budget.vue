@@ -344,15 +344,8 @@ export default {
       }
 
       if (terms.length !== 0) {
-        var query = {}
-        if (terms.length > 1) {
-          query = {
-            $and:
-            terms
-          }
-        } else {
-          query = terms[0]
-        }
+        terms.push({isArchived: false})
+        var query = { $and: terms }
 
         BudgetDB.search(query)
           .then(function (docs) {

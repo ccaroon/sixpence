@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## v1.9.0 - H2OMG (August 15, 2019)
+### Features
+* Budget
+    + Added ability to archive an entry. 
+      - Archiving will:
+        1. Hide the entry in the UI
+        2. Remove it from calculations
+    + Adds `isArchived` field to the Budget database
+* Database Migrations
+    + Added ability to detect if user's databases need updating and then apply those updates.
+      - I.e. A database migration system with user notifications.
+
 ## v1.8.0 - Atomic Fireball (June 22, 2019)
 ### Features
 * Reports
