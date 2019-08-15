@@ -24,7 +24,7 @@
         </v-btn>
       </v-list-tile-action>
       <v-list-tile-action>
-        <v-btn flat icon @click="showDeleteDialog = true" tabindex="-1">
+        <v-btn flat icon @click="showRemoveDialog = true" tabindex="-1">
           <v-icon>mdi-delete-forever</v-icon>
         </v-btn>
       </v-list-tile-action>
@@ -75,9 +75,9 @@
       </v-dialog>
     </template>
 
-    <v-dialog v-model="showDeleteDialog" persistent max-width="65%">
+    <v-dialog v-model="showRemoveDialog" persistent max-width="65%">
       <v-card>
-        <v-card-title class="headline">Delete Entry</v-card-title>
+        <v-card-title class="headline">Remove Entry</v-card-title>
         <v-divider></v-divider>
         <v-card-text :class="entryColor">
           <v-layout row>
@@ -90,14 +90,23 @@
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions>
-          <v-btn color="green darken-1" small round @click="deleteEntry(entry._id)" tabindex="-1">OK</v-btn>
+          <v-btn color="green darken-1" small round @click="archiveEntry(entry)" tabindex="-1">
+            <v-icon left>mdi-package-down</v-icon>Archive
+          </v-btn>
+          <v-btn color="red darken-2" small round @click="deleteEntry(entry._id)" tabindex="-1">
+            <v-icon left>mdi-delete-forever</v-icon>Delete Forever
+          </v-btn>
           <v-btn
-            color="red darken-1"
+            color="red lighten-1"
             small
             round
-            @click.native="showDeleteDialog = false"
+            right
+            absolute
+            @click.native="showRemoveDialog = false"
             tabindex="-1"
-          >Cancel</v-btn>
+          >
+            <v-icon left>mdi-cancel</v-icon>Cancel
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -147,6 +156,22 @@ export default {
       return (color)
     },
 
+    archiveEntry: function (entry) {
+      var self = this
+
+      this.showRemoveDialog = false
+
+      entry.isArchived = true
+      BudgetDB.save(entry)
+        .then((num, upsert) => {
+          self.$emit('refreshData')
+          self.$emit('displayAlert', 'mdi-package-down', 'green', 'Archive Successful!')
+        })
+        .catch(err => {
+          self.$emit('displayAlert', 'mdi-package-down', 'red', err)
+        })
+    },
+
     editEntry: function () {
       this.$emit('editEntry', this.entry)
     },
@@ -158,7 +183,7 @@ export default {
     deleteEntry: function (id) {
       var self = this
 
-      this.showDeleteDialog = false
+      this.showRemoveDialog = false
 
       BudgetDB.delete(id)
         .then(function (numDeleted) {
@@ -174,7 +199,7 @@ export default {
   data () {
     return {
       format: Format,
-      showDeleteDialog: false,
+      showRemoveDialog: false,
       showHistory: false
     }
   }

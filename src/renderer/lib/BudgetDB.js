@@ -37,11 +37,28 @@ export default {
 
   loadData: function () {
     var promise = new Promise(function (resolve, reject) {
-      _DB.find({}).sort({ type: 1, category: 1, amount: -1 }).exec(function (err, docs) {
+      _DB
+        .find({ isArchived: false })
+        .sort({ type: 1, category: 1, amount: -1 })
+        .exec(function (err, docs) {
+          if (err) {
+            reject(err)
+          } else {
+            resolve(docs)
+          }
+        })
+    })
+
+    return promise
+  },
+
+  bulkUpdate: function (query, updateData) {
+    var promise = new Promise(function (resolve, reject) {
+      _DB.update(query, updateData, { multi: true }, function (err, numReplaced) {
         if (err) {
           reject(err)
         } else {
-          resolve(docs)
+          resolve(numReplaced)
         }
       })
     })
@@ -98,6 +115,21 @@ export default {
           resolve(uniqueCats)
         }
       })
+    })
+
+    return promise
+  },
+
+  count: function (searchTerms) {
+    var promise = new Promise(function (resolve, reject) {
+      _DB.count(searchTerms)
+        .exec(function (err, numDocs) {
+          if (err) {
+            reject(err)
+          } else {
+            resolve(numDocs)
+          }
+        })
     })
 
     return promise
