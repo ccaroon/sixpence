@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## v1.10.0a - Repentant Rupees (August 30, 2019)
+## v1.10.0 - Repentant Rupees (September 27, 2019)
 The Archive feature in v1.9.0 was NOT well thought out and resulted in many 
 undesireable isses when a Budget Entry was archived.
 
@@ -14,7 +14,7 @@ This version is a complete re-do of the Archive feature.
 * `isArchived` flag field was changed to a date field named `archivedAt`
 
 ### Bug Fixes
-...
+* Known issues that v1.9.0 created when a budget entry was archived.
 
 ### Misc
 * BudgetDB - Cleaned up a bit; simplified?
