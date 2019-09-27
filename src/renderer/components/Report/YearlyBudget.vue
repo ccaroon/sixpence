@@ -6,9 +6,7 @@
           <v-icon>mdi-arrow-left-thick</v-icon>
         </v-btn>
       </v-menu>
-      <v-toolbar-title
-        v-if="view === 'catByYear'"
-      >Report - Budget Progress for {{ this.year }}</v-toolbar-title>
+      <v-toolbar-title v-if="view === 'catByYear'">Report - Budget Progress for {{ this.year }}</v-toolbar-title>
       <v-toolbar-title v-if="view === 'catByMonth' && dataLoaded">
         Report - {{ selectedCategory }} for {{ this.year }}
         <v-chip
@@ -103,7 +101,7 @@ export default {
       this.view = 'catByYear'
       this.dataLoaded = false
 
-      BudgetDB.loadData()
+      BudgetDB.getEntries(BudgetDB.QUERIES.ACTIVE_AFTER(this.yearStart))
         .then(function (categories) {
           // Seed Budgeted Categories
           categories.forEach(function (cat) {

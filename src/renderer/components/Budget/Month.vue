@@ -40,6 +40,7 @@
 import BudgetDB from '../../lib/BudgetDB'
 import Constants from '../../lib/Constants'
 import Format from '../../lib/Format'
+import Moment from 'moment'
 
 const ICONS = {
   0: 'mdi-approval',
@@ -54,7 +55,8 @@ export default {
 
   mounted () {
     var self = this
-    BudgetDB.loadCategoryDataByMonth(this.month.value - 1)
+    var date = Moment().month(this.month.value - 1)
+    BudgetDB.loadCategoryDataByMonth(date)
       .then(function (data) {
         self.monthData.income = 0.0
         self.monthData.expense = 0.0

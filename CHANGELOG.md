@@ -1,5 +1,25 @@
 # CHANGELOG
 
+## v1.10.0 - Repentant Rupees (September 27, 2019)
+The Archive feature in v1.9.0 was NOT well thought out and resulted in many 
+undesireable isses when a Budget Entry was archived.
+
+This version is a complete re-do of the Archive feature.
+
+### Features
+* Ability to archive a budget entry.
+* Budget menu includes choice to view archived entries.
+
+### Changes
+* `isArchived` flag field was changed to a date field named `archivedAt`
+
+### Bug Fixes
+* Known issues that v1.9.0 created when a budget entry was archived.
+
+### Misc
+* BudgetDB - Cleaned up a bit; simplified?
+* `v-select autocomplete>` deprecated. Changed to `v-autocomplete`.
+
 ## v1.9.0 - H2OMG (August 15, 2019)
 ### Features
 * Budget

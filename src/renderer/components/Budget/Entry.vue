@@ -13,21 +13,24 @@
         >{{ format.formatFrequency(entry.frequency) }} / {{ format.monthNumberToName(entry.firstDue - 1 )}}</v-flex>
         <v-flex xs>{{ entry.notes }}</v-flex>
       </v-layout>
-      <v-list-tile-action>
-        <v-btn flat icon :disabled="!entry.history" @click="viewHistory()" tabindex="-1">
-          <v-icon>mdi-history</v-icon>
-        </v-btn>
-      </v-list-tile-action>
-      <v-list-tile-action>
-        <v-btn flat icon @click="editEntry()" tabindex="-1">
-          <v-icon>mdi-pencil</v-icon>
-        </v-btn>
-      </v-list-tile-action>
-      <v-list-tile-action>
-        <v-btn flat icon @click="showRemoveDialog = true" tabindex="-1">
-          <v-icon>mdi-delete-forever</v-icon>
-        </v-btn>
-      </v-list-tile-action>
+      <template v-if="!readOnly">
+        <v-list-tile-action>
+          <v-btn flat icon :disabled="!entry.history" @click="viewHistory()" tabindex="-1">
+            <v-icon>mdi-history</v-icon>
+          </v-btn>
+        </v-list-tile-action>
+        <v-list-tile-action>
+          <v-btn flat icon @click="editEntry()" tabindex="-1">
+            <v-icon>mdi-pencil</v-icon>
+          </v-btn>
+        </v-list-tile-action>
+        <v-list-tile-action>
+          <v-btn flat icon @click="showRemoveDialog = true" tabindex="-1">
+            <v-icon>mdi-delete-forever</v-icon>
+          </v-btn>
+        </v-list-tile-action>
+      </template>
+      <template v-else>Archived: {{ format.formatDate(entry.archivedAt) }}</template>
     </v-list-tile>
 
     <!--  HISTORY -->
@@ -120,7 +123,7 @@ import Format from '../../lib/Format'
 
 export default {
   name: 'BudgetEntry',
-  props: ['entryNum', 'entry'],
+  props: ['entryNum', 'entry', 'readOnly'],
 
   computed: {
     hasHistory: function () {
@@ -161,7 +164,7 @@ export default {
 
       this.showRemoveDialog = false
 
-      entry.isArchived = true
+      entry.archivedAt = new Date()
       BudgetDB.save(entry)
         .then((num, upsert) => {
           self.$emit('refreshData')

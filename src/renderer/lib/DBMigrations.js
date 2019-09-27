@@ -1,10 +1,12 @@
-// import BudgetDB from './BudgetDB'
-
 import addIsArchived from '../dbMigrations/addIsArchived'
+import delIsArchived from '../dbMigrations/delIsArchived'
+import addArchivedAt from '../dbMigrations/addArchivedAt'
 // -----------------------------------------------------------------------------
 var migrations = {
   budgetDB: [
-    addIsArchived
+    addIsArchived,
+    delIsArchived,
+    addArchivedAt
   ]
 }
 // -----------------------------------------------------------------------------
@@ -13,7 +15,9 @@ export default {
   checkBudgetDb: function () {
     var neededMigrations = []
     migrations.budgetDB.forEach(mig => {
-      neededMigrations.push({ migration: mig, needsApplying: mig.check() })
+      if (mig.active) {
+        neededMigrations.push({ migration: mig, needsApplying: mig.check() })
+      }
     })
 
     return (neededMigrations)

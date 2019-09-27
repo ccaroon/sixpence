@@ -1,4 +1,5 @@
 import Datastore from 'nedb'
+import Moment from 'moment'
 
 const { app } = require('electron').remote
 
@@ -32,13 +33,66 @@ function due (month, freq, firstDue) {
 
   return isDue
 }
+
+// Generate a query to find entries that were active between the given dates
+var activeBetween = function (start, end) {
+  var startDate = Moment(start)
+  var endDate = Moment(end)
+  return {
+    $or: [
+      { archivedAt: null },
+      {
+        $where: function () {
+          return this.archivedAt >= startDate.startOf('month') && this.archivedAt <= endDate.endOf('month')
+        }
+      }
+    ]
+  }
+}
+
+// Generate a query to find entries that were active after the given date
+var activeAfter = function (aDate) {
+  var afterDate = Moment(aDate)
+  return {
+    $or: [
+      { archivedAt: null },
+      {
+        $where: function () {
+          return this.archivedAt >= afterDate.startOf('month')
+        }
+      }
+    ]
+  }
+}
+
+// Some very useful, canned queries
+const QUERIES = {
+  ALL: {},
+  ARCHIVED: { archivedAt: { $ne: null } },
+  UNARCHIVED: { archivedAt: null },
+  ACTIVE: activeBetween(Moment(), Moment()),
+  ACTIVE_BETWEEN: activeBetween,
+  ACTIVE_AFTER: activeAfter
+}
 // -----------------------------------------------------------------------------
 export default {
 
-  loadData: function () {
+  // Canned Queries
+  QUERIES: QUERIES,
+
+  // ---------------------------------------------
+  // Load Budget Entries
+  // ---------------------------------------------
+  // By default load ALL entries
+  // -- Params --
+  // query: A valid NeDb query. Defaults to: {}
+  //        See "canned" queries (above) for some useful options.
+  // -- Return --
+  // A promise
+  getEntries: function (query = QUERIES.ALL) {
     var promise = new Promise(function (resolve, reject) {
       _DB
-        .find({ isArchived: false })
+        .find(query)
         .sort({ type: 1, category: 1, amount: -1 })
         .exec(function (err, docs) {
           if (err) {
@@ -48,17 +102,35 @@ export default {
           }
         })
     })
-
     return promise
   },
 
-  bulkUpdate: function (query, updateData) {
+  // ---------------------------------------------
+  // Load Budget Categories
+  // ---------------------------------------------
+  // By default load ALL categories
+  // -- Params --
+  // query: A valid NeDb query. Defaults to: {}
+  //        See "canned" queries (above) for some useful options.
+  // -- Return --
+  // A promise
+  getCategories: function (query = QUERIES.ALL) {
+    var fields = {
+      _id: 0,
+      icon: 1,
+      category: 1
+    }
+
     var promise = new Promise(function (resolve, reject) {
-      _DB.update(query, updateData, { multi: true }, function (err, numReplaced) {
+      _DB.find(query, fields).sort({ category: 1 }).exec(function (err, docs) {
         if (err) {
           reject(err)
         } else {
-          resolve(numReplaced)
+          var uniqueCats = {}
+          docs.forEach(function (doc) {
+            uniqueCats[doc.category] = doc.icon
+          })
+          resolve(uniqueCats)
         }
       })
     })
@@ -69,9 +141,13 @@ export default {
   // Load Budget entries for categories that are due in the given `month` based
   // on each entry's frequency and firstDue.
   // Arrange as look-up table by category
-  loadCategoryDataByMonth: function (month) {
+  loadCategoryDataByMonth: function (date) {
+    var aDate = Moment(date).date(1)
+    var month = aDate.month()
+    var query = activeAfter(aDate)
+
     var promise = new Promise(function (resolve, reject) {
-      _DB.find({}, { _id: 0, frequency: 1, firstDue: 1, category: 1, amount: 1 })
+      _DB.find(query, { _id: 0, frequency: 1, firstDue: 1, category: 1, amount: 1 })
         .sort({ category: 1 })
         .exec(function (err, docs) {
           if (err) {
@@ -96,23 +172,17 @@ export default {
     return promise
   },
 
-  loadCategories: function () {
-    var fields = {
-      _id: 0,
-      icon: 1,
-      category: 1
-    }
-
+  categoryType: function (catName) {
     var promise = new Promise(function (resolve, reject) {
-      _DB.find({}, fields).sort({ category: 1 }).exec(function (err, docs) {
+      _DB.find({ category: catName }).exec(function (err, docs) {
         if (err) {
           reject(err)
         } else {
-          var uniqueCats = {}
-          docs.forEach(function (doc) {
-            uniqueCats[doc.category] = doc.icon
-          })
-          resolve(uniqueCats)
+          if (docs.length > 0) {
+            resolve(docs[0].type)
+          } else {
+            resolve(null)
+          }
         }
       })
     })
@@ -149,17 +219,13 @@ export default {
     return promise
   },
 
-  categoryType: function (catName) {
+  bulkUpdate: function (query, updateData) {
     var promise = new Promise(function (resolve, reject) {
-      _DB.find({ category: catName }).exec(function (err, docs) {
+      _DB.update(query, updateData, { multi: true }, function (err, numReplaced) {
         if (err) {
           reject(err)
         } else {
-          if (docs.length > 0) {
-            resolve(docs[0].type)
-          } else {
-            resolve(null)
-          }
+          resolve(numReplaced)
         }
       })
     })

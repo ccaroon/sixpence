@@ -595,7 +595,7 @@ export default {
       ExpenseDB.loadData(self.startDate, self.endDate)
         .then(function (docs) {
           if (self.viewStyle === Constants.VIEW_STYLE_GROUP) {
-            BudgetDB.loadCategoryDataByMonth(self.startDate.getMonth())
+            BudgetDB.loadCategoryDataByMonth(self.startDate)
               .then(function (cats) {
                 self.categoriesForMonth = cats
                 self._groupExpensesData(docs)
@@ -675,7 +675,7 @@ export default {
       var self = this
 
       // Load Categories (includes icons)
-      BudgetDB.loadCategories()
+      BudgetDB.getCategories(BudgetDB.QUERIES.ACTIVE_AFTER(Moment(this.startDate)))
         .then(function (cats) {
           // Mapping from Category name to Icon
           self.iconMap = cats
@@ -716,6 +716,8 @@ export default {
 
       this.$route.params.category = null
       this.viewingAll = false
+
+      this._loadCategoryData()
 
       this.refreshData()
     },

@@ -6,8 +6,8 @@
           <v-icon>mdi-menu</v-icon>
         </v-btn>
         <v-list dense>
-          <v-list-tile @click="toggleView()">
-            <v-list-tile-title>{{ menu.viewToggle.labels[menu.viewToggle.labelIndex] }}</v-list-tile-title>
+          <v-list-tile v-for="(item, i) in menu" :key="i" @click="setView(item)">
+            <v-list-tile-title>{{ item.name }}</v-list-tile-title>
           </v-list-tile>
         </v-list>
       </v-menu>
@@ -92,13 +92,16 @@
       </v-btn>
     </v-snackbar>
 
-    <template v-if="view === constants.BUDGET_VIEW_SUMMARY">
+    <template
+      v-if="view === constants.BUDGET_VIEW_SUMMARY || view === constants.BUDGET_VIEW_ARCHIVED"
+    >
       <v-list dense>
         <BudgetEntry
           v-for="(entry, index) in budget"
           :key="index"
           v-bind:entryNum="index"
           v-bind:entry="entry"
+          v-bind:readOnly="view === constants.BUDGET_VIEW_ARCHIVED ? true : false"
           v-on:editEntry="editEntry"
           v-on:refreshData="refreshData"
           v-on:displayAlert="displayAlert"
@@ -137,14 +140,13 @@
           <v-form ref="budgetForm">
             <v-layout row>
               <v-flex xs1>
-                <v-select
+                <v-autocomplete
                   ref="iconSelect"
                   :items="icons.ICONS"
                   v-model="entry.icon"
                   label="Icon"
                   single-line
                   dense
-                  autocomplete
                   hint="Choose an Icon"
                   append-icon="mdi-menu-down"
                 >
@@ -154,7 +156,7 @@
                   <template slot="item" slot-scope="data">
                     <v-icon>{{ data.item.value }}</v-icon>
                   </template>
-                </v-select>
+                </v-autocomplete>
               </v-flex>
               <v-flex xs2>
                 <v-combobox
@@ -181,7 +183,7 @@
                 ></v-text-field>
               </v-flex>
               <v-flex xs2>
-                <v-select
+                <v-autocomplete
                   :items="constants.FREQUENCY"
                   v-model="entry.frequency"
                   label="Frequency"
@@ -189,13 +191,12 @@
                   dense
                   required
                   :rules="rules.frequency"
-                  autocomplete
                   hint="How Frequently Does This Item Occur?"
                   append-icon="mdi-menu-down"
-                ></v-select>
+                ></v-autocomplete>
               </v-flex>
               <v-flex xs2>
-                <v-select
+                <v-autocomplete
                   :items="constants.MONTHS"
                   v-model="entry.firstDue"
                   label="First Due"
@@ -203,10 +204,9 @@
                   dense
                   required
                   :rules="rules.firstDue"
-                  autocomplete
                   hint="In What Month Is This Item First Due?"
                   append-icon="mdi-menu-down"
-                ></v-select>
+                ></v-autocomplete>
               </v-flex>
               <v-flex xs3>
                 <v-text-field name="notes" label="Notes" id="notes" v-model="entry.notes"></v-text-field>
@@ -344,7 +344,7 @@ export default {
       }
 
       if (terms.length !== 0) {
-        terms.push({isArchived: false})
+        terms.push({archivedAt: null})
         var query = { $and: terms }
 
         BudgetDB.search(query)
@@ -372,10 +372,15 @@ export default {
       this.search()
     },
 
-    _loadBudgetData: function () {
+    _loadBudgetData: function (archivedOnly = false) {
       var self = this
 
-      BudgetDB.loadData()
+      var query = BudgetDB.QUERIES.UNARCHIVED
+      if (archivedOnly) {
+        query = BudgetDB.QUERIES.ARCHIVED
+      }
+
+      BudgetDB.getEntries(query)
         .then(function (docs) {
           self.budget = docs
           self._loadCategoryData()
@@ -388,7 +393,7 @@ export default {
     _loadCategoryData: function () {
       var self = this
 
-      BudgetDB.loadCategories()
+      BudgetDB.getCategories(BudgetDB.QUERIES.UNARCHIVED)
         .then(function (cats) {
           // Set Category List from budget entries
           self.categories = Object.keys(cats)
@@ -421,13 +426,12 @@ export default {
       this.entry = {}
     },
 
-    toggleView: function () {
-      this.menu.viewToggle.labelIndex = this.view
+    setView: function (menuItem) {
+      this.view = menuItem.id
 
-      if (this.view === Constants.BUDGET_VIEW_SUMMARY) {
-        this.view = Constants.BUDGET_VIEW_BYMONTH
+      if (this.view === Constants.BUDGET_VIEW_ARCHIVED) {
+        this._loadBudgetData(true)
       } else {
-        this.view = Constants.BUDGET_VIEW_SUMMARY
         this.refreshData()
       }
     },
@@ -468,6 +472,13 @@ export default {
       }
     },
 
+    validateEntry: function (entry) {
+      // Ensure private/hidden fields are set
+      if (!entry.archivedAt) {
+        entry.archivedAt = null
+      }
+    },
+
     saveEntry: function () {
       var self = this
 
@@ -479,6 +490,8 @@ export default {
 
         this.entry.amount = parseFloat(this.entry.amount)
         this.entry.type = this.entry.amount > 0 ? Constants.TYPE_INCOME : Constants.TYPE_EXPENSE
+
+        this.validateEntry(this.entry)
 
         this.updateHistory()
 
@@ -524,16 +537,16 @@ export default {
         amount: null,
         firstDue: null,
         frequency: null,
+        archivedAt: null,
         notes: null
       },
       // Used to temp. track fields for history purposes
       oldEntry: null,
-      menu: {
-        viewToggle: {
-          labels: ['View By Month', 'View Entries'],
-          labelIndex: 0
-        }
-      },
+      menu: [
+        {name: 'View Active Entries', id: Constants.BUDGET_VIEW_SUMMARY},
+        {name: 'View Archived Entries', id: Constants.BUDGET_VIEW_ARCHIVED},
+        {name: 'View By Month', id: Constants.BUDGET_VIEW_BYMONTH}
+      ],
       view: Constants.BUDGET_VIEW_SUMMARY,
       showAddEditSheet: false,
       rules: {

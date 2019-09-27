@@ -5,6 +5,12 @@ export default {
   desc: 'Adds a new field to the database named `isArchived`. Used when marking a Budget Entry as Archived.',
 
   critical: true,
+  active: false,
+
+  notes: [
+    'No longer necessary. Short lived for v1.9.0 only.',
+    'Superseded by `addArchivedAt`.'
+  ],
 
   check: function () {
     return BudgetDB.count({ isArchived: { $exists: false } })
