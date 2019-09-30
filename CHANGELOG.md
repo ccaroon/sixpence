@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## v1.11.0a - Codename Goes Here (???? ??, 2019)
+### Features
+* Expense: If budgeted category, show budgeted value as placeholder text for expense entry amount
+* Expense: On new entry show form as red or green based on category to indicate that it will default to an Income or Expense entry.
+
+### Changes
+* Changed new expense entry form control style to `solo`. Looks nicer than the normal style.
+
+### Misc
+* Tabbing "fixes" on Expenses new entry form. Better?
+
 ## v1.10.0 - Repentant Rupees (September 27, 2019)
 The Archive feature in v1.9.0 was NOT well thought out and resulted in many 
 undesireable isses when a Budget Entry was archived.

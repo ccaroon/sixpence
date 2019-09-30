@@ -153,6 +153,7 @@
             <v-layout row>
               <v-flex xs2>
                 <v-menu
+                  tabindex="-1"
                   :close-on-content-click="false"
                   v-model="showDateMenu"
                   :nudge-right="40"
@@ -163,12 +164,15 @@
                   min-width="290px"
                 >
                   <v-text-field
+                    tabindex="-1"
                     ref="dateField"
                     slot="activator"
                     v-model="entryDateStr"
                     label="Date"
                     prepend-icon="mdi-calendar-range"
-                    disabled
+                    readonly
+                    solo
+                    :background-color="newEntryColor"
                     required
                     :rules="rules.date"
                   ></v-text-field>
@@ -191,6 +195,8 @@
                   single-line
                   dense
                   required
+                  solo
+                  :background-color="newEntryColor"
                   :rules="rules.category"
                   hint="Choose a Category or Add a New One"
                   append-icon="mdi-menu-down"
@@ -203,9 +209,12 @@
                   label="Amount"
                   id="amount"
                   required
-                  hint="Positive for Income, Negative for Expense"
+                  solo
+                  :background-color="newEntryColor"
+                  hint="+/- Amount"
                   :rules="rules.amount"
                   v-model="entry.amount"
+                  :placeholder="amountPlaceholder"
                 ></v-text-field>
               </v-flex>
               <v-flex xs5>
@@ -214,6 +223,8 @@
                   name="notes"
                   label="Notes"
                   id="notes"
+                  solo
+                  :background-color="newEntryColor"
                   v-model="entry.notes"
                 ></v-text-field>
               </v-flex>
@@ -307,6 +318,28 @@ export default {
       }
 
       return (amount)
+    },
+
+    amountPlaceholder: function () {
+      var value = ''
+
+      if (this.categoriesForMonth && this.categoriesForMonth[this.entry.category]) {
+        value = this.categoriesForMonth[this.entry.category].toString()
+      }
+
+      return (value)
+    },
+
+    newEntryColor: function () {
+      var color = Constants.COLORS.GREY
+
+      if (this.entry.amount < 0) {
+        color = this.constants.COLORS.EXPENSE_ALT
+      } else if (this.categoriesForMonth && this.categoriesForMonth[this.entry.category]) {
+        color = this.categoriesForMonth[this.entry.category] > 0 ? this.constants.COLORS.INCOME_ALT : this.constants.COLORS.EXPENSE_ALT
+      }
+
+      return (color)
     }
   },
 
