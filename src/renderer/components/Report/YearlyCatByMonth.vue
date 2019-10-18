@@ -1,27 +1,27 @@
 <template>
   <div>
-    <v-list-tile :class="rowColor(month)">
-      <v-list-tile-avatar>
+    <v-list-item :class="rowColor(month)">
+      <v-list-item-avatar>
         <v-icon>{{ month.icon }}</v-icon>
-      </v-list-tile-avatar>
-      <v-layout row align-center>
+      </v-list-item-avatar>
+      <v-layout align-center>
         <v-flex xs2>
-          <span class="subheading">{{ month.text }}</span>
+          <span class="subtitle-1">{{ month.text }}</span>
         </v-flex>
         <v-flex xs10>
-          <v-layout row align-center>
+          <v-layout align-center>
             <v-flex
               xs2
-              text-xs-center
+              text-center
             >{{ format.formatMoney(data.amount) }} / {{ format.formatMoney(Math.abs(data.budgetedAmount+0.0)) }}</v-flex>
             <v-flex xs6>
               <v-progress-linear v-model="progressPercent" height="20" :color="progressColor"></v-progress-linear>
             </v-flex>
-            <v-flex xs1 text-xs-center>{{ progressPercent }}%</v-flex>
+            <v-flex xs1 text-center>{{ progressPercent }}%</v-flex>
           </v-layout>
         </v-flex>
       </v-layout>
-    </v-list-tile>
+    </v-list-item>
   </div>
 </template>
 

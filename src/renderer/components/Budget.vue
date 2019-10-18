@@ -1,14 +1,16 @@
 <template>
   <div>
-    <v-toolbar :color="constants.COLORS.TOOLBAR" dark dense app fixed>
+    <v-app-bar :color="constants.COLORS.TOOLBAR" app dark dense fixed>
       <v-menu bottom offset-y>
-        <v-btn slot="activator" icon>
-          <v-icon>mdi-menu</v-icon>
-        </v-btn>
+        <template v-slot:activator="{ on }">
+          <v-btn icon v-on="on">
+            <v-icon>mdi-menu</v-icon>
+          </v-btn>
+        </template>
         <v-list dense>
-          <v-list-tile v-for="(item, i) in menu" :key="i" @click="setView(item)">
-            <v-list-tile-title>{{ item.name }}</v-list-tile-title>
-          </v-list-tile>
+          <v-list-item v-for="(item, i) in menu" :key="i" @click="setView(item)">
+            <v-list-item-title>{{ item.name }}</v-list-item-title>
+          </v-list-item>
         </v-list>
       </v-menu>
       <v-toolbar-title id="budget-toolbar-title">Budget</v-toolbar-title>
@@ -21,22 +23,22 @@
           dark
           :class="constants.COLORS.TOOLBAR_BUTTON"
         >
-          <v-btn flat>
+          <v-btn text>
             <v-icon>mdi-numeric-1-box</v-icon>
           </v-btn>
-          <v-btn flat>
+          <v-btn text>
             <v-icon>mdi-numeric-2-box</v-icon>
           </v-btn>
-          <v-btn flat>
+          <v-btn text>
             <v-icon>mdi-numeric-3-box</v-icon>
           </v-btn>
-          <v-btn flat>
+          <v-btn text>
             <v-icon>mdi-numeric-6-box</v-icon>
           </v-btn>
-          <v-btn flat>
+          <v-btn text>
             <v-icon>fa-calendar</v-icon>
           </v-btn>
-          <v-btn flat>
+          <v-btn text>
             <v-icon>mdi-all-inclusive</v-icon>
           </v-btn>
         </v-btn-toggle>
@@ -44,12 +46,12 @@
       <v-flex>
         <v-toolbar-items>
           <v-chip :color="constants.COLORS.INCOME" text-color="black" tabindex="-1" disabled>
-            <v-icon left>mdi-currency-usd</v-icon>
-            <span class="subheading">{{ format.formatMoney(totalIncome) }}</span>
+            <v-icon float-left>mdi-currency-usd</v-icon>
+            <span class="subtitle-1">{{ format.formatMoney(totalIncome) }}</span>
           </v-chip>
           <v-chip :color="constants.COLORS.EXPENSE" text-color="black" tabindex="-1" disabled>
-            <v-icon left>mdi-currency-usd-off</v-icon>
-            <span class="subheading">{{ format.formatMoney(totalExpenses) }}</span>
+            <v-icon float-left>mdi-currency-usd-off</v-icon>
+            <span class="subtitle-1">{{ format.formatMoney(totalExpenses) }}</span>
           </v-chip>
           <v-chip
             :color="totalIncome + totalExpenses >= 0 ? constants.COLORS.INCOME_ALT : constants.COLORS.EXPENSE_ALT"
@@ -57,8 +59,8 @@
             tabindex="-1"
             disabled
           >
-            <v-icon left>mdi-cash-multiple</v-icon>
-            <span class="subheading">{{ format.formatMoney(totalIncome + totalExpenses) }}</span>
+            <v-icon float-left>mdi-cash-multiple</v-icon>
+            <span class="subtitle-1">{{ format.formatMoney(totalIncome + totalExpenses) }}</span>
           </v-chip>
         </v-toolbar-items>
       </v-flex>
@@ -82,7 +84,7 @@
         </v-toolbar-items>
       </v-flex>
       <v-spacer></v-spacer>
-    </v-toolbar>
+    </v-app-bar>
 
     <v-snackbar bottom v-model="alert.visible" :color="alert.color" :timeout="alert.timeout">
       <v-icon>{{ alert.icon }}</v-icon>
@@ -121,24 +123,27 @@
       </v-list>
     </template>
 
-    <div class="text-xs-center">
+    <div class="text-center">
       <v-bottom-sheet v-model="showAddEditSheet">
-        <v-btn
-          slot="activator"
-          :color="constants.COLORS.OK_BUTTON"
-          @click="entry = {}"
-          fixed
-          bottom
-          right
-          dark
-          fab
-          small
-        >
-          <v-icon>mdi-plus</v-icon>
-        </v-btn>
+        <template v-slot:activator="{ on }">
+          <v-btn
+            :color="constants.COLORS.OK_BUTTON"
+            @click="entry = {}"
+            fixed
+            bottom
+            float-right
+            dark
+            fab
+            small
+            v-on="on"
+          >
+            <v-icon>mdi-plus</v-icon>
+          </v-btn>
+        </template>
+
         <v-card>
           <v-form ref="budgetForm">
-            <v-layout row>
+            <v-layout>
               <v-flex xs1>
                 <v-autocomplete
                   ref="iconSelect"
@@ -150,10 +155,10 @@
                   hint="Choose an Icon"
                   append-icon="mdi-menu-down"
                 >
-                  <template slot="selection" slot-scope="data">
+                  <template v-slot:selection="data">
                     <v-icon>{{ data.item.value }}</v-icon>
                   </template>
-                  <template slot="item" slot-scope="data">
+                  <template v-slot:item="data">
                     <v-icon>{{ data.item.value }}</v-icon>
                   </template>
                 </v-autocomplete>
@@ -412,7 +417,7 @@ export default {
     },
 
     newEntry: function () {
-      this.$refs.iconSelect.$el.focus()
+      // this.$refs.iconSelect.focus()
       this.showAddEditSheet = true
     },
 

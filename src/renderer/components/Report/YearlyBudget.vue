@@ -1,10 +1,12 @@
 <template>
   <div>
-    <v-toolbar :color="constants.COLORS.TOOLBAR" dark dense app fixed>
+    <v-app-bar :color="constants.COLORS.TOOLBAR" dark dense app fixed>
       <v-menu bottom offset-y>
-        <v-btn slot="activator" icon @click="handleBack()">
-          <v-icon>mdi-arrow-left-thick</v-icon>
-        </v-btn>
+        <template v-slot:activator="{ on }">
+          <v-btn v-on="on" icon @click="handleBack()">
+            <v-icon>mdi-arrow-left-thick</v-icon>
+          </v-btn>
+        </template>
       </v-menu>
       <v-toolbar-title v-if="view === 'catByYear'">Report - Budget Progress for {{ this.year }}</v-toolbar-title>
       <v-toolbar-title v-if="view === 'catByMonth' && dataLoaded">
@@ -15,15 +17,15 @@
           tabindex="-1"
           disabled
         >
-          <v-icon left>fa-calendar</v-icon>
-          <span class="subheading">{{ format.formatMoney(Math.abs(reportData.totalSpent)) }}</span>
+          <v-icon float-left>fa-calendar</v-icon>
+          <span class="subtitle-1">{{ format.formatMoney(Math.abs(reportData.totalSpent)) }}</span>
         </v-chip>
         <v-chip :color="amountColor(reportData.avgSpent)" text-color="black" tabindex="-1" disabled>
-          <v-icon left>mdi-cash-multiple</v-icon>
-          <span class="subheading">{{ format.formatMoney(Math.abs(reportData.avgSpent)) }} / Month</span>
+          <v-icon float-left>mdi-cash-multiple</v-icon>
+          <span class="subtitle-1">{{ format.formatMoney(Math.abs(reportData.avgSpent)) }} / Month</span>
         </v-chip>
       </v-toolbar-title>
-    </v-toolbar>
+    </v-app-bar>
 
     <template v-if="view === 'catByMonth' && dataLoaded">
       <v-list dense>

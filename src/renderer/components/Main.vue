@@ -6,7 +6,7 @@
           <v-flex xs1>
             <img src="../assets/logo.png" />
           </v-flex>
-          <v-flex text-xs-center>
+          <v-flex text-center>
             <h3 id="main-app-name" class="display-3">Sixpence</h3>A Simple Budget Manager
           </v-flex>
         </v-layout>
@@ -14,7 +14,7 @@
     </v-responsive>
     <v-container>
       <v-layout align-center row>
-        <v-flex text-xs-center>
+        <v-flex text-center>
           <v-btn id="main-budget-button" large color="green" @click="$router.push(`/budget`)">
             <v-icon>mdi-format-list-checks</v-icon>&nbsp;&nbsp;Budget
           </v-btn>
@@ -38,14 +38,13 @@
         v-for="(note, index) in notifications"
         :key="index"
         :icon="note.icon"
-        :value="true"
         :type="note.type"
       >
         {{ note.message }}
         <v-btn
           v-if="note.handler"
           dark
-          round
+          rounded
           absolute
           right
           @click="note.handler.action(note.handler.params)"
@@ -53,7 +52,7 @@
       </v-alert>
     </template>
     <template v-else>
-      <v-alert outline color="grey" icon="mdi-note" value="true">No Notifications</v-alert>
+      <v-alert outlined color="grey" icon="mdi-note">No Notifications</v-alert>
     </template>
   </div>
 </template>

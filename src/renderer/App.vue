@@ -1,6 +1,6 @@
 <template>
   <v-app id="app">
-    <v-content fluid>
+    <v-content container--fluid>
       <About></About>
       <router-view></router-view>
     </v-content>
