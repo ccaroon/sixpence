@@ -8,23 +8,28 @@
           </v-btn>
         </template>
       </v-menu>
-      <v-toolbar-title v-if="view === 'catByYear'">Report - Budget Progress for {{ this.year }}</v-toolbar-title>
-      <v-toolbar-title v-if="view === 'catByMonth' && dataLoaded">
-        Report - {{ selectedCategory }} for {{ this.year }}
-        <v-chip
-          :color="amountColor(reportData.totalSpent,3)"
-          text-color="black"
-          tabindex="-1"
-          disabled
-        >
-          <v-icon float-left>fa-calendar</v-icon>
-          <span class="subtitle-1">{{ format.formatMoney(Math.abs(reportData.totalSpent)) }}</span>
-        </v-chip>
-        <v-chip :color="amountColor(reportData.avgSpent)" text-color="black" tabindex="-1" disabled>
-          <v-icon float-left>mdi-cash-multiple</v-icon>
-          <span class="subtitle-1">{{ format.formatMoney(Math.abs(reportData.avgSpent)) }} / Month</span>
-        </v-chip>
-      </v-toolbar-title>
+      <template v-if="view === 'catByYear'">
+        <v-toolbar-title>Report - Budget Progress for {{ this.year }}</v-toolbar-title>
+      </template>
+      <template v-if="view === 'catByMonth' && dataLoaded">
+        <v-toolbar-title>Report - {{ selectedCategory }} for {{ this.year }}</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-flex>
+          <v-toolbar-items>
+            <v-chip :color="amountColor(reportData.totalSpent,3)" text-color="black">
+              <v-icon float-left>fa-calendar</v-icon>
+              <span class="subtitle-1">{{ format.formatMoney(Math.abs(reportData.totalSpent)) }}</span>
+            </v-chip>&nbsp;
+            <v-chip :color="amountColor(reportData.avgSpent)" text-color="black">
+              <v-icon float-left>mdi-cash-multiple</v-icon>
+              <span
+                class="subtitle-1"
+              >{{ format.formatMoney(Math.abs(reportData.avgSpent)) }} / Month</span>
+            </v-chip>
+          </v-toolbar-items>
+        </v-flex>
+      </template>
+      <v-spacer></v-spacer>
     </v-app-bar>
 
     <template v-if="view === 'catByMonth' && dataLoaded">

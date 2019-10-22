@@ -15,7 +15,7 @@
               text-center
             >{{ format.formatMoney(data.amount) }} / {{ format.formatMoney(Math.abs(data.budgetedAmount+0.0)) }}</v-flex>
             <v-flex xs6>
-              <v-progress-linear v-model="progressPercent" height="20" :color="progressColor"></v-progress-linear>
+              <v-progress-linear :value="progressPercent" height="20" :color="progressColor"></v-progress-linear>
             </v-flex>
             <v-flex xs1 text-center>{{ progressPercent }}%</v-flex>
           </v-layout>

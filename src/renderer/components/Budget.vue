@@ -16,48 +16,49 @@
       <v-toolbar-title id="budget-toolbar-title">Budget</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-flex>
-        <v-btn-toggle
-          id="budget-freq-filter"
-          v-model="freqFilter"
-          mandatory
-          dark
-          :class="constants.COLORS.TOOLBAR_BUTTON"
-        >
-          <v-btn text>
-            <v-icon>mdi-numeric-1-box</v-icon>
-          </v-btn>
-          <v-btn text>
-            <v-icon>mdi-numeric-2-box</v-icon>
-          </v-btn>
-          <v-btn text>
-            <v-icon>mdi-numeric-3-box</v-icon>
-          </v-btn>
-          <v-btn text>
-            <v-icon>mdi-numeric-6-box</v-icon>
-          </v-btn>
-          <v-btn text>
-            <v-icon>fa-calendar</v-icon>
-          </v-btn>
-          <v-btn text>
-            <v-icon>mdi-all-inclusive</v-icon>
-          </v-btn>
-        </v-btn-toggle>
+        <v-toolbar-items>
+          <v-btn-toggle
+            id="budget-freq-filter"
+            v-model="freqFilter"
+            mandatory
+            rounded
+            dark
+            :class="constants.COLORS.TOOLBAR_BUTTON"
+          >
+            <v-btn text>
+              <v-icon>mdi-numeric-1-box</v-icon>
+            </v-btn>
+            <v-btn text>
+              <v-icon>mdi-numeric-2-box</v-icon>
+            </v-btn>
+            <v-btn text>
+              <v-icon>mdi-numeric-3-box</v-icon>
+            </v-btn>
+            <v-btn text>
+              <v-icon>mdi-numeric-6-box</v-icon>
+            </v-btn>
+            <v-btn text>
+              <v-icon>fa-calendar</v-icon>
+            </v-btn>
+            <v-btn text>
+              <v-icon>mdi-all-inclusive</v-icon>
+            </v-btn>
+          </v-btn-toggle>
+        </v-toolbar-items>
       </v-flex>
       <v-flex>
         <v-toolbar-items>
-          <v-chip :color="constants.COLORS.INCOME" text-color="black" tabindex="-1" disabled>
+          <v-chip :color="constants.COLORS.INCOME" text-color="black">
             <v-icon float-left>mdi-currency-usd</v-icon>
             <span class="subtitle-1">{{ format.formatMoney(totalIncome) }}</span>
-          </v-chip>
-          <v-chip :color="constants.COLORS.EXPENSE" text-color="black" tabindex="-1" disabled>
+          </v-chip>&nbsp;
+          <v-chip :color="constants.COLORS.EXPENSE" text-color="black">
             <v-icon float-left>mdi-currency-usd-off</v-icon>
             <span class="subtitle-1">{{ format.formatMoney(totalExpenses) }}</span>
-          </v-chip>
+          </v-chip>&nbsp;
           <v-chip
             :color="totalIncome + totalExpenses >= 0 ? constants.COLORS.INCOME_ALT : constants.COLORS.EXPENSE_ALT"
             text-color="black"
-            tabindex="-1"
-            disabled
           >
             <v-icon float-left>mdi-cash-multiple</v-icon>
             <span class="subtitle-1">{{ format.formatMoney(totalIncome + totalExpenses) }}</span>
@@ -66,7 +67,7 @@
       </v-flex>
       <v-flex>
         <v-toolbar-items>
-          <v-btn @click="search()" icon :color="constants.COLORS.TOOLBAR_BUTTON">
+          <v-btn @click="search()" icon small :color="constants.COLORS.TOOLBAR_BUTTON">
             <v-icon>mdi-magnify</v-icon>
           </v-btn>&nbsp;
           <v-text-field
@@ -78,12 +79,11 @@
             @keyup.enter="search()"
             @keyup.esc="clearSearch()"
           ></v-text-field>
-          <v-btn @click="clearSearch()" icon :color="constants.COLORS.TOOLBAR">
+          <v-btn @click="clearSearch()" icon small :color="constants.COLORS.TOOLBAR_BUTTON">
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-toolbar-items>
       </v-flex>
-      <v-spacer></v-spacer>
     </v-app-bar>
 
     <v-snackbar bottom v-model="alert.visible" :color="alert.color" :timeout="alert.timeout">
@@ -131,7 +131,7 @@
             @click="entry = {}"
             fixed
             bottom
-            float-right
+            right
             dark
             fab
             small
@@ -181,6 +181,8 @@
                   name="amount"
                   label="Amount"
                   id="amount"
+                  single-line
+                  dense
                   required
                   hint="Positive for Income, Negative for Expense"
                   :rules="rules.amount"
@@ -214,10 +216,17 @@
                 ></v-autocomplete>
               </v-flex>
               <v-flex xs3>
-                <v-text-field name="notes" label="Notes" id="notes" v-model="entry.notes"></v-text-field>
+                <v-text-field
+                  name="notes"
+                  label="Notes"
+                  id="notes"
+                  v-model="entry.notes"
+                  single-line
+                  dense
+                ></v-text-field>
               </v-flex>
-              <v-flex xs1>
-                <v-btn :color="constants.COLORS.OK_BUTTON" fab @click="saveEntry()">
+              <v-flex xs1 text-center>
+                <v-btn :color="constants.COLORS.OK_BUTTON" fab small @click="saveEntry()">
                   <v-icon>mdi-content-save</v-icon>
                 </v-btn>
               </v-flex>

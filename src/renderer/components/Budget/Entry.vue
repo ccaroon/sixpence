@@ -1,36 +1,48 @@
 <template>
   <div>
     <v-list-item :class="entryColor">
-      <v-list-item-avatar>
+      <v-list-item-icon>
         <v-icon>{{ entry.icon }}</v-icon>
-      </v-list-item-avatar>
-      <v-layout>
-        <v-flex xs1>{{ entryType }}</v-flex>
-        <v-flex xs3>{{ entry.category }}</v-flex>
-        <v-flex xs2>{{ format.formatMoney(entry.amount) }}</v-flex>
-        <v-flex
-          xs2
-        >{{ format.formatFrequency(entry.frequency) }} / {{ format.monthNumberToName(entry.firstDue - 1 )}}</v-flex>
-        <v-flex xs>{{ entry.notes }}</v-flex>
-      </v-layout>
+      </v-list-item-icon>
+
+      <v-list-item-content>
+        <v-list-item-subtitle>{{ entryType }}</v-list-item-subtitle>
+        <v-list-item-title class="title">{{ entry.category }}</v-list-item-title>
+      </v-list-item-content>
+
+      <v-list-item-content>
+        <v-list-item-subtitle>{{ format.formatFrequency(entry.frequency) }} / {{ format.monthNumberToName(entry.firstDue - 1 )}}</v-list-item-subtitle>
+        <v-list-item-title class="title">{{ format.formatMoney(entry.amount) }}</v-list-item-title>
+      </v-list-item-content>
+
+      <v-list-item-content>
+        <v-list-item-title class="subtitle-1">{{ entry.notes }}</v-list-item-title>
+      </v-list-item-content>
+
       <template v-if="!readOnly">
         <v-list-item-action>
-          <v-btn text icon :disabled="!entry.history" @click="viewHistory()" tabindex="-1">
+          <v-btn icon :disabled="!entry.history" @click="viewHistory()" tabindex="-1">
             <v-icon>mdi-history</v-icon>
           </v-btn>
         </v-list-item-action>
+
         <v-list-item-action>
-          <v-btn text icon @click="editEntry()" tabindex="-1">
+          <v-btn icon @click="editEntry()" tabindex="-1">
             <v-icon>mdi-pencil</v-icon>
           </v-btn>
         </v-list-item-action>
+
         <v-list-item-action>
-          <v-btn text icon @click="showRemoveDialog = true" tabindex="-1">
+          <v-btn icon @click="showRemoveDialog = true" tabindex="-1">
             <v-icon>mdi-delete-forever</v-icon>
           </v-btn>
         </v-list-item-action>
       </template>
-      <template v-else>Archived: {{ format.formatDate(entry.archivedAt) }}</template>
+      <template v-else>
+        <v-list-item-content>
+          <v-list-item-title>Archived: {{ format.formatDate(entry.archivedAt) }}</v-list-item-title>
+        </v-list-item-content>
+      </template>
     </v-list-item>
 
     <!--  HISTORY -->

@@ -13,74 +13,105 @@
           </v-list-item>
         </v-list>
       </v-menu>
-      <v-toolbar-title>Expenses - {{ currentMonthName }}</v-toolbar-title>
-      <v-dialog
-        ref="monthDialog"
-        persistent
-        v-model="showMonthDialog"
-        lazy
-        full-width
-        width="290px"
-        :return-value.sync="monthToView"
-      >
-        <template v-slot:activator="{ on }">
-          <v-btn tabindex="-1" v-on="on" icon :color="constants.COLORS.TOOLBAR_BUTTON">
-            <v-icon>mdi-calendar-range</v-icon>
-          </v-btn>
-        </template>
-
-        <v-date-picker
-          type="month"
-          v-model="monthToView"
-          next-icon="mdi-chevron-right"
-          prev-icon="mdi-chevron-left"
-          :color="constants.COLORS.OK_BUTTON"
+      <v-toolbar-title>
+        Expenses
+        <v-dialog
+          ref="monthDialog"
+          persistent
+          v-model="showMonthDialog"
+          lazy
+          full-width
+          width="290px"
+          :return-value.sync="monthToView"
         >
-          <v-spacer></v-spacer>
-          <v-btn tabindex="-1" text color="primary" @click="showMonthDialog = false">Cancel</v-btn>
-          <v-btn tabindex="-1" text color="primary" @click="$refs.monthDialog.save(monthToView)">OK</v-btn>
-        </v-date-picker>
-      </v-dialog>
+          <template v-slot:activator="{ on }">
+            <v-btn
+              tabindex="-1"
+              v-on="on"
+              outlined
+              rounded
+              :color="constants.COLORS.TOOLBAR_BUTTON"
+            >
+              {{ currentMonthName }}
+              <v-icon>mdi-calendar-range</v-icon>
+            </v-btn>
+          </template>
+
+          <v-date-picker
+            type="month"
+            v-model="monthToView"
+            next-icon="mdi-chevron-right"
+            prev-icon="mdi-chevron-left"
+            :color="constants.COLORS.OK_BUTTON"
+          >
+            <v-spacer></v-spacer>
+            <v-btn tabindex="-1" text color="primary" @click="showMonthDialog = false">Cancel</v-btn>
+            <v-btn
+              tabindex="-1"
+              text
+              color="primary"
+              @click="$refs.monthDialog.save(monthToView)"
+            >OK</v-btn>
+          </v-date-picker>
+        </v-dialog>
+      </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-flex>
-        <v-btn-toggle v-model="viewStyle" mandatory :class="constants.COLORS.TOOLBAR_BUTTON">
-          <v-btn tabindex="-1" text :disabled="viewingAll">
-            <v-icon>mdi-chart-bar</v-icon>
-          </v-btn>
-          <v-btn tabindex="-1" text>
-            <v-icon>mdi-view-list</v-icon>
-          </v-btn>
-        </v-btn-toggle>
-      </v-flex>
+
       <v-flex>
         <v-toolbar-items>
-          <v-chip :color="constants.COLORS.INCOME" text-color="black" tabindex="-1" disabled>
-            <v-icon float-left>mdi-currency-usd</v-icon>
-            <span class="subtitle-1">{{ format.formatMoney(incomeAmount) }}</span>
-          </v-chip>
-          <v-chip :color="constants.COLORS.EXPENSE" text-color="black" tabindex="-1" disabled>
-            <v-icon float-left>mdi-currency-usd-off</v-icon>
-            <span class="subtitle-1">{{ format.formatMoney(expensesAmount) }}</span>
-          </v-chip>
-          <v-chip
-            :color="incomeAmount + expensesAmount >= 0 ? constants.COLORS.INCOME_ALT : constants.COLORS.EXPENSE_ALT"
-            text-color="black"
-            tabindex="-1"
-            disabled
+          <v-btn-toggle
+            v-model="viewStyle"
+            mandatory
+            rounded
+            :class="constants.COLORS.TOOLBAR_BUTTON"
           >
-            <v-icon float-left>mdi-cash-multiple</v-icon>
-            <span class="subtitle-1">{{ format.formatMoney(incomeAmount + expensesAmount) }}</span>
-          </v-chip>
-          <v-btn-toggle tabindex="-1" v-model="incomeExpenseView" class="green">
+            <v-btn tabindex="-1" text :disabled="viewingAll">
+              <v-icon>mdi-chart-bar</v-icon>
+            </v-btn>
             <v-btn tabindex="-1" text>
-              <v-icon>mdi-coin</v-icon>
+              <v-icon>mdi-view-list</v-icon>
             </v-btn>
           </v-btn-toggle>
         </v-toolbar-items>
       </v-flex>
       <v-flex>
         <v-toolbar-items>
-          <v-btn tabindex="-1" @click="search()" icon :color="constants.COLORS.TOOLBAR_BUTTON">
+          <v-chip :color="constants.COLORS.INCOME" text-color="black">
+            <v-icon float-left>mdi-currency-usd</v-icon>
+            <span class="subtitle-1">{{ format.formatMoney(incomeAmount) }}</span>
+          </v-chip>&nbsp;
+          <v-chip :color="constants.COLORS.EXPENSE" text-color="black">
+            <v-icon float-left>mdi-currency-usd-off</v-icon>
+            <span class="subtitle-1">{{ format.formatMoney(expensesAmount) }}</span>
+          </v-chip>&nbsp;
+          <v-chip
+            :color="incomeAmount + expensesAmount >= 0 ? constants.COLORS.INCOME_ALT : constants.COLORS.EXPENSE_ALT"
+            text-color="black"
+          >
+            <v-icon float-left>mdi-cash-multiple</v-icon>
+            <span class="subtitle-1">{{ format.formatMoney(incomeAmount + expensesAmount) }}</span>
+          </v-chip>&nbsp;
+        </v-toolbar-items>
+      </v-flex>
+      <v-flex>
+        <v-toolbar-items>
+          <v-btn-toggle tabindex="-1" v-model="incomeExpenseView" class="green">
+            <v-btn tabindex="-1" small icon>
+              <v-icon v-if="incomeExpenseView == constants.IE_VIEW_TO_DATE">mdi-currency-usd</v-icon>
+              <v-icon v-else>mdi-currency-usd-off</v-icon>
+            </v-btn>
+          </v-btn-toggle>
+        </v-toolbar-items>
+      </v-flex>
+      <v-flex>
+        <v-toolbar-items>
+          <v-btn
+            tabindex="-1"
+            @click="search()"
+            icon
+            small
+            :color="constants.COLORS.TOOLBAR_BUTTON"
+          >
             <v-icon>mdi-magnify</v-icon>
           </v-btn>&nbsp;
           <v-text-field
@@ -93,12 +124,17 @@
             @keyup.enter="search()"
             @keyup.esc="clearSearch()"
           ></v-text-field>
-          <v-btn tabindex="-1" @click="clearSearch()" icon :color="constants.COLORS.TOOLBAR">
+          <v-btn
+            tabindex="-1"
+            @click="clearSearch()"
+            icon
+            small
+            :color="constants.COLORS.TOOLBAR_BUTTON"
+          >
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-toolbar-items>
       </v-flex>
-      <v-spacer></v-spacer>
     </v-app-bar>
 
     <v-snackbar bottom v-model="alert.visible" :color="alert.color" :timeout="alert.timeout">
@@ -147,10 +183,10 @@
             @click="entry = {}"
             fixed
             bottom
-            float-right
             dark
             fab
             small
+            right
           >
             <v-icon>mdi-plus</v-icon>
           </v-btn>
@@ -179,7 +215,8 @@
                       label="Date"
                       prepend-icon="mdi-calendar-range"
                       readonly
-                      solo
+                      single-line
+                      dense
                       :background-color="newEntryColor"
                       required
                       :rules="rules.date"
@@ -204,7 +241,6 @@
                   single-line
                   dense
                   required
-                  solo
                   :background-color="newEntryColor"
                   :rules="rules.category"
                   hint="Choose a Category or Add a New One"
@@ -218,7 +254,8 @@
                   label="Amount"
                   id="amount"
                   required
-                  solo
+                  single-line
+                  dense
                   :background-color="newEntryColor"
                   hint="+/- Amount"
                   :rules="rules.amount"
@@ -232,13 +269,20 @@
                   name="notes"
                   label="Notes"
                   id="notes"
-                  solo
+                  single-line
+                  dense
                   :background-color="newEntryColor"
                   v-model="entry.notes"
                 ></v-text-field>
               </v-flex>
-              <v-flex xs1>
-                <v-btn tabindex="0" :color="constants.COLORS.OK_BUTTON" fab @click="saveEntry()">
+              <v-flex xs1 text-center>
+                <v-btn
+                  tabindex="0"
+                  :color="constants.COLORS.OK_BUTTON"
+                  fab
+                  small
+                  @click="saveEntry()"
+                >
                   <v-icon>mdi-content-save</v-icon>
                 </v-btn>
               </v-flex>
@@ -342,10 +386,14 @@ export default {
     newEntryColor: function () {
       var color = Constants.COLORS.GREY
 
-      if (this.entry.amount < 0) {
-        color = this.constants.COLORS.EXPENSE_ALT
-      } else if (this.categoriesForMonth && this.categoriesForMonth[this.entry.category]) {
+      if (this.categoriesForMonth && this.categoriesForMonth[this.entry.category]) {
         color = this.categoriesForMonth[this.entry.category] > 0 ? this.constants.COLORS.INCOME_ALT : this.constants.COLORS.EXPENSE_ALT
+      } else if (this.entry.amount) {
+        if (this.entry.amount < 0) {
+          color = this.constants.COLORS.EXPENSE_ALT
+        } else if (this.entry.amount > 0) {
+          color = this.constants.COLORS.INCOME_ALT
+        }
       }
 
       return (color)

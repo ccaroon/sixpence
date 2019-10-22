@@ -1,16 +1,24 @@
 <template>
   <div>
     <v-list-item :class="entryColor">
-      <v-list-item-avatar>
+      <v-list-item-icon>
         <v-icon>{{ entry.icon }}</v-icon>
-      </v-list-item-avatar>
-      <v-layout>
-        <v-flex xs1>{{ entryType }}</v-flex>
-        <v-flex xs3>{{ entry.category }}</v-flex>
-        <v-flex xs3>{{ format.formatDate(entry.date) }}</v-flex>
-        <v-flex xs2>{{ format.formatMoney(entry.amount) }}</v-flex>
-        <v-flex xs>{{ entry.notes }}</v-flex>
-      </v-layout>
+      </v-list-item-icon>
+
+      <v-list-item-content>
+        <v-list-item-subtitle>{{ entryType }}</v-list-item-subtitle>
+        <v-list-item-title class="title">{{ entry.category }}</v-list-item-title>
+      </v-list-item-content>
+
+      <v-list-item-content>
+        <v-list-item-subtitle>{{ format.formatDate(entry.date) }}</v-list-item-subtitle>
+        <v-list-item-title class="title">{{ format.formatMoney(entry.amount) }}</v-list-item-title>
+      </v-list-item-content>
+
+      <v-list-item-content>
+        <v-list-item-title class="subtitle-2">{{ entry.notes }}</v-list-item-title>
+      </v-list-item-content>
+
       <v-list-item-action>
         <v-btn text icon @click="editEntry()" tabindex="-1">
           <v-icon>mdi-pencil</v-icon>

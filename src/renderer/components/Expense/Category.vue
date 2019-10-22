@@ -2,22 +2,22 @@
   <div>
     <!-- Unbudgeted entries -->
     <template v-if="Array.isArray(entry)">
-      <v-expansion-panels tabindex="-1">
+      <v-expansion-panels tabindex="-1" v-show="entry.length > 0">
         <v-expansion-panel tabindex="-1" :class="entryColor" expand-icon="mdi-chevron-down">
+          <v-expansion-panel-header>
+            <v-row dense>
+              <v-col cols="4">
+                <span class="title">Unbudgeted</span>
+              </v-col>
+              <v-col cols="2" text-left>
+                <span class="title green--text">{{ format.formatMoney(unbudgetedIncome) }}</span>
+              </v-col>
+              <v-col cols="2" text-left>
+                <span class="title red--text">{{ format.formatMoney(unbudgetedExpense) }}</span>
+              </v-col>
+            </v-row>
+          </v-expansion-panel-header>
           <v-expansion-panel-content>
-            <v-layout slot="header">
-              <v-flex xs4 class="title">Unbudgeted</v-flex>
-              <v-flex
-                xs2
-                class="title green--text"
-                text-left
-              >{{ format.formatMoney(unbudgetedIncome) }}</v-flex>
-              <v-flex
-                xs2
-                class="title red--text"
-                text-left
-              >{{ format.formatMoney(unbudgetedExpense) }}</v-flex>
-            </v-layout>
             <v-list dense>
               <v-list-item
                 @click="viewEntries(item.category)"
@@ -25,14 +25,18 @@
                 v-for="(item,i) in entry"
                 :key="i"
               >
-                <v-list-item-avatar>
+                <v-list-item-icon>
                   <v-icon>{{ item.icon }}</v-icon>
-                </v-list-item-avatar>
-                <v-layout align-center>
-                  <v-flex xs1>{{ entryType(item) }}</v-flex>
-                  <v-flex xs2>{{ item.category }}</v-flex>
-                  <v-flex xs2 text-center>{{ format.formatMoney(item.amount) }}</v-flex>
-                </v-layout>
+                </v-list-item-icon>
+
+                <v-list-item-content>
+                  <v-list-item-subtitle>{{ entryType(item) }}</v-list-item-subtitle>
+                  <v-list-item-title class="title">{{ item.category }}</v-list-item-title>
+                </v-list-item-content>
+
+                <v-list-item-content>
+                  <v-list-item-title class="title">{{ format.formatMoney(item.amount) }}</v-list-item-title>
+                </v-list-item-content>
               </v-list-item>
             </v-list>
           </v-expansion-panel-content>
@@ -41,21 +45,27 @@
     </template>
     <template v-else>
       <v-list-item :class="entryColor" @click="viewEntries(entry.category)">
-        <v-list-item-avatar>
+        <v-list-item-icon>
           <v-icon>{{ entry.icon }}</v-icon>
-        </v-list-item-avatar>
-        <v-layout align-center>
-          <v-flex xs1>{{ entryType(entry) }}</v-flex>
-          <v-flex xs2>{{ entry.category }}</v-flex>
-          <v-flex
-            xs2
-            text-center
-          >{{ format.formatMoney(entry.amount) }} / {{ format.formatMoney(Math.abs(entry.budgetedAmount+0.0)) }}</v-flex>
-          <v-flex xs6>
-            <v-progress-linear v-model="progressPercent" height="20" :color="progressColor"></v-progress-linear>
-          </v-flex>
-          <v-flex xs1 text-center>{{ progressPercent }}%</v-flex>
-        </v-layout>
+        </v-list-item-icon>
+
+        <v-list-item-content>
+          <v-list-item-subtitle>{{ entryType(entry) }}</v-list-item-subtitle>
+          <v-list-item-title class="title">{{ entry.category }}</v-list-item-title>
+        </v-list-item-content>
+
+        <v-list-item-content>
+          <v-list-item-subtitle>{{ format.formatMoney(Math.abs(entry.budgetedAmount+0.0)) }}</v-list-item-subtitle>
+          <v-list-item-title class="title">{{ format.formatMoney(entry.amount) }}</v-list-item-title>
+        </v-list-item-content>
+
+        <v-list-item-content>
+          <v-progress-linear
+            :value="progressPercent"
+            height="20"
+            :color="progressColor"
+          >{{ progressPercent }}%</v-progress-linear>
+        </v-list-item-content>
       </v-list-item>
     </template>
   </div>
