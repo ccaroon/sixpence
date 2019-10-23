@@ -7,16 +7,16 @@
 
       <v-list-item-content>
         <v-list-item-subtitle>{{ entryType }}</v-list-item-subtitle>
-        <v-list-item-title class="title">{{ entry.category }}</v-list-item-title>
+        <v-list-item-title class="body-1">{{ entry.category }}</v-list-item-title>
       </v-list-item-content>
 
       <v-list-item-content>
         <v-list-item-subtitle>{{ format.formatFrequency(entry.frequency) }} / {{ format.monthNumberToName(entry.firstDue - 1 )}}</v-list-item-subtitle>
-        <v-list-item-title class="title">{{ format.formatMoney(entry.amount) }}</v-list-item-title>
+        <v-list-item-title class="body-1">{{ format.formatMoney(entry.amount) }}</v-list-item-title>
       </v-list-item-content>
 
       <v-list-item-content>
-        <v-list-item-title class="subtitle-1">{{ entry.notes }}</v-list-item-title>
+        <v-list-item-title class="body-1">{{ entry.notes }}</v-list-item-title>
       </v-list-item-content>
 
       <template v-if="!readOnly">
@@ -61,16 +61,16 @@
                 :key="record.date"
                 :class="altColors(index)"
               >
-                <v-layout>
-                  <v-flex xs1>
+                <v-row no-gutters>
+                  <v-col cols="1">
                     <v-list-item-content>
                       <v-icon>mdi-calendar</v-icon>
                     </v-list-item-content>
-                  </v-flex>
-                  <v-flex xs4>
+                  </v-col>
+                  <v-col cols="4">
                     <v-list-item-content>{{ format.formatDate(record.date, 'MMM DD, YYYY @ hh:mm:ss') }}</v-list-item-content>
-                  </v-flex>
-                  <v-flex xs7>
+                  </v-col>
+                  <v-col cols="7">
                     <v-list-item-content v-if="index < entry.history.length-1">
                       {{ format.formatMoney(record.amount) }}
                       &rarr;
@@ -81,8 +81,8 @@
                       &rarr;
                       {{ format.formatMoney(entry.amount) }}
                     </v-list-item-content>
-                  </v-flex>
-                </v-layout>
+                  </v-col>
+                </v-row>
               </v-list-item>
             </v-list>
           </v-card-text>
@@ -92,16 +92,29 @@
 
     <v-dialog v-model="showRemoveDialog" persistent max-width="65%">
       <v-card>
-        <v-card-title class="headline">Remove Entry</v-card-title>
+        <v-card-title class="title">Remove Entry</v-card-title>
         <v-divider></v-divider>
-        <v-card-text :class="entryColor">
-          <v-layout>
-            <v-flex>{{ entryType }}</v-flex>
-            <v-flex>{{ entry.category }}</v-flex>
-            <v-flex>{{ format.formatMoney(entry.amount) }}</v-flex>
-            <v-flex>{{ format.formatFrequency(entry.frequency) }} / {{ format.monthNumberToName(entry.firstDue - 1 )}}</v-flex>
-            <v-flex>{{ entry.notes }}</v-flex>
-          </v-layout>
+        <v-card-text>
+          <v-list dense :class="entryColor">
+            <v-list-item>
+              <v-list-item-icon>
+                <v-icon>{{ entry.icon }}</v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+                <v-list-item-subtitle>{{ entryType }}</v-list-item-subtitle>
+                <v-list-item-title class="body-1">{{ entry.category }}</v-list-item-title>
+              </v-list-item-content>
+
+              <v-list-item-content>
+                <v-list-item-subtitle>{{ format.formatFrequency(entry.frequency) }} / {{ format.monthNumberToName(entry.firstDue - 1 )}}</v-list-item-subtitle>
+                <v-list-item-title class="body-1">{{ format.formatMoney(entry.amount) }}</v-list-item-title>
+              </v-list-item-content>
+
+              <v-list-item-content>
+                <v-list-item-title class="body-1">{{ entry.notes }}</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions>
@@ -115,7 +128,7 @@
             color="red lighten-1"
             small
             rounded
-            float-right
+            right
             absolute
             @click.native="showRemoveDialog = false"
             tabindex="-1"

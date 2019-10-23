@@ -12,21 +12,20 @@
     </v-app-bar>
 
     <template v-if="dataLoaded">
-      <v-list dark dense fixed>
+      <v-list dense dark>
         <v-list-item>
-          <v-list-item-avatar>
+          <v-list-item-icon>
             <v-icon>{{ focusData.data.icon ? focusData.data.icon : 'mdi-all-inclusive'}}</v-icon>
-          </v-list-item-avatar>
-          <v-layout>
-            <v-flex
-              xs3
-              align-self-center
-              class="title"
-            >{{ focusData.category ? focusData.category : 'Category'}}</v-flex>
-            <v-flex align-self-center xs1 v-for="(year, id) in yearRange" :key="id">
-              <v-btn @click="viewYear(year)">{{ year }}</v-btn>
-            </v-flex>
-          </v-layout>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-row no-gutters align="center">
+              <v-col cols="3">{{ focusData.category ? focusData.category : 'Category'}}</v-col>
+              <v-col cols="1" text-center v-for="(year, id) in yearRange" :key="id">
+                <v-btn small @click="viewYear(year)">{{ year }}</v-btn>
+              </v-col>
+            </v-row>
+          </v-list-item-content>
         </v-list-item>
       </v-list>
 
@@ -36,34 +35,31 @@
           v-for="(entry, category, id) in data"
           :class="entryColor(id, entry.type)"
           :key="id"
-          @click
         >
-          <v-list-item-avatar>
+          <v-list-item-icon>
             <v-icon>{{ entry.icon }}</v-icon>
-          </v-list-item-avatar>
-          <v-layout align-center>
-            <v-flex xs3>
-              <span class="subtitle-1">{{ category }}</span>
-            </v-flex>
-            <v-flex text-center xs1 v-for="(year, id) in yearRange" :key="id">
+          </v-list-item-icon>
+
+          <v-row dense align="center">
+            <v-col cols="3">{{ category }}</v-col>
+
+            <v-col cols="1" v-for="(year, id) in yearRange" :key="id">
               <span v-if="entry[year]">{{ format.formatMoney(entry[year]['total']) }}</span>
               <span v-else>N/A</span>
-            </v-flex>
-            <v-flex xs offset-xs5>
-              <v-list-item-action>
-                <v-btn text icon @click="viewEntries(category)">
-                  <v-icon>mdi-view-list</v-icon>
-                </v-btn>
-              </v-list-item-action>
-            </v-flex>
-            <v-flex xs1>
-              <v-list-item-action>
-                <v-btn text icon @click="focusSingleCategory(category)">
-                  <v-icon>mdi-image-filter-center-focus</v-icon>
-                </v-btn>
-              </v-list-item-action>
-            </v-flex>
-          </v-layout>
+            </v-col>
+
+            <!-- ACTIONS : Offset to align right -->
+            <!-- grid size - ICON - CATEGORY - 1/year amount -->
+            <v-col :offset="12 - 1 - 3 - (yearRange.length)">
+              <v-btn icon @click="viewEntries(category)">
+                <v-icon>mdi-view-list</v-icon>
+              </v-btn>
+
+              <v-btn icon @click="focusSingleCategory(category)">
+                <v-icon>mdi-image-filter-center-focus</v-icon>
+              </v-btn>
+            </v-col>
+          </v-row>
         </v-list-item>
       </v-list>
 
@@ -74,20 +70,21 @@
           :key="month.value"
           :class="month.value % 2 === 0 ? constants.COLORS.GREY : constants.COLORS.GREY_ALT"
         >
-          <v-list-item-avatar>
+          <v-list-item-icon>
             <v-icon>{{ month.icon }}</v-icon>
-          </v-list-item-avatar>
-          <v-layout align-center>
-            <v-flex xs3>
+          </v-list-item-icon>
+
+          <v-row dense align="center">
+            <v-col cols="3">
               <span class="subtitle-1">{{ month.text }}</span>
-            </v-flex>
-            <v-flex text-center xs1 v-for="(year, id) in yearRange" :key="id">
+            </v-col>
+            <v-col cols="1" v-for="(year, id) in yearRange" :key="id">
               <span
                 v-if="focusData.data[year]"
               >{{ format.formatMoney(focusData.data[year]['months'][month.value-1]) }}</span>
               <span v-else>N/A</span>
-            </v-flex>
-          </v-layout>
+            </v-col>
+          </v-row>
         </v-list-item>
       </v-list>
     </template>
@@ -194,6 +191,7 @@ export default {
             }
           })
 
+          // TODO: don't allow anymore than yearCount years into yearRange
           for (var i = self.minYear; i <= self.maxYear; i++) {
             self.yearRange.push(i)
           }
@@ -210,6 +208,7 @@ export default {
 
   data () {
     return ({
+      yearCount: 5, // Number of years to display - not used yet
       minYear: 9999,
       maxYear: 0,
       yearRange: [],

@@ -7,16 +7,16 @@
 
       <v-list-item-content>
         <v-list-item-subtitle>{{ entryType }}</v-list-item-subtitle>
-        <v-list-item-title class="title">{{ entry.category }}</v-list-item-title>
+        <v-list-item-title class="body-1">{{ entry.category }}</v-list-item-title>
       </v-list-item-content>
 
       <v-list-item-content>
         <v-list-item-subtitle>{{ format.formatDate(entry.date) }}</v-list-item-subtitle>
-        <v-list-item-title class="title">{{ format.formatMoney(entry.amount) }}</v-list-item-title>
+        <v-list-item-title class="body-1">{{ format.formatMoney(entry.amount) }}</v-list-item-title>
       </v-list-item-content>
 
       <v-list-item-content>
-        <v-list-item-title class="subtitle-2">{{ entry.notes }}</v-list-item-title>
+        <v-list-item-title class="body-1">{{ entry.notes }}</v-list-item-title>
       </v-list-item-content>
 
       <v-list-item-action>
@@ -35,14 +35,28 @@
       <v-card>
         <v-card-title class="headline">Delete Entry</v-card-title>
         <v-divider></v-divider>
-        <v-card-text :class="entryColor">
-          <v-layout>
-            <v-flex>{{ entryType }}</v-flex>
-            <v-flex>{{ format.formatDate(entry.date) }}</v-flex>
-            <v-flex>{{ entry.category }}</v-flex>
-            <v-flex>{{ format.formatMoney(entry.amount) }}</v-flex>
-            <v-flex>{{ entry.notes }}</v-flex>
-          </v-layout>
+        <v-card-text>
+          <v-list dense :class="entryColor">
+            <v-list-item>
+              <v-list-item-icon>
+                <v-icon>{{ entry.icon }}</v-icon>
+              </v-list-item-icon>
+
+              <v-list-item-content>
+                <v-list-item-subtitle>{{ entryType }}</v-list-item-subtitle>
+                <v-list-item-title class="body-1">{{ entry.category }}</v-list-item-title>
+              </v-list-item-content>
+
+              <v-list-item-content>
+                <v-list-item-subtitle>{{ format.formatDate(entry.date) }}</v-list-item-subtitle>
+                <v-list-item-title class="body-1">{{ format.formatMoney(entry.amount) }}</v-list-item-title>
+              </v-list-item-content>
+
+              <v-list-item-content>
+                <v-list-item-title class="body-1">{{ entry.notes }}</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions>

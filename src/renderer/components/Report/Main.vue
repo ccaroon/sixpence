@@ -24,8 +24,13 @@
         :class="rowColor(ri)"
         @click="viewReport(report)"
       >
-        <v-list-item-title>{{ report.title }}</v-list-item-title>
-        <v-list-item-subtitle>{{ report.desc }}</v-list-item-subtitle>
+        <v-list-item-icon>
+          <v-icon>{{ report.icon }}</v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>
+          <v-list-item-title class="body-1">{{ report.title }}</v-list-item-title>
+          <v-list-item-subtitle>{{ report.desc }}</v-list-item-subtitle>
+        </v-list-item-content>
       </v-list-item>
     </v-list>
   </div>
@@ -58,14 +63,16 @@ export default {
       constants: Constants,
       reportList: [
         {
+          icon: 'mdi-calendar-star',
           title: 'Yearly Budget',
           url: '/report/yearly-budget',
-          desc: 'Budget Progress for a Year'
+          desc: 'Budget progress for the current year'
         },
         {
+          icon: 'mdi-compare',
           title: 'Multi-Year Income/Expense Comparison',
           url: '/report/multi-year-comparison',
-          desc: 'Income & Expense Comparison between Years'
+          desc: 'Income & Expense comparison between years'
         }
       ]
     }

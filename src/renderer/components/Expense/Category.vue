@@ -31,11 +31,11 @@
 
                 <v-list-item-content>
                   <v-list-item-subtitle>{{ entryType(item) }}</v-list-item-subtitle>
-                  <v-list-item-title class="title">{{ item.category }}</v-list-item-title>
+                  <v-list-item-title class="body-1">{{ item.category }}</v-list-item-title>
                 </v-list-item-content>
 
                 <v-list-item-content>
-                  <v-list-item-title class="title">{{ format.formatMoney(item.amount) }}</v-list-item-title>
+                  <v-list-item-title class="body-1">{{ format.formatMoney(item.amount) }}</v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
             </v-list>
@@ -51,12 +51,12 @@
 
         <v-list-item-content>
           <v-list-item-subtitle>{{ entryType(entry) }}</v-list-item-subtitle>
-          <v-list-item-title class="title">{{ entry.category }}</v-list-item-title>
+          <v-list-item-title class="body-1">{{ entry.category }}</v-list-item-title>
         </v-list-item-content>
 
         <v-list-item-content>
           <v-list-item-subtitle>{{ format.formatMoney(Math.abs(entry.budgetedAmount+0.0)) }}</v-list-item-subtitle>
-          <v-list-item-title class="title">{{ format.formatMoney(entry.amount) }}</v-list-item-title>
+          <v-list-item-title class="body-1">{{ format.formatMoney(entry.amount) }}</v-list-item-title>
         </v-list-item-content>
 
         <v-list-item-content>
@@ -116,9 +116,14 @@ export default {
 
     entryColor: function () {
       var color
-      var total = this.entryTotal
 
-      color = total === 0 ? Constants.COLORS.GREY_ALT : Constants.COLORS.GREY
+      if (this.entryTotal === 0) {
+        color = 'white'
+      } else if (this.entryNum % 2 === 0) {
+        color = Constants.COLORS.GREY
+      } else {
+        color = Constants.COLORS.GREY_ALT
+      }
 
       return (color)
     },

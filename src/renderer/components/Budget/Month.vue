@@ -5,23 +5,23 @@
         <v-icon>{{ month.icon }}</v-icon>
       </v-list-item-icon>
 
-      <v-layout align-center>
-        <v-flex xs3>
+      <v-row align="center">
+        <v-col cols="3">
           <span class="subtitle-1">{{ month.text }}</span>
-        </v-flex>
-        <v-flex xs3>
+        </v-col>
+        <v-col cols="3">
           <v-chip label :color="constants.COLORS.INCOME">
             <v-icon float-left>mdi-currency-usd</v-icon>
             <span class="subtitle-1">{{ format.formatMoney(monthData.income) }}</span>
           </v-chip>
-        </v-flex>
-        <v-flex xs3>
+        </v-col>
+        <v-col cols="3">
           <v-chip label :color="constants.COLORS.EXPENSE">
             <v-icon float-left>mdi-currency-usd-off</v-icon>
             <span class="subtitle-1">{{ format.formatMoney(monthData.expense) }}</span>
           </v-chip>
-        </v-flex>
-        <v-flex xs3>
+        </v-col>
+        <v-col cols="3">
           <v-chip
             label
             :color="monthData.diff >= 0.0 ? constants.COLORS.INCOME_ALT : constants.COLORS.EXPENSE_ALT"
@@ -30,8 +30,8 @@
             <span class="subtitle-1">{{ format.formatMoney(monthData.diff) }}</span>
             <v-icon :color="averageColor()" float-right>{{ averageIcon() }}</v-icon>
           </v-chip>
-        </v-flex>
-      </v-layout>
+        </v-col>
+      </v-row>
     </v-list-item>
   </div>
 </template>

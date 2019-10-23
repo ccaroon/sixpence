@@ -14,20 +14,22 @@
       <template v-if="view === 'catByMonth' && dataLoaded">
         <v-toolbar-title>Report - {{ selectedCategory }} for {{ this.year }}</v-toolbar-title>
         <v-spacer></v-spacer>
-        <v-flex>
-          <v-toolbar-items>
-            <v-chip :color="amountColor(reportData.totalSpent,3)" text-color="black">
-              <v-icon float-left>fa-calendar</v-icon>
-              <span class="subtitle-1">{{ format.formatMoney(Math.abs(reportData.totalSpent)) }}</span>
-            </v-chip>&nbsp;
-            <v-chip :color="amountColor(reportData.avgSpent)" text-color="black">
-              <v-icon float-left>mdi-cash-multiple</v-icon>
-              <span
-                class="subtitle-1"
-              >{{ format.formatMoney(Math.abs(reportData.avgSpent)) }} / Month</span>
-            </v-chip>
-          </v-toolbar-items>
-        </v-flex>
+        <v-row no-gutters>
+          <v-col>
+            <v-toolbar-items>
+              <v-chip :color="amountColor(reportData.totalSpent,3)" text-color="black">
+                <v-icon float-left>fa-calendar</v-icon>
+                <span class="subtitle-1">{{ format.formatMoney(Math.abs(reportData.totalSpent)) }}</span>
+              </v-chip>&nbsp;
+              <v-chip :color="amountColor(reportData.avgSpent)" text-color="black">
+                <v-icon float-left>mdi-cash-multiple</v-icon>
+                <span
+                  class="subtitle-1"
+                >{{ format.formatMoney(Math.abs(reportData.avgSpent)) }} / Month</span>
+              </v-chip>
+            </v-toolbar-items>
+          </v-col>
+        </v-row>
       </template>
       <v-spacer></v-spacer>
     </v-app-bar>
