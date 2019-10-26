@@ -1,8 +1,11 @@
 'use strict'
 
-import { app, Menu, BrowserWindow } from 'electron'
+import { app, ipcMain, Menu, BrowserWindow } from 'electron'
+import Moment from 'moment'
+
 const fs = require('fs')
 const path = require('path')
+const zipLib = require('zip-lib')
 
 /**
  * Set `__static` path to static files in production
@@ -17,13 +20,14 @@ const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
   : `file://${__dirname}/index.html`
 
+const dataPath = path.join(app.getPath('documents'), 'Sixpence')
+
 function initApp () {
   // TODO: Open and read settings; create if necessary
 
-  // Create app documents directory
-  var docPath = path.join(app.getPath('documents'), 'Sixpence')
-  if (!fs.existsSync(docPath)) {
-    fs.mkdirSync(docPath, '0750')
+  // Create data directory
+  if (!fs.existsSync(dataPath)) {
+    fs.mkdirSync(dataPath, '0750')
   }
 }
 
@@ -78,7 +82,7 @@ function createWindow () {
     {
       role: 'window',
       submenu: [
-        {role: 'minimize'}
+        { role: 'minimize' }
       ]
     },
     // 2
@@ -126,6 +130,14 @@ function createWindow () {
 
   mainWindow.loadURL(winURL)
 
+  mainWindow.on('close', (event) => {
+    // Prevent closing the window...we still need it for a bit
+    event.preventDefault()
+
+    // Quit, to trigger the events in the 'before-quit' handler
+    app.quit()
+  })
+
   mainWindow.on('closed', () => {
     mainWindow = null
   })
@@ -136,15 +148,56 @@ app.on('ready', () => {
   createWindow()
 })
 
-app.on('window-all-closed', () => {
-  // if (process.platform !== 'darwin') {
-  app.quit()
-  // }
-})
+// app.on('window-all-closed', (event) => {
+//   console.log('main:window-all-closed')
+// })
 
 app.on('activate', () => {
   if (mainWindow === null) {
     createWindow()
+  }
+})
+
+app.on('before-quit', (event) => {
+  if (mainWindow) {
+    // Prevent the app from quitting...we need to handle clean up first
+    event.preventDefault()
+
+    // Send the cleanup event to the renderer
+    // When it's done, it'll send back a cleanup event for the main process here
+    mainWindow.webContents.send('sixpence-renderer-cleanup', 'before-quit')
+  }
+  // else - really quit
+})
+
+// This is necessary b/c in the `before-quit` handler we STOP the app from
+// quiting so that we can send events...those events then respond by sending
+// this event to do cleanup and actually exit.
+ipcMain.on('sixpence-main-cleanup', (event, status, msg) => {
+  // Backup Data Files
+  var suffix = Moment().format('YYYYMMDD-hhmm')
+  var zipFileName = `${dataPath}/Sixpence-${suffix}.zip`
+
+  if (!fs.existsSync(zipFileName)) {
+    var allFiles = fs.readdirSync(dataPath)
+    var dataFiles = allFiles.filter(filename => filename.endsWith('.sxp'))
+
+    var zipFile = new zipLib.Zip()
+    dataFiles.forEach(filename => zipFile.addFile(`${dataPath}/${filename}`))
+
+    zipFile.archive(zipFileName)
+      .then(() => {
+        return true
+      })
+      .catch((err) => {
+        console.log(`Zip Failed: ${err}`)
+        return false
+      })
+      .finally(() => {
+        app.exit(status)
+      })
+  } else {
+    app.exit(status)
   }
 })
 

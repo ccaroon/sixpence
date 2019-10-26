@@ -9,6 +9,8 @@
 
 <script>
 import About from './components/About'
+import BudgetDB from './lib/BudgetDB'
+import ExpenseDB from './lib/ExpenseDB'
 
 const {ipcRenderer} = require('electron')
 
@@ -32,6 +34,41 @@ export default {
     ipcRenderer.on('menu-view-reports', (event, arg) => {
       this.$router.push(`/report/list`)
     })
+
+    ipcRenderer.on('sixpence-renderer-cleanup', (event, msg) => {
+      this.cleanup(msg)
+        .then((values) => {
+          ipcRenderer.send('sixpence-main-cleanup', 0, msg)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    })
+  },
+
+  methods: {
+    cleanup: function (msg) {
+      // ---------------------------------------------------
+      // var doNothing = new Promise((resolve, reject) => {
+      //   resolve(true)
+      // })
+      // return Promise.all([doNothing])
+      // ---------------------------------------------------
+
+      var compactBDB = new Promise((resolve, reject) => {
+        BudgetDB.compact(() => {
+          resolve(true)
+        })
+      })
+
+      var compactEDB = new Promise((resolve, reject) => {
+        ExpenseDB.compact(() => {
+          resolve(true)
+        })
+      })
+
+      return Promise.all([compactBDB, compactEDB])
+    }
   }
 
 }

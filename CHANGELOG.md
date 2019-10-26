@@ -4,6 +4,10 @@
 ### Features
 * Expense: If budgeted category, show budgeted value as placeholder text for expense entry amount
 * Expense: On new entry show form as red or green based on category to indicate that it will default to an Income or Expense entry.
+* Update Vuetify to v2.x.x
+    - This included some UI enhancements.
+* General: Periodic data backup
+    - First pass. Data files are backed-up to a ZIP file when you exit the app.
 
 ### Changes
 * Changed new expense entry form control style to `solo`. Looks nicer than the normal style.
