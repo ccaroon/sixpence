@@ -1,18 +1,18 @@
 'use strict'
 
 import { app, ipcMain, Menu, BrowserWindow } from 'electron'
-import Moment from 'moment'
+import Backup from './backup'
+import Config from './config'
 
 const fs = require('fs')
 const path = require('path')
-const zipLib = require('zip-lib')
 
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
  */
 if (process.env.NODE_ENV !== 'development') {
-  global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
+  global.__static = path.join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
 
 let mainWindow
@@ -20,14 +20,10 @@ const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
   : `file://${__dirname}/index.html`
 
-const dataPath = path.join(app.getPath('documents'), 'Sixpence')
-
 function initApp () {
-  // TODO: Open and read settings; create if necessary
-
   // Create data directory
-  if (!fs.existsSync(dataPath)) {
-    fs.mkdirSync(dataPath, '0750')
+  if (!fs.existsSync(Config.dataPath)) {
+    fs.mkdirSync(Config.dataPath, '0750')
   }
 }
 
@@ -174,31 +170,17 @@ app.on('before-quit', (event) => {
 // quiting so that we can send events...those events then respond by sending
 // this event to do cleanup and actually exit.
 ipcMain.on('sixpence-main-cleanup', (event, status, msg) => {
-  // Backup Data Files
-  var suffix = Moment().format('YYYYMMDD-hhmm')
-  var zipFileName = `${dataPath}/Sixpence-${suffix}.zip`
-
-  if (!fs.existsSync(zipFileName)) {
-    var allFiles = fs.readdirSync(dataPath)
-    var dataFiles = allFiles.filter(filename => filename.endsWith('.sxp'))
-
-    var zipFile = new zipLib.Zip()
-    dataFiles.forEach(filename => zipFile.addFile(`${dataPath}/${filename}`))
-
-    zipFile.archive(zipFileName)
-      .then(() => {
-        return true
-      })
-      .catch((err) => {
-        console.log(`Zip Failed: ${err}`)
-        return false
-      })
-      .finally(() => {
-        app.exit(status)
-      })
-  } else {
-    app.exit(status)
-  }
+  Backup.backup()
+    .then(() => {
+      return true
+    })
+    .catch((err) => {
+      console.log(`Backup Failed: ${err}`)
+      return false
+    })
+    .finally(() => {
+      app.exit(status)
+    })
 })
 
 /**

@@ -8,6 +8,8 @@
     - This included some UI enhancements.
 * General: Periodic data backup
     - First pass. Data files are backed-up to a ZIP file when you exit the app.
+* General: Config File
+    - No UI (yet). Lives in data directory and is included in data backup.
 
 ### Changes
 * Changed new expense entry form control style to `solo`. Looks nicer than the normal style.
@@ -16,7 +18,7 @@
 * Tabbing "fixes" on Expenses new entry form. Better?
 
 ## v1.10.0 - Repentant Rupees (September 27, 2019)
-The Archive feature in v1.9.0 was NOT well thought out and resulted in many 
+The Archive feature in v1.9.0 was NOT well thought out and resulted in many
 undesireable isses when a Budget Entry was archived.
 
 This version is a complete re-do of the Archive feature.
@@ -38,7 +40,7 @@ This version is a complete re-do of the Archive feature.
 ## v1.9.0 - H2OMG (August 15, 2019)
 ### Features
 * Budget
-    + Added ability to archive an entry. 
+    + Added ability to archive an entry.
       - Archiving will:
         1. Hide the entry in the UI
         2. Remove it from calculations
