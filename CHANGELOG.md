@@ -10,6 +10,9 @@
     - First pass. Data files are backed-up to a ZIP file when you exit the app.
 * General: Config File
     - No UI (yet). Lives in data directory and is included in data backup.
+* General: Backup Enchancements
+    - Backup to a `backups` directory by default. Configurable.
+    - Set the number of backup files to keep. Defaults to five. Configurable.
 
 ### Changes
 * Changed new expense entry form control style to `solo`. Looks nicer than the normal style.
