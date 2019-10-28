@@ -4,6 +4,23 @@ import Config from './config'
 const fs = require('fs')
 const zipLib = require('zip-lib')
 
+function cleanup () {
+  var backupPath = Config.get('backup:path')
+  var numToKeep = Config.get('backup:keep')
+
+  var allFiles = fs.readdirSync(backupPath)
+  var zipFiles = allFiles.filter(filename => filename.endsWith('.zip'))
+
+  if (zipFiles.length > numToKeep) {
+    zipFiles.sort()
+
+    var delFiles = zipFiles.slice(0, -1 * numToKeep)
+    delFiles.forEach(filename => {
+      fs.unlinkSync(`${backupPath}/${filename}`)
+    })
+  }
+}
+
 export default {
   backup: function () {
     var promise = null
@@ -14,8 +31,11 @@ export default {
       fs.mkdirSync(Config.get('backup:path'), '0750')
     }
 
+    // Clean up old backups
+    cleanup()
+
     // Backup Data Files
-    var suffix = Moment().format('YYYYMMDD-hhmm')
+    var suffix = Moment().format('YYYYMMDD-HHmm')
     var zipFileName = `${Config.get('backup:path')}/Sixpence-${suffix}.zip`
 
     if (!fs.existsSync(zipFileName)) {
