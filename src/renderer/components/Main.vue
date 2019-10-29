@@ -14,7 +14,7 @@
       </v-container>
     </v-responsive>
     <v-container>
-      <v-row align="center" justify="space-around">
+      <v-row align="center" justify="space-around" class="pa-1">
         <v-btn id="main-budget-button" large color="green" @click="$router.push(`/budget`)">
           <v-icon>mdi-format-list-checks</v-icon>&nbsp;&nbsp;Budget
         </v-btn>
@@ -28,6 +28,11 @@
           @click="$router.push(`/report/list`)"
         >
           <v-icon>mdi-file-chart</v-icon>Reports
+        </v-btn>
+      </v-row>
+      <v-row align="center" justify="space-around" class="pa-1">
+        <v-btn id="main-settings-button" large color="grey" @click="$router.push(`/settings`)">
+          <v-icon>mdi-settings</v-icon>Settings
         </v-btn>
       </v-row>
     </v-container>

@@ -1,4 +1,11 @@
-import { app } from 'electron'
+
+var app
+if (process.type === 'renderer') {
+  app = require('electron').remote.app
+} else {
+  app = require('electron').app
+}
+
 const fs = require('fs')
 const path = require('path')
 
@@ -7,6 +14,14 @@ const configFile = `${dataPath}/SixpenceCfg.json`
 
 var configData = {}
 
+// Basic Layout
+// - Every option is assumed to be in a "group"
+// - Groups are assumed to be only 1 level deep
+// -------
+// group: {
+//   option1: null,
+//   option2: null,
+// }
 const DEFAULTS = {
   backup: {
     keep: 5,
@@ -19,13 +34,16 @@ export default {
   configFile: configFile,
   dataPath: dataPath,
 
-  get: function (path) {
-    var pathParts = path.split(':')
-
+  get: function (path = null) {
     var value = configData
-    pathParts.forEach((key) => {
-      value = value[key]
-    })
+
+    if (path !== null) {
+      var pathParts = path.split(':')
+
+      pathParts.forEach((key) => {
+        value = value[key]
+      })
+    }
 
     return value
   },

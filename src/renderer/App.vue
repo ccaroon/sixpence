@@ -35,6 +35,10 @@ export default {
       this.$router.push(`/report/list`)
     })
 
+    ipcRenderer.on('menu-settings', (event, arg) => {
+      this.$router.push(`/settings`)
+    })
+
     ipcRenderer.on('sixpence-renderer-cleanup', (event, msg) => {
       this.cleanup(msg)
         .then((values) => {

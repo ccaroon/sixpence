@@ -47,6 +47,12 @@ function createWindow () {
     click: () => BrowserWindow.getFocusedWindow().webContents.send('menu-help-about')
   }
 
+  var settingsSubMenu = {
+    label: process.platform === 'darwin' ? 'Preferences...' : 'Settings...',
+    accelerator: mainMetaKey + '+,',
+    click: () => BrowserWindow.getFocusedWindow().webContents.send('menu-settings')
+  }
+
   const template = [
     // 0
     {
@@ -99,7 +105,8 @@ function createWindow () {
       label: 'Apple Menu',
       submenu: [
         aboutSubMenu,
-        // Other Apple Menu Worthy Item Go HERE
+        { type: 'separator' },
+        settingsSubMenu,
         { type: 'separator' },
         { role: 'quit' }
       ]
@@ -115,6 +122,8 @@ function createWindow () {
     template.unshift({
       label: 'File',
       submenu: [
+        settingsSubMenu,
+        { type: 'separator' },
         { role: 'quit' }
       ]
     })
