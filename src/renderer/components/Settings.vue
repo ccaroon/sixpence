@@ -12,7 +12,7 @@
 
     <v-tabs-items v-model="tab">
       <v-tab-item v-for="(options, group, index) in settings" :key="index">
-        <SettingsOption v-bind:options="options"></SettingsOption>
+        <SettingsOption v-bind:options="options" v-bind:metadata="metadata[group]"></SettingsOption>
       </v-tab-item>
     </v-tabs-items>
 
@@ -42,6 +42,7 @@ export default {
   data () {
     return {
       tab: null,
+      metadata: Config.metaData,
       constants: Constants,
       settings: Config.get()
     }

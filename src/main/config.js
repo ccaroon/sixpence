@@ -19,33 +19,46 @@ var configData = {}
 // - Groups are assumed to be only 1 level deep
 // -------
 // group: {
-//   option1: null,
-//   option2: null,
+//   option1: value1,
+//   option2: value2,
 // }
-const DEFAULTS = {
+// METADATA describes the various groups and options.
+// Used by the UI
+const METADATA = {
   backup: {
-    keep: 5,
-    path: `${dataPath}/backups`
+    keep: { type: 'NUMBER', icon: 'mdi-counter', desc: 'The number of backup files to keep', default: 5 },
+    path: { type: 'FILE', icon: 'mdi-folder', desc: 'Directory where backup files are stored', default: `${dataPath}/backups` }
   }
 }
+
+// Generate DEFAULTS from METADATA
+var DEFAULTS = {}
+for (let [group, options] of Object.entries(METADATA)) {
+  DEFAULTS[group] = {}
+  for (let [name, mdata] of Object.entries(options)) {
+    DEFAULTS[group][name] = mdata.default
+  }
+}
+
 // -----------------------------------------------------------------------------
 export default {
   // NOT user configurable
   configFile: configFile,
   dataPath: dataPath,
+  metaData: METADATA,
 
   get: function (path = null) {
-    var value = configData
+    var option = configData
 
     if (path !== null) {
       var pathParts = path.split(':')
 
       pathParts.forEach((key) => {
-        value = value[key]
+        option = option[key]
       })
     }
 
-    return value
+    return option
   },
 
   set: function (path, value) {
