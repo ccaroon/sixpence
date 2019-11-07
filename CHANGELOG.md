@@ -1,24 +1,27 @@
 # CHANGELOG
 
-## v1.11.0a - Codename Goes Here (???? ??, 2019)
+## v1.11.0 - Codename Goes Here (November ??, 2019)
 ### Features
-* Expense: If budgeted category, show budgeted value as placeholder text for expense entry amount
-* Expense: On new entry show form as red or green based on category to indicate that it will default to an Income or Expense entry.
-* Update Vuetify to v2.x.x
-    - This included some UI enhancements.
-* General: Periodic data backup
-    - First pass. Data files are backed-up to a ZIP file when you exit the app.
-* General: Config File
-    - No UI (yet). Lives in data directory and is included in data backup.
-* General: Backup Enchancements
-    - Backup to a `backups` directory by default. Configurable.
-    - Set the number of backup files to keep. Defaults to five. Configurable.
+#### General
+* Data File Backup
+    - Data files are backed-up to a ZIP file when you exit the app.
+    - Backup to a `backups` directory by default. User configureable.
+    - Set the number of backup files to keep. Defaults to five. User configurable.
+* User Options (Config)
+    - New UI (Ctrl+,) and Menu Option
+    - Lives in data directory and is included in data backup.
+
+#### Expense
+* If budgeted category, show budgeted value as placeholder text for expense entry amount.
+* On new entry show form as red or green based on category to indicate that it will default to an Income or Expense entry.
+
+#### Budget
+* When updating a budget entry, you can now add a note regarding the change.
 
 ### Changes
-* Changed new expense entry form control style to `solo`. Looks nicer than the normal style.
-
-### Misc
-* Tabbing "fixes" on Expenses new entry form. Better?
+#### General
+* Update Vuetify to v2.x (v2.1.5)
+* Misc UI improvement made possible by Vuetify v2.
 
 ## v1.10.0 - Repentant Rupees (September 27, 2019)
 The Archive feature in v1.9.0 was NOT well thought out and resulted in many

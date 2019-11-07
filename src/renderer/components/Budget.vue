@@ -126,6 +126,27 @@
       </v-list>
     </template>
 
+    <v-dialog v-model="showHistoryNoteDialog" persistent max-width="50%">
+      <v-card>
+        <v-card-title :class="constants.COLORS.GREY">
+          <v-icon color="black">{{ entry.icon }}</v-icon>
+          &nbsp;
+          {{ entry.category }} - Change Note
+        </v-card-title>
+        <v-card-text>
+          <v-text-field autofocus v-model="historyNote"></v-text-field>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn
+            small
+            rounded
+            @click="showHistoryNoteDialog = false; historyCallback ? historyCallback(historyNote) : false"
+            :color="constants.COLORS.OK_BUTTON"
+          >Continue</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <div class="text-center">
       <v-bottom-sheet v-model="showAddEditSheet">
         <template v-slot:activator="{ on }">
@@ -464,29 +485,38 @@ export default {
 
     updateHistory: function () {
       var self = this
-      var historyRec = { date: Date.now() }
-      var relevantChange = false
 
-      if (this.oldEntry) {
-        HISTORY_FIELDS.forEach(function (fld) {
-          if (self.entry[fld] !== self.oldEntry[fld]) {
-            historyRec[fld] = self.oldEntry[fld]
-            relevantChange = true
+      var promise = new Promise((resolve, reject) => {
+        if (this.oldEntry) {
+          var historyRec = { date: Date.now() }
+          var relevantChange = false
+          HISTORY_FIELDS.forEach(function (fld) {
+            if (self.entry[fld] !== self.oldEntry[fld]) {
+              historyRec[fld] = self.oldEntry[fld]
+              relevantChange = true
+            }
+          })
+
+          if (relevantChange) {
+            // Create history list if not exist
+            if (!this.entry.history) {
+              this.entry.history = []
+            }
+            this.entry.history.push(historyRec)
+
+            // Show dialog asking for change note
+            this.showHistoryNoteDialog = true
+            this.historyCallback = resolve
           }
-        })
-      }
 
-      // Zero out for next use
-      this.oldEntry = null
-
-      if (relevantChange) {
-        // Create history list if not exist
-        if (!this.entry.history) {
-          this.entry.history = []
+          // Zero out for next use
+          this.oldEntry = null
+        } else {
+          resolve()
         }
+      })
 
-        this.entry.history.push(historyRec)
-      }
+      return promise
     },
 
     validateEntry: function (entry) {
@@ -511,8 +541,21 @@ export default {
         this.validateEntry(this.entry)
 
         this.updateHistory()
+          .then((note) => {
+            // History note dialog resolves a promise with the note entered by the user
+            if (this.entry.history && note) {
+              var index = this.entry.history.length - 1
+              // Get last history record (most recent one)
+              var history = this.entry.history[index]
+              // Add note
+              history.note = note
 
-        BudgetDB.save(this.entry)
+              this.historyCallback = null
+              this.historyNote = null
+            }
+
+            BudgetDB.save(this.entry)
+          })
           .then(function (numReplaced, upsert) {
             self._clearEntry()
             self.$refs.iconSelect.$el.focus()
@@ -559,6 +602,9 @@ export default {
       },
       // Used to temp. track fields for history purposes
       oldEntry: null,
+      historyNote: null,
+      historyCallback: null,
+      showHistoryNoteDialog: false,
       menu: [
         {name: 'View Active Entries', id: Constants.BUDGET_VIEW_SUMMARY},
         {name: 'View Archived Entries', id: Constants.BUDGET_VIEW_ARCHIVED},

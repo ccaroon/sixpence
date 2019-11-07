@@ -47,13 +47,14 @@
 
     <!--  HISTORY -->
     <template v-if="entry.history">
-      <v-dialog v-model="showHistory" max-width="768">
+      <v-dialog v-model="showHistory" scrollable max-width="768">
         <v-card>
           <v-card-title :id="entry._id" :class="entryColor" class="headline">
             <v-icon color="black">{{ entry.icon }}</v-icon>
+            &nbsp;
             {{ entry.category }} - Record History
           </v-card-title>
-          <v-card-text>
+          <v-card-text style="height: 75%">
             <v-icon color="info">mdi-alert-circle</v-icon>Currently only tracking changes to budgeted amounts.
             <v-list>
               <v-list-item
@@ -61,25 +62,33 @@
                 :key="record.date"
                 :class="altColors(index)"
               >
+                <v-list-item-icon>
+                  <v-icon>mdi-calendar</v-icon>
+                </v-list-item-icon>
                 <v-row no-gutters>
-                  <v-col cols="1">
+                  <v-col cols="2">
                     <v-list-item-content>
-                      <v-icon>mdi-calendar</v-icon>
+                      <v-list-item-title>{{ format.formatDate(record.date, 'MMM DD, YYYY') }}</v-list-item-title>
+                      <v-list-item-subtitle>{{ format.formatDate(record.date, 'hh:mm:ssa') }}</v-list-item-subtitle>
                     </v-list-item-content>
                   </v-col>
                   <v-col cols="4">
-                    <v-list-item-content>{{ format.formatDate(record.date, 'MMM DD, YYYY @ hh:mm:ss') }}</v-list-item-content>
-                  </v-col>
-                  <v-col cols="7">
-                    <v-list-item-content v-if="index < entry.history.length-1">
-                      {{ format.formatMoney(record.amount) }}
-                      &rarr;
-                      {{ format.formatMoney(entry.history[index+1].amount) }}
+                    <v-list-item-content>
+                      <v-list-item-title v-if="index < entry.history.length-1">
+                        {{ format.formatMoney(record.amount) }}
+                        &rarr;
+                        {{ format.formatMoney(entry.history[index+1].amount) }}
+                      </v-list-item-title>
+                      <v-list-item-title v-else>
+                        {{ format.formatMoney(record.amount) }}
+                        &rarr;
+                        {{ format.formatMoney(entry.amount) }}
+                      </v-list-item-title>
                     </v-list-item-content>
-                    <v-list-item-content v-else>
-                      {{ format.formatMoney(record.amount) }}
-                      &rarr;
-                      {{ format.formatMoney(entry.amount) }}
+                  </v-col>
+                  <v-col cols="4">
+                    <v-list-item-content>
+                      <v-list-item-title>{{ record.note }}</v-list-item-title>
                     </v-list-item-content>
                   </v-col>
                 </v-row>
