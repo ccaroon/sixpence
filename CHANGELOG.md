@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## v1.11.0 - Codename Goes Here (November ??, 2019)
+## v1.11.0 - Codename Goes Here (November 07, 2019)
 ### Features
 #### General
 * Data File Backup
