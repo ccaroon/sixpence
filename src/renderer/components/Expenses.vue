@@ -1,100 +1,141 @@
 <template>
   <div>
-    <v-toolbar :color="constants.COLORS.TOOLBAR" dark dense app fixed>
+    <v-app-bar :color="constants.COLORS.TOOLBAR" dark dense app fixed>
       <v-menu bottom offset-y>
-        <v-btn tabindex="-1" slot="activator" icon>
-          <v-icon>mdi-menu</v-icon>
-        </v-btn>
+        <template v-slot:activator="{ on }">
+          <v-btn icon v-on="on">
+            <v-icon>mdi-menu</v-icon>
+          </v-btn>
+        </template>
         <v-list dense>
-          <v-list-tile @click="viewOverbudgetEntries()" :disabled="viewingAll">
-            <v-list-tile-title>{{ menu.viewOverbudgetEntries.labels[menu.viewOverbudgetEntries.labelIndex] }}</v-list-tile-title>
-          </v-list-tile>
+          <v-list-item @click="viewOverbudgetEntries()" :disabled="viewingAll">
+            <v-list-item-title>{{ menu.viewOverbudgetEntries.labels[menu.viewOverbudgetEntries.labelIndex] }}</v-list-item-title>
+          </v-list-item>
         </v-list>
       </v-menu>
-      <v-toolbar-title>Expenses - {{ currentMonthName }}</v-toolbar-title>
-      <v-dialog
-        ref="monthDialog"
-        persistent
-        v-model="showMonthDialog"
-        lazy
-        full-width
-        width="290px"
-        :return-value.sync="monthToView"
-      >
-        <v-btn tabindex="-1" slot="activator" icon :color="constants.COLORS.TOOLBAR_BUTTON">
-          <v-icon>mdi-calendar-range</v-icon>
-        </v-btn>
-        <v-date-picker
-          type="month"
-          v-model="monthToView"
-          next-icon="mdi-chevron-right"
-          prev-icon="mdi-chevron-left"
-          :color="constants.COLORS.OK_BUTTON"
-        >
-          <v-spacer></v-spacer>
-          <v-btn tabindex="-1" flat color="primary" @click="showMonthDialog = false">Cancel</v-btn>
-          <v-btn tabindex="-1" flat color="primary" @click="$refs.monthDialog.save(monthToView)">OK</v-btn>
-        </v-date-picker>
-      </v-dialog>
-      <v-spacer></v-spacer>
-      <v-flex>
-        <v-btn-toggle v-model="viewStyle" mandatory :class="constants.COLORS.TOOLBAR_BUTTON">
-          <v-btn tabindex="-1" flat :disabled="viewingAll">
-            <v-icon>mdi-chart-bar</v-icon>
-          </v-btn>
-          <v-btn tabindex="-1" flat>
-            <v-icon>mdi-view-list</v-icon>
-          </v-btn>
-        </v-btn-toggle>
-      </v-flex>
-      <v-flex>
-        <v-toolbar-items>
-          <v-chip :color="constants.COLORS.INCOME" text-color="black" tabindex="-1" disabled>
-            <v-icon left>mdi-currency-usd</v-icon>
-            <span class="subheading">{{ format.formatMoney(incomeAmount) }}</span>
-          </v-chip>
-          <v-chip :color="constants.COLORS.EXPENSE" text-color="black" tabindex="-1" disabled>
-            <v-icon left>mdi-currency-usd-off</v-icon>
-            <span class="subheading">{{ format.formatMoney(expensesAmount) }}</span>
-          </v-chip>
-          <v-chip
-            :color="incomeAmount + expensesAmount >= 0 ? constants.COLORS.INCOME_ALT : constants.COLORS.EXPENSE_ALT"
-            text-color="black"
-            tabindex="-1"
-            disabled
+      <v-row no-gutters align="center">
+        <v-col cols="1">
+          <v-toolbar-title>Expenses</v-toolbar-title>
+        </v-col>
+        <v-col cols="2">
+          <v-dialog
+            ref="monthDialog"
+            persistent
+            v-model="showMonthDialog"
+            width="290px"
+            :return-value.sync="monthToView"
           >
-            <v-icon left>mdi-cash-multiple</v-icon>
-            <span class="subheading">{{ format.formatMoney(incomeAmount + expensesAmount) }}</span>
-          </v-chip>
-          <v-btn-toggle tabindex="-1" v-model="incomeExpenseView" class="green">
-            <v-btn tabindex="-1" flat>
-              <v-icon>mdi-coin</v-icon>
+            <template v-slot:activator="{ on }">
+              <v-btn
+                tabindex="-1"
+                v-on="on"
+                outlined
+                rounded
+                :color="constants.COLORS.TOOLBAR_BUTTON"
+              >
+                {{ currentMonthName }}
+                <v-icon>mdi-calendar-range</v-icon>
+              </v-btn>
+            </template>
+
+            <v-date-picker
+              type="month"
+              v-model="monthToView"
+              next-icon="mdi-chevron-right"
+              prev-icon="mdi-chevron-left"
+              :color="constants.COLORS.OK_BUTTON"
+            >
+              <v-spacer></v-spacer>
+              <v-btn tabindex="-1" text color="primary" @click="showMonthDialog = false">Cancel</v-btn>
+              <v-btn
+                tabindex="-1"
+                text
+                color="primary"
+                @click="$refs.monthDialog.save(monthToView)"
+              >OK</v-btn>
+            </v-date-picker>
+          </v-dialog>
+        </v-col>
+        <v-col cols="1">
+          <v-toolbar-items>
+            <v-btn-toggle
+              v-model="viewStyle"
+              mandatory
+              rounded
+              :class="constants.COLORS.TOOLBAR_BUTTON"
+            >
+              <v-btn tabindex="-1" text :disabled="viewingAll">
+                <v-icon>mdi-chart-bar</v-icon>
+              </v-btn>
+              <v-btn tabindex="-1" text>
+                <v-icon>mdi-view-list</v-icon>
+              </v-btn>
+            </v-btn-toggle>
+          </v-toolbar-items>
+        </v-col>
+        <v-col cols="4">
+          <v-toolbar-items>
+            <v-chip :color="constants.COLORS.INCOME" text-color="black">
+              <v-icon float-left>mdi-currency-usd</v-icon>
+              <span class="subtitle-1">{{ format.formatMoney(incomeAmount) }}</span>
+            </v-chip>&nbsp;
+            <v-chip :color="constants.COLORS.EXPENSE" text-color="black">
+              <v-icon float-left>mdi-currency-usd-off</v-icon>
+              <span class="subtitle-1">{{ format.formatMoney(expensesAmount) }}</span>
+            </v-chip>&nbsp;
+            <v-chip
+              :color="incomeAmount + expensesAmount >= 0 ? constants.COLORS.INCOME_ALT : constants.COLORS.EXPENSE_ALT"
+              text-color="black"
+            >
+              <v-icon float-left>mdi-cash-multiple</v-icon>
+              <span class="subtitle-1">{{ format.formatMoney(incomeAmount + expensesAmount) }}</span>
+            </v-chip>&nbsp;
+          </v-toolbar-items>
+        </v-col>
+        <v-col cols="1">
+          <v-toolbar-items>
+            <v-btn-toggle tabindex="-1" v-model="incomeExpenseView" class="green">
+              <v-btn tabindex="-1" small icon>
+                <v-icon v-if="incomeExpenseView == constants.IE_VIEW_TO_DATE">mdi-currency-usd</v-icon>
+                <v-icon v-else>mdi-currency-usd-off</v-icon>
+              </v-btn>
+            </v-btn-toggle>
+          </v-toolbar-items>
+        </v-col>
+        <v-col>
+          <v-toolbar-items>
+            <v-btn
+              tabindex="-1"
+              @click="search()"
+              icon
+              small
+              :color="constants.COLORS.TOOLBAR_BUTTON"
+            >
+              <v-icon>mdi-magnify</v-icon>
+            </v-btn>&nbsp;
+            <v-text-field
+              tabindex="-1"
+              ref="searchField"
+              v-model="searchText"
+              hide-details
+              color="black"
+              single-line
+              @keyup.enter="search()"
+              @keyup.esc="clearSearch()"
+            ></v-text-field>
+            <v-btn
+              tabindex="-1"
+              @click="clearSearch()"
+              icon
+              small
+              :color="constants.COLORS.TOOLBAR_BUTTON"
+            >
+              <v-icon>mdi-close</v-icon>
             </v-btn>
-          </v-btn-toggle>
-        </v-toolbar-items>
-      </v-flex>
-      <v-flex>
-        <v-toolbar-items>
-          <v-btn tabindex="-1" @click="search()" icon :color="constants.COLORS.TOOLBAR_BUTTON">
-            <v-icon>mdi-magnify</v-icon>
-          </v-btn>&nbsp;
-          <v-text-field
-            tabindex="-1"
-            ref="searchField"
-            v-model="searchText"
-            hide-details
-            color="black"
-            single-line
-            @keyup.enter="search()"
-            @keyup.esc="clearSearch()"
-          ></v-text-field>
-          <v-btn tabindex="-1" @click="clearSearch()" icon :color="constants.COLORS.TOOLBAR">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </v-toolbar-items>
-      </v-flex>
-      <v-spacer></v-spacer>
-    </v-toolbar>
+          </v-toolbar-items>
+        </v-col>
+      </v-row>
+    </v-app-bar>
 
     <v-snackbar bottom v-model="alert.visible" :color="alert.color" :timeout="alert.timeout">
       <v-icon>{{ alert.icon }}</v-icon>
@@ -132,46 +173,53 @@
       </v-list>
     </template>
 
-    <div class="text-xs-center">
+    <div class="text-center">
       <v-bottom-sheet v-model="showAddEditSheet">
-        <v-btn
-          tabindex="-1"
-          slot="activator"
-          :color="constants.COLORS.OK_BUTTON"
-          @click="entry = {}"
-          fixed
-          bottom
-          right
-          dark
-          fab
-          small
-        >
-          <v-icon>mdi-plus</v-icon>
-        </v-btn>
+        <template v-slot:activator="{ on }">
+          <v-btn
+            tabindex="-1"
+            v-on="on"
+            :color="constants.COLORS.OK_BUTTON"
+            @click="entry = {}"
+            fixed
+            bottom
+            dark
+            fab
+            small
+            right
+          >
+            <v-icon>mdi-plus</v-icon>
+          </v-btn>
+        </template>
         <v-card>
           <v-form ref="expenseForm">
-            <v-layout row>
-              <v-flex xs2>
+            <v-row no-gutters>
+              <v-col cols="2">
                 <v-menu
+                  tabindex="-1"
                   :close-on-content-click="false"
                   v-model="showDateMenu"
                   :nudge-right="40"
-                  lazy
                   transition="scale-transition"
                   offset-y
-                  full-width
                   min-width="290px"
                 >
-                  <v-text-field
-                    ref="dateField"
-                    slot="activator"
-                    v-model="entryDateStr"
-                    label="Date"
-                    prepend-icon="mdi-calendar-range"
-                    disabled
-                    required
-                    :rules="rules.date"
-                  ></v-text-field>
+                  <template v-slot:activator="{ on }">
+                    <v-text-field
+                      tabindex="-1"
+                      ref="dateField"
+                      v-on="on"
+                      v-model="entryDateStr"
+                      label="Date"
+                      prepend-icon="mdi-calendar-range"
+                      readonly
+                      single-line
+                      dense
+                      :background-color="newEntryColor"
+                      required
+                      :rules="rules.date"
+                    ></v-text-field>
+                  </template>
                   <v-date-picker
                     v-model="entryDateStr"
                     @input="showDateMenu = false"
@@ -180,8 +228,8 @@
                     prev-icon="mdi-chevron-left"
                   ></v-date-picker>
                 </v-menu>
-              </v-flex>
-              <v-flex xs3>
+              </v-col>
+              <v-col cols="3">
                 <v-combobox
                   tabindex="0"
                   ref="categorySelect"
@@ -191,38 +239,52 @@
                   single-line
                   dense
                   required
+                  :background-color="newEntryColor"
                   :rules="rules.category"
                   hint="Choose a Category or Add a New One"
                   append-icon="mdi-menu-down"
                 ></v-combobox>
-              </v-flex>
-              <v-flex xs1>
+              </v-col>
+              <v-col cols="1">
                 <v-text-field
                   tabindex="0"
                   name="amount"
                   label="Amount"
                   id="amount"
                   required
-                  hint="Positive for Income, Negative for Expense"
+                  single-line
+                  dense
+                  :background-color="newEntryColor"
+                  hint="+/- Amount"
                   :rules="rules.amount"
                   v-model="entry.amount"
+                  :placeholder="amountPlaceholder"
                 ></v-text-field>
-              </v-flex>
-              <v-flex xs5>
+              </v-col>
+              <v-col cols="5">
                 <v-text-field
                   tabindex="0"
                   name="notes"
                   label="Notes"
                   id="notes"
+                  single-line
+                  dense
+                  :background-color="newEntryColor"
                   v-model="entry.notes"
                 ></v-text-field>
-              </v-flex>
-              <v-flex xs1>
-                <v-btn tabindex="0" :color="constants.COLORS.OK_BUTTON" fab @click="saveEntry()">
+              </v-col>
+              <v-col cols="1" text-center>
+                <v-btn
+                  tabindex="0"
+                  :color="constants.COLORS.OK_BUTTON"
+                  fab
+                  small
+                  @click="saveEntry()"
+                >
                   <v-icon>mdi-content-save</v-icon>
                 </v-btn>
-              </v-flex>
-            </v-layout>
+              </v-col>
+            </v-row>
           </v-form>
         </v-card>
       </v-bottom-sheet>
@@ -307,6 +369,32 @@ export default {
       }
 
       return (amount)
+    },
+
+    amountPlaceholder: function () {
+      var value = ''
+
+      if (this.categoriesForMonth && this.categoriesForMonth[this.entry.category]) {
+        value = this.categoriesForMonth[this.entry.category].toString()
+      }
+
+      return (value)
+    },
+
+    newEntryColor: function () {
+      var color = Constants.COLORS.GREY
+
+      if (this.categoriesForMonth && this.categoriesForMonth[this.entry.category]) {
+        color = this.categoriesForMonth[this.entry.category] > 0 ? this.constants.COLORS.INCOME_ALT : this.constants.COLORS.EXPENSE_ALT
+      } else if (this.entry.amount) {
+        if (this.entry.amount < 0) {
+          color = this.constants.COLORS.EXPENSE_ALT
+        } else if (this.entry.amount > 0) {
+          color = this.constants.COLORS.INCOME_ALT
+        }
+      }
+
+      return (color)
     }
   },
 
@@ -482,7 +570,7 @@ export default {
     newEntry: function () {
       this.entryDateStr = Format.formatDate(new Date(), Constants.FORMATS.entryDate)
       // this.$refs.categorySelect.$el.focus()
-      this.$refs.dateField.focus()
+      // this.$refs.dateField.focus()
       this.showAddEditSheet = true
     },
 

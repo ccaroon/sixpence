@@ -1,7 +1,30 @@
 # CHANGELOG
 
+## v1.11.0 - Codename Goes Here (November 07, 2019)
+### Features
+#### General
+* Data File Backup
+    - Data files are backed-up to a ZIP file when you exit the app.
+    - Backup to a `backups` directory by default. User configureable.
+    - Set the number of backup files to keep. Defaults to five. User configurable.
+* User Options (Config)
+    - New UI (Ctrl+,) and Menu Option
+    - Lives in data directory and is included in data backup.
+
+#### Expense
+* If budgeted category, show budgeted value as placeholder text for expense entry amount.
+* On new entry show form as red or green based on category to indicate that it will default to an Income or Expense entry.
+
+#### Budget
+* When updating a budget entry, you can now add a note regarding the change.
+
+### Changes
+#### General
+* Update Vuetify to v2.x (v2.1.5)
+* Misc UI improvement made possible by Vuetify v2.
+
 ## v1.10.0 - Repentant Rupees (September 27, 2019)
-The Archive feature in v1.9.0 was NOT well thought out and resulted in many 
+The Archive feature in v1.9.0 was NOT well thought out and resulted in many
 undesireable isses when a Budget Entry was archived.
 
 This version is a complete re-do of the Archive feature.
@@ -23,7 +46,7 @@ This version is a complete re-do of the Archive feature.
 ## v1.9.0 - H2OMG (August 15, 2019)
 ### Features
 * Budget
-    + Added ability to archive an entry. 
+    + Added ability to archive an entry.
       - Archiving will:
         1. Hide the entry in the UI
         2. Remove it from calculations

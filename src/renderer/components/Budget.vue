@@ -1,88 +1,93 @@
 <template>
   <div>
-    <v-toolbar :color="constants.COLORS.TOOLBAR" dark dense app fixed>
+    <v-app-bar :color="constants.COLORS.TOOLBAR" app dark dense fixed>
       <v-menu bottom offset-y>
-        <v-btn slot="activator" icon>
-          <v-icon>mdi-menu</v-icon>
-        </v-btn>
+        <template v-slot:activator="{ on }">
+          <v-btn icon v-on="on">
+            <v-icon>mdi-menu</v-icon>
+          </v-btn>
+        </template>
         <v-list dense>
-          <v-list-tile v-for="(item, i) in menu" :key="i" @click="setView(item)">
-            <v-list-tile-title>{{ item.name }}</v-list-tile-title>
-          </v-list-tile>
+          <v-list-item v-for="(item, i) in menu" :key="i" @click="setView(item)">
+            <v-list-item-title>{{ item.name }}</v-list-item-title>
+          </v-list-item>
         </v-list>
       </v-menu>
-      <v-toolbar-title id="budget-toolbar-title">Budget</v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-flex>
-        <v-btn-toggle
-          id="budget-freq-filter"
-          v-model="freqFilter"
-          mandatory
-          dark
-          :class="constants.COLORS.TOOLBAR_BUTTON"
-        >
-          <v-btn flat>
-            <v-icon>mdi-numeric-1-box</v-icon>
-          </v-btn>
-          <v-btn flat>
-            <v-icon>mdi-numeric-2-box</v-icon>
-          </v-btn>
-          <v-btn flat>
-            <v-icon>mdi-numeric-3-box</v-icon>
-          </v-btn>
-          <v-btn flat>
-            <v-icon>mdi-numeric-6-box</v-icon>
-          </v-btn>
-          <v-btn flat>
-            <v-icon>fa-calendar</v-icon>
-          </v-btn>
-          <v-btn flat>
-            <v-icon>mdi-all-inclusive</v-icon>
-          </v-btn>
-        </v-btn-toggle>
-      </v-flex>
-      <v-flex>
-        <v-toolbar-items>
-          <v-chip :color="constants.COLORS.INCOME" text-color="black" tabindex="-1" disabled>
-            <v-icon left>mdi-currency-usd</v-icon>
-            <span class="subheading">{{ format.formatMoney(totalIncome) }}</span>
-          </v-chip>
-          <v-chip :color="constants.COLORS.EXPENSE" text-color="black" tabindex="-1" disabled>
-            <v-icon left>mdi-currency-usd-off</v-icon>
-            <span class="subheading">{{ format.formatMoney(totalExpenses) }}</span>
-          </v-chip>
-          <v-chip
-            :color="totalIncome + totalExpenses >= 0 ? constants.COLORS.INCOME_ALT : constants.COLORS.EXPENSE_ALT"
-            text-color="black"
-            tabindex="-1"
-            disabled
-          >
-            <v-icon left>mdi-cash-multiple</v-icon>
-            <span class="subheading">{{ format.formatMoney(totalIncome + totalExpenses) }}</span>
-          </v-chip>
-        </v-toolbar-items>
-      </v-flex>
-      <v-flex>
-        <v-toolbar-items>
-          <v-btn @click="search()" icon :color="constants.COLORS.TOOLBAR_BUTTON">
-            <v-icon>mdi-magnify</v-icon>
-          </v-btn>&nbsp;
-          <v-text-field
-            ref="searchField"
-            v-model="searchText"
-            hide-details
-            color="black"
-            single-line
-            @keyup.enter="search()"
-            @keyup.esc="clearSearch()"
-          ></v-text-field>
-          <v-btn @click="clearSearch()" icon :color="constants.COLORS.TOOLBAR">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </v-toolbar-items>
-      </v-flex>
-      <v-spacer></v-spacer>
-    </v-toolbar>
+      <v-row no-gutters align="center">
+        <v-col cols="1">
+          <v-toolbar-title id="budget-toolbar-title">Budget</v-toolbar-title>
+        </v-col>
+        <v-col cols="3">
+          <v-toolbar-items>
+            <v-btn-toggle
+              id="budget-freq-filter"
+              v-model="freqFilter"
+              mandatory
+              rounded
+              dark
+              :class="constants.COLORS.TOOLBAR_BUTTON"
+            >
+              <v-btn text>
+                <v-icon>mdi-numeric-1-box</v-icon>
+              </v-btn>
+              <v-btn text>
+                <v-icon>mdi-numeric-2-box</v-icon>
+              </v-btn>
+              <v-btn text>
+                <v-icon>mdi-numeric-3-box</v-icon>
+              </v-btn>
+              <v-btn text>
+                <v-icon>mdi-numeric-6-box</v-icon>
+              </v-btn>
+              <v-btn text>
+                <v-icon>fa-calendar</v-icon>
+              </v-btn>
+              <v-btn text>
+                <v-icon>mdi-all-inclusive</v-icon>
+              </v-btn>
+            </v-btn-toggle>
+          </v-toolbar-items>
+        </v-col>
+        <v-col cols="4">
+          <v-toolbar-items>
+            <v-chip :color="constants.COLORS.INCOME" text-color="black">
+              <v-icon float-left>mdi-currency-usd</v-icon>
+              <span class="subtitle-1">{{ format.formatMoney(totalIncome) }}</span>
+            </v-chip>&nbsp;
+            <v-chip :color="constants.COLORS.EXPENSE" text-color="black">
+              <v-icon float-left>mdi-currency-usd-off</v-icon>
+              <span class="subtitle-1">{{ format.formatMoney(totalExpenses) }}</span>
+            </v-chip>&nbsp;
+            <v-chip
+              :color="totalIncome + totalExpenses >= 0 ? constants.COLORS.INCOME_ALT : constants.COLORS.EXPENSE_ALT"
+              text-color="black"
+            >
+              <v-icon float-left>mdi-cash-multiple</v-icon>
+              <span class="subtitle-1">{{ format.formatMoney(totalIncome + totalExpenses) }}</span>
+            </v-chip>
+          </v-toolbar-items>
+        </v-col>
+        <v-col>
+          <v-toolbar-items>
+            <v-btn @click="search()" icon small :color="constants.COLORS.TOOLBAR_BUTTON">
+              <v-icon>mdi-magnify</v-icon>
+            </v-btn>&nbsp;
+            <v-text-field
+              ref="searchField"
+              v-model="searchText"
+              hide-details
+              color="black"
+              single-line
+              @keyup.enter="search()"
+              @keyup.esc="clearSearch()"
+            ></v-text-field>
+            <v-btn @click="clearSearch()" icon small :color="constants.COLORS.TOOLBAR_BUTTON">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-toolbar-items>
+        </v-col>
+      </v-row>
+    </v-app-bar>
 
     <v-snackbar bottom v-model="alert.visible" :color="alert.color" :timeout="alert.timeout">
       <v-icon>{{ alert.icon }}</v-icon>
@@ -121,25 +126,49 @@
       </v-list>
     </template>
 
-    <div class="text-xs-center">
+    <v-dialog v-model="showHistoryNoteDialog" persistent max-width="50%">
+      <v-card>
+        <v-card-title :class="constants.COLORS.GREY">
+          <v-icon color="black">{{ entry.icon }}</v-icon>
+          &nbsp;
+          {{ entry.category }} - Change Note
+        </v-card-title>
+        <v-card-text>
+          <v-text-field autofocus v-model="historyNote"></v-text-field>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn
+            small
+            rounded
+            @click="showHistoryNoteDialog = false; historyCallback ? historyCallback(historyNote) : false"
+            :color="constants.COLORS.OK_BUTTON"
+          >Continue</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <div class="text-center">
       <v-bottom-sheet v-model="showAddEditSheet">
-        <v-btn
-          slot="activator"
-          :color="constants.COLORS.OK_BUTTON"
-          @click="entry = {}"
-          fixed
-          bottom
-          right
-          dark
-          fab
-          small
-        >
-          <v-icon>mdi-plus</v-icon>
-        </v-btn>
+        <template v-slot:activator="{ on }">
+          <v-btn
+            :color="constants.COLORS.OK_BUTTON"
+            @click="entry = {}"
+            fixed
+            bottom
+            right
+            dark
+            fab
+            small
+            v-on="on"
+          >
+            <v-icon>mdi-plus</v-icon>
+          </v-btn>
+        </template>
+
         <v-card>
           <v-form ref="budgetForm">
-            <v-layout row>
-              <v-flex xs1>
+            <v-row>
+              <v-col cols="1">
                 <v-autocomplete
                   ref="iconSelect"
                   :items="icons.ICONS"
@@ -150,15 +179,15 @@
                   hint="Choose an Icon"
                   append-icon="mdi-menu-down"
                 >
-                  <template slot="selection" slot-scope="data">
+                  <template v-slot:selection="data">
                     <v-icon>{{ data.item.value }}</v-icon>
                   </template>
-                  <template slot="item" slot-scope="data">
+                  <template v-slot:item="data">
                     <v-icon>{{ data.item.value }}</v-icon>
                   </template>
                 </v-autocomplete>
-              </v-flex>
-              <v-flex xs2>
+              </v-col>
+              <v-col cols="2">
                 <v-combobox
                   :items="categories"
                   v-model="entry.category"
@@ -170,19 +199,21 @@
                   hint="Choose a Category or Add a New One"
                   append-icon="mdi-menu-down"
                 ></v-combobox>
-              </v-flex>
-              <v-flex xs1>
+              </v-col>
+              <v-col cols="1">
                 <v-text-field
                   name="amount"
                   label="Amount"
                   id="amount"
+                  single-line
+                  dense
                   required
                   hint="Positive for Income, Negative for Expense"
                   :rules="rules.amount"
                   v-model="entry.amount"
                 ></v-text-field>
-              </v-flex>
-              <v-flex xs2>
+              </v-col>
+              <v-col cols="2">
                 <v-autocomplete
                   :items="constants.FREQUENCY"
                   v-model="entry.frequency"
@@ -194,8 +225,8 @@
                   hint="How Frequently Does This Item Occur?"
                   append-icon="mdi-menu-down"
                 ></v-autocomplete>
-              </v-flex>
-              <v-flex xs2>
+              </v-col>
+              <v-col cols="2">
                 <v-autocomplete
                   :items="constants.MONTHS"
                   v-model="entry.firstDue"
@@ -207,16 +238,23 @@
                   hint="In What Month Is This Item First Due?"
                   append-icon="mdi-menu-down"
                 ></v-autocomplete>
-              </v-flex>
-              <v-flex xs3>
-                <v-text-field name="notes" label="Notes" id="notes" v-model="entry.notes"></v-text-field>
-              </v-flex>
-              <v-flex xs1>
-                <v-btn :color="constants.COLORS.OK_BUTTON" fab @click="saveEntry()">
+              </v-col>
+              <v-col cols="3">
+                <v-text-field
+                  name="notes"
+                  label="Notes"
+                  id="notes"
+                  v-model="entry.notes"
+                  single-line
+                  dense
+                ></v-text-field>
+              </v-col>
+              <v-col cols="1" text-center>
+                <v-btn :color="constants.COLORS.OK_BUTTON" fab small @click="saveEntry()">
                   <v-icon>mdi-content-save</v-icon>
                 </v-btn>
-              </v-flex>
-            </v-layout>
+              </v-col>
+            </v-row>
           </v-form>
         </v-card>
       </v-bottom-sheet>
@@ -412,7 +450,7 @@ export default {
     },
 
     newEntry: function () {
-      this.$refs.iconSelect.$el.focus()
+      // this.$refs.iconSelect.focus()
       this.showAddEditSheet = true
     },
 
@@ -447,29 +485,38 @@ export default {
 
     updateHistory: function () {
       var self = this
-      var historyRec = { date: Date.now() }
-      var relevantChange = false
 
-      if (this.oldEntry) {
-        HISTORY_FIELDS.forEach(function (fld) {
-          if (self.entry[fld] !== self.oldEntry[fld]) {
-            historyRec[fld] = self.oldEntry[fld]
-            relevantChange = true
+      var promise = new Promise((resolve, reject) => {
+        if (this.oldEntry) {
+          var historyRec = { date: Date.now() }
+          var relevantChange = false
+          HISTORY_FIELDS.forEach(function (fld) {
+            if (self.entry[fld] !== self.oldEntry[fld]) {
+              historyRec[fld] = self.oldEntry[fld]
+              relevantChange = true
+            }
+          })
+
+          if (relevantChange) {
+            // Create history list if not exist
+            if (!this.entry.history) {
+              this.entry.history = []
+            }
+            this.entry.history.push(historyRec)
+
+            // Show dialog asking for change note
+            this.showHistoryNoteDialog = true
+            this.historyCallback = resolve
           }
-        })
-      }
 
-      // Zero out for next use
-      this.oldEntry = null
-
-      if (relevantChange) {
-        // Create history list if not exist
-        if (!this.entry.history) {
-          this.entry.history = []
+          // Zero out for next use
+          this.oldEntry = null
+        } else {
+          resolve()
         }
+      })
 
-        this.entry.history.push(historyRec)
-      }
+      return promise
     },
 
     validateEntry: function (entry) {
@@ -494,8 +541,21 @@ export default {
         this.validateEntry(this.entry)
 
         this.updateHistory()
+          .then((note) => {
+            // History note dialog resolves a promise with the note entered by the user
+            if (this.entry.history && note) {
+              var index = this.entry.history.length - 1
+              // Get last history record (most recent one)
+              var history = this.entry.history[index]
+              // Add note
+              history.note = note
 
-        BudgetDB.save(this.entry)
+              this.historyCallback = null
+              this.historyNote = null
+            }
+
+            BudgetDB.save(this.entry)
+          })
           .then(function (numReplaced, upsert) {
             self._clearEntry()
             self.$refs.iconSelect.$el.focus()
@@ -542,6 +602,9 @@ export default {
       },
       // Used to temp. track fields for history purposes
       oldEntry: null,
+      historyNote: null,
+      historyCallback: null,
+      showHistoryNoteDialog: false,
       menu: [
         {name: 'View Active Entries', id: Constants.BUDGET_VIEW_SUMMARY},
         {name: 'View Archived Entries', id: Constants.BUDGET_VIEW_ARCHIVED},

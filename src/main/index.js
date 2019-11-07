@@ -1,6 +1,9 @@
 'use strict'
 
-import { app, Menu, BrowserWindow } from 'electron'
+import { app, ipcMain, Menu, BrowserWindow } from 'electron'
+import Backup from './backup'
+import Config from './config'
+
 const fs = require('fs')
 const path = require('path')
 
@@ -9,7 +12,7 @@ const path = require('path')
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
  */
 if (process.env.NODE_ENV !== 'development') {
-  global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
+  global.__static = path.join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
 
 let mainWindow
@@ -18,12 +21,9 @@ const winURL = process.env.NODE_ENV === 'development'
   : `file://${__dirname}/index.html`
 
 function initApp () {
-  // TODO: Open and read settings; create if necessary
-
-  // Create app documents directory
-  var docPath = path.join(app.getPath('documents'), 'Sixpence')
-  if (!fs.existsSync(docPath)) {
-    fs.mkdirSync(docPath, '0750')
+  // Create data directory
+  if (!fs.existsSync(Config.dataPath)) {
+    fs.mkdirSync(Config.dataPath, '0750')
   }
 }
 
@@ -45,6 +45,12 @@ function createWindow () {
     label: 'About Sixpence',
     accelerator: mainMetaKey + '+?',
     click: () => BrowserWindow.getFocusedWindow().webContents.send('menu-help-about')
+  }
+
+  var settingsSubMenu = {
+    label: process.platform === 'darwin' ? 'Preferences...' : 'Settings...',
+    accelerator: mainMetaKey + '+,',
+    click: () => BrowserWindow.getFocusedWindow().webContents.send('menu-settings')
   }
 
   const template = [
@@ -78,7 +84,7 @@ function createWindow () {
     {
       role: 'window',
       submenu: [
-        {role: 'minimize'}
+        { role: 'minimize' }
       ]
     },
     // 2
@@ -99,7 +105,8 @@ function createWindow () {
       label: 'Apple Menu',
       submenu: [
         aboutSubMenu,
-        // Other Apple Menu Worthy Item Go HERE
+        { type: 'separator' },
+        settingsSubMenu,
         { type: 'separator' },
         { role: 'quit' }
       ]
@@ -115,6 +122,8 @@ function createWindow () {
     template.unshift({
       label: 'File',
       submenu: [
+        settingsSubMenu,
+        { type: 'separator' },
         { role: 'quit' }
       ]
     })
@@ -126,6 +135,14 @@ function createWindow () {
 
   mainWindow.loadURL(winURL)
 
+  mainWindow.on('close', (event) => {
+    // Prevent closing the window...we still need it for a bit
+    event.preventDefault()
+
+    // Quit, to trigger the events in the 'before-quit' handler
+    app.quit()
+  })
+
   mainWindow.on('closed', () => {
     mainWindow = null
   })
@@ -136,16 +153,43 @@ app.on('ready', () => {
   createWindow()
 })
 
-app.on('window-all-closed', () => {
-  // if (process.platform !== 'darwin') {
-  app.quit()
-  // }
-})
+// app.on('window-all-closed', (event) => {
+//   console.log('main:window-all-closed')
+// })
 
 app.on('activate', () => {
   if (mainWindow === null) {
     createWindow()
   }
+})
+
+app.on('before-quit', (event) => {
+  if (mainWindow) {
+    // Prevent the app from quitting...we need to handle clean up first
+    event.preventDefault()
+
+    // Send the cleanup event to the renderer
+    // When it's done, it'll send back a cleanup event for the main process here
+    mainWindow.webContents.send('sixpence-renderer-cleanup', 'before-quit')
+  }
+  // else - really quit
+})
+
+// This is necessary b/c in the `before-quit` handler we STOP the app from
+// quiting so that we can send events...those events then respond by sending
+// this event to do cleanup and actually exit.
+ipcMain.on('sixpence-main-cleanup', (event, status, msg) => {
+  Backup.backup()
+    .then(() => {
+      return true
+    })
+    .catch((err) => {
+      console.log(`Backup Failed: ${err}`)
+      return false
+    })
+    .finally(() => {
+      app.exit(status)
+    })
 })
 
 /**

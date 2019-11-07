@@ -13,6 +13,13 @@ var _DB = new Datastore({
 // -----------------------------------------------------------------------------
 export default {
 
+  compact: function (cb) {
+    _DB.persistence.compactDatafile()
+    _DB.once('compaction.done', (event) => {
+      cb()
+    })
+  },
+
   loadData: function (startDate, endDate) {
     var query = {}
     if (startDate && endDate) {

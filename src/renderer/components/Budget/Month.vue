@@ -1,38 +1,38 @@
 <template>
   <div>
-    <v-list-tile @click="budgetDetails()" :class="rowColor()" v-if="dataLoaded">
-      <v-list-tile-avatar>
+    <v-list-item @click="budgetDetails()" :class="rowColor()" v-if="dataLoaded">
+      <v-list-item-icon>
         <v-icon>{{ month.icon }}</v-icon>
-      </v-list-tile-avatar>
-      <v-layout row align-center>
-        <v-flex xs3>
-          <span class="subheading">{{ month.text }}</span>
-        </v-flex>
-        <v-flex xs3>
-          <v-chip label :color="constants.COLORS.INCOME" disabled>
-            <v-icon left>mdi-currency-usd</v-icon>
-            <span class="subheading">{{ format.formatMoney(monthData.income) }}</span>
+      </v-list-item-icon>
+
+      <v-row align="center">
+        <v-col cols="3">
+          <span class="subtitle-1">{{ month.text }}</span>
+        </v-col>
+        <v-col cols="3">
+          <v-chip label :color="constants.COLORS.INCOME">
+            <v-icon float-left>mdi-currency-usd</v-icon>
+            <span class="subtitle-1">{{ format.formatMoney(monthData.income) }}</span>
           </v-chip>
-        </v-flex>
-        <v-flex xs3>
-          <v-chip label :color="constants.COLORS.EXPENSE" disabled>
-            <v-icon left>mdi-currency-usd-off</v-icon>
-            <span class="subheading">{{ format.formatMoney(monthData.expense) }}</span>
+        </v-col>
+        <v-col cols="3">
+          <v-chip label :color="constants.COLORS.EXPENSE">
+            <v-icon float-left>mdi-currency-usd-off</v-icon>
+            <span class="subtitle-1">{{ format.formatMoney(monthData.expense) }}</span>
           </v-chip>
-        </v-flex>
-        <v-flex xs3>
+        </v-col>
+        <v-col cols="3">
           <v-chip
             label
             :color="monthData.diff >= 0.0 ? constants.COLORS.INCOME_ALT : constants.COLORS.EXPENSE_ALT"
-            disabled
           >
-            <v-icon left>mdi-cash-multiple</v-icon>
-            <span class="subheading">{{ format.formatMoney(monthData.diff) }}</span>
-            <v-icon :color="averageColor()" right>{{ averageIcon() }}</v-icon>
+            <v-icon float-left>mdi-cash-multiple</v-icon>
+            <span class="subtitle-1">{{ format.formatMoney(monthData.diff) }}</span>
+            <v-icon :color="averageColor()" float-right>{{ averageIcon() }}</v-icon>
           </v-chip>
-        </v-flex>
-      </v-layout>
-    </v-list-tile>
+        </v-col>
+      </v-row>
+    </v-list-item>
   </div>
 </template>
 

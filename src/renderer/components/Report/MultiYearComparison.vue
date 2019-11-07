@@ -1,92 +1,91 @@
 <template>
   <div>
-    <v-toolbar :color="constants.COLORS.TOOLBAR" dark dense app fixed>
+    <v-app-bar :color="constants.COLORS.TOOLBAR" dark dense app fixed>
       <v-menu bottom offset-y>
-        <v-btn slot="activator" icon @click="handleBack()">
-          <v-icon>mdi-arrow-left-thick</v-icon>
-        </v-btn>
+        <template v-slot:activator="{ on }">
+          <v-btn v-on="on" icon @click="handleBack()">
+            <v-icon>mdi-arrow-left-thick</v-icon>
+          </v-btn>
+        </template>
       </v-menu>
       <v-toolbar-title>Report - Income & Expenses By Year</v-toolbar-title>
-    </v-toolbar>
+    </v-app-bar>
 
     <template v-if="dataLoaded">
-      <v-list dark dense fixed>
-        <v-list-tile>
-          <v-list-tile-avatar>
+      <v-list dense dark>
+        <v-list-item>
+          <v-list-item-icon>
             <v-icon>{{ focusData.data.icon ? focusData.data.icon : 'mdi-all-inclusive'}}</v-icon>
-          </v-list-tile-avatar>
-          <v-layout row>
-            <v-flex
-              xs3
-              align-self-center
-              class="title"
-            >{{ focusData.category ? focusData.category : 'Category'}}</v-flex>
-            <v-flex align-self-center xs1 v-for="(year, id) in yearRange" :key="id">
-              <v-btn @click="viewYear(year)">{{ year }}</v-btn>
-            </v-flex>
-          </v-layout>
-        </v-list-tile>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-row no-gutters align="center">
+              <v-col cols="3">{{ focusData.category ? focusData.category : 'Category'}}</v-col>
+              <v-col cols="1" text-center v-for="(year, id) in yearRange" :key="id">
+                <v-btn small @click="viewYear(year)">{{ year }}</v-btn>
+              </v-col>
+            </v-row>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
 
       <!-- All Categories -->
       <v-list dense v-show="!focusData.category">
-        <v-list-tile
+        <v-list-item
           v-for="(entry, category, id) in data"
           :class="entryColor(id, entry.type)"
           :key="id"
-          @click
         >
-          <v-list-tile-avatar>
+          <v-list-item-icon>
             <v-icon>{{ entry.icon }}</v-icon>
-          </v-list-tile-avatar>
-          <v-layout row align-center>
-            <v-flex xs3>
-              <span class="subheading">{{ category }}</span>
-            </v-flex>
-            <v-flex text-xs-center xs1 v-for="(year, id) in yearRange" :key="id">
+          </v-list-item-icon>
+
+          <v-row dense align="center">
+            <v-col cols="3">{{ category }}</v-col>
+
+            <v-col cols="1" v-for="(year, id) in yearRange" :key="id">
               <span v-if="entry[year]">{{ format.formatMoney(entry[year]['total']) }}</span>
               <span v-else>N/A</span>
-            </v-flex>
-            <v-flex xs offset-xs5>
-              <v-list-tile-action>
-                <v-btn flat icon @click="viewEntries(category)">
-                  <v-icon>mdi-view-list</v-icon>
-                </v-btn>
-              </v-list-tile-action>
-            </v-flex>
-            <v-flex xs1>
-              <v-list-tile-action>
-                <v-btn flat icon @click="focusSingleCategory(category)">
-                  <v-icon>mdi-image-filter-center-focus</v-icon>
-                </v-btn>
-              </v-list-tile-action>
-            </v-flex>
-          </v-layout>
-        </v-list-tile>
+            </v-col>
+
+            <!-- ACTIONS : Offset to align right -->
+            <!-- grid size - ICON - CATEGORY - 1/year amount -->
+            <v-col :offset="12 - 1 - 3 - (yearRange.length)">
+              <v-btn icon @click="viewEntries(category)">
+                <v-icon>mdi-view-list</v-icon>
+              </v-btn>
+
+              <v-btn icon @click="focusSingleCategory(category)">
+                <v-icon>mdi-image-filter-center-focus</v-icon>
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-list-item>
       </v-list>
 
       <!-- Focus on Single Category -->
       <v-list v-show="focusData.category">
-        <v-list-tile
+        <v-list-item
           v-for="month in constants.MONTHS"
           :key="month.value"
           :class="month.value % 2 === 0 ? constants.COLORS.GREY : constants.COLORS.GREY_ALT"
         >
-          <v-list-tile-avatar>
+          <v-list-item-icon>
             <v-icon>{{ month.icon }}</v-icon>
-          </v-list-tile-avatar>
-          <v-layout row align-center>
-            <v-flex xs3>
-              <span class="subheading">{{ month.text }}</span>
-            </v-flex>
-            <v-flex text-xs-center xs1 v-for="(year, id) in yearRange" :key="id">
+          </v-list-item-icon>
+
+          <v-row dense align="center">
+            <v-col cols="3">
+              <span class="subtitle-1">{{ month.text }}</span>
+            </v-col>
+            <v-col cols="1" v-for="(year, id) in yearRange" :key="id">
               <span
                 v-if="focusData.data[year]"
               >{{ format.formatMoney(focusData.data[year]['months'][month.value-1]) }}</span>
               <span v-else>N/A</span>
-            </v-flex>
-          </v-layout>
-        </v-list-tile>
+            </v-col>
+          </v-row>
+        </v-list-item>
       </v-list>
     </template>
   </div>
@@ -192,6 +191,7 @@ export default {
             }
           })
 
+          // TODO: don't allow anymore than yearCount years into yearRange
           for (var i = self.minYear; i <= self.maxYear; i++) {
             self.yearRange.push(i)
           }
@@ -208,6 +208,7 @@ export default {
 
   data () {
     return ({
+      yearCount: 5, // Number of years to display - not used yet
       minYear: 9999,
       maxYear: 0,
       yearRange: [],

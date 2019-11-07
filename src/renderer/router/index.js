@@ -11,6 +11,11 @@ export default new Router({
       component: require('@/components/Main').default
     },
     {
+      path: '/settings',
+      name: 'settings-screen',
+      component: require('@/components/Settings').default
+    },
+    {
       path: '/budget',
       name: 'budget-screen',
       component: require('@/components/Budget').default

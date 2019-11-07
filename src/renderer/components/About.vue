@@ -2,7 +2,7 @@
   <v-dialog v-model="showDialog" max-width="768">
     <v-card>
       <v-card-title id="about-title" class="headline green lighten-1">
-        <img width="64" src="../assets/logo.png">
+        <img width="64" src="../assets/logo.png" />
         &nbsp;
         {{ appInfo.name }} v{{ appInfo.version }}
       </v-card-title>
@@ -10,15 +10,17 @@
         {{ appInfo.description }} &mdash; &copy; {{ appInfo.author }} 2018-{{ new Date().getFullYear() }}
         <v-divider></v-divider>
         <v-subheader>Built With</v-subheader>
-        <v-data-table :items="items" hide-actions hide-headers dark>
-          <template slot="items" slot-scope="data">
-            <td>
-              <v-icon>mdi-{{ data.item.icon }}</v-icon>
-              {{ data.item.name }}
-            </td>
-            <td
-              :id="'about-tech-' + data.item.name.toLowerCase().replace(' ', '')"
-            >{{ data.item.value }}</td>
+        <v-data-table :items="items" hide-default-footer hide-default-header dark>
+          <template v-slot:body="{ items }">
+            <tbody>
+              <tr v-for="item in items" :key="item.name">
+                <td>
+                  <v-icon>mdi-{{ item.icon }}</v-icon>
+                  {{ item.name }}
+                </td>
+                <td :id="'about-tech-' + item.name.toLowerCase().replace(' ', '')">{{ item.value }}</td>
+              </tr>
+            </tbody>
           </template>
         </v-data-table>
       </v-card-text>

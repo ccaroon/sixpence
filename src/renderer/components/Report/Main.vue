@@ -1,29 +1,37 @@
 <template>
   <div>
-    <v-toolbar :color="constants.COLORS.TOOLBAR" dark dense app fixed>
+    <v-app-bar :color="constants.COLORS.TOOLBAR" dark dense app fixed>
       <v-menu bottom offset-y>
-        <v-btn slot="activator" icon>
-          <v-icon>mdi-menu</v-icon>
-        </v-btn>
+        <template v-slot:activator="{ on }">
+          <v-btn v-on="on" icon>
+            <v-icon>mdi-menu</v-icon>
+          </v-btn>
+        </template>
+
         <v-list dense>
-          <v-list-tile v-for="(report, ri) in reportList" :key="ri" @click="viewReport(report)">
-            <v-list-tile-title>{{ report.title }}</v-list-tile-title>
-          </v-list-tile>
+          <v-list-item v-for="(report, ri) in reportList" :key="ri" @click="viewReport(report)">
+            <v-list-item-title>{{ report.title }}</v-list-item-title>
+          </v-list-item>
         </v-list>
       </v-menu>
       <v-toolbar-title>Report List</v-toolbar-title>
-    </v-toolbar>
+    </v-app-bar>
 
     <v-list dense>
-      <v-list-tile
+      <v-list-item
         v-for="(report, ri) in reportList"
         :key="ri"
         :class="rowColor(ri)"
         @click="viewReport(report)"
       >
-        <v-list-tile-title>{{ report.title }}</v-list-tile-title>
-        <v-list-tile-sub-title>{{ report.desc }}</v-list-tile-sub-title>
-      </v-list-tile>
+        <v-list-item-icon>
+          <v-icon>{{ report.icon }}</v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>
+          <v-list-item-title class="body-1">{{ report.title }}</v-list-item-title>
+          <v-list-item-subtitle>{{ report.desc }}</v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
     </v-list>
   </div>
 </template>
@@ -55,14 +63,16 @@ export default {
       constants: Constants,
       reportList: [
         {
+          icon: 'mdi-calendar-star',
           title: 'Yearly Budget',
           url: '/report/yearly-budget',
-          desc: 'Budget Progress for a Year'
+          desc: 'Budget progress for the current year'
         },
         {
+          icon: 'mdi-compare',
           title: 'Multi-Year Income/Expense Comparison',
           url: '/report/multi-year-comparison',
-          desc: 'Income & Expense Comparison between Years'
+          desc: 'Income & Expense comparison between years'
         }
       ]
     }

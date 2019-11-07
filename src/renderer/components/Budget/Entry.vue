@@ -1,77 +1,98 @@
 <template>
   <div>
-    <v-list-tile :class="entryColor">
-      <v-list-tile-avatar>
+    <v-list-item :class="entryColor">
+      <v-list-item-icon>
         <v-icon>{{ entry.icon }}</v-icon>
-      </v-list-tile-avatar>
-      <v-layout row>
-        <v-flex xs1>{{ entryType }}</v-flex>
-        <v-flex xs3>{{ entry.category }}</v-flex>
-        <v-flex xs2>{{ format.formatMoney(entry.amount) }}</v-flex>
-        <v-flex
-          xs2
-        >{{ format.formatFrequency(entry.frequency) }} / {{ format.monthNumberToName(entry.firstDue - 1 )}}</v-flex>
-        <v-flex xs>{{ entry.notes }}</v-flex>
-      </v-layout>
+      </v-list-item-icon>
+
+      <v-list-item-content>
+        <v-list-item-subtitle>{{ entryType }}</v-list-item-subtitle>
+        <v-list-item-title class="body-1">{{ entry.category }}</v-list-item-title>
+      </v-list-item-content>
+
+      <v-list-item-content>
+        <v-list-item-subtitle>{{ format.formatFrequency(entry.frequency) }} / {{ format.monthNumberToName(entry.firstDue - 1 )}}</v-list-item-subtitle>
+        <v-list-item-title class="body-1">{{ format.formatMoney(entry.amount) }}</v-list-item-title>
+      </v-list-item-content>
+
+      <v-list-item-content>
+        <v-list-item-title class="body-1">{{ entry.notes }}</v-list-item-title>
+      </v-list-item-content>
+
       <template v-if="!readOnly">
-        <v-list-tile-action>
-          <v-btn flat icon :disabled="!entry.history" @click="viewHistory()" tabindex="-1">
+        <v-list-item-action>
+          <v-btn icon :disabled="!entry.history" @click="viewHistory()" tabindex="-1">
             <v-icon>mdi-history</v-icon>
           </v-btn>
-        </v-list-tile-action>
-        <v-list-tile-action>
-          <v-btn flat icon @click="editEntry()" tabindex="-1">
+        </v-list-item-action>
+
+        <v-list-item-action>
+          <v-btn icon @click="editEntry()" tabindex="-1">
             <v-icon>mdi-pencil</v-icon>
           </v-btn>
-        </v-list-tile-action>
-        <v-list-tile-action>
-          <v-btn flat icon @click="showRemoveDialog = true" tabindex="-1">
+        </v-list-item-action>
+
+        <v-list-item-action>
+          <v-btn icon @click="showRemoveDialog = true" tabindex="-1">
             <v-icon>mdi-delete-forever</v-icon>
           </v-btn>
-        </v-list-tile-action>
+        </v-list-item-action>
       </template>
-      <template v-else>Archived: {{ format.formatDate(entry.archivedAt) }}</template>
-    </v-list-tile>
+      <template v-else>
+        <v-list-item-content>
+          <v-list-item-title>Archived: {{ format.formatDate(entry.archivedAt) }}</v-list-item-title>
+        </v-list-item-content>
+      </template>
+    </v-list-item>
 
     <!--  HISTORY -->
     <template v-if="entry.history">
-      <v-dialog v-model="showHistory" max-width="768">
+      <v-dialog v-model="showHistory" scrollable max-width="768">
         <v-card>
           <v-card-title :id="entry._id" :class="entryColor" class="headline">
             <v-icon color="black">{{ entry.icon }}</v-icon>
+            &nbsp;
             {{ entry.category }} - Record History
           </v-card-title>
-          <v-card-text>
+          <v-card-text style="height: 75%">
             <v-icon color="info">mdi-alert-circle</v-icon>Currently only tracking changes to budgeted amounts.
             <v-list>
-              <v-list-tile
+              <v-list-item
                 v-for="(record, index) in entry.history"
                 :key="record.date"
                 :class="altColors(index)"
               >
-                <v-layout row>
-                  <v-flex xs1>
-                    <v-list-tile-content>
-                      <v-icon>mdi-calendar</v-icon>
-                    </v-list-tile-content>
-                  </v-flex>
-                  <v-flex xs4>
-                    <v-list-tile-content>{{ format.formatDate(record.date, 'MMM DD, YYYY @ hh:mm:ss') }}</v-list-tile-content>
-                  </v-flex>
-                  <v-flex xs7>
-                    <v-list-tile-content v-if="index < entry.history.length-1">
-                      {{ format.formatMoney(record.amount) }}
-                      &rarr;
-                      {{ format.formatMoney(entry.history[index+1].amount) }}
-                    </v-list-tile-content>
-                    <v-list-tile-content v-else>
-                      {{ format.formatMoney(record.amount) }}
-                      &rarr;
-                      {{ format.formatMoney(entry.amount) }}
-                    </v-list-tile-content>
-                  </v-flex>
-                </v-layout>
-              </v-list-tile>
+                <v-list-item-icon>
+                  <v-icon>mdi-calendar</v-icon>
+                </v-list-item-icon>
+                <v-row no-gutters>
+                  <v-col cols="2">
+                    <v-list-item-content>
+                      <v-list-item-title>{{ format.formatDate(record.date, 'MMM DD, YYYY') }}</v-list-item-title>
+                      <v-list-item-subtitle>{{ format.formatDate(record.date, 'hh:mm:ssa') }}</v-list-item-subtitle>
+                    </v-list-item-content>
+                  </v-col>
+                  <v-col cols="4">
+                    <v-list-item-content>
+                      <v-list-item-title v-if="index < entry.history.length-1">
+                        {{ format.formatMoney(record.amount) }}
+                        &rarr;
+                        {{ format.formatMoney(entry.history[index+1].amount) }}
+                      </v-list-item-title>
+                      <v-list-item-title v-else>
+                        {{ format.formatMoney(record.amount) }}
+                        &rarr;
+                        {{ format.formatMoney(entry.amount) }}
+                      </v-list-item-title>
+                    </v-list-item-content>
+                  </v-col>
+                  <v-col cols="4">
+                    <v-list-item-content>
+                      <v-list-item-title>{{ record.note }}</v-list-item-title>
+                    </v-list-item-content>
+                  </v-col>
+                </v-row>
+              </v-list-item>
             </v-list>
           </v-card-text>
         </v-card>
@@ -80,35 +101,48 @@
 
     <v-dialog v-model="showRemoveDialog" persistent max-width="65%">
       <v-card>
-        <v-card-title class="headline">Remove Entry</v-card-title>
+        <v-card-title class="title">Remove Entry</v-card-title>
         <v-divider></v-divider>
-        <v-card-text :class="entryColor">
-          <v-layout row>
-            <v-flex>{{ entryType }}</v-flex>
-            <v-flex>{{ entry.category }}</v-flex>
-            <v-flex>{{ format.formatMoney(entry.amount) }}</v-flex>
-            <v-flex>{{ format.formatFrequency(entry.frequency) }} / {{ format.monthNumberToName(entry.firstDue - 1 )}}</v-flex>
-            <v-flex>{{ entry.notes }}</v-flex>
-          </v-layout>
+        <v-card-text>
+          <v-list dense :class="entryColor">
+            <v-list-item>
+              <v-list-item-icon>
+                <v-icon>{{ entry.icon }}</v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+                <v-list-item-subtitle>{{ entryType }}</v-list-item-subtitle>
+                <v-list-item-title class="body-1">{{ entry.category }}</v-list-item-title>
+              </v-list-item-content>
+
+              <v-list-item-content>
+                <v-list-item-subtitle>{{ format.formatFrequency(entry.frequency) }} / {{ format.monthNumberToName(entry.firstDue - 1 )}}</v-list-item-subtitle>
+                <v-list-item-title class="body-1">{{ format.formatMoney(entry.amount) }}</v-list-item-title>
+              </v-list-item-content>
+
+              <v-list-item-content>
+                <v-list-item-title class="body-1">{{ entry.notes }}</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions>
-          <v-btn color="green darken-1" small round @click="archiveEntry(entry)" tabindex="-1">
-            <v-icon left>mdi-package-down</v-icon>Archive
+          <v-btn color="green darken-1" small rounded @click="archiveEntry(entry)" tabindex="-1">
+            <v-icon float-left>mdi-package-down</v-icon>Archive
           </v-btn>
-          <v-btn color="red darken-2" small round @click="deleteEntry(entry._id)" tabindex="-1">
-            <v-icon left>mdi-delete-forever</v-icon>Delete Forever
+          <v-btn color="red darken-2" small rounded @click="deleteEntry(entry._id)" tabindex="-1">
+            <v-icon float-left>mdi-delete-forever</v-icon>Delete Forever
           </v-btn>
           <v-btn
             color="red lighten-1"
             small
-            round
+            rounded
             right
             absolute
             @click.native="showRemoveDialog = false"
             tabindex="-1"
           >
-            <v-icon left>mdi-cancel</v-icon>Cancel
+            <v-icon float-left>mdi-cancel</v-icon>Cancel
           </v-btn>
         </v-card-actions>
       </v-card>

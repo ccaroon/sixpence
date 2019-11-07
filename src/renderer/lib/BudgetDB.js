@@ -2,7 +2,6 @@ import Datastore from 'nedb'
 import Moment from 'moment'
 
 const { app } = require('electron').remote
-
 // -----------------------------------------------------------------------------
 const dbFileName = (process.env.NODE_ENV === 'development') ? 'budget-dev.sxp' : 'budget.sxp'
 var _DB = new Datastore({
@@ -79,6 +78,13 @@ export default {
 
   // Canned Queries
   QUERIES: QUERIES,
+
+  compact: function (cb) {
+    _DB.persistence.compactDatafile()
+    _DB.once('compaction.done', (event) => {
+      cb()
+    })
+  },
 
   // ---------------------------------------------
   // Load Budget Entries
