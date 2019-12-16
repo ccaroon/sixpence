@@ -154,6 +154,7 @@
           v-bind:entryNum="index"
           v-bind:entry="entry"
           v-on:editEntry="editEntry"
+          v-on:search="search"
           v-on:refreshData="refreshData"
           v-on:displayAlert="displayAlert"
         ></ExpenseEntry>
@@ -215,7 +216,7 @@
                       readonly
                       single-line
                       dense
-                      :background-color="newEntryColor"
+                      :background-color="newEntryColor()"
                       required
                       :rules="rules.date"
                     ></v-text-field>
@@ -239,10 +240,11 @@
                   single-line
                   dense
                   required
-                  :background-color="newEntryColor"
+                  :background-color="newEntryColor()"
                   :rules="rules.category"
                   hint="Choose a Category or Add a New One"
                   append-icon="mdi-menu-down"
+                  @change="loadCategoryTags()"
                 ></v-combobox>
               </v-col>
               <v-col cols="1">
@@ -254,7 +256,7 @@
                   required
                   single-line
                   dense
-                  :background-color="newEntryColor"
+                  :background-color="newEntryColor()"
                   hint="+/- Amount"
                   :rules="rules.amount"
                   v-model="entry.amount"
@@ -262,16 +264,27 @@
                 ></v-text-field>
               </v-col>
               <v-col cols="5">
-                <v-text-field
-                  tabindex="0"
-                  name="notes"
-                  label="Notes"
-                  id="notes"
+                <v-combobox
+                  v-model="entry.tags"
+                  :items="this.tagList"
+                  :background-color="newEntryColor()"
+                  label="Tags"
+                  multiple
                   single-line
                   dense
-                  :background-color="newEntryColor"
-                  v-model="entry.notes"
-                ></v-text-field>
+                >
+                  <template v-slot:selection="{ attrs, item, select, selected }">
+                    <v-chip
+                      v-bind="attrs"
+                      :input-value="selected"
+                      close
+                      :color="newEntryColor('tag')"
+                      small
+                      @click="select"
+                      @click:close="removeTag(item)"
+                    >{{ item }}</v-chip>
+                  </template>
+                </v-combobox>
               </v-col>
               <v-col cols="1" text-center>
                 <v-btn
@@ -379,22 +392,6 @@ export default {
       }
 
       return (value)
-    },
-
-    newEntryColor: function () {
-      var color = Constants.COLORS.GREY
-
-      if (this.categoriesForMonth && this.categoriesForMonth[this.entry.category]) {
-        color = this.categoriesForMonth[this.entry.category] > 0 ? this.constants.COLORS.INCOME_ALT : this.constants.COLORS.EXPENSE_ALT
-      } else if (this.entry.amount) {
-        if (this.entry.amount < 0) {
-          color = this.constants.COLORS.EXPENSE_ALT
-        } else if (this.entry.amount > 0) {
-          color = this.constants.COLORS.INCOME_ALT
-        }
-      }
-
-      return (color)
     }
   },
 
@@ -528,8 +525,64 @@ export default {
       return (expense)
     },
 
-    search: function () {
+    loadCategoryTags: async function () {
       var self = this
+      this.tagList = []
+
+      if (this.entry.category) {
+        try {
+          // Find all Tags used for the category in the lasts 6 months
+          var startDate = Moment(this.endDate).subtract(6, 'months')
+          var endDate = this.endDate
+
+          var docs = await ExpenseDB.search(startDate, endDate, {category: this.entry.category}, {}, {tags: 1})
+
+          var catTags = []
+          docs.forEach(entry => {
+            if (entry.tags) {
+              catTags = catTags.concat(entry.tags)
+            }
+          })
+
+          // Use a Set to de-dup list
+          // & convert back into Array
+          this.tagList = [...new Set(catTags)]
+        } catch (err) {
+          self.displayAlert('mdi-alert-octagon', 'red', err, 60)
+        }
+      }
+    },
+
+    newEntryColor: function (type = 'base') {
+      var color = Constants.COLORS.GREY
+      var incColor = Constants.COLORS.INCOME_ALT
+      var expColor = Constants.COLORS.EXPENSE_ALT
+
+      if (type === 'tag') {
+        color = Constants.COLORS.GREY_ALT
+        incColor = Constants.COLORS.INCOME
+        expColor = Constants.COLORS.EXPENSE
+      }
+
+      if (this.categoriesForMonth && this.categoriesForMonth[this.entry.category]) {
+        color = this.categoriesForMonth[this.entry.category] > 0 ? incColor : expColor
+      } else if (this.entry.amount) {
+        if (this.entry.amount < 0) {
+          color = expColor
+        } else if (this.entry.amount > 0) {
+          color = incColor
+        }
+      }
+
+      return (color)
+    },
+
+    search: function (searchFor = null) {
+      var self = this
+
+      if (searchFor !== null) {
+        this.searchText = searchFor
+      }
 
       if (this.searchText) {
         var parts = this.searchText.split(/\?/, 2)
@@ -538,7 +591,13 @@ export default {
         if (parts.length === 2) {
           query[parts[0].trim()] = new RegExp(parts[1].trim(), 'i')
         } else {
-          query['category'] = new RegExp(parts[0].trim(), 'i')
+          var term = new RegExp(parts[0].trim(), 'i')
+          query = {
+            $or: [
+              {category: term},
+              {tags: term}
+            ]
+          }
         }
 
         this.dataLoaded = false
@@ -576,7 +635,10 @@ export default {
 
     editEntry: function (entry) {
       this.entry = entry
+
+      this.loadCategoryTags()
       this.entryDateStr = Format.formatDate(this.entry.date, Constants.FORMATS.entryDate)
+
       this.showAddEditSheet = true
     },
 
@@ -594,6 +656,11 @@ export default {
 
         this.entry.icon = this.findIcon(this.entry)
         this.entry.amount = parseFloat(this.entry.amount)
+
+        if (this.entry.tags) {
+          delete this.entry.notes
+          this.entry.tags.sort()
+        }
 
         // IF entry.category IS a budgeted category
         //   use the budgeted category's type for entry.type
@@ -651,10 +718,10 @@ export default {
         icon = foundIcon ? foundIcon.value : undefined
       }
 
-      // Try to find a match from the Notes field
-      // "paid the dentist"
+      // Try to find a match from the list of tags
+      // "Dentist", "Food", "..."
       if (icon === undefined) {
-        foundIcon = Icons.superSearch(entry.notes)
+        foundIcon = Icons.superSearch(entry.tags)
         icon = foundIcon ? foundIcon.value : 'mdi-currency-usd'
       }
 
@@ -789,6 +856,11 @@ export default {
         })
     },
 
+    removeTag: function (tag) {
+      var index = this.entry.tags.indexOf(tag)
+      this.entry.tags.splice(index, 1)
+    },
+
     viewStyleChange: function () {
       if (this.searchText) {
         this.search()
@@ -879,11 +951,12 @@ export default {
         icon: null,
         category: null,
         amount: null,
-        notes: null
+        tags: []
       },
       showDateMenu: false,
       showAddEditSheet: false,
       showOverbudget: false,
+      tagList: [],
       rules: {
         date: [
           date => !!date || 'Date is required',

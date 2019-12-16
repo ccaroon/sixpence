@@ -4,7 +4,7 @@
       <v-card-title id="about-title" class="headline green lighten-1">
         <img width="64" src="../assets/logo.png" />
         &nbsp;
-        {{ appInfo.name }} v{{ appInfo.version }}
+        {{ appInfo.name }} v{{ appInfo.version }} ({{ appInfo.codename }})
       </v-card-title>
       <v-card-text>
         {{ appInfo.description }} &mdash; &copy; {{ appInfo.author }} 2018-{{ new Date().getFullYear() }}

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-list-item :class="entryColor">
+    <v-list-item :class="entryColor()">
       <v-list-item-icon>
         <v-icon>{{ entry.icon }}</v-icon>
       </v-list-item-icon>
@@ -16,7 +16,16 @@
       </v-list-item-content>
 
       <v-list-item-content>
-        <v-list-item-title class="body-1">{{ entry.notes }}</v-list-item-title>
+        <v-list-item-title v-if="entry.tags">
+          <v-chip
+            v-for="(tag, index) in entry.tags"
+            :key="index"
+            small
+            :color="entryColor('tag')"
+            @click="search(tag)"
+          >{{ tag }}</v-chip>
+        </v-list-item-title>
+        <v-list-item-title v-else class="body-1">{{ entry.notes }}</v-list-item-title>
       </v-list-item-content>
 
       <v-list-item-action>
@@ -36,7 +45,7 @@
         <v-card-title class="headline">Delete Entry</v-card-title>
         <v-divider></v-divider>
         <v-card-text>
-          <v-list dense :class="entryColor">
+          <v-list dense :class="entryColor()">
             <v-list-item>
               <v-list-item-icon>
                 <v-icon>{{ entry.icon }}</v-icon>
@@ -53,7 +62,15 @@
               </v-list-item-content>
 
               <v-list-item-content>
-                <v-list-item-title class="body-1">{{ entry.notes }}</v-list-item-title>
+                <v-list-item-title v-if="entry.tags">
+                  <v-chip
+                    v-for="(tag, index) in entry.tags"
+                    :key="index"
+                    small
+                    :color="entryColor('tag')"
+                  >{{ tag }}</v-chip>
+                </v-list-item-title>
+                <v-list-item-title v-else class="body-1">{{ entry.notes }}</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
           </v-list>
@@ -94,21 +111,34 @@ export default {
     entryType: function () {
       var type = this.entry.type === Constants.TYPE_INCOME ? 'Income' : 'Expense'
       return (type)
-    },
-    entryColor: function () {
-      var color = null
-
-      if (this.entryNum % 2 === 0) {
-        color = (this.entry.amount >= 0) ? Constants.COLORS.INCOME : Constants.COLORS.EXPENSE
-      } else {
-        color = (this.entry.amount >= 0) ? Constants.COLORS.INCOME_ALT : Constants.COLORS.EXPENSE_ALT
-      }
-
-      return (color)
     }
   },
 
   methods: {
+    entryColor: function (type = 'base') {
+      var entryColor = null
+      var tagColor = null
+
+      if (this.entryNum % 2 === 0) {
+        entryColor = (this.entry.amount >= 0) ? Constants.COLORS.INCOME : Constants.COLORS.EXPENSE
+        tagColor = (this.entry.amount >= 0) ? Constants.COLORS.INCOME_ALT : Constants.COLORS.EXPENSE_ALT
+      } else {
+        entryColor = (this.entry.amount >= 0) ? Constants.COLORS.INCOME_ALT : Constants.COLORS.EXPENSE_ALT
+        tagColor = (this.entry.amount >= 0) ? Constants.COLORS.INCOME : Constants.COLORS.EXPENSE
+      }
+
+      var color = entryColor
+      if (type === 'tag') {
+        color = tagColor
+      }
+
+      return (color)
+    },
+
+    search: function (term) {
+      this.$emit('search', term)
+    },
+
     editEntry: function () {
       this.$emit('editEntry', this.entry)
     },

@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## v1.12.0 - Grookey (February 05, 2020)
+### Changes
+* Expense entries are now taggable instead of having a free-form text field for `notes`.
+    - There's a DB migration which will indicate if any entries exist with a `notes` field.
+    - There is **not** an automatic migration from `notes` to `tags`.
+    - The user can manually edit an entry to add tags. Doing so will remove the `notes` field.
+    - Expense search now searches `category` and `tags` for matches.
+    - Clicking on a `[TAG]` in the Entry listing will filter on that tag.
+* Added the version codename to the About dialog.
+
+### Misc
+* Updated VuetifyJS
+* Updated VueJS
+
 ## v1.11.0 - Codename Goes Here (November 07, 2019)
 ### Features
 #### General
@@ -25,7 +39,7 @@
 
 ## v1.10.0 - Repentant Rupees (September 27, 2019)
 The Archive feature in v1.9.0 was NOT well thought out and resulted in many
-undesireable isses when a Budget Entry was archived.
+undesireable issues when a Budget Entry was archived.
 
 This version is a complete re-do of the Archive feature.
 
