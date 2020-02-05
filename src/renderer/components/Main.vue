@@ -72,35 +72,41 @@ export default {
   },
 
   methods: {
+    applyDBMigrations: function (check) {
+      check.needsApplying
+        .then(needed => {
+          if (needed) {
+            var type = check.migration.critical ? 'error' : 'info'
+            this.addNotification(
+              'mdi-update',
+              type,
+              `Database Update: ${check.migration.name} - ${check.migration.desc}`,
+              {action: this.applyMigration, params: check.migration}
+            )
+          }
+        })
+        .catch(err => {
+          this.addNotification('mdi-alert-octagram', 'error', `Database Update Check Failed: ${err}`)
+        })
+    },
+
     checkForDBMigrations: function () {
       var budgetChecks = DBMigrations.checkBudgetDb()
+      budgetChecks.forEach(this.applyDBMigrations)
 
-      budgetChecks.forEach(check => {
-        check.needsApplying
-          .then(needed => {
-            if (needed) {
-              var type = check.migration.critical ? 'error' : 'info'
-              this.addNotification(
-                'mdi-update',
-                type,
-                `Database Update: ${check.migration.name} - ${check.migration.desc}`,
-                {action: this.applyMigration, params: check.migration}
-              )
-            }
-          })
-          .catch(err => {
-            this.addNotification('mdi-alert-octagram', 'error', `Database Update Check Failed: ${err}`)
-          })
-      })
-
-      // var expenseChecks = DBMigrations.checkExpenseDb()
+      var expenseChecks = DBMigrations.checkExpenseDb()
+      expenseChecks.forEach(this.applyDBMigrations)
     },
 
     applyMigration: function (mig) {
       mig.apply()
         .then(num => {
           this.notifications = []
-          this.addNotification('mdi-update', 'success', `${mig.name} successfully applied. ${num} entries updated.`)
+          if (num === null) {
+            this.addNotification('mdi-alert', 'warning', `${mig.name}: ${mig.note}`)
+          } else {
+            this.addNotification('mdi-update', 'success', `${mig.name} successfully applied. ${num} entries updated.`)
+          }
         })
         .catch(err => {
           this.notifications = []

@@ -57,7 +57,7 @@ export default {
     return promise
   },
 
-  search: function (startDate, endDate, searchTerms, sort = { type: 1, date: 1, category: 1, amount: -1 }) {
+  search: function (startDate, endDate, searchTerms, sort = { type: 1, date: 1, category: 1, amount: -1 }, fields = {}) {
     var query = searchTerms
     if (startDate && endDate) {
       query = {
@@ -70,7 +70,7 @@ export default {
     }
 
     var promise = new Promise(function (resolve, reject) {
-      _DB.find(query).sort(sort).exec(function (err, docs) {
+      _DB.find(query, fields).sort(sort).exec(function (err, docs) {
         if (err) {
           reject(err)
         } else {
@@ -114,7 +114,7 @@ export default {
             icon: 'mdi-transfer',
             category: Constants.ROLLOVER_CATEGORY,
             amount: income + expense,
-            notes: 'Balance Rolled Over from Previous Month'
+            tags: ['Sixpence', 'Balance Rollover']
           }
         )
 
@@ -145,6 +145,21 @@ export default {
       .catch(function (err) {
         return Promise.reject(err)
       })
+
+    return promise
+  },
+
+  count: function (searchTerms) {
+    var promise = new Promise(function (resolve, reject) {
+      _DB.count(searchTerms)
+        .exec(function (err, numDocs) {
+          if (err) {
+            reject(err)
+          } else {
+            resolve(numDocs)
+          }
+        })
+    })
 
     return promise
   },
