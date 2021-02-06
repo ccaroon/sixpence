@@ -10,3 +10,8 @@ npm-debug.log.*
 thumbs.db
 !.gitkeep
 yarn-error.log
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
