@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## v1.12.1 - Grookey.1 (February 06, 2021)
+### Changes
+* Upgraded Electron from 4.x to 11.x
+* Upgraded yarn to v2 (berry)
+
 ## v1.12.0 - Grookey (February 05, 2020)
 ### Changes
 * Expense entries are now taggable instead of having a free-form text field for `notes`.

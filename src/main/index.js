@@ -36,7 +36,11 @@ function createWindow () {
     height: 928,
     minWidth: 900,
     minHeight: 600,
-    useContentSize: true
+    useContentSize: true,
+    webPreferences: {
+      nodeIntegration: true,
+      enableRemoteModule: true
+    }
   })
 
   var mainMetaKey = process.platform === 'darwin' ? 'Cmd' : 'Ctrl'
