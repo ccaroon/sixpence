@@ -56,7 +56,7 @@
     }
   },
   "dependencies": {
-    "@mdi/font": "^2.8.94",
+    "@mdi/font": "^5.9.55",
     "font-awesome": "^4.7.0",
     "moment": "^2.29.1",
     "mousetrap": "^1.6.5",
@@ -66,7 +66,7 @@
     "vue-router": "^3.5.1",
     "vuetify": "^2.4.9",
     "vuex": "^3.6.2",
-    "zip-lib": "^0.3.1"
+    "zip-lib": "^0.7.2"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",
@@ -81,7 +81,7 @@
     "cfonts": "^2.9.1",
     "chalk": "^4.1.0",
     "copy-webpack-plugin": "^4.0.1",
-    "cross-env": "^5.0.5",
+    "cross-env": "^5.2.1",
     "css-loader": "^0.28.11",
     "del": "^3.0.0",
     "devtron": "^1.4.0",
