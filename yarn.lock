@@ -244,18 +244,18 @@ __metadata:
     babel-preset-stage-0: ^6.24.1
     babel-register: ^6.24.1
     babili-webpack-plugin: ^0.1.2
-    cfonts: ^2.4.2
+    cfonts: ^2.9.1
     chai: ^4.0.0
-    chalk: ^2.1.0
+    chalk: ^2.4.2
     copy-webpack-plugin: ^4.0.1
     cross-env: ^5.0.5
-    css-loader: ^0.28.4
+    css-loader: ^0.28.11
     del: ^3.0.0
     devtron: ^1.4.0
     electron: ^12.0.2
     electron-builder: ^22.10.5
-    electron-debug: ^2.0.0
-    electron-devtools-installer: ^2.2.0
+    electron-debug: ^2.2.0
+    electron-devtools-installer: ^2.2.4
     eslint: ^5.16.0
     eslint-config-standard: ^10.2.1
     eslint-friendly-formatter: ^3.0.0
@@ -279,8 +279,8 @@ __metadata:
     karma-spec-reporter: ^0.0.32
     karma-webpack: ^2.0.1
     mocha: ^6.1.4
-    moment: ^2.22.2
-    mousetrap: ^1.6.1
+    moment: ^2.29.1
+    mousetrap: ^1.6.5
     multispinner: ^0.2.1
     nedb: ^1.8.0
     node-loader: ^0.6.0
@@ -288,15 +288,15 @@ __metadata:
     spectron: ^5.0.0
     style-loader: ^0.23.1
     url-loader: ^1.1.2
-    vue: ^2.6.11
+    vue: ^2.6.12
     vue-electron: ^1.0.6
     vue-html-loader: ^1.2.4
     vue-loader: ^13.0.5
     vue-router: ^3.0.2
     vue-style-loader: ^3.0.1
     vue-template-compiler: ^2.6.11
-    vuetify: ^2.1.14
-    vuex: ^3.1.2
+    vuetify: ^2.4.9
+    vuex: ^3.6.2
     webpack: ^3.5.2
     webpack-dev-server: ^2.7.1
     webpack-hot-middleware: ^2.18.2
@@ -2873,7 +2873,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cfonts@npm:^2.4.2":
+"cfonts@npm:^2.9.1":
   version: 2.9.1
   resolution: "cfonts@npm:2.9.1"
   dependencies:
@@ -3870,7 +3870,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"css-loader@npm:^0.28.4":
+"css-loader@npm:^0.28.11":
   version: 0.28.11
   resolution: "css-loader@npm:0.28.11"
   dependencies:
@@ -4678,7 +4678,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron-debug@npm:^2.0.0":
+"electron-debug@npm:^2.2.0":
   version: 2.2.0
   resolution: "electron-debug@npm:2.2.0"
   dependencies:
@@ -4688,7 +4688,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron-devtools-installer@npm:^2.2.0":
+"electron-devtools-installer@npm:^2.2.4":
   version: 2.2.4
   resolution: "electron-devtools-installer@npm:2.2.4"
   dependencies:
@@ -9232,14 +9232,14 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"moment@npm:^2.22.2":
+"moment@npm:^2.29.1":
   version: 2.29.1
   resolution: "moment@npm:2.29.1"
   checksum: 86729013febf7160de5b93da69273dd304d674b0224f9544b3abd09a87671ddd2cdd57598261ce57588910d63747ffd5590965e83c790d8bf327083c0e0a06e0
   languageName: node
   linkType: hard
 
-"mousetrap@npm:^1.6.1":
+"mousetrap@npm:^1.6.5":
   version: 1.6.5
   resolution: "mousetrap@npm:1.6.5"
   checksum: 563074169163708e2de0c2e9a2bd76f32ba909efbe2baf395db08015d09b19445b859982fad36cd50dcd8a2475f07af89babe2b3da029e7b5cd48e26ff973cd5
@@ -13756,23 +13756,23 @@ resolve@^1.20.0:
   languageName: node
   linkType: hard
 
-"vue@npm:^2.6.11":
+"vue@npm:^2.6.12":
   version: 2.6.12
   resolution: "vue@npm:2.6.12"
   checksum: 92ed547e55a4b27a2a45aa9ab7ff5999f891dc9754562a37226dd190b323d9f99daec892dd8bd39786e404e6e065d808e165b1a0c127ce8d45fd1bde79ec7312
   languageName: node
   linkType: hard
 
-"vuetify@npm:^2.1.14":
-  version: 2.4.3
-  resolution: "vuetify@npm:2.4.3"
+"vuetify@npm:^2.4.9":
+  version: 2.4.9
+  resolution: "vuetify@npm:2.4.9"
   peerDependencies:
     vue: ^2.6.4
-  checksum: 121a409d5c39c665f0b6e5d0ee11afad4cdbc013ef840490d98f453dff850d21a6585b77cecacb5ab44db8ff65c876b12172b6a6fda592f24c47825f594cdffa
+  checksum: e0794fa18c2d78c2f14c43677f0722a96d4136017dfc5de5276c8ad9b44763b8a6596a2788a052284b5549d8e23c18326b32f9381850fbb0177b5df0d466ac71
   languageName: node
   linkType: hard
 
-"vuex@npm:^3.1.2":
+"vuex@npm:^3.6.2":
   version: 3.6.2
   resolution: "vuex@npm:3.6.2"
   peerDependencies:
