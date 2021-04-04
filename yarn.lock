@@ -102,7 +102,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mdi/font@npm:^2.2.43":
+"@mdi/font@npm:^2.8.94":
   version: 2.8.94
   resolution: "@mdi/font@npm:2.8.94"
   checksum: 772517f493cc1451b2ab32394d2101d5d2b735039101ed198ac58649979a74b4fb8257f943224aff9c1b7ceb5ef43562234db0a12964dee70acd19f1ec43ca8a
@@ -234,7 +234,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "Sixpence@workspace:."
   dependencies:
-    "@mdi/font": ^2.2.43
+    "@mdi/font": ^2.8.94
     babel-core: ^6.25.0
     babel-eslint: ^7.2.3
     babel-loader: ^7.1.1
@@ -246,7 +246,7 @@ __metadata:
     babili-webpack-plugin: ^0.1.2
     cfonts: ^2.9.1
     chai: ^4.0.0
-    chalk: ^2.4.2
+    chalk: ^4.1.0
     copy-webpack-plugin: ^4.0.1
     cross-env: ^5.0.5
     css-loader: ^0.28.11
@@ -291,10 +291,10 @@ __metadata:
     vue: ^2.6.12
     vue-electron: ^1.0.6
     vue-html-loader: ^1.2.4
-    vue-loader: ^13.0.5
-    vue-router: ^3.0.2
-    vue-style-loader: ^3.0.1
-    vue-template-compiler: ^2.6.11
+    vue-loader: ^13.7.3
+    vue-router: ^3.5.1
+    vue-style-loader: ^3.1.2
+    vue-template-compiler: ^2.6.12
     vuetify: ^2.4.9
     vuex: ^3.6.2
     webpack: ^3.5.2
@@ -13698,7 +13698,7 @@ resolve@^1.20.0:
   languageName: node
   linkType: hard
 
-"vue-loader@npm:^13.0.5":
+"vue-loader@npm:^13.7.3":
   version: 13.7.3
   resolution: "vue-loader@npm:13.7.3"
   dependencies:
@@ -13722,14 +13722,14 @@ resolve@^1.20.0:
   languageName: node
   linkType: hard
 
-"vue-router@npm:^3.0.2":
+"vue-router@npm:^3.5.1":
   version: 3.5.1
   resolution: "vue-router@npm:3.5.1"
   checksum: cf53dc6bdb280090831fb68d324326a5d5da3cb686c4b5a53fd1ac25294c03009442c5102ac94f82596ea9851805ba4ef796cbe734e215602adede1fb94304c7
   languageName: node
   linkType: hard
 
-"vue-style-loader@npm:^3.0.0, vue-style-loader@npm:^3.0.1":
+"vue-style-loader@npm:^3.0.0, vue-style-loader@npm:^3.1.2":
   version: 3.1.2
   resolution: "vue-style-loader@npm:3.1.2"
   dependencies:
@@ -13739,7 +13739,7 @@ resolve@^1.20.0:
   languageName: node
   linkType: hard
 
-"vue-template-compiler@npm:^2.6.11":
+"vue-template-compiler@npm:^2.6.12":
   version: 2.6.12
   resolution: "vue-template-compiler@npm:2.6.12"
   dependencies:
