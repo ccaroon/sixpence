@@ -5,16 +5,16 @@ const fs = require('fs')
 const zipLib = require('zip-lib')
 
 function cleanup () {
-  var backupPath = Config.get('backup:path')
-  var numToKeep = Config.get('backup:keep')
+  const backupPath = Config.get('backup:path')
+  const numToKeep = Config.get('backup:keep')
 
-  var allFiles = fs.readdirSync(backupPath)
-  var zipFiles = allFiles.filter(filename => filename.endsWith('.zip'))
+  const allFiles = fs.readdirSync(backupPath)
+  const zipFiles = allFiles.filter(filename => filename.endsWith('.zip'))
 
   if (zipFiles.length > numToKeep) {
     zipFiles.sort()
 
-    var delFiles = zipFiles.slice(0, -1 * numToKeep)
+    const delFiles = zipFiles.slice(0, -1 * numToKeep)
     delFiles.forEach(filename => {
       fs.unlinkSync(`${backupPath}/${filename}`)
     })
@@ -23,7 +23,7 @@ function cleanup () {
 
 export default {
   backup: function () {
-    var promise = null
+    let promise = null
 
     Config.load()
 
@@ -35,14 +35,14 @@ export default {
     cleanup()
 
     // Backup Data Files
-    var suffix = Moment().format('YYYYMMDD-HHmm')
-    var zipFileName = `${Config.get('backup:path')}/Sixpence-${suffix}.zip`
+    const suffix = Moment().format('YYYYMMDD-HHmm')
+    const zipFileName = `${Config.get('backup:path')}/Sixpence-${suffix}.zip`
 
     if (!fs.existsSync(zipFileName)) {
-      var allFiles = fs.readdirSync(Config.dataPath)
-      var dataFiles = allFiles.filter(filename => filename.endsWith('.sxp'))
+      const allFiles = fs.readdirSync(Config.dataPath)
+      const dataFiles = allFiles.filter(filename => filename.endsWith('.sxp'))
 
-      var zipFile = new zipLib.Zip()
+      const zipFile = new zipLib.Zip()
       zipFile.addFile(Config.configFile)
       dataFiles.forEach(filename => zipFile.addFile(`${Config.dataPath}/${filename}`))
 

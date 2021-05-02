@@ -62,7 +62,7 @@ export default {
   ],
 
   superSearch: function (terms, sep = ' ', rev = false) {
-    var parts = null
+    let parts = null
     if (typeof (terms) === 'string') {
       parts = terms.split(sep)
     } else {
@@ -73,8 +73,8 @@ export default {
       parts.reverse()
     }
 
-    var foundIcon = null
-    for (var i = 0; i < parts.length; i++) {
+    let foundIcon = null
+    for (let i = 0; i < parts.length; i++) {
       foundIcon = this.search(parts[i])
 
       if (foundIcon) {
@@ -86,20 +86,20 @@ export default {
   },
 
   search: function (keyword) {
-    var foundIcon = null
+    let foundIcon = null
 
     if (keyword.length <= 2 || this._SKIP_WORDS.includes(keyword)) {
       return null
     }
 
-    var pattern = new RegExp(keyword, 'i')
+    const pattern = new RegExp(keyword, 'i')
     foundIcon = this.ICONS.find(function (iconData) {
       if (iconData.text.match(pattern)) {
         return true
       } else {
-        var foundInKw = false
-        for (var j = 0; j < iconData.keywords.length; j++) {
-          var keyword = iconData.keywords[j]
+        let foundInKw = false
+        for (let j = 0; j < iconData.keywords.length; j++) {
+          const keyword = iconData.keywords[j]
           if (keyword.match(pattern)) {
             foundInKw = true
             break

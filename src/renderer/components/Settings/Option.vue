@@ -34,7 +34,7 @@ export default {
 
   methods: {
     updateFileOptions: function () {
-      for (let [name, file] of Object.entries(this.files)) {
+      for (const [name, file] of Object.entries(this.files)) {
         if (file && file.path) {
           this.options[name] = file.path
         }
@@ -51,8 +51,8 @@ export default {
   },
 
   data () {
-    var files = {}
-    for (let [name, mdata] of Object.entries(this.metadata)) {
+    const files = {}
+    for (const [name, mdata] of Object.entries(this.metadata)) {
       if (mdata.type === 'FILE') {
         files[name] = new File([], this.options[name])
       }

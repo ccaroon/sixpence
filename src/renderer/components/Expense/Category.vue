@@ -82,7 +82,7 @@ export default {
 
   computed: {
     unbudgetedIncome: function () {
-      var total = 0.0
+      let total = 0.0
       this.entry.forEach(function (e) {
         if (e.amount >= 0.0) {
           total += e.amount
@@ -92,7 +92,7 @@ export default {
     },
 
     unbudgetedExpense: function () {
-      var total = 0.0
+      let total = 0.0
       this.entry.forEach(function (e) {
         if (e.amount < 0.0) {
           total += e.amount
@@ -102,7 +102,7 @@ export default {
     },
 
     entryTotal: function () {
-      var total = 0.0
+      let total = 0.0
       if (Array.isArray(this.entry)) {
         this.entry.forEach(function (e) {
           total += e.amount
@@ -115,7 +115,7 @@ export default {
     },
 
     entryColor: function () {
-      var color
+      let color
 
       if (this.entryTotal === 0) {
         color = 'white'
@@ -129,13 +129,13 @@ export default {
     },
 
     progressPercent: function () {
-      var p = (this.entry.amount / this.entry.budgetedAmount) * 100
+      const p = (this.entry.amount / this.entry.budgetedAmount) * 100
       return Math.round(Math.abs(p))
     },
 
     progressColor: function () {
-      var p = this.progressPercent
-      var color
+      const p = this.progressPercent
+      let color
       if (p === 0) {
         color = 'white'
       } else if (p <= 75) {
@@ -155,9 +155,9 @@ export default {
   methods: {
 
     unbudgetedEntryColor: function (entry) {
-      var amount = Math.abs(entry.amount)
+      const amount = Math.abs(entry.amount)
 
-      var color
+      let color
       if (entry.type === Constants.TYPE_INCOME) {
         color = Constants.COLORS.INCOME
       } else {
@@ -174,7 +174,7 @@ export default {
     },
 
     entryType: function (entry) {
-      var type = entry.type === Constants.TYPE_INCOME ? 'Income' : 'Expense'
+      const type = entry.type === Constants.TYPE_INCOME ? 'Income' : 'Expense'
       return (type)
     },
 

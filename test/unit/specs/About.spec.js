@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import About from '@/components/About'
 
-const pkgJson = require(`../../../package.json`)
+const pkgJson = require('../../../package.json')
 
 describe('About.vue', () => {
   it('should render correct contents', () => {

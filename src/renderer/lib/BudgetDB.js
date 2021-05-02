@@ -4,20 +4,20 @@ import Moment from 'moment'
 const { app } = require('electron').remote
 // -----------------------------------------------------------------------------
 const dbFileName = (process.env.NODE_ENV === 'development') ? 'budget-dev.sxp' : 'budget.sxp'
-var _DB = new Datastore({
+const _DB = new Datastore({
   filename: app.getPath('documents') + '/Sixpence/' + dbFileName,
   autoload: true,
   timestampData: true
 })
 // -----------------------------------------------------------------------------
 function computePeriod (freq, firstDue) {
-  var due = []
-  var willGet = (12 - firstDue) + 1
-  var moreNeeded = 12 - willGet
+  const due = []
+  const willGet = (12 - firstDue) + 1
+  const moreNeeded = 12 - willGet
 
-  for (var m = firstDue; m <= 12 + moreNeeded; m += freq) {
+  for (let m = firstDue; m <= 12 + moreNeeded; m += freq) {
     // for (var m = firstDue; m <= 12; m += freq) {
-    var dueInMonth = m <= 12 ? m : m - 12
+    const dueInMonth = m <= 12 ? m : m - 12
     due.push(dueInMonth)
   }
 
@@ -25,18 +25,18 @@ function computePeriod (freq, firstDue) {
 }
 // -----------------------------------------------------------------------------
 function due (month, freq, firstDue) {
-  var isDue = false
+  let isDue = false
 
-  var dueMonths = computePeriod(freq, firstDue)
+  const dueMonths = computePeriod(freq, firstDue)
   isDue = dueMonths.includes(month)
 
   return isDue
 }
 
 // Generate a query to find entries that were active between the given dates
-var activeBetween = function (start, end) {
-  var startDate = Moment(start)
-  var endDate = Moment(end)
+const activeBetween = function (start, end) {
+  const startDate = Moment(start)
+  const endDate = Moment(end)
   return {
     $or: [
       { archivedAt: null },
@@ -50,8 +50,8 @@ var activeBetween = function (start, end) {
 }
 
 // Generate a query to find entries that were active after the given date
-var activeAfter = function (aDate) {
-  var afterDate = Moment(aDate)
+const activeAfter = function (aDate) {
+  const afterDate = Moment(aDate)
   return {
     $or: [
       { archivedAt: null },
@@ -96,7 +96,7 @@ export default {
   // -- Return --
   // A promise
   getEntries: function (query = QUERIES.ALL) {
-    var promise = new Promise(function (resolve, reject) {
+    const promise = new Promise(function (resolve, reject) {
       _DB
         .find(query)
         .sort({ type: 1, category: 1, amount: -1 })
@@ -121,18 +121,18 @@ export default {
   // -- Return --
   // A promise
   getCategories: function (query = QUERIES.ALL) {
-    var fields = {
+    const fields = {
       _id: 0,
       icon: 1,
       category: 1
     }
 
-    var promise = new Promise(function (resolve, reject) {
+    const promise = new Promise(function (resolve, reject) {
       _DB.find(query, fields).sort({ category: 1 }).exec(function (err, docs) {
         if (err) {
           reject(err)
         } else {
-          var uniqueCats = {}
+          const uniqueCats = {}
           docs.forEach(function (doc) {
             uniqueCats[doc.category] = doc.icon
           })
@@ -148,22 +148,22 @@ export default {
   // on each entry's frequency and firstDue.
   // Arrange as look-up table by category
   loadCategoryDataByMonth: function (date) {
-    var aDate = Moment(date).date(1)
-    var month = aDate.month()
-    var query = activeAfter(aDate)
+    const aDate = Moment(date).date(1)
+    const month = aDate.month()
+    const query = activeAfter(aDate)
 
-    var promise = new Promise(function (resolve, reject) {
+    const promise = new Promise(function (resolve, reject) {
       _DB.find(query, { _id: 0, frequency: 1, firstDue: 1, category: 1, amount: 1 })
         .sort({ category: 1 })
         .exec(function (err, docs) {
           if (err) {
             reject(err)
           } else {
-            var entries = docs.filter(entry => due(month + 1, entry.frequency, entry.firstDue))
-            var catMap = {}
+            const entries = docs.filter(entry => due(month + 1, entry.frequency, entry.firstDue))
+            const catMap = {}
 
             entries.forEach(function (entry) {
-              if (!catMap.hasOwnProperty(entry.category)) {
+              if (!(entry.category in catMap)) {
                 catMap[entry.category] = 0.0
               }
 
@@ -179,7 +179,7 @@ export default {
   },
 
   categoryType: function (catName) {
-    var promise = new Promise(function (resolve, reject) {
+    const promise = new Promise(function (resolve, reject) {
       _DB.find({ category: catName }).exec(function (err, docs) {
         if (err) {
           reject(err)
@@ -197,7 +197,7 @@ export default {
   },
 
   count: function (searchTerms) {
-    var promise = new Promise(function (resolve, reject) {
+    const promise = new Promise(function (resolve, reject) {
       _DB.count(searchTerms)
         .exec(function (err, numDocs) {
           if (err) {
@@ -212,7 +212,7 @@ export default {
   },
 
   search: function (searchTerms, sort = { type: 1, category: 1, amount: -1 }) {
-    var promise = new Promise(function (resolve, reject) {
+    const promise = new Promise(function (resolve, reject) {
       _DB.find(searchTerms).sort(sort).exec(function (err, docs) {
         if (err) {
           reject(err)
@@ -226,7 +226,7 @@ export default {
   },
 
   bulkUpdate: function (query, updateData) {
-    var promise = new Promise(function (resolve, reject) {
+    const promise = new Promise(function (resolve, reject) {
       _DB.update(query, updateData, { multi: true }, function (err, numReplaced) {
         if (err) {
           reject(err)
@@ -240,7 +240,7 @@ export default {
   },
 
   delete: function (id) {
-    var promise = new Promise(function (resolve, reject) {
+    const promise = new Promise(function (resolve, reject) {
       _DB.remove({ _id: id }, {}, function (err, count) {
         if (err) {
           reject(err)
@@ -254,7 +254,7 @@ export default {
   },
 
   save: function (entry) {
-    var promise = new Promise(function (resolve, reject) {
+    const promise = new Promise(function (resolve, reject) {
       _DB.update({ _id: entry._id }, entry, { upsert: true }, function (err, numReplaced, upsert) {
         if (err) {
           reject(err)

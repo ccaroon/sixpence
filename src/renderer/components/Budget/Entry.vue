@@ -161,17 +161,17 @@ export default {
 
   computed: {
     hasHistory: function () {
-      var hasHistory = this.entry.history ? '' : 'disabled'
+      const hasHistory = this.entry.history ? '' : 'disabled'
       return hasHistory
     },
 
     entryType: function () {
-      var type = this.entry.type === Constants.TYPE_INCOME ? 'Income' : 'Expense'
+      const type = this.entry.type === Constants.TYPE_INCOME ? 'Income' : 'Expense'
       return (type)
     },
 
     entryColor: function () {
-      var color = null
+      let color = null
 
       if (this.entryNum % 2 === 0) {
         color = (this.entry.amount >= 0) ? Constants.COLORS.INCOME : Constants.COLORS.EXPENSE
@@ -185,7 +185,7 @@ export default {
 
   methods: {
     altColors: function (value) {
-      var color = Constants.COLORS.GREY
+      let color = Constants.COLORS.GREY
       if (value % 2 === 0) {
         color = Constants.COLORS.GREY_ALT
       }
@@ -194,7 +194,7 @@ export default {
     },
 
     archiveEntry: function (entry) {
-      var self = this
+      const self = this
 
       this.showRemoveDialog = false
 
@@ -218,7 +218,7 @@ export default {
     },
 
     deleteEntry: function (id) {
-      var self = this
+      const self = this
 
       this.showRemoveDialog = false
 

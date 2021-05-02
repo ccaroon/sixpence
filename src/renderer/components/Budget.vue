@@ -285,9 +285,9 @@ export default {
 
   computed: {
     totalIncome: function () {
-      var income = 0.0
-      for (var i = 0; i < this.budget.length; i++) {
-        var entry = this.budget[i]
+      let income = 0.0
+      for (let i = 0; i < this.budget.length; i++) {
+        const entry = this.budget[i]
         if (entry.amount >= 0.0) {
           income += entry.amount
         }
@@ -296,9 +296,9 @@ export default {
     },
 
     totalExpenses: function () {
-      var expense = 0.0
-      for (var i = 0; i < this.budget.length; i++) {
-        var entry = this.budget[i]
+      let expense = 0.0
+      for (let i = 0; i < this.budget.length; i++) {
+        const entry = this.budget[i]
         if (entry.amount < 0.0) {
           expense += (entry.amount / entry.frequency)
         }
@@ -336,10 +336,10 @@ export default {
     },
 
     search: function () {
-      var self = this
-      var terms = []
+      const self = this
+      const terms = []
 
-      var freq = null
+      let freq = null
       switch (this.freqFilter) {
         case 0:
           freq = 1
@@ -365,25 +365,25 @@ export default {
       }
 
       if (freq) {
-        terms.push({frequency: freq})
+        terms.push({ frequency: freq })
       }
 
       if (this.searchText) {
-        var parts = this.searchText.split(/\?/, 2)
+        const parts = this.searchText.split(/\?/, 2)
 
         if (parts.length === 2) {
-          var fieldQuery = {}
+          const fieldQuery = {}
           fieldQuery[parts[0].trim()] = new RegExp(parts[1].trim(), 'i')
 
           terms.push(fieldQuery)
         } else {
-          terms.push({category: new RegExp(parts[0].trim(), 'i')})
+          terms.push({ category: new RegExp(parts[0].trim(), 'i') })
         }
       }
 
       if (terms.length !== 0) {
-        terms.push({archivedAt: null})
-        var query = { $and: terms }
+        terms.push({ archivedAt: null })
+        const query = { $and: terms }
 
         BudgetDB.search(query)
           .then(function (docs) {
@@ -411,9 +411,9 @@ export default {
     },
 
     _loadBudgetData: function (archivedOnly = false) {
-      var self = this
+      const self = this
 
-      var query = BudgetDB.QUERIES.UNARCHIVED
+      let query = BudgetDB.QUERIES.UNARCHIVED
       if (archivedOnly) {
         query = BudgetDB.QUERIES.ARCHIVED
       }
@@ -429,7 +429,7 @@ export default {
     },
 
     _loadCategoryData: function () {
-      var self = this
+      const self = this
 
       BudgetDB.getCategories(BudgetDB.QUERIES.UNARCHIVED)
         .then(function (cats) {
@@ -475,7 +475,7 @@ export default {
     },
 
     storeHistory: function () {
-      var self = this
+      const self = this
 
       this.oldEntry = {}
       HISTORY_FIELDS.forEach(function (fld) {
@@ -484,12 +484,12 @@ export default {
     },
 
     updateHistory: function () {
-      var self = this
+      const self = this
 
-      var promise = new Promise((resolve, reject) => {
+      const promise = new Promise((resolve, reject) => {
         if (this.oldEntry) {
-          var historyRec = { date: Date.now() }
-          var relevantChange = false
+          const historyRec = { date: Date.now() }
+          let relevantChange = false
           HISTORY_FIELDS.forEach(function (fld) {
             if (self.entry[fld] !== self.oldEntry[fld]) {
               historyRec[fld] = self.oldEntry[fld]
@@ -527,11 +527,11 @@ export default {
     },
 
     saveEntry: function () {
-      var self = this
+      const self = this
 
       if (this.$refs.budgetForm.validate()) {
         if (!this.entry.icon) {
-          var icon = Icons.superSearch(this.entry.category, ':', true)
+          const icon = Icons.superSearch(this.entry.category, ':', true)
           this.entry.icon = icon ? icon.value : Icons.ICONS[0].value
         }
 
@@ -544,9 +544,9 @@ export default {
           .then((note) => {
             // History note dialog resolves a promise with the note entered by the user
             if (this.entry.history && note) {
-              var index = this.entry.history.length - 1
+              const index = this.entry.history.length - 1
               // Get last history record (most recent one)
-              var history = this.entry.history[index]
+              const history = this.entry.history[index]
               // Add note
               history.note = note
 
@@ -606,9 +606,9 @@ export default {
       historyCallback: null,
       showHistoryNoteDialog: false,
       menu: [
-        {name: 'View Active Entries', id: Constants.BUDGET_VIEW_SUMMARY},
-        {name: 'View Archived Entries', id: Constants.BUDGET_VIEW_ARCHIVED},
-        {name: 'View By Month', id: Constants.BUDGET_VIEW_BYMONTH}
+        { name: 'View Active Entries', id: Constants.BUDGET_VIEW_SUMMARY },
+        { name: 'View Archived Entries', id: Constants.BUDGET_VIEW_ARCHIVED },
+        { name: 'View By Month', id: Constants.BUDGET_VIEW_BYMONTH }
       ],
       view: Constants.BUDGET_VIEW_SUMMARY,
       showAddEditSheet: false,

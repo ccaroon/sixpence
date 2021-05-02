@@ -2,7 +2,7 @@ import Moment from 'moment'
 
 export default {
   formatFrequency: function (freq) {
-    var freqStr = null
+    let freqStr = null
 
     switch (freq) {
       case 1:
@@ -29,7 +29,7 @@ export default {
   },
 
   formatMoney: function (amount) {
-    return (amount.toLocaleString('en-US', {style: 'currency', currency: 'USD'}))
+    return (amount.toLocaleString('en-US', { style: 'currency', currency: 'USD' }))
   },
 
   formatDate: function (date, format = 'MMM DD, YYYY') {

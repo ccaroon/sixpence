@@ -54,8 +54,8 @@ export default {
   props: ['month', 'average'],
 
   mounted () {
-    var self = this
-    var date = Moment().month(this.month.value - 1)
+    const self = this
+    const date = Moment().month(this.month.value - 1)
     BudgetDB.loadCategoryDataByMonth(date)
       .then(function (data) {
         self.monthData.income = 0.0
@@ -82,11 +82,11 @@ export default {
 
   methods: {
     budgetDetails: function () {
-      this.$router.push({path: `/expenses/${this.month.value - 1}`})
+      this.$router.push({ path: `/expenses/${this.month.value - 1}` })
     },
 
     rowColor: function () {
-      var color = this.month.value % 2 === 0 ? Constants.COLORS.GREY : Constants.COLORS.GREY_ALT
+      let color = this.month.value % 2 === 0 ? Constants.COLORS.GREY : Constants.COLORS.GREY_ALT
 
       // Highlight Current Month
       if (this.month.value - 1 === (new Date()).getMonth()) {
@@ -97,12 +97,12 @@ export default {
     },
 
     averageIcon: function () {
-      var i = ICONS[this.aboveBelowAverage()]
+      const i = ICONS[this.aboveBelowAverage()]
       return i
     },
 
     averageColor: function () {
-      var color = 'black'
+      let color = 'black'
       if (this.aboveBelowAverage() === -1) {
         color = Constants.COLORS.EXPENSE
       } else if (this.aboveBelowAverage() === 1) {
@@ -114,7 +114,7 @@ export default {
 
     // 0 == Equal; -1 == Below Avg; +1 == Above Agv
     aboveBelowAverage: function () {
-      var aboveBelow = 0
+      let aboveBelow = 0
 
       if (this.monthData.diff > this.average) {
         aboveBelow = +1

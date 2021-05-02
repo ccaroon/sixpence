@@ -38,7 +38,7 @@ export default {
 
   computed: {
     progressPercent: function () {
-      var percent = 0.0
+      let percent = 0.0
       if (this.data.budgetedAmount !== 0.0) {
         percent = (this.data.amount / this.data.budgetedAmount) * 100
       }
@@ -47,8 +47,8 @@ export default {
     },
 
     progressColor: function () {
-      var p = this.progressPercent
-      var color
+      const p = this.progressPercent
+      let color
       if (p === 0) {
         color = 'white'
       } else if (p <= 75) {
@@ -67,7 +67,7 @@ export default {
 
   methods: {
     rowColor: function (month) {
-      var color = month.value % 2 === 0 ? Constants.COLORS.GREY : Constants.COLORS.GREY_ALT
+      const color = month.value % 2 === 0 ? Constants.COLORS.GREY : Constants.COLORS.GREY_ALT
       return (color)
     }
   },

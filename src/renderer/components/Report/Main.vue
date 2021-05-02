@@ -49,7 +49,7 @@ export default {
 
   methods: {
     rowColor: function (index) {
-      var color = index % 2 === 0 ? Constants.COLORS.GREY : Constants.COLORS.GREY_ALT
+      const color = index % 2 === 0 ? Constants.COLORS.GREY : Constants.COLORS.GREY_ALT
       return (color)
     },
 
