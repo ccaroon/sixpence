@@ -1,5 +1,5 @@
 
-var app
+let app
 if (process.type === 'renderer') {
   app = require('electron').remote.app
 } else {
@@ -12,7 +12,7 @@ const path = require('path')
 const dataPath = path.join(app.getPath('documents'), 'Sixpence')
 const configFile = `${dataPath}/SixpenceCfg.json`
 
-var configData = {}
+let configData = {}
 
 // Basic Layout
 // - Every option is assumed to be in a "group"
@@ -32,10 +32,10 @@ const METADATA = {
 }
 
 // Generate DEFAULTS from METADATA
-var DEFAULTS = {}
-for (let [group, options] of Object.entries(METADATA)) {
+const DEFAULTS = {}
+for (const [group, options] of Object.entries(METADATA)) {
   DEFAULTS[group] = {}
-  for (let [name, mdata] of Object.entries(options)) {
+  for (const [name, mdata] of Object.entries(options)) {
     DEFAULTS[group][name] = mdata.default
   }
 }
@@ -48,10 +48,10 @@ export default {
   metaData: METADATA,
 
   get: function (path = null) {
-    var option = configData
+    let option = configData
 
     if (path !== null) {
-      var pathParts = path.split(':')
+      const pathParts = path.split(':')
 
       pathParts.forEach((key) => {
         option = option[key]
@@ -67,8 +67,8 @@ export default {
 
   load: function () {
     if (fs.existsSync(configFile)) {
-      var contents = fs.readFileSync(configFile)
-      var data = JSON.parse(contents)
+      const contents = fs.readFileSync(configFile)
+      const data = JSON.parse(contents)
 
       configData = Object.assign({}, DEFAULTS, data)
     } else {
@@ -81,7 +81,7 @@ export default {
   },
 
   save: function () {
-    var json = JSON.stringify(configData)
+    const json = JSON.stringify(configData)
     fs.writeFileSync(configFile, json)
   }
 }

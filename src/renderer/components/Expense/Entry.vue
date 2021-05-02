@@ -109,15 +109,15 @@ export default {
 
   computed: {
     entryType: function () {
-      var type = this.entry.type === Constants.TYPE_INCOME ? 'Income' : 'Expense'
+      const type = this.entry.type === Constants.TYPE_INCOME ? 'Income' : 'Expense'
       return (type)
     }
   },
 
   methods: {
     entryColor: function (type = 'base') {
-      var entryColor = null
-      var tagColor = null
+      let entryColor = null
+      let tagColor = null
 
       if (this.entryNum % 2 === 0) {
         entryColor = (this.entry.amount >= 0) ? Constants.COLORS.INCOME : Constants.COLORS.EXPENSE
@@ -127,7 +127,7 @@ export default {
         tagColor = (this.entry.amount >= 0) ? Constants.COLORS.INCOME : Constants.COLORS.EXPENSE
       }
 
-      var color = entryColor
+      let color = entryColor
       if (type === 'tag') {
         color = tagColor
       }
@@ -144,7 +144,7 @@ export default {
     },
 
     deleteEntry: function (id) {
-      var self = this
+      const self = this
 
       this.showDeleteDialog = false
 

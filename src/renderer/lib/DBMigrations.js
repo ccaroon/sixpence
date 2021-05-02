@@ -3,7 +3,7 @@ import delIsArchived from '../dbMigrations/delIsArchived'
 import addArchivedAt from '../dbMigrations/addArchivedAt'
 import migrateNotesToTags from '../dbMigrations/migrateNotesToTags'
 // -----------------------------------------------------------------------------
-var migrations = {
+const migrations = {
   budgetDB: [
     addIsArchived,
     delIsArchived,
@@ -17,7 +17,7 @@ var migrations = {
 export default {
 
   checkBudgetDb: function () {
-    var neededMigrations = []
+    const neededMigrations = []
     migrations.budgetDB.forEach(mig => {
       if (mig.active) {
         neededMigrations.push({ migration: mig, needsApplying: mig.check() })
@@ -28,7 +28,7 @@ export default {
   },
 
   checkExpenseDb: function () {
-    var neededMigrations = []
+    const neededMigrations = []
     migrations.expenseDB.forEach(mig => {
       if (mig.active) {
         neededMigrations.push({ migration: mig, needsApplying: mig.check() })

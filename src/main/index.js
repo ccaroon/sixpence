@@ -17,8 +17,8 @@ if (process.env.NODE_ENV !== 'development') {
 
 let mainWindow
 const winURL = process.env.NODE_ENV === 'development'
-  ? `http://localhost:9080`
-  : `file://${__dirname}/index.html`
+  ? 'http://localhost:9080'
+  : `file://${path.join(__dirname, 'index.html')}`
 
 function initApp () {
   // Create data directory
@@ -44,15 +44,15 @@ function createWindow () {
     }
   })
 
-  var mainMetaKey = process.platform === 'darwin' ? 'Cmd' : 'Ctrl'
+  const mainMetaKey = process.platform === 'darwin' ? 'Cmd' : 'Ctrl'
   // -------------
-  var aboutSubMenu = {
+  const aboutSubMenu = {
     label: 'About Sixpence',
     accelerator: mainMetaKey + '+?',
     click: () => BrowserWindow.getFocusedWindow().webContents.send('menu-help-about')
   }
 
-  var settingsSubMenu = {
+  const settingsSubMenu = {
     label: process.platform === 'darwin' ? 'Preferences...' : 'Settings...',
     accelerator: mainMetaKey + '+,',
     click: () => BrowserWindow.getFocusedWindow().webContents.send('menu-settings')

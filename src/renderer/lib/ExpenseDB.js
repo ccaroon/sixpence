@@ -5,7 +5,7 @@ import Moment from 'moment'
 const { app } = require('electron').remote
 
 const dbFileName = (process.env.NODE_ENV === 'development') ? 'expenses-dev.sxp' : 'expenses.sxp'
-var _DB = new Datastore({
+const _DB = new Datastore({
   filename: app.getPath('documents') + '/Sixpence/' + dbFileName,
   autoload: true,
   timestampData: true
@@ -21,12 +21,12 @@ export default {
   },
 
   loadData: function (startDate, endDate) {
-    var query = {}
+    let query = {}
     if (startDate && endDate) {
       query = { $where: function () { return this.date >= startDate && this.date <= endDate } }
     }
 
-    var promise = new Promise(function (resolve, reject) {
+    const promise = new Promise(function (resolve, reject) {
       _DB.find(query)
         .sort({ date: 1, type: 1, category: 1, amount: -1 })
         .exec(function (err, docs) {
@@ -42,9 +42,9 @@ export default {
   },
 
   loadCategories: function (startDate, endDate) {
-    var query = { $where: function () { return this.date >= startDate && this.date <= endDate } }
+    const query = { $where: function () { return this.date >= startDate && this.date <= endDate } }
 
-    var promise = new Promise(function (resolve, reject) {
+    const promise = new Promise(function (resolve, reject) {
       _DB.find(query, { _id: 0, category: 1 }).exec(function (err, docs) {
         if (err) {
           reject(err)
@@ -58,7 +58,7 @@ export default {
   },
 
   search: function (startDate, endDate, searchTerms, sort = { type: 1, date: 1, category: 1, amount: -1 }, fields = {}) {
-    var query = searchTerms
+    let query = searchTerms
     if (startDate && endDate) {
       query = {
         $and:
@@ -69,7 +69,7 @@ export default {
       }
     }
 
-    var promise = new Promise(function (resolve, reject) {
+    const promise = new Promise(function (resolve, reject) {
       _DB.find(query, fields).sort(sort).exec(function (err, docs) {
         if (err) {
           reject(err)
@@ -84,19 +84,19 @@ export default {
 
   // monthNumber - 0-based
   _createRolloverEntry: function (monthNumber) {
-    var self = this
+    const self = this
 
-    var currMonth = Moment().month(monthNumber)
-    var prevMonth = Moment().month(monthNumber).subtract(1, 'month')
+    const currMonth = Moment().month(monthNumber)
+    const prevMonth = Moment().month(monthNumber).subtract(1, 'month')
 
-    var currMonthStart = currMonth.startOf('month').toDate()
-    var prevMonthStart = prevMonth.startOf('month').toDate()
-    var prevMonthEnd = prevMonth.endOf('month').toDate()
+    const currMonthStart = currMonth.startOf('month').toDate()
+    const prevMonthStart = prevMonth.startOf('month').toDate()
+    const prevMonthEnd = prevMonth.endOf('month').toDate()
 
-    var promise = this.loadData(prevMonthStart, prevMonthEnd)
+    const promise = this.loadData(prevMonthStart, prevMonthEnd)
       .then(function (docs) {
-        var income = 0.0
-        var expense = 0.0
+        let income = 0.0
+        let expense = 0.0
         docs.forEach(function (entry) {
           if (entry.amount >= 0.0) {
             income += entry.amount
@@ -107,7 +107,7 @@ export default {
 
         // insert record for first day of monthNumber
         //  - Income, Category: Constants.ROLLOVER_CATEGORY, amount: income + expense
-        var savePromise = self.save(
+        const savePromise = self.save(
           {
             type: Constants.TYPE_INCOME,
             date: currMonthStart,
@@ -129,12 +129,12 @@ export default {
 
   // monthNumber - 0-based
   ensureRollover: function (monthNumber) {
-    var self = this
+    const self = this
 
-    var currMonthStart = Moment().month(monthNumber).startOf('month').toDate()
-    var currMonthEnd = Moment().month(monthNumber).endOf('month').toDate()
+    const currMonthStart = Moment().month(monthNumber).startOf('month').toDate()
+    const currMonthEnd = Moment().month(monthNumber).endOf('month').toDate()
 
-    var promise = this.search(currMonthStart, currMonthEnd, { 'category': Constants.ROLLOVER_CATEGORY })
+    const promise = this.search(currMonthStart, currMonthEnd, { category: Constants.ROLLOVER_CATEGORY })
       .then(function (docs) {
         if (docs.length === 0) {
           return self._createRolloverEntry(monthNumber)
@@ -150,7 +150,7 @@ export default {
   },
 
   count: function (searchTerms) {
-    var promise = new Promise(function (resolve, reject) {
+    const promise = new Promise(function (resolve, reject) {
       _DB.count(searchTerms)
         .exec(function (err, numDocs) {
           if (err) {
@@ -165,7 +165,7 @@ export default {
   },
 
   delete: function (id) {
-    var promise = new Promise(function (resolve, reject) {
+    const promise = new Promise(function (resolve, reject) {
       _DB.remove({ _id: id }, {}, function (err, count) {
         if (err) {
           reject(err)
@@ -179,7 +179,7 @@ export default {
   },
 
   save: function (entry) {
-    var promise = new Promise(function (resolve, reject) {
+    const promise = new Promise(function (resolve, reject) {
       _DB.update({ _id: entry._id }, entry, { upsert: true }, function (err, numReplaced, upsert) {
         if (err) {
           reject(err)

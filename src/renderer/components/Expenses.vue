@@ -9,7 +9,11 @@
         </template>
         <v-list dense>
           <v-list-item @click="viewOverbudgetEntries()" :disabled="viewingAll">
-            <v-list-item-title>{{ menu.viewOverbudgetEntries.labels[menu.viewOverbudgetEntries.labelIndex] }}</v-list-item-title>
+            <v-list-item-title>{{
+              menu.viewOverbudgetEntries.labels[
+                menu.viewOverbudgetEntries.labelIndex
+              ]
+            }}</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -46,13 +50,20 @@
               :color="constants.COLORS.OK_BUTTON"
             >
               <v-spacer></v-spacer>
-              <v-btn tabindex="-1" text color="primary" @click="showMonthDialog = false">Cancel</v-btn>
+              <v-btn
+                tabindex="-1"
+                text
+                color="primary"
+                @click="showMonthDialog = false"
+                >Cancel</v-btn
+              >
               <v-btn
                 tabindex="-1"
                 text
                 color="primary"
                 @click="$refs.monthDialog.save(monthToView)"
-              >OK</v-btn>
+                >OK</v-btn
+              >
             </v-date-picker>
           </v-dialog>
         </v-col>
@@ -77,26 +88,42 @@
           <v-toolbar-items>
             <v-chip :color="constants.COLORS.INCOME" text-color="black">
               <v-icon float-left>mdi-currency-usd</v-icon>
-              <span class="subtitle-1">{{ format.formatMoney(incomeAmount) }}</span>
-            </v-chip>&nbsp;
+              <span class="subtitle-1">{{
+                format.formatMoney(incomeAmount)
+              }}</span> </v-chip
+            >&nbsp;
             <v-chip :color="constants.COLORS.EXPENSE" text-color="black">
               <v-icon float-left>mdi-currency-usd-off</v-icon>
-              <span class="subtitle-1">{{ format.formatMoney(expensesAmount) }}</span>
-            </v-chip>&nbsp;
+              <span class="subtitle-1">{{
+                format.formatMoney(expensesAmount)
+              }}</span> </v-chip
+            >&nbsp;
             <v-chip
-              :color="incomeAmount + expensesAmount >= 0 ? constants.COLORS.INCOME_ALT : constants.COLORS.EXPENSE_ALT"
+              :color="
+                incomeAmount + expensesAmount >= 0
+                  ? constants.COLORS.INCOME_ALT
+                  : constants.COLORS.EXPENSE_ALT
+              "
               text-color="black"
             >
               <v-icon float-left>mdi-cash-multiple</v-icon>
-              <span class="subtitle-1">{{ format.formatMoney(incomeAmount + expensesAmount) }}</span>
-            </v-chip>&nbsp;
+              <span class="subtitle-1">{{
+                format.formatMoney(incomeAmount + expensesAmount)
+              }}</span> </v-chip
+            >&nbsp;
           </v-toolbar-items>
         </v-col>
         <v-col cols="1">
           <v-toolbar-items>
-            <v-btn-toggle tabindex="-1" v-model="incomeExpenseView" class="green">
+            <v-btn-toggle
+              tabindex="-1"
+              v-model="incomeExpenseView"
+              class="green"
+            >
               <v-btn tabindex="-1" small icon>
-                <v-icon v-if="incomeExpenseView == constants.IE_VIEW_TO_DATE">mdi-currency-usd</v-icon>
+                <v-icon v-if="incomeExpenseView == constants.IE_VIEW_TO_DATE"
+                  >mdi-currency-usd</v-icon
+                >
                 <v-icon v-else>mdi-currency-usd-off</v-icon>
               </v-btn>
             </v-btn-toggle>
@@ -111,8 +138,8 @@
               small
               :color="constants.COLORS.TOOLBAR_BUTTON"
             >
-              <v-icon>mdi-magnify</v-icon>
-            </v-btn>&nbsp;
+              <v-icon>mdi-magnify</v-icon> </v-btn
+            >&nbsp;
             <v-text-field
               tabindex="-1"
               ref="searchField"
@@ -137,10 +164,15 @@
       </v-row>
     </v-app-bar>
 
-    <v-snackbar bottom v-model="alert.visible" :color="alert.color" :timeout="alert.timeout">
+    <v-snackbar
+      bottom
+      v-model="alert.visible"
+      :color="alert.color"
+      :timeout="alert.timeout"
+    >
       <v-icon>{{ alert.icon }}</v-icon>
       &nbsp;{{ alert.message }}
-      <v-btn icon dark @click="alert.visible=false">
+      <v-btn icon dark @click="alert.visible = false">
         <v-icon>mdi-close</v-icon>
       </v-btn>
     </v-snackbar>
@@ -273,7 +305,9 @@
                   single-line
                   dense
                 >
-                  <template v-slot:selection="{ attrs, item, select, selected }">
+                  <template
+                    v-slot:selection="{ attrs, item, select, selected }"
+                  >
                     <v-chip
                       v-bind="attrs"
                       :input-value="selected"
@@ -282,7 +316,8 @@
                       small
                       @click="select"
                       @click:close="removeTag(item)"
-                    >{{ item }}</v-chip>
+                      >{{ item }}</v-chip
+                    >
                   </template>
                 </v-combobox>
               </v-col>
@@ -321,14 +356,14 @@ export default {
   components: { ExpenseEntry, ExpenseCategory },
 
   mounted () {
-    var self = this
-    var today = new Moment()
+    const self = this
+    const today = new Moment()
 
     this._bindShortcutKeys()
 
     ExpenseDB.ensureRollover(today.month())
       .then(function () {
-        var startMonth = new Moment()
+        const startMonth = new Moment()
 
         if (self.$route.params) {
           if (self.$route.params.category) {
@@ -361,7 +396,7 @@ export default {
 
   computed: {
     incomeAmount: function () {
-      var amount = null
+      let amount = null
 
       if (this.incomeExpenseView === Constants.IE_VIEW_TO_DATE) {
         amount = this.incomeExpenseData('toDate', Constants.TYPE_INCOME)
@@ -373,7 +408,7 @@ export default {
     },
 
     expensesAmount: function () {
-      var amount = null
+      let amount = null
 
       if (this.incomeExpenseView === Constants.IE_VIEW_TO_DATE) {
         amount = this.incomeExpenseData('toDate', Constants.TYPE_EXPENSE)
@@ -385,7 +420,7 @@ export default {
     },
 
     amountPlaceholder: function () {
-      var value = ''
+      let value = ''
 
       if (this.categoriesForMonth && this.categoriesForMonth[this.entry.category]) {
         value = this.categoriesForMonth[this.entry.category].toString()
@@ -397,7 +432,7 @@ export default {
 
   methods: {
     _bindShortcutKeys: function () {
-      var self = this
+      const self = this
 
       Mousetrap.bind(['ctrl+n', 'command+n'], () => {
         this.newEntry()
@@ -438,7 +473,7 @@ export default {
     },
 
     incomeExpenseData: function (type, iORe) {
-      var value = null
+      let value = null
 
       if (type === 'budgeted') {
         if (iORe === Constants.TYPE_INCOME) {
@@ -458,7 +493,7 @@ export default {
     },
 
     budgetedIncome: function () {
-      var amount = 0.0
+      let amount = 0.0
       Object.values(this.categoriesForMonth).forEach(amt => {
         if (amt > 0.0) {
           amount += amt
@@ -469,7 +504,7 @@ export default {
     },
 
     budgetedExpenses: function () {
-      var amount = 0.0
+      let amount = 0.0
       Object.values(this.categoriesForMonth).forEach(amt => {
         if (amt < 0.0) {
           amount += amt
@@ -480,10 +515,10 @@ export default {
     },
 
     toDateIncome: function () {
-      var income = 0.0
-      for (var i = 0; i < this.expenses.length; i++) {
-        var entry = this.expenses[i]
-        var amount = 0.0
+      let income = 0.0
+      for (let i = 0; i < this.expenses.length; i++) {
+        const entry = this.expenses[i]
+        let amount = 0.0
         // Grouped Unbudgeted entries
         if (Array.isArray(entry)) {
           entry.forEach(e => {
@@ -503,10 +538,10 @@ export default {
     },
 
     toDateExpenses: function () {
-      var expense = 0.0
-      for (var i = 0; i < this.expenses.length; i++) {
-        var entry = this.expenses[i]
-        var amount = 0.0
+      let expense = 0.0
+      for (let i = 0; i < this.expenses.length; i++) {
+        const entry = this.expenses[i]
+        let amount = 0.0
         // Grouped Unbudgeted entries
         if (Array.isArray(entry)) {
           entry.forEach(e => {
@@ -526,18 +561,18 @@ export default {
     },
 
     loadCategoryTags: async function () {
-      var self = this
+      const self = this
       this.tagList = []
 
       if (this.entry.category) {
         try {
           // Find all Tags used for the category in the lasts 6 months
-          var startDate = Moment(this.endDate).subtract(6, 'months')
-          var endDate = this.endDate
+          const startDate = Moment(this.endDate).subtract(6, 'months')
+          const endDate = this.endDate
 
-          var docs = await ExpenseDB.search(startDate, endDate, {category: this.entry.category}, {}, {tags: 1})
+          const docs = await ExpenseDB.search(startDate, endDate, { category: this.entry.category }, {}, { tags: 1 })
 
-          var catTags = []
+          let catTags = []
           docs.forEach(entry => {
             if (entry.tags) {
               catTags = catTags.concat(entry.tags)
@@ -554,9 +589,9 @@ export default {
     },
 
     newEntryColor: function (type = 'base') {
-      var color = Constants.COLORS.GREY
-      var incColor = Constants.COLORS.INCOME_ALT
-      var expColor = Constants.COLORS.EXPENSE_ALT
+      let color = Constants.COLORS.GREY
+      let incColor = Constants.COLORS.INCOME_ALT
+      let expColor = Constants.COLORS.EXPENSE_ALT
 
       if (type === 'tag') {
         color = Constants.COLORS.GREY_ALT
@@ -578,24 +613,24 @@ export default {
     },
 
     search: function (searchFor = null) {
-      var self = this
+      const self = this
 
       if (searchFor !== null) {
         this.searchText = searchFor
       }
 
       if (this.searchText) {
-        var parts = this.searchText.split(/\?/, 2)
+        const parts = this.searchText.split(/\?/, 2)
 
-        var query = {}
+        let query = {}
         if (parts.length === 2) {
           query[parts[0].trim()] = new RegExp(parts[1].trim(), 'i')
         } else {
-          var term = new RegExp(parts[0].trim(), 'i')
+          const term = new RegExp(parts[0].trim(), 'i')
           query = {
             $or: [
-              {category: term},
-              {tags: term}
+              { category: term },
+              { tags: term }
             ]
           }
         }
@@ -643,7 +678,7 @@ export default {
     },
 
     saveEntry: function () {
-      var self = this
+      const self = this
 
       if (this.$refs.expenseForm.validate()) {
         if (this.entryDateStr) {
@@ -706,10 +741,10 @@ export default {
     },
 
     findIcon: function (entry) {
-      var foundIcon = null
+      let foundIcon = null
 
       // Find exact match to category
-      var icon = this.iconMap[entry.category]
+      let icon = this.iconMap[entry.category]
 
       // Find match by breaking category down into parts based on ':' divider
       // with rightmost parts matched first
@@ -737,14 +772,14 @@ export default {
     },
 
     _deltaEntryDate: function (amount, units) {
-      var entryDate = Moment(this.entryDateStr, Constants.FORMATS.entryDate)
+      const entryDate = Moment(this.entryDateStr, Constants.FORMATS.entryDate)
       entryDate.add(amount, units)
 
       this.entryDateStr = entryDate.format(Constants.FORMATS.entryDate)
     },
 
     _loadExpensesData: function () {
-      var self = this
+      const self = this
       this.dataLoaded = false
 
       ExpenseDB.loadData(self.startDate, self.endDate)
@@ -770,9 +805,9 @@ export default {
     },
 
     _groupExpensesData: function (entries, seed = true) {
-      var self = this
-      var groupedEntries = {}
-      var newEntries = []
+      const self = this
+      const groupedEntries = {}
+      const newEntries = []
 
       // Seed with Budget Categories Due for Current Month
       if (seed) {
@@ -788,14 +823,14 @@ export default {
         groupedEntries[entry.category].push(entry)
       })
 
-      var unbudgtedEntries = []
-      var budgetCategories = Object.keys(this.categoriesForMonth)
+      const unbudgtedEntries = []
+      const budgetCategories = Object.keys(this.categoriesForMonth)
       Object.entries(groupedEntries).forEach(([cat, catEntries]) => {
-        var totalAmount = 0.0
-        var budgetedAmount = this.categoriesForMonth[cat] || 0.0
-        var type = budgetedAmount >= 0.0 ? Constants.TYPE_INCOME : Constants.TYPE_EXPENSE
+        let totalAmount = 0.0
+        const budgetedAmount = this.categoriesForMonth[cat] || 0.0
+        const type = budgetedAmount >= 0.0 ? Constants.TYPE_INCOME : Constants.TYPE_EXPENSE
 
-        var icon = 'mdi-coin'
+        let icon = 'mdi-coin'
         if (catEntries.length > 0) {
           icon = catEntries[0].icon
           catEntries.forEach(function (entry) {
@@ -803,7 +838,7 @@ export default {
           })
         }
 
-        var newEntry = {type: type, icon: icon, category: cat, amount: totalAmount, budgetedAmount: budgetedAmount}
+        const newEntry = { type: type, icon: icon, category: cat, amount: totalAmount, budgetedAmount: budgetedAmount }
 
         if (budgetCategories.includes(newEntry.category)) {
           if (self.showOverbudget) {
@@ -827,7 +862,7 @@ export default {
     },
 
     _loadCategoryData: function () {
-      var self = this
+      const self = this
 
       // Load Categories (includes icons)
       BudgetDB.getCategories(BudgetDB.QUERIES.ACTIVE_AFTER(Moment(this.startDate)))
@@ -844,8 +879,8 @@ export default {
           // entries and make them available for re-use.
           ExpenseDB.loadCategories(self.startDate, self.endDate)
             .then(function (cats) {
-              var catNames = cats.map(obj => obj.category)
-              var allCats = self.categories.concat(catNames).sort()
+              const catNames = cats.map(obj => obj.category)
+              const allCats = self.categories.concat(catNames).sort()
 
               // Filter out dups
               self.categories = [...new Set(allCats)]
@@ -857,7 +892,7 @@ export default {
     },
 
     removeTag: function (tag) {
-      var index = this.entry.tags.indexOf(tag)
+      const index = this.entry.tags.indexOf(tag)
       this.entry.tags.splice(index, 1)
     },
 

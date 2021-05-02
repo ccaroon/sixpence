@@ -76,12 +76,12 @@ export default {
       check.needsApplying
         .then(needed => {
           if (needed) {
-            var type = check.migration.critical ? 'error' : 'info'
+            const type = check.migration.critical ? 'error' : 'info'
             this.addNotification(
               'mdi-update',
               type,
               `Database Update: ${check.migration.name} - ${check.migration.desc}`,
-              {action: this.applyMigration, params: check.migration}
+              { action: this.applyMigration, params: check.migration }
             )
           }
         })
@@ -91,10 +91,10 @@ export default {
     },
 
     checkForDBMigrations: function () {
-      var budgetChecks = DBMigrations.checkBudgetDb()
+      const budgetChecks = DBMigrations.checkBudgetDb()
       budgetChecks.forEach(this.applyDBMigrations)
 
-      var expenseChecks = DBMigrations.checkExpenseDb()
+      const expenseChecks = DBMigrations.checkExpenseDb()
       expenseChecks.forEach(this.applyDBMigrations)
     },
 
@@ -115,7 +115,7 @@ export default {
     },
 
     addNotification: function (icon, type, msg, action = null) {
-      this.notifications.push({icon: icon, type: type, message: msg, handler: action})
+      this.notifications.push({ icon: icon, type: type, message: msg, handler: action })
     }
   },
 

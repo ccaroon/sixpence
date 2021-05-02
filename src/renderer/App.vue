@@ -12,7 +12,7 @@ import About from './components/About'
 import BudgetDB from './lib/BudgetDB'
 import ExpenseDB from './lib/ExpenseDB'
 
-const {ipcRenderer} = require('electron')
+const { ipcRenderer } = require('electron')
 
 export default {
   name: 'Sixpence',
@@ -20,23 +20,23 @@ export default {
 
   mounted () {
     ipcRenderer.on('menu-view-main', (event, arg) => {
-      this.$router.push(`/`)
+      this.$router.push('/')
     })
 
     ipcRenderer.on('menu-view-budget', (event, arg) => {
-      this.$router.push(`/budget`)
+      this.$router.push('/budget')
     })
 
     ipcRenderer.on('menu-view-expenses', (event, arg) => {
-      this.$router.push(`/expenses`)
+      this.$router.push('/expenses')
     })
 
     ipcRenderer.on('menu-view-reports', (event, arg) => {
-      this.$router.push(`/report/list`)
+      this.$router.push('/report/list')
     })
 
     ipcRenderer.on('menu-settings', (event, arg) => {
-      this.$router.push(`/settings`)
+      this.$router.push('/settings')
     })
 
     ipcRenderer.on('sixpence-renderer-cleanup', (event, msg) => {
@@ -59,13 +59,13 @@ export default {
       // return Promise.all([doNothing])
       // ---------------------------------------------------
 
-      var compactBDB = new Promise((resolve, reject) => {
+      const compactBDB = new Promise((resolve, reject) => {
         BudgetDB.compact(() => {
           resolve(true)
         })
       })
 
-      var compactEDB = new Promise((resolve, reject) => {
+      const compactEDB = new Promise((resolve, reject) => {
         ExpenseDB.compact(() => {
           resolve(true)
         })

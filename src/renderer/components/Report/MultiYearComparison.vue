@@ -110,7 +110,7 @@ export default {
 
   methods: {
     entryColor: function (entryNum, type) {
-      var color = null
+      let color = null
 
       if (entryNum % 2 === 0) {
         color = (type === Constants.TYPE_INCOME) ? Constants.COLORS.INCOME : Constants.COLORS.EXPENSE
@@ -138,7 +138,7 @@ export default {
     },
 
     clearFocus: function () {
-      this.focusData = {category: null, data: {}}
+      this.focusData = { category: null, data: {} }
     },
 
     focusSingleCategory: function (category) {
@@ -149,19 +149,19 @@ export default {
     },
 
     loadData: function () {
-      var self = this
+      const self = this
       // NOTE: Load all data for now. May need to restrict this to X back years
       // for performance purposes later.
-      var start = null
-      var end = null
+      const start = null
+      const end = null
 
-      ExpenseDB.search(start, end, {}, {type: 1, category: 1, date: 1, amount: 1})
+      ExpenseDB.search(start, end, {}, { type: 1, category: 1, date: 1, amount: 1 })
         .then(function (entries) {
           entries.forEach(function (entry) {
-            var category = entry.category
-            var amount = entry.amount
-            var month = Moment(entry.date).month()
-            var year = Moment(entry.date).year()
+            const category = entry.category
+            const amount = entry.amount
+            const month = Moment(entry.date).month()
+            const year = Moment(entry.date).year()
 
             if (category !== Constants.ROLLOVER_CATEGORY) {
               if (year < self.minYear) {
@@ -186,13 +186,13 @@ export default {
                 }
               }
 
-              self.data[category][year]['months'][month] += amount
-              self.data[category][year]['total'] += amount
+              self.data[category][year].months[month] += amount
+              self.data[category][year].total += amount
             }
           })
 
           // TODO: don't allow anymore than yearCount years into yearRange
-          for (var i = self.minYear; i <= self.maxYear; i++) {
+          for (let i = self.minYear; i <= self.maxYear; i++) {
             self.yearRange.push(i)
           }
 
@@ -212,7 +212,7 @@ export default {
       minYear: 9999,
       maxYear: 0,
       yearRange: [],
-      focusData: {category: null, data: {}},
+      focusData: { category: null, data: {} },
       data: {},
       dataLoaded: false,
       format: Format,

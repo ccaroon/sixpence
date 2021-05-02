@@ -9,23 +9,36 @@
         </template>
       </v-menu>
       <template v-if="view === 'catByYear'">
-        <v-toolbar-title>Report - Budget Progress for {{ this.year }}</v-toolbar-title>
+        <v-toolbar-title
+          >Report - Budget Progress for {{ this.year }}</v-toolbar-title
+        >
       </template>
       <template v-if="view === 'catByMonth' && dataLoaded">
-        <v-toolbar-title>Report - {{ selectedCategory }} for {{ this.year }}</v-toolbar-title>
+        <v-toolbar-title
+          >Report - {{ selectedCategory }} for {{ this.year }}</v-toolbar-title
+        >
         <v-spacer></v-spacer>
         <v-row no-gutters>
           <v-col>
             <v-toolbar-items>
-              <v-chip :color="amountColor(reportData.totalSpent,3)" text-color="black">
+              <v-chip
+                :color="amountColor(reportData.totalSpent, 3)"
+                text-color="black"
+              >
                 <v-icon float-left>fa-calendar</v-icon>
-                <span class="subtitle-1">{{ format.formatMoney(Math.abs(reportData.totalSpent)) }}</span>
-              </v-chip>&nbsp;
-              <v-chip :color="amountColor(reportData.avgSpent)" text-color="black">
+                <span class="subtitle-1">{{
+                  format.formatMoney(Math.abs(reportData.totalSpent))
+                }}</span> </v-chip
+              >&nbsp;
+              <v-chip
+                :color="amountColor(reportData.avgSpent)"
+                text-color="black"
+              >
                 <v-icon float-left>mdi-cash-multiple</v-icon>
-                <span
-                  class="subtitle-1"
-                >{{ format.formatMoney(Math.abs(reportData.avgSpent)) }} / Month</span>
+                <span class="subtitle-1"
+                  >{{ format.formatMoney(Math.abs(reportData.avgSpent)) }} /
+                  Month</span
+                >
               </v-chip>
             </v-toolbar-items>
           </v-col>
@@ -85,7 +98,7 @@ export default {
   methods: {
 
     amountColor: function (amount, accent = 1) {
-      var color = ''
+      let color = ''
 
       if (amount >= 0.0) {
         color = 'green accent-' + accent
@@ -104,8 +117,8 @@ export default {
     },
 
     viewCategoryByYear: function () {
-      var self = this
-      var groupedData = {}
+      const self = this
+      const groupedData = {}
 
       this.view = 'catByYear'
       this.dataLoaded = false
@@ -114,8 +127,8 @@ export default {
         .then(function (categories) {
           // Seed Budgeted Categories
           categories.forEach(function (cat) {
-            if (groupedData.hasOwnProperty(cat.category)) {
-              groupedData[cat.category]['budgetedAmount'] += cat.amount * (12 / cat.frequency)
+            if (cat.category in groupedData) {
+              groupedData[cat.category].budgetedAmount += cat.amount * (12 / cat.frequency)
             } else {
               groupedData[cat.category] = {
                 type: cat.type,
@@ -131,7 +144,7 @@ export default {
         })
         .then(function (entries) {
           entries.forEach(function (entry) {
-            if (groupedData.hasOwnProperty(entry.category)) {
+            if (entry.category in groupedData) {
               groupedData[entry.category].amount += entry.amount
             }
           })
@@ -145,7 +158,7 @@ export default {
     },
 
     viewCategoryByMonth: function (catName, totalSpent) {
-      var self = this
+      const self = this
 
       this.selectedCategory = catName
       this.view = 'catByMonth'
@@ -153,8 +166,8 @@ export default {
 
       // If viewing the current year, only average up to the current month,
       // otherwise average across a full year (12 months)
-      var now = Moment()
-      var divisor = this.year === now.year() ? now.month() + 1 : 12.0
+      const now = Moment()
+      const divisor = this.year === now.year() ? now.month() + 1 : 12.0
 
       this.reportData = {
         totalSpent: totalSpent,
@@ -162,24 +175,24 @@ export default {
         data: []
       }
 
-      BudgetDB.search({'category': catName})
+      BudgetDB.search({ category: catName })
         .then(function (cats) {
           self.constants.MONTHS.forEach(function (month) {
-            var monthStart = Moment(`${self.year}-${month.value}`, 'YYYY-M', true).startOf('month').toDate()
-            var monthEnd = Moment(`${self.year}-${month.value}`, 'YYYY-M', true).endOf('month').toDate()
+            const monthStart = Moment(`${self.year}-${month.value}`, 'YYYY-M', true).startOf('month').toDate()
+            const monthEnd = Moment(`${self.year}-${month.value}`, 'YYYY-M', true).endOf('month').toDate()
 
-            self.reportData.data[month.value] = {'amount': 0.0, 'budgetedAmount': 0.0}
+            self.reportData.data[month.value] = { amount: 0.0, budgetedAmount: 0.0 }
 
-            ExpenseDB.search(monthStart, monthEnd, {'category': catName})
+            ExpenseDB.search(monthStart, monthEnd, { category: catName })
               .then(function (entries) {
                 cats.forEach(function (category) {
                   if (BudgetDB.isDue(month.value, category.frequency, category.firstDue)) {
-                    self.reportData.data[month.value]['budgetedAmount'] += category.amount
+                    self.reportData.data[month.value].budgetedAmount += category.amount
                   }
                 })
 
                 entries.forEach(function (entry) {
-                  self.reportData.data[month.value]['amount'] += entry.amount
+                  self.reportData.data[month.value].amount += entry.amount
                 })
 
                 if (month.value === 12) {
@@ -198,9 +211,9 @@ export default {
   },
 
   data () {
-    var thisYear = Moment().year()
-    var yearStart = Moment(`${thisYear}-01-01`).toDate()
-    var yearEnd = Moment(`${thisYear}-12-31`).toDate()
+    const thisYear = Moment().year()
+    const yearStart = Moment(`${thisYear}-01-01`).toDate()
+    const yearEnd = Moment(`${thisYear}-12-31`).toDate()
 
     return {
       constants: Constants,
