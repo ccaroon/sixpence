@@ -128,7 +128,7 @@ export default {
   },
 
   // monthNumber - 0-based
-  ensureRollover: function (monthNumber) {
+  ensureRollover: function (monthNumber, existsOk = true) {
     const self = this
 
     const currMonthStart = Moment().month(monthNumber).startOf('month').toDate()
@@ -136,9 +136,45 @@ export default {
 
     const promise = this.search(currMonthStart, currMonthEnd, { category: Constants.ROLLOVER_CATEGORY })
       .then(function (docs) {
-        if (docs.length === 0) {
-          return self._createRolloverEntry(monthNumber)
+        let doc = null
+
+        if (docs.length !== 0) {
+          doc = docs[0]
+        }
+
+        return doc
+      })
+      .then(function (doc) {
+        let action = null
+
+        if (doc) {
+          if (!existsOk) {
+            action = 'delete+create'
+          }
         } else {
+          action = 'create'
+        }
+
+        return ({ action: action, doc: doc })
+      })
+      .then(function (result) {
+        console.log(result)
+
+        if (result.action === 'create') {
+          console.log('Create rollover entry')
+          return self._createRolloverEntry(monthNumber)
+        } else if (result.action === 'delete+create') {
+          console.log('Delete & Create rollover entry')
+          self.delete(result.doc._id)
+            .then(function (count) {
+              console.log(`Deleted ${count} entries.`)
+              return self._createRolloverEntry(monthNumber)
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        } else {
+          console.log('Not creating rollover entry')
           return Promise.resolve(true)
         }
       })

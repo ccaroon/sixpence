@@ -6,6 +6,9 @@
 * Upgrade Electron from 11.x to 12.0.x
 * Lots of NPM package updates
 
+### Features
+* Added  "Recalculate Monthly Rollover" choice to Expenses Menu
+
 ## v1.12.1 - Grookey.1 (February 06, 2021)
 ### Changes
 * Upgraded Electron from 4.x to 11.x

@@ -15,6 +15,13 @@
               ]
             }}</v-list-item-title>
           </v-list-item>
+          <v-list-item @click="recalculateRollover()">
+            <v-list-item-title>{{
+              menu.recalculateRollover.labels[
+                menu.recalculateRollover.labelIndex
+              ]
+            }}</v-list-item-title>
+          </v-list-item>
         </v-list>
       </v-menu>
       <v-row no-gutters align="center">
@@ -925,6 +932,19 @@ export default {
       // this.search()
     },
 
+    recalculateRollover: function () {
+      const self = this
+      const viewDate = new Moment(this.startDate)
+
+      ExpenseDB.ensureRollover(viewDate.month(), false)
+        .then(() => {
+          // console.log(`MTV [${self.monthToView}] | VD [${viewDate.format('YYYY-MM')}]`)
+          // self.monthToView = viewDate.format('YYYY-MM')
+          self._loadCategoryData()
+          self.refreshData()
+        })
+    },
+
     viewOverbudgetEntries: function () {
       this.showOverbudget = !this.showOverbudget
 
@@ -969,6 +989,10 @@ export default {
       menu: {
         viewOverbudgetEntries: {
           labels: ['View Overbudget Categories', 'View All Categories'],
+          labelIndex: 0
+        },
+        recalculateRollover: {
+          labels: ['Recalculate Montly Rollover'],
           labelIndex: 0
         }
       },
