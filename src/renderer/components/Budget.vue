@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-app-bar :color="constants.COLORS.TOOLBAR" app dark dense fixed>
+    <v-app-bar :color="constants.COLORS.TOOLBAR" app dark fixed>
       <v-menu bottom offset-y>
         <template v-slot:activator="{ on }">
           <v-btn icon v-on="on">
@@ -8,7 +8,11 @@
           </v-btn>
         </template>
         <v-list dense>
-          <v-list-item v-for="(item, i) in menu" :key="i" @click="setView(item)">
+          <v-list-item
+            v-for="(item, i) in menu"
+            :key="i"
+            @click="setView(item)"
+          >
             <v-list-item-title>{{ item.name }}</v-list-item-title>
           </v-list-item>
         </v-list>
@@ -52,26 +56,41 @@
           <v-toolbar-items>
             <v-chip :color="constants.COLORS.INCOME" text-color="black">
               <v-icon float-left>mdi-currency-usd</v-icon>
-              <span class="subtitle-1">{{ format.formatMoney(totalIncome) }}</span>
-            </v-chip>&nbsp;
+              <span class="subtitle-1">{{
+                format.formatMoney(totalIncome)
+              }}</span> </v-chip
+            >&nbsp;
             <v-chip :color="constants.COLORS.EXPENSE" text-color="black">
               <v-icon float-left>mdi-currency-usd-off</v-icon>
-              <span class="subtitle-1">{{ format.formatMoney(totalExpenses) }}</span>
-            </v-chip>&nbsp;
+              <span class="subtitle-1">{{
+                format.formatMoney(totalExpenses)
+              }}</span> </v-chip
+            >&nbsp;
             <v-chip
-              :color="totalIncome + totalExpenses >= 0 ? constants.COLORS.INCOME_ALT : constants.COLORS.EXPENSE_ALT"
+              :color="
+                totalIncome + totalExpenses >= 0
+                  ? constants.COLORS.INCOME_ALT
+                  : constants.COLORS.EXPENSE_ALT
+              "
               text-color="black"
             >
               <v-icon float-left>mdi-cash-multiple</v-icon>
-              <span class="subtitle-1">{{ format.formatMoney(totalIncome + totalExpenses) }}</span>
+              <span class="subtitle-1">{{
+                format.formatMoney(totalIncome + totalExpenses)
+              }}</span>
             </v-chip>
           </v-toolbar-items>
         </v-col>
         <v-col>
           <v-toolbar-items>
-            <v-btn @click="search()" icon small :color="constants.COLORS.TOOLBAR_BUTTON">
-              <v-icon>mdi-magnify</v-icon>
-            </v-btn>&nbsp;
+            <v-btn
+              @click="search()"
+              icon
+              small
+              :color="constants.COLORS.TOOLBAR_BUTTON"
+            >
+              <v-icon>mdi-magnify</v-icon> </v-btn
+            >&nbsp;
             <v-text-field
               ref="searchField"
               v-model="searchText"
@@ -81,7 +100,12 @@
               @keyup.enter="search()"
               @keyup.esc="clearSearch()"
             ></v-text-field>
-            <v-btn @click="clearSearch()" icon small :color="constants.COLORS.TOOLBAR_BUTTON">
+            <v-btn
+              @click="clearSearch()"
+              icon
+              small
+              :color="constants.COLORS.TOOLBAR_BUTTON"
+            >
               <v-icon>mdi-close</v-icon>
             </v-btn>
           </v-toolbar-items>
@@ -89,16 +113,24 @@
       </v-row>
     </v-app-bar>
 
-    <v-snackbar bottom v-model="alert.visible" :color="alert.color" :timeout="alert.timeout">
+    <v-snackbar
+      bottom
+      v-model="alert.visible"
+      :color="alert.color"
+      :timeout="alert.timeout"
+    >
       <v-icon>{{ alert.icon }}</v-icon>
       &nbsp;{{ alert.message }}
-      <v-btn icon dark @click="alert.visible=false">
+      <v-btn icon dark @click="alert.visible = false">
         <v-icon>mdi-close</v-icon>
       </v-btn>
     </v-snackbar>
 
     <template
-      v-if="view === constants.BUDGET_VIEW_SUMMARY || view === constants.BUDGET_VIEW_ARCHIVED"
+      v-if="
+        view === constants.BUDGET_VIEW_SUMMARY ||
+        view === constants.BUDGET_VIEW_ARCHIVED
+      "
     >
       <v-list dense>
         <BudgetEntry
@@ -106,7 +138,9 @@
           :key="index"
           v-bind:entryNum="index"
           v-bind:entry="entry"
-          v-bind:readOnly="view === constants.BUDGET_VIEW_ARCHIVED ? true : false"
+          v-bind:readOnly="
+            view === constants.BUDGET_VIEW_ARCHIVED ? true : false
+          "
           v-on:editEntry="editEntry"
           v-on:refreshData="refreshData"
           v-on:displayAlert="displayAlert"
@@ -140,9 +174,13 @@
           <v-btn
             small
             rounded
-            @click="showHistoryNoteDialog = false; historyCallback ? historyCallback(historyNote) : false"
+            @click="
+              showHistoryNoteDialog = false;
+              historyCallback ? historyCallback(historyNote) : false;
+            "
             :color="constants.COLORS.OK_BUTTON"
-          >Continue</v-btn>
+            >Continue</v-btn
+          >
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -250,7 +288,12 @@
                 ></v-text-field>
               </v-col>
               <v-col cols="1" text-center>
-                <v-btn :color="constants.COLORS.OK_BUTTON" fab small @click="saveEntry()">
+                <v-btn
+                  :color="constants.COLORS.OK_BUTTON"
+                  fab
+                  small
+                  @click="saveEntry()"
+                >
                   <v-icon>mdi-content-save</v-icon>
                 </v-btn>
               </v-col>
