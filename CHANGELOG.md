@@ -12,6 +12,7 @@
 * Added  "Recalculate Monthly Rollover" choice to Expenses Menu
 * Added next & previous month buttons to the Expenses toolbar
 * Added button to Expenses toolbar to return to current month
+* TODO: View Expenses as a montly calendar
 
 ## v1.12.1 - Grookey.1 (February 06, 2021)
 ### Changes

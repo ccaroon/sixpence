@@ -82,7 +82,7 @@
             ><v-icon>mdi-chevron-right</v-icon></v-btn
           >
         </v-col>
-        <v-col cols="1">
+        <v-col cols="2">
           <v-toolbar-items>
             <v-btn-toggle
               v-model="viewStyle"
@@ -92,6 +92,9 @@
             >
               <v-btn tabindex="-1" icon :disabled="viewingAll">
                 <v-icon>mdi-chart-bar</v-icon>
+              </v-btn>
+              <v-btn tabindex="-1" icon>
+                <v-icon>mdi-calendar-month</v-icon>
               </v-btn>
               <v-btn tabindex="-1" icon>
                 <v-icon>mdi-view-list</v-icon>
@@ -215,6 +218,10 @@
           v-on:viewEntriesInGroup="viewEntriesInGroup"
         ></ExpenseCategory>
       </v-list>
+    </template>
+
+    <template v-if="dataLoaded && viewStyle === constants.VIEW_STYLE_CALENDAR">
+      <ExpenseCalendar></ExpenseCalendar>
     </template>
 
     <div class="text-center">
@@ -355,6 +362,7 @@
 import BudgetDB from '../lib/BudgetDB'
 import Constants from '../lib/Constants'
 import ExpenseEntry from './Expense/Entry'
+import ExpenseCalendar from './Expense/Calendar'
 import ExpenseCategory from './Expense/Category'
 import ExpenseDB from '../lib/ExpenseDB'
 import Format from '../lib/Format'
@@ -364,7 +372,7 @@ import Moment from 'moment'
 
 export default {
   name: 'Expenses',
-  components: { ExpenseEntry, ExpenseCategory },
+  components: { ExpenseEntry, ExpenseCategory, ExpenseCalendar },
 
   mounted () {
     const self = this
@@ -926,7 +934,6 @@ export default {
     adjustMonth: function () {
       this.startDate = Moment(this.monthToView, 'YYYY-MM', true).startOf('month').toDate()
       this.endDate = Moment(this.monthToView, 'YYYY-MM', true).endOf('month').toDate()
-      // this.currentMonthName = Format.monthNumberToName(this.startDate.getMonth())
       this.currentMonthName = Format.formatDate(this.startDate, 'MMM, YYYY')
 
       this.$route.params.category = null
@@ -951,8 +958,6 @@ export default {
 
       ExpenseDB.ensureRollover(viewDate.month(), false)
         .then(() => {
-          // console.log(`MTV [${self.monthToView}] | VD [${viewDate.format('YYYY-MM')}]`)
-          // self.monthToView = viewDate.format('YYYY-MM')
           self._loadCategoryData()
           self.refreshData()
         })

@@ -7,7 +7,8 @@ const constants = {
   BUDGET_VIEW_ARCHIVED: 2,
 
   VIEW_STYLE_GROUP: 0,
-  VIEW_STYLE_LIST: 1,
+  VIEW_STYLE_CALENDAR: 1,
+  VIEW_STYLE_LIST: 2,
 
   ROLLOVER_CATEGORY: 'Sixpence:Rollover',
 
