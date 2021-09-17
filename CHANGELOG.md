@@ -5,13 +5,13 @@
 ### Changes
 * Upgrade Electron from 11.x to 12.0.x
 * Lots of NPM package updates
-* Removed rounding on Expenses View button group
 * Removed `dense` attribute from Budget, Expenses & Reports AppBars
+* Removed `yarn` support. Just use `npm` instead. `yarn` got weird.
 
 ### Features
 * Added  "Recalculate Monthly Rollover" choice to Expenses Menu
 * Added next & previous month buttons to the Expenses toolbar
-* Added button to Expenses toolbar to view current month
+* Added button to Expenses toolbar to return to current month
 
 ## v1.12.1 - Grookey.1 (February 06, 2021)
 ### Changes
