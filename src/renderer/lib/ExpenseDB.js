@@ -83,7 +83,7 @@ export default {
   },
 
   // monthNumber - 0-based
-  _createRolloverEntry: function (monthNumber) {
+  _upsertRolloverEntry: function (monthNumber, existingEntry = null) {
     const self = this
 
     const currMonth = Moment().month(monthNumber)
@@ -105,10 +105,12 @@ export default {
           }
         })
 
-        // insert record for first day of monthNumber
-        //  - Income, Category: Constants.ROLLOVER_CATEGORY, amount: income + expense
-        const savePromise = self.save(
-          {
+        let entryToSave = null
+        if (existingEntry) {
+          entryToSave = existingEntry
+          entryToSave.amount = income + expense
+        } else {
+          entryToSave = {
             type: Constants.TYPE_INCOME,
             date: currMonthStart,
             icon: 'mdi-transfer',
@@ -116,7 +118,11 @@ export default {
             amount: income + expense,
             tags: ['Sixpence', 'Balance Rollover']
           }
-        )
+        }
+
+        // insert/update record for first day of monthNumber
+        //  - Income, Category: Constants.ROLLOVER_CATEGORY, amount: income + expense
+        const savePromise = self.save(entryToSave)
 
         return savePromise
       })
@@ -149,7 +155,7 @@ export default {
 
         if (doc) {
           if (!existsOk) {
-            action = 'delete+create'
+            action = 'update'
           }
         } else {
           action = 'create'
@@ -157,25 +163,9 @@ export default {
 
         return ({ action: action, doc: doc })
       })
-      .then(function (result) {
-        console.log(result)
-
-        if (result.action === 'create') {
-          console.log('Create rollover entry')
-          return self._createRolloverEntry(monthNumber)
-        } else if (result.action === 'delete+create') {
-          console.log('Delete & Create rollover entry')
-          self.delete(result.doc._id)
-            .then(function (count) {
-              console.log(`Deleted ${count} entries.`)
-              return self._createRolloverEntry(monthNumber)
-            })
-            .catch((err) => {
-              console.log(err)
-            })
-        } else {
-          console.log('Not creating rollover entry')
-          return Promise.resolve(true)
+      .then((data) => {
+        if (data.action === 'create' || data.action === 'update') {
+          return self._upsertRolloverEntry(monthNumber, data.doc)
         }
       })
       .catch(function (err) {
