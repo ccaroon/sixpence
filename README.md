@@ -14,7 +14,7 @@ One day I'll get around to writing some docs to explain how it works and the
 general philosophy of it's usage. Until then, feel free to download it and try
 it out.
 
-Sixpence allows you to create a budget and then track your progress. It it **not**
+Sixpence allows you to create a budget and then track your progress. It is **not**
 Quicken or Moneydance or Mint.com. It can be used in conjunction with those kinds
 of applications.
 
@@ -30,7 +30,7 @@ of applications.
 * View your expenses grouped by category showing progress toward each budgeted item.
 * Icons to help you quickly identify categories
 
-## Screen Shots
+## Screen Shots (Old Needs Updating)
 ### Main
 <img src="docs/images/main.png" width="800">
 
@@ -48,16 +48,16 @@ of applications.
 
 ``` bash
 # install dependencies
-yarn install
+npm install
 
 # serve with hot reload at localhost:9080
-yarn dev
+npm run dev
 
 # build electron application for production
-yarn build
+npm run build
 
 # lint all JS/Vue component files in `src/`
-yarn lint
+npm run lint
 
 ```
 

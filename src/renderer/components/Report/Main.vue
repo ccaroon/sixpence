@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-app-bar :color="constants.COLORS.TOOLBAR" dark dense app fixed>
+    <v-app-bar :color="constants.COLORS.TOOLBAR" dark app fixed>
       <v-menu bottom offset-y>
         <template v-slot:activator="{ on }">
           <v-btn v-on="on" icon>
@@ -9,7 +9,11 @@
         </template>
 
         <v-list dense>
-          <v-list-item v-for="(report, ri) in reportList" :key="ri" @click="viewReport(report)">
+          <v-list-item
+            v-for="(report, ri) in reportList"
+            :key="ri"
+            @click="viewReport(report)"
+          >
             <v-list-item-title>{{ report.title }}</v-list-item-title>
           </v-list-item>
         </v-list>
@@ -28,7 +32,9 @@
           <v-icon>{{ report.icon }}</v-icon>
         </v-list-item-icon>
         <v-list-item-content>
-          <v-list-item-title class="body-1">{{ report.title }}</v-list-item-title>
+          <v-list-item-title class="body-1">{{
+            report.title
+          }}</v-list-item-title>
           <v-list-item-subtitle>{{ report.desc }}</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-app-bar :color="constants.COLORS.TOOLBAR" dark dense app fixed>
+    <v-app-bar :color="constants.COLORS.TOOLBAR" dark app fixed>
       <v-menu bottom offset-y>
         <template v-slot:activator="{ on }">
           <v-btn icon v-on="on">
@@ -15,13 +15,26 @@
               ]
             }}</v-list-item-title>
           </v-list-item>
+          <v-list-item @click="recalculateRollover()">
+            <v-list-item-title>{{
+              menu.recalculateRollover.labels[
+                menu.recalculateRollover.labelIndex
+              ]
+            }}</v-list-item-title>
+          </v-list-item>
         </v-list>
       </v-menu>
       <v-row no-gutters align="center">
         <v-col cols="1">
           <v-toolbar-title>Expenses</v-toolbar-title>
         </v-col>
-        <v-col cols="2">
+        <v-col cols="2" offset="1">
+          <v-btn icon x-small @click="viewCurrMonth()"
+            ><v-icon>mdi-calendar-month</v-icon></v-btn
+          >
+          <v-btn icon small @click="changeMonth(-1)"
+            ><v-icon>mdi-chevron-left</v-icon></v-btn
+          >
           <v-dialog
             ref="monthDialog"
             persistent
@@ -38,7 +51,6 @@
                 :color="constants.COLORS.TOOLBAR_BUTTON"
               >
                 {{ currentMonthName }}
-                <v-icon>mdi-calendar-range</v-icon>
               </v-btn>
             </template>
 
@@ -66,6 +78,9 @@
               >
             </v-date-picker>
           </v-dialog>
+          <v-btn icon small @click="changeMonth(+1)"
+            ><v-icon>mdi-chevron-right</v-icon></v-btn
+          >
         </v-col>
         <v-col cols="1">
           <v-toolbar-items>
@@ -75,10 +90,10 @@
               rounded
               :class="constants.COLORS.TOOLBAR_BUTTON"
             >
-              <v-btn tabindex="-1" text :disabled="viewingAll">
+              <v-btn tabindex="-1" icon :disabled="viewingAll">
                 <v-icon>mdi-chart-bar</v-icon>
               </v-btn>
-              <v-btn tabindex="-1" text>
+              <v-btn tabindex="-1" icon>
                 <v-icon>mdi-view-list</v-icon>
               </v-btn>
             </v-btn-toggle>
@@ -111,10 +126,6 @@
                 format.formatMoney(incomeAmount + expensesAmount)
               }}</span> </v-chip
             >&nbsp;
-          </v-toolbar-items>
-        </v-col>
-        <v-col cols="1">
-          <v-toolbar-items>
             <v-btn-toggle
               tabindex="-1"
               v-model="incomeExpenseView"
@@ -377,7 +388,7 @@ export default {
 
             self.refreshData()
           } else if (self.$route.params.month) {
-            // Setting `monthToView` triggers the changeMonth() method below
+            // Setting `monthToView` triggers the adjustMonth() method below
             self.monthToView = startMonth.month(self.$route.params.month).format('YYYY-MM')
           } else {
             self.monthToView = startMonth.format('YYYY-MM')
@@ -904,10 +915,19 @@ export default {
       }
     },
 
-    changeMonth: function () {
+    viewCurrMonth: function () {
+      this.monthToView = Moment().format('YYYY-MM')
+    },
+
+    changeMonth: function (delta) {
+      this.monthToView = Moment(this.startDate).add(delta, 'month').format('YYYY-MM')
+    },
+
+    adjustMonth: function () {
       this.startDate = Moment(this.monthToView, 'YYYY-MM', true).startOf('month').toDate()
       this.endDate = Moment(this.monthToView, 'YYYY-MM', true).endOf('month').toDate()
-      this.currentMonthName = Format.monthNumberToName(this.startDate.getMonth())
+      // this.currentMonthName = Format.monthNumberToName(this.startDate.getMonth())
+      this.currentMonthName = Format.formatDate(this.startDate, 'MMM, YYYY')
 
       this.$route.params.category = null
       this.viewingAll = false
@@ -923,6 +943,19 @@ export default {
       this.searchText = category
       this.viewStyle = Constants.VIEW_STYLE_LIST
       // this.search()
+    },
+
+    recalculateRollover: function () {
+      const self = this
+      const viewDate = new Moment(this.startDate)
+
+      ExpenseDB.ensureRollover(viewDate.month(), false)
+        .then(() => {
+          // console.log(`MTV [${self.monthToView}] | VD [${viewDate.format('YYYY-MM')}]`)
+          // self.monthToView = viewDate.format('YYYY-MM')
+          self._loadCategoryData()
+          self.refreshData()
+        })
     },
 
     viewOverbudgetEntries: function () {
@@ -945,7 +978,7 @@ export default {
 
   watch: {
     viewStyle: 'viewStyleChange',
-    monthToView: 'changeMonth'
+    monthToView: 'adjustMonth'
   },
 
   data () {
@@ -969,6 +1002,10 @@ export default {
       menu: {
         viewOverbudgetEntries: {
           labels: ['View Overbudget Categories', 'View All Categories'],
+          labelIndex: 0
+        },
+        recalculateRollover: {
+          labels: ['Recalculate Montly Rollover'],
           labelIndex: 0
         }
       },

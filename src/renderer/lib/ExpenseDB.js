@@ -83,7 +83,7 @@ export default {
   },
 
   // monthNumber - 0-based
-  _createRolloverEntry: function (monthNumber) {
+  _upsertRolloverEntry: function (monthNumber, existingEntry = null) {
     const self = this
 
     const currMonth = Moment().month(monthNumber)
@@ -105,10 +105,12 @@ export default {
           }
         })
 
-        // insert record for first day of monthNumber
-        //  - Income, Category: Constants.ROLLOVER_CATEGORY, amount: income + expense
-        const savePromise = self.save(
-          {
+        let entryToSave = null
+        if (existingEntry) {
+          entryToSave = existingEntry
+          entryToSave.amount = income + expense
+        } else {
+          entryToSave = {
             type: Constants.TYPE_INCOME,
             date: currMonthStart,
             icon: 'mdi-transfer',
@@ -116,7 +118,11 @@ export default {
             amount: income + expense,
             tags: ['Sixpence', 'Balance Rollover']
           }
-        )
+        }
+
+        // insert/update record for first day of monthNumber
+        //  - Income, Category: Constants.ROLLOVER_CATEGORY, amount: income + expense
+        const savePromise = self.save(entryToSave)
 
         return savePromise
       })
@@ -128,7 +134,7 @@ export default {
   },
 
   // monthNumber - 0-based
-  ensureRollover: function (monthNumber) {
+  ensureRollover: function (monthNumber, existsOk = true) {
     const self = this
 
     const currMonthStart = Moment().month(monthNumber).startOf('month').toDate()
@@ -136,10 +142,30 @@ export default {
 
     const promise = this.search(currMonthStart, currMonthEnd, { category: Constants.ROLLOVER_CATEGORY })
       .then(function (docs) {
-        if (docs.length === 0) {
-          return self._createRolloverEntry(monthNumber)
+        let doc = null
+
+        if (docs.length !== 0) {
+          doc = docs[0]
+        }
+
+        return doc
+      })
+      .then(function (doc) {
+        let action = null
+
+        if (doc) {
+          if (!existsOk) {
+            action = 'update'
+          }
         } else {
-          return Promise.resolve(true)
+          action = 'create'
+        }
+
+        return ({ action: action, doc: doc })
+      })
+      .then((data) => {
+        if (data.action === 'create' || data.action === 'update') {
+          return self._upsertRolloverEntry(monthNumber, data.doc)
         }
       })
       .catch(function (err) {
