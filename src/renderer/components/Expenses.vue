@@ -221,7 +221,11 @@
     </template>
 
     <template v-if="dataLoaded && viewStyle === constants.VIEW_STYLE_CALENDAR">
-      <ExpenseCalendar></ExpenseCalendar>
+      <ExpenseCalendar
+        v-bind:monthToView="monthToView"
+        v-bind:expenses="expenses"
+        v-bind:newEntry="newEntry"
+      ></ExpenseCalendar>
     </template>
 
     <div class="text-center">
@@ -680,8 +684,8 @@ export default {
       this.$refs.searchField.blur()
     },
 
-    newEntry: function () {
-      this.entryDateStr = Format.formatDate(new Date(), Constants.FORMATS.entryDate)
+    newEntry: function (entryDate = new Date()) {
+      this.entryDateStr = Format.formatDate(entryDate, Constants.FORMATS.entryDate)
       // this.$refs.categorySelect.$el.focus()
       // this.$refs.dateField.focus()
       this.showAddEditSheet = true
