@@ -16,7 +16,7 @@
           event-text-color="black"
           :event-more="false"
           :events="events"
-          @click:event="true"
+          @click:event="viewEntries"
           @click:date="addEntry"
         >
         </v-calendar>
@@ -39,22 +39,9 @@ export default {
   },
 
   methods: {
-    // goToToday: function () {
-    //   this.calDate = Format.formatDate(new Date(), 'YYYY-MM-DD')
-    // },
-
-    eventColor: function () {
-      const color = Constants.COLORS.INCOME
-      return color
-    },
-
     createEvents: function () {
       const events = []
 
-      // TODO: Each Event
-      // Income
-      // Expense
-      // Balance
       const entriesByDate = new Map()
       this.expenses.forEach((entry) => {
         const entryDate = Moment(entry.date).startOf('day')
@@ -78,21 +65,27 @@ export default {
       })
 
       entriesByDate.forEach((entry) => {
-        events.push({
-          name: Format.formatMoney(entry.income),
-          start: entry.date.toDate(),
-          end: entry.date.toDate(),
-          color: Constants.COLORS.INCOME,
-          timed: false
-        })
+        if (entry.income > 0.0) {
+          events.push({
+            name: Format.formatMoney(entry.income),
+            start: entry.date.toDate(),
+            end: entry.date.toDate(),
+            color: Constants.COLORS.INCOME,
+            timed: false,
+            entryType: Constants.TYPE_INCOME
+          })
+        }
 
-        events.push({
-          name: Format.formatMoney(entry.expenses),
-          start: entry.date.toDate(),
-          end: entry.date.toDate(),
-          color: Constants.COLORS.EXPENSE,
-          timed: false
-        })
+        if (entry.expenses < 0.0) {
+          events.push({
+            name: Format.formatMoney(entry.expenses),
+            start: entry.date.toDate(),
+            end: entry.date.toDate(),
+            color: Constants.COLORS.EXPENSE,
+            timed: false,
+            entryType: Constants.TYPE_EXPENSE
+          })
+        }
       })
 
       return events
@@ -101,6 +94,10 @@ export default {
     addEntry: function (dateEvent) {
       const entryDate = Moment(dateEvent.date)
       this.newEntry(entryDate)
+    },
+
+    viewEntries: function (event) {
+      this.$emit('viewEntriesInGroup', `date?${event.day.date}&type?${event.event.entryType}`)
     },
 
     refresh: function () {
@@ -125,8 +122,6 @@ export default {
     return {
       calDate: Format.formatDate(this.monthToView, 'YYYY-MM-DD'),
       events: [],
-      // selectedCalEvent: {},
-      // eventElement: null,
       format: Format
     }
   }

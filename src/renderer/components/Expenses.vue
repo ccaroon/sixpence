@@ -225,6 +225,7 @@
         v-bind:monthToView="monthToView"
         v-bind:expenses="expenses"
         v-bind:newEntry="newEntry"
+        v-on:viewEntriesInGroup="viewEntriesInGroup"
       ></ExpenseCalendar>
     </template>
 
@@ -643,23 +644,73 @@ export default {
       }
 
       if (this.searchText) {
-        const parts = this.searchText.split(/\?/, 2)
-
         let query = {}
-        if (parts.length === 2) {
-          query[parts[0].trim()] = new RegExp(parts[1].trim(), 'i')
+        let searchDateStart = this.startDate
+        let searchDateEnd = this.endDate
+        const terms = this.searchText.split(/&/)
+
+        // TODO: DRY up this code a bit
+        //       lots of duplication between IF and ELSE statements
+        if (terms.length === 1) {
+          const parts = terms[0].split(/\?/, 2)
+          if (parts.length === 2) {
+            if (parts[0] === 'date') {
+              const searchDate = Moment(parts[1])
+
+              searchDateStart = searchDate.startOf('day').toDate()
+              searchDateEnd = searchDate.endOf('day').toDate()
+            } else {
+              const key = parts[0].trim()
+              let value = parts[1].trim()
+              if (isNaN(value)) {
+                value = new RegExp(parts[1].trim(), 'i')
+              } else {
+                value = Number(value)
+              }
+              query[key] = value
+            }
+          } else {
+            const match = new RegExp(parts[0].trim(), 'i')
+            query = {
+              $or: [
+                { category: match },
+                { tags: match }
+              ]
+            }
+          }
         } else {
-          const term = new RegExp(parts[0].trim(), 'i')
+          const ands = []
+          terms.forEach((term) => {
+            const parts = term.split(/\?/, 2)
+
+            if (parts[0] === 'date') {
+              const searchDate = Moment(parts[1])
+
+              searchDateStart = searchDate.startOf('day').toDate()
+              searchDateEnd = searchDate.endOf('day').toDate()
+            } else {
+              const searchTerm = {}
+              const key = parts[0].trim()
+              let value = parts[1].trim()
+
+              if (isNaN(value)) {
+                value = new RegExp(parts[1].trim(), 'i')
+              } else {
+                value = Number(value)
+              }
+
+              searchTerm[key] = value
+              ands.push(searchTerm)
+            }
+          })
+
           query = {
-            $or: [
-              { category: term },
-              { tags: term }
-            ]
+            $and: ands
           }
         }
 
         this.dataLoaded = false
-        ExpenseDB.search(this.startDate, this.endDate, query)
+        ExpenseDB.search(searchDateStart, searchDateEnd, query)
           .then(function (docs) {
             if (self.viewStyle === Constants.VIEW_STYLE_GROUP) {
               self._groupExpensesData(docs, false)
@@ -948,12 +999,12 @@ export default {
       this.refreshData()
     },
 
-    // This is called from ExpenseCategory when the user clicks on the grouped
-    // expense category name
-    viewEntriesInGroup: function (category) {
-      this.searchText = category
+    // This is called from...
+    // ExpenseCategory - when the user clicks on the grouped expense category name
+    // ExpenseCalendar - when expense or income amount is clicked
+    viewEntriesInGroup: function (searchTerm) {
+      this.searchText = searchTerm
       this.viewStyle = Constants.VIEW_STYLE_LIST
-      // this.search()
     },
 
     recalculateRollover: function () {

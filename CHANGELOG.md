@@ -7,12 +7,15 @@
 * Lots of NPM package updates
 * Removed `dense` attribute from Budget, Expenses & Reports AppBars
 * Removed `yarn` support. Just use `npm` instead. `yarn` got weird.
+* Expenses search enhancements...
+    - no longer assumes search values are strings; can be numbers too
+    - can search for multiple terms; only supports AND at the moment: `key1?value1&key2?value2`
 
 ### Features
 * Added  "Recalculate Monthly Rollover" choice to Expenses Menu
 * Added next & previous month buttons to the Expenses toolbar
 * Added button to Expenses toolbar to return to current month
-* TODO: View Expenses as a montly calendar
+* Added Calendar View type to Expenses. See income & spending amounts per day.
 
 ## v1.12.1 - Grookey.1 (February 06, 2021)
 ### Changes
