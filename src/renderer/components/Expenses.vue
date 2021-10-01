@@ -8,18 +8,14 @@
           </v-btn>
         </template>
         <v-list dense>
-          <v-list-item @click="viewOverbudgetEntries()" :disabled="viewingAll">
+          <v-list-item
+            v-for="(item, index) in menu"
+            :key="index"
+            @click="handleMenuChoice(item)"
+            :disabled="item.active"
+          >
             <v-list-item-title>{{
-              menu.viewOverbudgetEntries.labels[
-                menu.viewOverbudgetEntries.labelIndex
-              ]
-            }}</v-list-item-title>
-          </v-list-item>
-          <v-list-item @click="recalculateRollover()">
-            <v-list-item-title>{{
-              menu.recalculateRollover.labels[
-                menu.recalculateRollover.labelIndex
-              ]
+              item.labels[item.labelIndex]
             }}</v-list-item-title>
           </v-list-item>
         </v-list>
@@ -915,8 +911,12 @@ export default {
         const newEntry = { type: type, icon: icon, category: cat, amount: totalAmount, budgetedAmount: budgetedAmount }
 
         if (budgetCategories.includes(newEntry.category)) {
-          if (self.showOverbudget) {
+          if (self.menu.viewOverbudgetEntries.active) {
             if (Math.abs(newEntry.amount) > Math.abs(newEntry.budgetedAmount)) {
+              newEntries.push(newEntry)
+            }
+          } else if (self.menu.viewZeroDollarEntries.active) {
+            if (newEntry.amount === 0.0) {
               newEntries.push(newEntry)
             }
           } else {
@@ -1007,6 +1007,30 @@ export default {
       this.viewStyle = Constants.VIEW_STYLE_LIST
     },
 
+    handleMenuChoice: function (choice) {
+      if (choice.action) {
+        choice.action(choice)
+      }
+    },
+
+    // Handles these menu choices:
+    //  - viewAll
+    //  - viewOverbudget
+    //  - viewZeroDollar
+    viewCategoriesFilter: function (choice) {
+      this.menu.viewAllCategories.active = false
+      this.menu.viewOverbudgetEntries.active = false
+      this.menu.viewZeroDollarEntries.active = false
+
+      choice.active = true
+
+      if (this.viewStyle !== Constants.VIEW_STYLE_GROUP) {
+        this.viewStyle = Constants.VIEW_STYLE_GROUP
+      } else {
+        this.refreshData()
+      }
+    },
+
     recalculateRollover: function () {
       const self = this
       const viewDate = new Moment(this.startDate)
@@ -1016,22 +1040,6 @@ export default {
           self._loadCategoryData()
           self.refreshData()
         })
-    },
-
-    viewOverbudgetEntries: function () {
-      this.showOverbudget = !this.showOverbudget
-
-      if (this.showOverbudget) {
-        this.menu.viewOverbudgetEntries.labelIndex = 1
-      } else {
-        this.menu.viewOverbudgetEntries.labelIndex = 0
-      }
-
-      if (this.viewStyle !== Constants.VIEW_STYLE_GROUP) {
-        this.viewStyle = Constants.VIEW_STYLE_GROUP
-      } else {
-        this.refreshData()
-      }
     }
 
   },
@@ -1060,13 +1068,29 @@ export default {
       endDate: null,
       showMonthDialog: false,
       menu: {
+        viewAllCategories: {
+          action: this.viewCategoriesFilter,
+          labels: ['View All Categories'],
+          labelIndex: 0,
+          active: true
+        },
         viewOverbudgetEntries: {
-          labels: ['View Overbudget Categories', 'View All Categories'],
-          labelIndex: 0
+          action: this.viewCategoriesFilter,
+          labels: ['View Overbudget Categories'],
+          labelIndex: 0,
+          active: false
+        },
+        viewZeroDollarEntries: {
+          action: this.viewCategoriesFilter,
+          labels: ['View Zero Dollar Categories'],
+          labelIndex: 0,
+          active: false
         },
         recalculateRollover: {
-          labels: ['Recalculate Montly Rollover'],
-          labelIndex: 0
+          action: this.recalculateRollover,
+          labels: ['Recalculate Monthly Rollover'],
+          labelIndex: 0,
+          active: false
         }
       },
       alert: {
@@ -1087,7 +1111,6 @@ export default {
       },
       showDateMenu: false,
       showAddEditSheet: false,
-      showOverbudget: false,
       tagList: [],
       rules: {
         date: [

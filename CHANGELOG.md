@@ -12,7 +12,9 @@
     - can search for multiple terms; only supports AND at the moment: `key1?value1&key2?value2`
 
 ### Features
-* Added  "Recalculate Monthly Rollover" choice to Expenses Menu
+* Added "Recalculate Monthly Rollover" choice to Expenses Menu
+* Added "View Zero Dollar Categories" choice to Expenses Menu
+  - ...also made menu building & choice handling more generic
 * Added next & previous month buttons to the Expenses toolbar
 * Added button to Expenses toolbar to return to current month
 * Added Calendar View type to Expenses. See income & spending amounts per day.
