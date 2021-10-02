@@ -10,6 +10,7 @@
 * Expenses search enhancements...
     - no longer assumes search values are strings; can be numbers too
     - can search for multiple terms; only supports AND at the moment: `key1?value1&key2?value2`
+* Fixed several MDI icons that were either removed from the set or renamed.
 
 ### Features
 * Added "Recalculate Monthly Rollover" choice to Expenses Menu
