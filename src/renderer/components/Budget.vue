@@ -550,6 +550,8 @@ export default {
             // Show dialog asking for change note
             this.showHistoryNoteDialog = true
             this.historyCallback = resolve
+          } else {
+            resolve()
           }
 
           // Zero out for next use
@@ -597,7 +599,7 @@ export default {
               this.historyNote = null
             }
 
-            BudgetDB.save(this.entry)
+            return BudgetDB.save(this.entry)
           })
           .then(function (numReplaced, upsert) {
             self._clearEntry()

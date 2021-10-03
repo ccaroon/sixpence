@@ -2,6 +2,9 @@
 
 
 ## v1.13.0 - Glimmering Gil (??? ??, 2021)
+### Bugs
+* Fixed a bug where you had to click the "Save" button twice to save a Budget entry
+
 ### Changes
 * Upgrade Electron from 11.x to 12.0.x
 * Lots of NPM package updates
@@ -19,6 +22,10 @@
 * Added next & previous month buttons to the Expenses toolbar
 * Added button to Expenses toolbar to return to current month
 * Added Calendar View type to Expenses. See income & spending amounts per day.
+
+### Misc
+* Updated `@mdi/fonts`
+* Updated `vuetify`
 
 ## v1.12.1 - Grookey.1 (February 06, 2021)
 ### Changes
