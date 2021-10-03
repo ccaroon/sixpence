@@ -1,20 +1,6 @@
 # CHANGELOG
 
-
-## v1.13.0 - Glimmering Gil (??? ??, 2021)
-### Bugs
-* Fixed a bug where you had to click the "Save" button twice to save a Budget entry
-
-### Changes
-* Upgrade Electron from 11.x to 12.0.x
-* Lots of NPM package updates
-* Removed `dense` attribute from Budget, Expenses & Reports AppBars
-* Removed `yarn` support. Just use `npm` instead. `yarn` got weird.
-* Expenses search enhancements...
-    - no longer assumes search values are strings; can be numbers too
-    - can search for multiple terms; only supports AND at the moment: `key1?value1&key2?value2`
-* Fixed several MDI icons that were either removed from the set or renamed.
-
+## v1.13.0 - Glimmering Gil (October ??, 2021)
 ### Features
 * Added "Recalculate Monthly Rollover" choice to Expenses Menu
 * Added "View Zero Dollar Categories" choice to Expenses Menu
@@ -23,9 +9,27 @@
 * Added button to Expenses toolbar to return to current month
 * Added Calendar View type to Expenses. See income & spending amounts per day.
 
+### Changes
+* Removed `dense` attribute from Budget, Expenses & Reports AppBars
+* Expenses search enhancements...
+    - no longer assumes search values are strings; can be numbers too
+    - support for multiple operators: `==`, `~=`, `>`, `>=`, `<`, `<=`
+    - NO LONGER supports `?` search separator
+    - can search for multiple `&` separated terms
+      - only supports AND at the moment: `key1<OP>value1&key2<OP>value2`
+    - Search code mostly re-written
+* Fixed several MDI icons that were either removed from the set or renamed.
+
+### Bug Fixes
+* Fixed a bug where you had to click the "Save" button twice to save a Budget entry
+
 ### Misc
-* Updated `@mdi/fonts`
-* Updated `vuetify`
+* Upgrade Electron from 11.x to 12.0.x
+* Lots of NPM package updates
+  - `@mdi/fonts`
+  - `vuetify`
+  - etc...
+* Removed `yarn` support. Just use `npm` instead. `yarn` got weird.
 
 ## v1.12.1 - Grookey.1 (February 06, 2021)
 ### Changes

@@ -97,7 +97,7 @@ export default {
     },
 
     viewEntries: function (event) {
-      this.$emit('viewEntriesInGroup', `date?${event.day.date}&type?${event.event.entryType}`)
+      this.$emit('viewEntriesInGroup', `date==${event.day.date}&type==${event.event.entryType}`)
     },
 
     refresh: function () {

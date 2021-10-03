@@ -153,7 +153,7 @@
             <v-text-field
               tabindex="-1"
               ref="searchField"
-              v-model="searchText"
+              v-model="searchString"
               hide-details
               color="black"
               single-line
@@ -371,6 +371,8 @@ import Icons from '../lib/Icons'
 import Mousetrap from 'mousetrap'
 import Moment from 'moment'
 
+const SEARCH_OPS = /(==|~=|>=|<=|>|<)/
+
 export default {
   name: 'Expenses',
   components: { ExpenseEntry, ExpenseCategory, ExpenseCalendar },
@@ -387,7 +389,7 @@ export default {
 
         if (self.$route.params) {
           if (self.$route.params.category) {
-            self.searchText = self.$route.params.category
+            self.searchString = self.$route.params.category
             self.viewStyle = Constants.VIEW_STYLE_LIST
             self.viewingAll = true
 
@@ -632,81 +634,102 @@ export default {
       return (color)
     },
 
-    search: function (searchFor = null) {
+    search: function (searchString = null) {
       const self = this
 
-      if (searchFor !== null) {
-        this.searchText = searchFor
+      if (searchString !== null) {
+        this.searchString = searchString
       }
 
-      if (this.searchText) {
-        let query = {}
-        let searchDateStart = this.startDate
-        let searchDateEnd = this.endDate
-        const terms = this.searchText.split(/&/)
+      if (this.searchString) {
+        const dbQuery = {
+          metaData: {
+            startDate: this.startDate,
+            endDate: this.endDate
+          },
+          data: {}
+        }
+        const searchTerms = this.searchString.split(/&/)
 
-        // TODO: DRY up this code a bit
-        //       lots of duplication between IF and ELSE statements
-        if (terms.length === 1) {
-          const parts = terms[0].split(/\?/, 2)
-          if (parts.length === 2) {
-            if (parts[0] === 'date') {
-              const searchDate = Moment(parts[1])
-
-              searchDateStart = searchDate.startOf('day').toDate()
-              searchDateEnd = searchDate.endOf('day').toDate()
-            } else {
-              const key = parts[0].trim()
-              let value = parts[1].trim()
-              if (isNaN(value)) {
-                value = new RegExp(parts[1].trim(), 'i')
-              } else {
-                value = Number(value)
-              }
-              query[key] = value
-            }
-          } else {
-            const match = new RegExp(parts[0].trim(), 'i')
-            query = {
-              $or: [
-                { category: match },
-                { tags: match }
-              ]
-            }
+        // Single search word. Use default search.
+        // Regex match against 'category' and 'tags'
+        if (searchTerms.length === 1 && !searchTerms[0].match(SEARCH_OPS)) {
+          const searchValue = new RegExp(searchTerms[0].trim(), 'i')
+          dbQuery.data = {
+            $or: [
+              { category: searchValue },
+              { tags: searchValue }
+            ]
           }
         } else {
+          // Multiple search terms. Each term is AND'ed.
           const ands = []
-          terms.forEach((term) => {
-            const parts = term.split(/\?/, 2)
+          searchTerms.forEach((term) => {
+            const parts = term.split(SEARCH_OPS)
 
             if (parts[0] === 'date') {
-              const searchDate = Moment(parts[1])
+              // parts[1] is the operator, which is ignored by 'date' since
+              // we assume startOf and endOf
+              const searchDate = Moment(parts[2])
 
-              searchDateStart = searchDate.startOf('day').toDate()
-              searchDateEnd = searchDate.endOf('day').toDate()
+              dbQuery.metaData.startDate = searchDate.startOf('day').toDate()
+              dbQuery.metaData.endDate = searchDate.endOf('day').toDate()
             } else {
-              const searchTerm = {}
               const key = parts[0].trim()
-              let value = parts[1].trim()
+              const op = parts[1].trim()
+              const value = parts[2].trim()
+              let dbValue = null
+              const dbTerm = {}
 
+              // Not a Number == String
               if (isNaN(value)) {
-                value = new RegExp(parts[1].trim(), 'i')
+                if (op === '~=') {
+                  dbValue = new RegExp(value, 'i')
+                } else {
+                  dbValue = value
+                }
               } else {
-                value = Number(value)
+                // { field: { $op: value } }
+                const numValue = Number(value)
+                switch (op) {
+                  case '>':
+                    dbValue = {
+                      $gt: numValue
+                    }
+                    break
+                  case '>=':
+                    dbValue = {
+                      $gte: numValue
+                    }
+                    break
+                  case '<':
+                    dbValue = {
+                      $lt: numValue
+                    }
+                    break
+                  case '<=':
+                    dbValue = {
+                      $lte: numValue
+                    }
+                    break
+                  default:
+                    dbValue = numValue
+                    break
+                }
               }
 
-              searchTerm[key] = value
-              ands.push(searchTerm)
+              dbTerm[key] = dbValue
+              ands.push(dbTerm)
             }
           })
 
-          query = {
+          dbQuery.data = {
             $and: ands
           }
         }
 
         this.dataLoaded = false
-        ExpenseDB.search(searchDateStart, searchDateEnd, query)
+        ExpenseDB.search(dbQuery.metaData.startDate, dbQuery.metaData.endDate, dbQuery.data)
           .then(function (docs) {
             if (self.viewStyle === Constants.VIEW_STYLE_GROUP) {
               self._groupExpensesData(docs, false)
@@ -724,8 +747,8 @@ export default {
     },
 
     clearSearch: function () {
-      if (this.searchText) {
-        this.searchText = null
+      if (this.searchString) {
+        this.searchString = null
         this.loadAllData()
       }
       this.$refs.searchField.blur()
@@ -971,7 +994,7 @@ export default {
     },
 
     viewStyleChange: function () {
-      if (this.searchText) {
+      if (this.searchString) {
         this.search()
       } else {
         this.refreshData()
@@ -1003,7 +1026,7 @@ export default {
     // ExpenseCategory - when the user clicks on the grouped expense category name
     // ExpenseCalendar - when expense or income amount is clicked
     viewEntriesInGroup: function (searchTerm) {
-      this.searchText = searchTerm
+      this.searchString = searchTerm
       this.viewStyle = Constants.VIEW_STYLE_LIST
     },
 
@@ -1061,7 +1084,7 @@ export default {
       viewingAll: false,
       expenses: [],
       dataLoaded: false,
-      searchText: null,
+      searchString: null,
       monthToView: null,
       currentMonthName: null,
       startDate: null,
