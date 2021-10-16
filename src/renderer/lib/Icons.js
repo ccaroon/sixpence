@@ -5,6 +5,7 @@ export default {
     { text: 'Audiobook', value: 'mdi-book-music', keywords: ['audible'] },
     { text: 'Baby', value: 'mdi-baby-buggy', keywords: ['diapers'] },
     { text: 'Bank', value: 'mdi-bank', keywords: [] },
+    { text: 'Balance', value: 'mdi-cash-check', keywords: [] },
     { text: 'Bike', value: 'mdi-bike', keywords: ['bicycle', 'cycling'] },
     { text: 'Book', value: 'mdi-book-open-variant', keywords: ['books'] },
     { text: 'Bug', value: 'mdi-bug', keywords: [] },
@@ -18,6 +19,7 @@ export default {
     { text: 'Dollar', value: 'mdi-currency-usd', keywords: ['money', 'cost'] },
     { text: 'Tooth', value: 'mdi-tooth-outline', keywords: ['dentist', 'teeth', 'dental'] },
     { text: 'Electronics', value: 'mdi-raspberry-pi', keywords: [] },
+    { text: 'Expense', value: 'mdi-cash-minus', keywords: ['spending'] },
     { text: 'Fishing', value: 'mdi-fish', keywords: [] },
     { text: 'Food', value: 'mdi-food-fork-drink', keywords: ['drink', 'snack'] },
     { text: 'Fuel', value: 'mdi-fuel', keywords: [] },
@@ -29,6 +31,7 @@ export default {
     { text: 'House', value: 'mdi-home-variant', keywords: ['home'] },
     { text: 'Hulu', value: 'mdi-hulu', keywords: [] },
     { text: 'HVAC', value: 'mdi-air-conditioner', keywords: ['a/c', 'air conditioner'] },
+    { text: 'Income', value: 'mdi-cash-plus', keywords: ['earnings'] },
     { text: 'Package', value: 'mdi-package-variant', keywords: ['amazon'] },
     { text: 'Phone', value: 'mdi-cellphone', keywords: ['cellphone', 'iphone'] },
     { text: 'Flower', value: 'mdi-flower', keywords: ['landscaping', 'gardening'] },
@@ -82,6 +85,20 @@ export default {
         break
       }
     }
+
+    return foundIcon
+  },
+
+  get: function (name) {
+    let foundIcon = null
+
+    foundIcon = this.ICONS.find(function (iconData) {
+      if (iconData.text === name) {
+        return true
+      } else {
+        return false
+      }
+    })
 
     return foundIcon
   },

@@ -21,10 +21,15 @@
         </v-list>
       </v-menu>
       <v-row no-gutters align="center">
-        <v-col cols="1">
-          <v-toolbar-title>Expenses</v-toolbar-title>
+        <v-col cols="2">
+          <v-toolbar-title
+            >Expenses
+            <v-icon :color="categoryFilterIconColor">{{
+              categoryFilterIcon
+            }}</v-icon>
+          </v-toolbar-title>
         </v-col>
-        <v-col cols="2" offset="1">
+        <v-col cols="2">
           <v-btn icon x-small @click="viewCurrMonth()"
             ><v-icon>mdi-calendar-month</v-icon></v-btn
           >
@@ -100,14 +105,27 @@
         </v-col>
         <v-col cols="4">
           <v-toolbar-items>
+            <v-btn-toggle
+              tabindex="-1"
+              v-model="incomeExpenseView"
+              class="green"
+            >
+              <v-btn tabindex="-1" small icon>
+                <v-icon v-if="incomeExpenseView == constants.IE_VIEW_TO_DATE"
+                  >mdi-bank-outline</v-icon
+                >
+                <v-icon v-else>mdi-chart-box-outline</v-icon>
+              </v-btn>
+            </v-btn-toggle>
+            &nbsp;
             <v-chip :color="constants.COLORS.INCOME" text-color="black">
-              <v-icon float-left>mdi-currency-usd</v-icon>
+              <v-icon float-left>{{ icons.get("Income").value }}</v-icon>
               <span class="subtitle-1">{{
                 format.formatMoney(incomeAmount)
               }}</span> </v-chip
             >&nbsp;
             <v-chip :color="constants.COLORS.EXPENSE" text-color="black">
-              <v-icon float-left>mdi-currency-usd-off</v-icon>
+              <v-icon float-left>{{ icons.get("Expense").value }}</v-icon>
               <span class="subtitle-1">{{
                 format.formatMoney(expensesAmount)
               }}</span> </v-chip
@@ -120,23 +138,11 @@
               "
               text-color="black"
             >
-              <v-icon float-left>mdi-cash-multiple</v-icon>
+              <v-icon float-left>{{ icons.get("Balance").value }}</v-icon>
               <span class="subtitle-1">{{
                 format.formatMoney(incomeAmount + expensesAmount)
-              }}</span> </v-chip
-            >&nbsp;
-            <v-btn-toggle
-              tabindex="-1"
-              v-model="incomeExpenseView"
-              class="green"
-            >
-              <v-btn tabindex="-1" small icon>
-                <v-icon v-if="incomeExpenseView == constants.IE_VIEW_TO_DATE"
-                  >mdi-currency-usd</v-icon
-                >
-                <v-icon v-else>mdi-currency-usd-off</v-icon>
-              </v-btn>
-            </v-btn-toggle>
+              }}</span>
+            </v-chip>
           </v-toolbar-items>
         </v-col>
         <v-col>
@@ -1034,6 +1040,14 @@ export default {
       if (choice.action) {
         choice.action(choice)
       }
+
+      if (choice.icon) {
+        this.categoryFilterIcon = choice.icon
+
+        if (choice.iconColor) {
+          this.categoryFilterIconColor = choice.iconColor
+        }
+      }
     },
 
     // Handles these menu choices:
@@ -1078,6 +1092,7 @@ export default {
       categoriesForMonth: null,
       categories: [],
       iconMap: {},
+      icons: Icons,
       format: Format,
       viewStyle: Constants.VIEW_STYLE_GROUP,
       incomeExpenseView: Constants.IE_VIEW_TO_DATE,
@@ -1090,22 +1105,30 @@ export default {
       startDate: null,
       endDate: null,
       showMonthDialog: false,
+      categoryFilterIcon: 'mdi-cash',
+      categoryFilterIconColor: Constants.COLORS.INCOME_ALT,
       menu: {
         viewAllCategories: {
           action: this.viewCategoriesFilter,
           labels: ['View All Categories'],
+          icon: 'mdi-cash',
+          iconColor: Constants.COLORS.INCOME_ALT,
           labelIndex: 0,
           active: true
         },
         viewOverbudgetEntries: {
           action: this.viewCategoriesFilter,
           labels: ['View Overbudget Categories'],
+          icon: 'mdi-cash-plus',
+          iconColor: Constants.COLORS.EXPENSE_ALT,
           labelIndex: 0,
           active: false
         },
         viewZeroDollarEntries: {
           action: this.viewCategoriesFilter,
           labels: ['View Zero Dollar Categories'],
+          icon: 'mdi-cash-remove',
+          iconColor: 'black',
           labelIndex: 0,
           active: false
         },

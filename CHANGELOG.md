@@ -8,23 +8,32 @@
 * Added next & previous month buttons to the Expenses toolbar
 * Added button to Expenses toolbar to return to current month
 * Added Calendar View type to Expenses. See income & spending amounts per day.
+* Added Icon beside Expense menu to identify which (if any) filter mode is enabled.
+  - All catetories vs. Overbudget catetories vs. Zero Dollar categories
+* Added `get` method to Icons class to get an icon by exact name
 
 ### Changes
 * Removed `dense` attribute from Budget, Expenses & Reports AppBars
 * Expenses search enhancements...
-    - no longer assumes search values are strings; can be numbers too
-    - support for multiple operators: `==`, `~=`, `>`, `>=`, `<`, `<=`
-    - NO LONGER supports `?` search separator
-    - can search for multiple `&` separated terms
-      - only supports AND at the moment: `key1<OP>value1&key2<OP>value2`
-    - Search code mostly re-written
+  - no longer assumes search values are strings; can be numbers too
+  - support for multiple operators: `==`, `~=`, `>`, `>=`, `<`, `<=`
+  - NO LONGER supports `?` search separator
+  - can search for multiple `&` separated terms
+    - only supports AND at the moment: `key1<OP>value1&key2<OP>value2`
+  - Search code mostly re-written
 * Fixed several MDI icons that were either removed from the set or renamed.
+* Moved Expenses toolbar button for Actual vs. Budgeted numbers to *before* the numbers.
+* Icon Updates:
+    - Budget: Income, Expense & Balance in a couple places
+    - Expenses:
+      - Income, Expense & Balance
+      - Actual (Bank) numbers vs Budgeted numbers toggle button
 
 ### Bug Fixes
 * Fixed a bug where you had to click the "Save" button twice to save a Budget entry
 
 ### Misc
-* Upgrade Electron from 11.x to 12.0.x
+* Upgrade Electron from 11.x to 12.2.x
 * Lots of NPM package updates
   - `@mdi/fonts`
   - `vuetify`

@@ -11,24 +11,36 @@
         </v-col>
         <v-col cols="3">
           <v-chip label :color="constants.COLORS.INCOME">
-            <v-icon float-left>mdi-currency-usd</v-icon>
-            <span class="subtitle-1">{{ format.formatMoney(monthData.income) }}</span>
+            <v-icon float-left>{{ icons.get("Income").value }}</v-icon>
+            <span class="subtitle-1">{{
+              format.formatMoney(monthData.income)
+            }}</span>
           </v-chip>
         </v-col>
         <v-col cols="3">
           <v-chip label :color="constants.COLORS.EXPENSE">
-            <v-icon float-left>mdi-currency-usd-off</v-icon>
-            <span class="subtitle-1">{{ format.formatMoney(monthData.expense) }}</span>
+            <v-icon float-left>{{ icons.get("Expense").value }}</v-icon>
+            <span class="subtitle-1">{{
+              format.formatMoney(monthData.expense)
+            }}</span>
           </v-chip>
         </v-col>
         <v-col cols="3">
           <v-chip
             label
-            :color="monthData.diff >= 0.0 ? constants.COLORS.INCOME_ALT : constants.COLORS.EXPENSE_ALT"
+            :color="
+              monthData.diff >= 0.0
+                ? constants.COLORS.INCOME_ALT
+                : constants.COLORS.EXPENSE_ALT
+            "
           >
-            <v-icon float-left>mdi-cash-multiple</v-icon>
-            <span class="subtitle-1">{{ format.formatMoney(monthData.diff) }}</span>
-            <v-icon :color="averageColor()" float-right>{{ averageIcon() }}</v-icon>
+            <v-icon float-left>{{ icons.get("Balance").value }}</v-icon>
+            <span class="subtitle-1">{{
+              format.formatMoney(monthData.diff)
+            }}</span>
+            <v-icon :color="averageColor()" float-right>{{
+              averageIcon()
+            }}</v-icon>
           </v-chip>
         </v-col>
       </v-row>
@@ -40,6 +52,7 @@
 import BudgetDB from '../../lib/BudgetDB'
 import Constants from '../../lib/Constants'
 import Format from '../../lib/Format'
+import Icons from '../../lib/Icons'
 import Moment from 'moment'
 
 const ICONS = {
@@ -129,6 +142,7 @@ export default {
   data () {
     return {
       constants: Constants,
+      icons: Icons,
       format: Format,
       dataLoaded: false,
       monthData: {}
