@@ -1,24 +1,25 @@
 export default {
   ICONS: [
-    { text: 'Dollar', value: 'mdi-currency-usd', keywords: ['money', 'cost'] },
-    { text: 'Android Phone', value: 'mdi-cellphone-android', keywords: ['android'] },
     { text: 'Account', value: 'mdi-account', keywords: ['personal'] },
-    { text: 'Amazon', value: 'mdi-amazon', keywords: [] },
-    { text: 'Audiobook', value: 'mdi-audiobook', keywords: [] },
+    { text: 'Apple', value: 'mdi-apple', keywords: [] },
+    { text: 'Audiobook', value: 'mdi-book-music', keywords: ['audible'] },
     { text: 'Baby', value: 'mdi-baby-buggy', keywords: ['diapers'] },
     { text: 'Bank', value: 'mdi-bank', keywords: [] },
+    { text: 'Balance', value: 'mdi-cash-check', keywords: [] },
     { text: 'Bike', value: 'mdi-bike', keywords: ['bicycle', 'cycling'] },
     { text: 'Book', value: 'mdi-book-open-variant', keywords: ['books'] },
     { text: 'Bug', value: 'mdi-bug', keywords: [] },
     { text: 'Camera', value: 'mdi-camera', keywords: ['photo'] },
     { text: 'Car', value: 'mdi-car', keywords: ['auto'] },
     { text: 'Cart', value: 'mdi-cart', keywords: [] },
-    { text: 'Cash', value: 'mdi-cash-usd', keywords: [] },
+    { text: 'Cash', value: 'mdi-cash', keywords: [] },
     { text: 'Clothes', value: 'mdi-tshirt-crew', keywords: ['shirt', 'blouse'] },
     { text: 'Coffee', value: 'mdi-coffee', keywords: ['java'] },
     { text: 'Church', value: 'mdi-church', keywords: ['tithe'] },
+    { text: 'Dollar', value: 'mdi-currency-usd', keywords: ['money', 'cost'] },
     { text: 'Tooth', value: 'mdi-tooth-outline', keywords: ['dentist', 'teeth', 'dental'] },
-    { text: 'Electronics', value: 'mdi-raspberrypi', keywords: [] },
+    { text: 'Electronics', value: 'mdi-raspberry-pi', keywords: [] },
+    { text: 'Expense', value: 'mdi-cash-minus', keywords: ['spending'] },
     { text: 'Fishing', value: 'mdi-fish', keywords: [] },
     { text: 'Food', value: 'mdi-food-fork-drink', keywords: ['drink', 'snack'] },
     { text: 'Fuel', value: 'mdi-fuel', keywords: [] },
@@ -30,7 +31,9 @@ export default {
     { text: 'House', value: 'mdi-home-variant', keywords: ['home'] },
     { text: 'Hulu', value: 'mdi-hulu', keywords: [] },
     { text: 'HVAC', value: 'mdi-air-conditioner', keywords: ['a/c', 'air conditioner'] },
-    { text: 'iPhone', value: 'mdi-cellphone-iphone', keywords: ['apple'] },
+    { text: 'Income', value: 'mdi-cash-plus', keywords: ['earnings'] },
+    { text: 'Package', value: 'mdi-package-variant', keywords: ['amazon'] },
+    { text: 'Phone', value: 'mdi-cellphone', keywords: ['cellphone', 'iphone'] },
     { text: 'Flower', value: 'mdi-flower', keywords: ['landscaping', 'gardening'] },
     { text: 'Light', value: 'mdi-lightbulb-on', keywords: [] },
     { text: 'Medical', value: 'mdi-medical-bag', keywords: [] },
@@ -40,8 +43,9 @@ export default {
     { text: 'Needle', value: 'mdi-needle', keywords: [] },
     { text: 'Netflix', value: 'mdi-netflix', keywords: [] },
     { text: 'Network', value: 'mdi-lan-connect', keywords: ['internet'] },
+    { text: 'Office', value: 'mdi-chair-rolling', keywords: ['chair'] },
     { text: 'Pets', value: 'mdi-paw', keywords: ['cat', 'dog'] },
-    { text: 'Playstation', value: 'mdi-playstation', keywords: ['ps1', 'ps2', 'ps3', 'ps4'] },
+    { text: 'Playstation', value: 'mdi-sony-playstation', keywords: ['psn', 'ps1', 'ps2', 'ps3', 'ps4'] },
     { text: 'Radiator', value: 'mdi-radiator', keywords: ['heat'] },
     { text: 'RV', value: 'mdi-caravan', keywords: ['camper', 'caravan'] },
     { text: 'Spotify', value: 'mdi-spotify', keywords: [] },
@@ -50,7 +54,7 @@ export default {
     { text: 'Sports Car', value: 'mdi-car-sports', keywords: [] },
     { text: 'Tax', value: 'mdi-currency-usd-off', keywords: [] },
     { text: 'TV', value: 'mdi-television-classic', keywords: ['television'] },
-    { text: 'Towing', value: 'mdi-towing', keywords: [] },
+    { text: 'Towing', value: 'mdi-tow-truck', keywords: ['tow truck'] },
     { text: 'Toys', value: 'mdi-duck', keywords: [] },
     { text: 'Transfer', value: 'mdi-transfer', keywords: [] },
     { text: 'Video Games', value: 'mdi-gamepad-variant', keywords: [] },
@@ -81,6 +85,20 @@ export default {
         break
       }
     }
+
+    return foundIcon
+  },
+
+  get: function (name) {
+    let foundIcon = null
+
+    foundIcon = this.ICONS.find(function (iconData) {
+      if (iconData.text === name) {
+        return true
+      } else {
+        return false
+      }
+    })
 
     return foundIcon
   },

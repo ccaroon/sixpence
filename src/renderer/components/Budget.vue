@@ -55,13 +55,13 @@
         <v-col cols="4">
           <v-toolbar-items>
             <v-chip :color="constants.COLORS.INCOME" text-color="black">
-              <v-icon float-left>mdi-currency-usd</v-icon>
+              <v-icon float-left>{{ icons.get("Income").value }}</v-icon>
               <span class="subtitle-1">{{
                 format.formatMoney(totalIncome)
               }}</span> </v-chip
             >&nbsp;
             <v-chip :color="constants.COLORS.EXPENSE" text-color="black">
-              <v-icon float-left>mdi-currency-usd-off</v-icon>
+              <v-icon float-left>{{ icons.get("Expense").value }}</v-icon>
               <span class="subtitle-1">{{
                 format.formatMoney(totalExpenses)
               }}</span> </v-chip
@@ -74,7 +74,7 @@
               "
               text-color="black"
             >
-              <v-icon float-left>mdi-cash-multiple</v-icon>
+              <v-icon float-left>{{ icons.get("Balance").value }}</v-icon>
               <span class="subtitle-1">{{
                 format.formatMoney(totalIncome + totalExpenses)
               }}</span>
@@ -550,6 +550,8 @@ export default {
             // Show dialog asking for change note
             this.showHistoryNoteDialog = true
             this.historyCallback = resolve
+          } else {
+            resolve()
           }
 
           // Zero out for next use
@@ -597,7 +599,7 @@ export default {
               this.historyNote = null
             }
 
-            BudgetDB.save(this.entry)
+            return BudgetDB.save(this.entry)
           })
           .then(function (numReplaced, upsert) {
             self._clearEntry()

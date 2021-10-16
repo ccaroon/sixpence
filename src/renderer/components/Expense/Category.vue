@@ -3,17 +3,25 @@
     <!-- Unbudgeted entries -->
     <template v-if="Array.isArray(entry)">
       <v-expansion-panels tabindex="-1" v-show="entry.length > 0">
-        <v-expansion-panel tabindex="-1" :class="entryColor" expand-icon="mdi-chevron-down">
+        <v-expansion-panel
+          tabindex="-1"
+          :class="entryColor"
+          expand-icon="mdi-chevron-down"
+        >
           <v-expansion-panel-header>
             <v-row dense>
               <v-col cols="4">
                 <span class="title">Unbudgeted</span>
               </v-col>
               <v-col cols="2" text-left>
-                <span class="title green--text">{{ format.formatMoney(unbudgetedIncome) }}</span>
+                <span class="title green--text">{{
+                  format.formatMoney(unbudgetedIncome)
+                }}</span>
               </v-col>
               <v-col cols="2" text-left>
-                <span class="title red--text">{{ format.formatMoney(unbudgetedExpense) }}</span>
+                <span class="title red--text">{{
+                  format.formatMoney(unbudgetedExpense)
+                }}</span>
               </v-col>
             </v-row>
           </v-expansion-panel-header>
@@ -22,7 +30,7 @@
               <v-list-item
                 @click="viewEntries(item.category)"
                 :class="unbudgetedEntryColor(item)"
-                v-for="(item,i) in entry"
+                v-for="(item, i) in entry"
                 :key="i"
               >
                 <v-list-item-icon>
@@ -30,12 +38,18 @@
                 </v-list-item-icon>
 
                 <v-list-item-content>
-                  <v-list-item-subtitle>{{ entryType(item) }}</v-list-item-subtitle>
-                  <v-list-item-title class="body-1">{{ item.category }}</v-list-item-title>
+                  <v-list-item-subtitle>{{
+                    entryType(item)
+                  }}</v-list-item-subtitle>
+                  <v-list-item-title class="body-1">{{
+                    item.category
+                  }}</v-list-item-title>
                 </v-list-item-content>
 
                 <v-list-item-content>
-                  <v-list-item-title class="body-1">{{ format.formatMoney(item.amount) }}</v-list-item-title>
+                  <v-list-item-title class="body-1">{{
+                    format.formatMoney(item.amount)
+                  }}</v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
             </v-list>
@@ -51,12 +65,18 @@
 
         <v-list-item-content>
           <v-list-item-subtitle>{{ entryType(entry) }}</v-list-item-subtitle>
-          <v-list-item-title class="body-1">{{ entry.category }}</v-list-item-title>
+          <v-list-item-title class="body-1">{{
+            entry.category
+          }}</v-list-item-title>
         </v-list-item-content>
 
         <v-list-item-content>
-          <v-list-item-subtitle>{{ format.formatMoney(Math.abs(entry.budgetedAmount+0.0)) }}</v-list-item-subtitle>
-          <v-list-item-title class="body-1">{{ format.formatMoney(entry.amount) }}</v-list-item-title>
+          <v-list-item-subtitle>{{
+            format.formatMoney(Math.abs(entry.budgetedAmount + 0.0))
+          }}</v-list-item-subtitle>
+          <v-list-item-title class="body-1">{{
+            format.formatMoney(entry.amount)
+          }}</v-list-item-title>
         </v-list-item-content>
 
         <v-list-item-content>
@@ -64,7 +84,8 @@
             :value="progressPercent"
             height="20"
             :color="progressColor"
-          >{{ progressPercent }}%</v-progress-linear>
+            >{{ progressPercent }}%</v-progress-linear
+          >
         </v-list-item-content>
       </v-list-item>
     </template>
@@ -179,7 +200,7 @@ export default {
     },
 
     viewEntries: function (category) {
-      this.$emit('viewEntriesInGroup', category, this.entryTotal)
+      this.$emit('viewEntriesInGroup', category)
     }
   },
 

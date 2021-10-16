@@ -8,27 +8,28 @@
           </v-btn>
         </template>
         <v-list dense>
-          <v-list-item @click="viewOverbudgetEntries()" :disabled="viewingAll">
+          <v-list-item
+            v-for="(item, index) in menu"
+            :key="index"
+            @click="handleMenuChoice(item)"
+            :disabled="item.active"
+          >
             <v-list-item-title>{{
-              menu.viewOverbudgetEntries.labels[
-                menu.viewOverbudgetEntries.labelIndex
-              ]
-            }}</v-list-item-title>
-          </v-list-item>
-          <v-list-item @click="recalculateRollover()">
-            <v-list-item-title>{{
-              menu.recalculateRollover.labels[
-                menu.recalculateRollover.labelIndex
-              ]
+              item.labels[item.labelIndex]
             }}</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
       <v-row no-gutters align="center">
-        <v-col cols="1">
-          <v-toolbar-title>Expenses</v-toolbar-title>
+        <v-col cols="2">
+          <v-toolbar-title
+            >Expenses
+            <v-icon :color="categoryFilterIconColor">{{
+              categoryFilterIcon
+            }}</v-icon>
+          </v-toolbar-title>
         </v-col>
-        <v-col cols="2" offset="1">
+        <v-col cols="2">
           <v-btn icon x-small @click="viewCurrMonth()"
             ><v-icon>mdi-calendar-month</v-icon></v-btn
           >
@@ -82,7 +83,7 @@
             ><v-icon>mdi-chevron-right</v-icon></v-btn
           >
         </v-col>
-        <v-col cols="1">
+        <v-col cols="2">
           <v-toolbar-items>
             <v-btn-toggle
               v-model="viewStyle"
@@ -94,6 +95,9 @@
                 <v-icon>mdi-chart-bar</v-icon>
               </v-btn>
               <v-btn tabindex="-1" icon>
+                <v-icon>mdi-calendar-month</v-icon>
+              </v-btn>
+              <v-btn tabindex="-1" icon>
                 <v-icon>mdi-view-list</v-icon>
               </v-btn>
             </v-btn-toggle>
@@ -101,14 +105,27 @@
         </v-col>
         <v-col cols="4">
           <v-toolbar-items>
+            <v-btn-toggle
+              tabindex="-1"
+              v-model="incomeExpenseView"
+              class="green"
+            >
+              <v-btn tabindex="-1" small icon>
+                <v-icon v-if="incomeExpenseView == constants.IE_VIEW_TO_DATE"
+                  >mdi-bank-outline</v-icon
+                >
+                <v-icon v-else>mdi-chart-box-outline</v-icon>
+              </v-btn>
+            </v-btn-toggle>
+            &nbsp;
             <v-chip :color="constants.COLORS.INCOME" text-color="black">
-              <v-icon float-left>mdi-currency-usd</v-icon>
+              <v-icon float-left>{{ icons.get("Income").value }}</v-icon>
               <span class="subtitle-1">{{
                 format.formatMoney(incomeAmount)
               }}</span> </v-chip
             >&nbsp;
             <v-chip :color="constants.COLORS.EXPENSE" text-color="black">
-              <v-icon float-left>mdi-currency-usd-off</v-icon>
+              <v-icon float-left>{{ icons.get("Expense").value }}</v-icon>
               <span class="subtitle-1">{{
                 format.formatMoney(expensesAmount)
               }}</span> </v-chip
@@ -121,23 +138,11 @@
               "
               text-color="black"
             >
-              <v-icon float-left>mdi-cash-multiple</v-icon>
+              <v-icon float-left>{{ icons.get("Balance").value }}</v-icon>
               <span class="subtitle-1">{{
                 format.formatMoney(incomeAmount + expensesAmount)
-              }}</span> </v-chip
-            >&nbsp;
-            <v-btn-toggle
-              tabindex="-1"
-              v-model="incomeExpenseView"
-              class="green"
-            >
-              <v-btn tabindex="-1" small icon>
-                <v-icon v-if="incomeExpenseView == constants.IE_VIEW_TO_DATE"
-                  >mdi-currency-usd</v-icon
-                >
-                <v-icon v-else>mdi-currency-usd-off</v-icon>
-              </v-btn>
-            </v-btn-toggle>
+              }}</span>
+            </v-chip>
           </v-toolbar-items>
         </v-col>
         <v-col>
@@ -154,7 +159,7 @@
             <v-text-field
               tabindex="-1"
               ref="searchField"
-              v-model="searchText"
+              v-model="searchString"
               hide-details
               color="black"
               single-line
@@ -215,6 +220,15 @@
           v-on:viewEntriesInGroup="viewEntriesInGroup"
         ></ExpenseCategory>
       </v-list>
+    </template>
+
+    <template v-if="dataLoaded && viewStyle === constants.VIEW_STYLE_CALENDAR">
+      <ExpenseCalendar
+        v-bind:monthToView="monthToView"
+        v-bind:expenses="expenses"
+        v-bind:newEntry="newEntry"
+        v-on:viewEntriesInGroup="viewEntriesInGroup"
+      ></ExpenseCalendar>
     </template>
 
     <div class="text-center">
@@ -355,6 +369,7 @@
 import BudgetDB from '../lib/BudgetDB'
 import Constants from '../lib/Constants'
 import ExpenseEntry from './Expense/Entry'
+import ExpenseCalendar from './Expense/Calendar'
 import ExpenseCategory from './Expense/Category'
 import ExpenseDB from '../lib/ExpenseDB'
 import Format from '../lib/Format'
@@ -362,9 +377,11 @@ import Icons from '../lib/Icons'
 import Mousetrap from 'mousetrap'
 import Moment from 'moment'
 
+const SEARCH_OPS = /(==|~=|>=|<=|>|<)/
+
 export default {
   name: 'Expenses',
-  components: { ExpenseEntry, ExpenseCategory },
+  components: { ExpenseEntry, ExpenseCategory, ExpenseCalendar },
 
   mounted () {
     const self = this
@@ -378,7 +395,7 @@ export default {
 
         if (self.$route.params) {
           if (self.$route.params.category) {
-            self.searchText = self.$route.params.category
+            self.searchString = self.$route.params.category
             self.viewStyle = Constants.VIEW_STYLE_LIST
             self.viewingAll = true
 
@@ -623,31 +640,102 @@ export default {
       return (color)
     },
 
-    search: function (searchFor = null) {
+    search: function (searchString = null) {
       const self = this
 
-      if (searchFor !== null) {
-        this.searchText = searchFor
+      if (searchString !== null) {
+        this.searchString = searchString
       }
 
-      if (this.searchText) {
-        const parts = this.searchText.split(/\?/, 2)
+      if (this.searchString) {
+        const dbQuery = {
+          metaData: {
+            startDate: this.startDate,
+            endDate: this.endDate
+          },
+          data: {}
+        }
+        const searchTerms = this.searchString.split(/&/)
 
-        let query = {}
-        if (parts.length === 2) {
-          query[parts[0].trim()] = new RegExp(parts[1].trim(), 'i')
-        } else {
-          const term = new RegExp(parts[0].trim(), 'i')
-          query = {
+        // Single search word. Use default search.
+        // Regex match against 'category' and 'tags'
+        if (searchTerms.length === 1 && !searchTerms[0].match(SEARCH_OPS)) {
+          const searchValue = new RegExp(searchTerms[0].trim(), 'i')
+          dbQuery.data = {
             $or: [
-              { category: term },
-              { tags: term }
+              { category: searchValue },
+              { tags: searchValue }
             ]
+          }
+        } else {
+          // Multiple search terms. Each term is AND'ed.
+          const ands = []
+          searchTerms.forEach((term) => {
+            const parts = term.split(SEARCH_OPS)
+
+            if (parts[0] === 'date') {
+              // parts[1] is the operator, which is ignored by 'date' since
+              // we assume startOf and endOf
+              const searchDate = Moment(parts[2])
+
+              dbQuery.metaData.startDate = searchDate.startOf('day').toDate()
+              dbQuery.metaData.endDate = searchDate.endOf('day').toDate()
+            } else {
+              const key = parts[0].trim()
+              const op = parts[1].trim()
+              const value = parts[2].trim()
+              let dbValue = null
+              const dbTerm = {}
+
+              // Not a Number == String
+              if (isNaN(value)) {
+                if (op === '~=') {
+                  dbValue = new RegExp(value, 'i')
+                } else {
+                  dbValue = value
+                }
+              } else {
+                // { field: { $op: value } }
+                const numValue = Number(value)
+                switch (op) {
+                  case '>':
+                    dbValue = {
+                      $gt: numValue
+                    }
+                    break
+                  case '>=':
+                    dbValue = {
+                      $gte: numValue
+                    }
+                    break
+                  case '<':
+                    dbValue = {
+                      $lt: numValue
+                    }
+                    break
+                  case '<=':
+                    dbValue = {
+                      $lte: numValue
+                    }
+                    break
+                  default:
+                    dbValue = numValue
+                    break
+                }
+              }
+
+              dbTerm[key] = dbValue
+              ands.push(dbTerm)
+            }
+          })
+
+          dbQuery.data = {
+            $and: ands
           }
         }
 
         this.dataLoaded = false
-        ExpenseDB.search(this.startDate, this.endDate, query)
+        ExpenseDB.search(dbQuery.metaData.startDate, dbQuery.metaData.endDate, dbQuery.data)
           .then(function (docs) {
             if (self.viewStyle === Constants.VIEW_STYLE_GROUP) {
               self._groupExpensesData(docs, false)
@@ -665,15 +753,15 @@ export default {
     },
 
     clearSearch: function () {
-      if (this.searchText) {
-        this.searchText = null
+      if (this.searchString) {
+        this.searchString = null
         this.loadAllData()
       }
       this.$refs.searchField.blur()
     },
 
-    newEntry: function () {
-      this.entryDateStr = Format.formatDate(new Date(), Constants.FORMATS.entryDate)
+    newEntry: function (entryDate = new Date()) {
+      this.entryDateStr = Format.formatDate(entryDate, Constants.FORMATS.entryDate)
       // this.$refs.categorySelect.$el.focus()
       // this.$refs.dateField.focus()
       this.showAddEditSheet = true
@@ -852,8 +940,12 @@ export default {
         const newEntry = { type: type, icon: icon, category: cat, amount: totalAmount, budgetedAmount: budgetedAmount }
 
         if (budgetCategories.includes(newEntry.category)) {
-          if (self.showOverbudget) {
+          if (self.menu.viewOverbudgetEntries.active) {
             if (Math.abs(newEntry.amount) > Math.abs(newEntry.budgetedAmount)) {
+              newEntries.push(newEntry)
+            }
+          } else if (self.menu.viewZeroDollarEntries.active) {
+            if (newEntry.amount === 0.0) {
               newEntries.push(newEntry)
             }
           } else {
@@ -908,7 +1000,7 @@ export default {
     },
 
     viewStyleChange: function () {
-      if (this.searchText) {
+      if (this.searchString) {
         this.search()
       } else {
         this.refreshData()
@@ -926,7 +1018,6 @@ export default {
     adjustMonth: function () {
       this.startDate = Moment(this.monthToView, 'YYYY-MM', true).startOf('month').toDate()
       this.endDate = Moment(this.monthToView, 'YYYY-MM', true).endOf('month').toDate()
-      // this.currentMonthName = Format.monthNumberToName(this.startDate.getMonth())
       this.currentMonthName = Format.formatDate(this.startDate, 'MMM, YYYY')
 
       this.$route.params.category = null
@@ -937,12 +1028,44 @@ export default {
       this.refreshData()
     },
 
-    // This is called from ExpenseCategory when the user clicks on the grouped
-    // expense category name
-    viewEntriesInGroup: function (category) {
-      this.searchText = category
+    // This is called from...
+    // ExpenseCategory - when the user clicks on the grouped expense category name
+    // ExpenseCalendar - when expense or income amount is clicked
+    viewEntriesInGroup: function (searchTerm) {
+      this.searchString = searchTerm
       this.viewStyle = Constants.VIEW_STYLE_LIST
-      // this.search()
+    },
+
+    handleMenuChoice: function (choice) {
+      if (choice.action) {
+        choice.action(choice)
+      }
+
+      if (choice.icon) {
+        this.categoryFilterIcon = choice.icon
+
+        if (choice.iconColor) {
+          this.categoryFilterIconColor = choice.iconColor
+        }
+      }
+    },
+
+    // Handles these menu choices:
+    //  - viewAll
+    //  - viewOverbudget
+    //  - viewZeroDollar
+    viewCategoriesFilter: function (choice) {
+      this.menu.viewAllCategories.active = false
+      this.menu.viewOverbudgetEntries.active = false
+      this.menu.viewZeroDollarEntries.active = false
+
+      choice.active = true
+
+      if (this.viewStyle !== Constants.VIEW_STYLE_GROUP) {
+        this.viewStyle = Constants.VIEW_STYLE_GROUP
+      } else {
+        this.refreshData()
+      }
     },
 
     recalculateRollover: function () {
@@ -951,27 +1074,9 @@ export default {
 
       ExpenseDB.ensureRollover(viewDate.month(), false)
         .then(() => {
-          // console.log(`MTV [${self.monthToView}] | VD [${viewDate.format('YYYY-MM')}]`)
-          // self.monthToView = viewDate.format('YYYY-MM')
           self._loadCategoryData()
           self.refreshData()
         })
-    },
-
-    viewOverbudgetEntries: function () {
-      this.showOverbudget = !this.showOverbudget
-
-      if (this.showOverbudget) {
-        this.menu.viewOverbudgetEntries.labelIndex = 1
-      } else {
-        this.menu.viewOverbudgetEntries.labelIndex = 0
-      }
-
-      if (this.viewStyle !== Constants.VIEW_STYLE_GROUP) {
-        this.viewStyle = Constants.VIEW_STYLE_GROUP
-      } else {
-        this.refreshData()
-      }
     }
 
   },
@@ -987,26 +1092,51 @@ export default {
       categoriesForMonth: null,
       categories: [],
       iconMap: {},
+      icons: Icons,
       format: Format,
       viewStyle: Constants.VIEW_STYLE_GROUP,
       incomeExpenseView: Constants.IE_VIEW_TO_DATE,
       viewingAll: false,
       expenses: [],
       dataLoaded: false,
-      searchText: null,
+      searchString: null,
       monthToView: null,
       currentMonthName: null,
       startDate: null,
       endDate: null,
       showMonthDialog: false,
+      categoryFilterIcon: 'mdi-cash',
+      categoryFilterIconColor: Constants.COLORS.INCOME_ALT,
       menu: {
+        viewAllCategories: {
+          action: this.viewCategoriesFilter,
+          labels: ['View All Categories'],
+          icon: 'mdi-cash',
+          iconColor: Constants.COLORS.INCOME_ALT,
+          labelIndex: 0,
+          active: true
+        },
         viewOverbudgetEntries: {
-          labels: ['View Overbudget Categories', 'View All Categories'],
-          labelIndex: 0
+          action: this.viewCategoriesFilter,
+          labels: ['View Overbudget Categories'],
+          icon: 'mdi-cash-plus',
+          iconColor: Constants.COLORS.EXPENSE_ALT,
+          labelIndex: 0,
+          active: false
+        },
+        viewZeroDollarEntries: {
+          action: this.viewCategoriesFilter,
+          labels: ['View Zero Dollar Categories'],
+          icon: 'mdi-cash-remove',
+          iconColor: 'black',
+          labelIndex: 0,
+          active: false
         },
         recalculateRollover: {
-          labels: ['Recalculate Montly Rollover'],
-          labelIndex: 0
+          action: this.recalculateRollover,
+          labels: ['Recalculate Monthly Rollover'],
+          labelIndex: 0,
+          active: false
         }
       },
       alert: {
@@ -1027,7 +1157,6 @@ export default {
       },
       showDateMenu: false,
       showAddEditSheet: false,
-      showOverbudget: false,
       tagList: [],
       rules: {
         date: [
