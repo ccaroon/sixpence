@@ -200,7 +200,7 @@ export default {
     },
 
     viewEntries: function (category) {
-      this.$emit('viewEntriesInGroup', category)
+      this.$emit('viewEntriesInGroup', category, this.entryTotal)
     }
   },
 

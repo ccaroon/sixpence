@@ -3,6 +3,11 @@
 ## UNRELEASED: v1.14.0 - Radiant Rupees (????? ??, 2021)
 ...
 
+## v1.13.1 - Glimmering Gil - Patch #1 (December 5, 2021)
+### Bugs Fixes
+* In Reports -> Yearly Budget -> Category by Month screen the Total Spent and
+  Average Per Month Spent were always displaying NaN
+
 ## v1.13.0 - Glimmering Gil (October 16, 2021)
 ### Features
 * Added "Recalculate Monthly Rollover" choice to Expenses Menu

@@ -10,8 +10,12 @@
       </v-list-item-content>
 
       <v-list-item-content>
-        <v-list-item-subtitle>{{ format.formatMoney(Math.abs(data.budgetedAmount+0.0)) }}</v-list-item-subtitle>
-        <v-list-item-title class="body-1">{{ format.formatMoney(data.amount) }}</v-list-item-title>
+        <v-list-item-subtitle>{{
+          format.formatMoney(Math.abs(data.budgetedAmount + 0.0))
+        }}</v-list-item-subtitle>
+        <v-list-item-title class="body-1">{{
+          format.formatMoney(data.amount)
+        }}</v-list-item-title>
       </v-list-item-content>
 
       <v-list-item-content>
@@ -19,7 +23,8 @@
           :value="progressPercent"
           height="20"
           :color="progressColor"
-        >{{ progressPercent }}%</v-progress-linear>
+          >{{ progressPercent }}%</v-progress-linear
+        >
       </v-list-item-content>
     </v-list-item>
   </div>
