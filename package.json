@@ -106,7 +106,7 @@
     "mini-css-extract-plugin": "^1.6.2",
     "multispinner": "^0.2.1",
     "node-loader": "^1.0.3",
-    "node-sass": "^5.0.0",
+    "node-sass": "^7.0.0",
     "require-dir": "^0.3.2",
     "sass-loader": "^11.1.1",
     "style-loader": "^2.0.0",
