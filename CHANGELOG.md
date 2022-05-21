@@ -3,6 +3,10 @@
 ## UNRELEASED: v1.14.0 - Radiant Rupees (????? ??, 2021)
 ...
 
+## v1.13.2 - Glimmering Gil - Patch #2 (May 21, 2022)
+### Misc
+* Updated the App Icon to be less transparent
+
 ## v1.13.1 - Glimmering Gil - Patch #1 (December 5, 2021)
 ### Bugs Fixes
 * In Reports -> Yearly Budget -> Category by Month screen the Total Spent and
