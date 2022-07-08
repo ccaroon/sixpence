@@ -58,7 +58,7 @@
   "dependencies": {
     "@mdi/font": "^6.2.95",
     "font-awesome": "^4.7.0",
-    "moment": "^2.29.1",
+    "moment": "^2.29.4",
     "mousetrap": "^1.6.5",
     "nedb": "^1.8.0",
     "vue": "^2.6.14",
