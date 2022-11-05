@@ -1,82 +1,70 @@
-# daikon
-An example [Electron] + [VueJS] + [Vuetify] application.
+# Sixpence
 
-Created using:
-* [vue-cli]
-* [vue-cli-plugin-electron-builder]
-  - [electron-builder]
-* [vue-cli-plugin-vuetify]
+> A Simple Budget Manager
 
-## Usage
-Copy/Fork; Rename; Update; Make Something Great; Profit!
+Sixpence is a cross-platform application built using [Electron][electron],
+[Vue.js][vuejs] and [Vuetify][vuetify]. It can be built to run on Linux, Windows
+or MacOS.
+
+Sixpence exists because I couldn't find another application to manage my budget
+the way **I** wanted to manage my budget. I built it for myself, my use case. But if
+it works for you too, then great!
+
+One day I'll get around to writing some docs to explain how it works and the
+general philosophy of it's usage. Until then, feel free to download it and try
+it out.
+
+Sixpence allows you to create a budget and then track your progress. It is **not**
+Quicken or Moneydance or Mint.com. It can be used in conjunction with those kinds
+of applications.
 
 ## Features
-* [Electron] App
-* [VueJS]
-* [Vuetify] for UI
-* [MDI Icons]
-* [FontAwesome] Free Icons
-* [mousetrap]
+* Create and Maintain a Budget
+* Budgeted items can recur Monthly, Bi-Monthly, Quarterly, Bi-Yearly or Yearly
+* Track Expenses and progress towards budgeted items
+* Automatically tracks un-budgeted income & expenses
+* Expense tracking focuses on the current month, but allows you to view/edit previous months.
+* Monthly expense tracking takes into account non-monthly budgeted items. E.g. Your yearly subscription for Amazon Prime will show up as an expected (budgeted) expense for the month that it is due. Meaning you'll know that in June you have an extra $99 to shell out that month.
+* Quickly and Easily search your Budget or Expenses
+* View your expenses as a timeline list
+* View your expenses grouped by category showing progress toward each budgeted item.
+* Icons to help you quickly identify categories
 
+## Screen Shots (Old Needs Updating)
+### Main
+<img src="docs/images/main.png" width="800">
 
-## Getting Started
-This project is built and developed using NodeJS v16.
+### Budget
+<img src="docs/images/budget.png" width="800">
 
-### Project setup
-```
+### Expenses - List (ordered by date)
+<img src="docs/images/expenses-list.png" width="800">
+
+### Expenses - Grouped by Budget Category - Showing Progress
+<img src="docs/images/expenses-grouped.png" width="800">
+
+## Development
+### Build Setup
+
+``` bash
+# install dependencies
 npm install
-```
 
-### Compile with hot-reloads for development
-```
-npm run electron:serve
-```
+# serve with hot reload at localhost:9080
+npm run dev
 
-### Build Electron App (for current OS)
+# build electron application for production
+npm run build
+
+# lint all JS/Vue component files in `src/`
+npm run lint
+
 ```
-npm run electron:build
-```
-
-## Choices
-### Context Isolation vs Node Integration
-This app is set up to use [**Context Isolation**](https://www.electronjs.org/docs/latest/tutorial/context-isolation)
-by default in Electron. This is the most secure way of having the Renderer process
-communicate with the Main process.
-
-The "Transmogrify" button on the app's main screen is an example of using **Context
-Isolation**.
-
-See the `src/main/preload.js`, `src/main/ipc.js`, `src/main/main.js` and
-`src/main/Napiform.js` code for how that is set up.
 
 -----
 
-The other option is to enable **Node Integration** in the Renderer process. This allows
-code in the Renderer process to access NodeJS APIs.
+This project was generated with [electron-vue](https://github.com/SimulatedGREG/electron-vue)@[1c165f7](https://github.com/SimulatedGREG/electron-vue/tree/1c165f7c5e56edaf48be0fbb70838a1af26bb015) using [vue-cli](https://github.com/vuejs/vue-cli). Documentation about the original structure can be found [here](https://simulatedgreg.gitbooks.io/electron-vue/content/index.html).
 
-**Context Isolation** and **Node Integration** do not work together. It's one or the other.
-
-More Security information [here](https://www.electronjs.org/docs/latest/tutorial/security)
-
-
-## Things You Might Want to Update
-* `README.md`
-* `package.json` (`name`, `author`, `description`, etc)
-* Icons in `build/`
-* Images and `favicon.ico` in `public/`
-* Logo images in `src/renderer/assets`
-* `src/renderer/Components/*`
-* Routes in `src/renderer/router/index.js`
-* `src/renderer/App.vue` -- Application container
-
-
-[Electron]: https://www.electronjs.org/docs/latest/
-[VueJS]: https://v2.vuejs.org/v2/guide/index.html
-[Vuetify]: https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
-[MDI Icons]: https://materialdesignicons.com/
-[FontAwesome]: https://fontawesome.com/icons
-[vue-cli]: https://cli.vuejs.org/
-[electron-builder]: https://www.electron.build/
-[vue-cli-plugin-electron-builder]: https://nklayman.github.io/vue-cli-plugin-electron-builder/
-[vue-cli-plugin-vuetify]: https://github.com/vuetifyjs/vue-cli-plugins/tree/master/packages/vue-cli-plugin-vuetify
-[mousetrap]: https://craig.is/killing/mice
+[electron]: https://electronjs.org
+[vuejs]: https://vuejs.org
+[vuetify]: https://vuetifyjs.com

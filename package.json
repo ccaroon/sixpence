@@ -1,11 +1,11 @@
 {
-  "name": "Daikon",
-  "codename": "Root Veggie",
-  "icon": "fa-carrot",
-  "version": "1.0.0a",
+  "name": "Sixpence",
+  "codename": "Radiant Rupees",
+  "icon": "fa-solid fa-gem",
+  "version": "2.0.0a",
   "author": "Craig N. Caroon",
   "buildDate": "November 05, 2022",
-  "description": "Sample Electron+Vue+Vuetify App",
+  "description": "A Simple Budget Manager",
   "private": true,
   "repository": {
     "type": "git",
@@ -14,9 +14,7 @@
   "scripts": {
     "build": "vue-cli-service electron:build",
     "build:clean": "rm -rf dist_electron/",
-    "serve": "vue-cli-service electron:serve",
-    "web:serve": "vue-cli-service serve",
-    "web:build": "vue-cli-service build",
+    "dev": "vue-cli-service electron:serve",
     "lint": "vue-cli-service lint --no-fix",
     "lint:fix": "vue-cli-service lint",
     "postinstall": "electron-builder install-app-deps",
@@ -26,10 +24,13 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.1.2",
     "core-js": "^3.25.3",
+    "moment": "^2.29.4",
     "mousetrap": "^1.6.5",
+    "nedb": "^1.8.0",
     "vue": "^2.7.8",
     "vue-router": "^3.6.5",
-    "vuetify": "^2.6.10"
+    "vuetify": "^2.6.10",
+    "zip-lib": "^0.7.3"
   },
   "devDependencies": {
     "@babel/core": "^7.19.0",
