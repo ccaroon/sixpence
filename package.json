@@ -72,7 +72,10 @@
     "parserOptions": {
       "parser": "@babel/eslint-parser"
     },
-    "rules": {}
+    "rules": {
+      "object-shorthand": "off",
+      "vue/no-mutating-props": "warn"
+    }
   },
   "browserslist": [
     "> 1%",

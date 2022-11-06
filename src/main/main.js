@@ -1,13 +1,18 @@
 'use strict'
 
-import { app, protocol, screen, BrowserWindow, Menu, MenuItem } from 'electron'
+import { app, protocol, screen, ipcMain, BrowserWindow } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
+import fs from 'fs'
 import path from 'path'
 
+import backup from './lib/backup'
 import ipc from './lib/ipc'
+import menu from './lib/menu'
+import settings from './lib/settings'
 import windowHelper from './lib/windowHelper'
 
+let mainWindow = null
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 // Scheme must be registered before the app is ready
@@ -15,11 +20,18 @@ protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ])
 
+function initApp () {
+  // Create data directory
+  if (!fs.existsSync(settings.dataPath)) {
+    fs.mkdirSync(settings.dataPath, '0750')
+  }
+}
+
 async function createWindow () {
   const display = screen.getPrimaryDisplay()
 
   // Create the browser window.
-  const win = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: display.size.width * 0.70,
     height: display.size.height * 0.90,
     webPreferences: {
@@ -32,44 +44,20 @@ async function createWindow () {
     }
   })
 
-  // Add Context Menu
-  const menu = new Menu()
-  menu.append(new MenuItem({
-    label: 'Copy',
-    role: 'copy'
-  }))
-  menu.append(new MenuItem({
-    label: 'Paste',
-    role: 'paste'
-  }))
-  menu.append(new MenuItem({
-    type: 'separator'
-  }))
-  menu.append(new MenuItem({
-    label: 'Dev Tools',
-    role: 'toggleDevTools'
-  }))
-
-  win.webContents.on('context-menu',
-    (event, click) => {
-      event.preventDefault()
-      menu.popup(win.webContents)
-    },
-    false
-  )
+  menu.setApplicationMenu()
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
-    await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
-    // if (!process.env.IS_TEST) win.webContents.openDevTools()
+    await mainWindow.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
+    // if (!process.env.IS_TEST) mainWindow.webContents.openDevTools()
   } else {
     createProtocol('app')
     // Load the index.html when not in development
-    win.loadURL('app://./index.html')
+    mainWindow.loadURL('app://./index.html')
   }
 
   // Links that open new windows on target="_blank" use this
-  win.webContents.setWindowOpenHandler((details) => {
+  mainWindow.webContents.setWindowOpenHandler((details) => {
     // Open a new window like **we** want
     windowHelper.new(details.url)
     // Prevent the default window from opening.
@@ -106,7 +94,38 @@ app.on('ready', async () => {
   }
 
   ipc.registerHandlers()
+  initApp()
   createWindow()
+})
+
+app.on('before-quit', (event) => {
+  if (mainWindow) {
+    // Prevent the app from quitting...we need to handle clean up first
+    event.preventDefault()
+
+    // Send the cleanup event to the renderer
+    // When it's done, it'll send back a cleanup event for the main process here
+    mainWindow.webContents.send('sixpence-renderer-cleanup', 'before-quit')
+  }
+  // else - really quit
+})
+
+// This is necessary b/c in the `before-quit` handler we STOP the app from
+// quiting so that we can send events...those events then respond by sending
+// this event to do cleanup and actually exit.
+ipcMain.on('sixpence-main-cleanup', (event, status, msg) => {
+  backup.backup()
+    .then(() => {
+      return true
+    })
+    .catch((err) => {
+      console.log(`Backup Failed: ${err}`)
+      return false
+    })
+    .finally(() => {
+      app.exit(status)
+      mainWindow = null
+    })
 })
 
 // Exit cleanly on request from parent process in development mode.
