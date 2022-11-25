@@ -45,6 +45,7 @@ async function createWindow () {
   })
 
   menu.setApplicationMenu()
+  menu.addContext(mainWindow)
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
@@ -98,18 +99,20 @@ app.on('ready', async () => {
   createWindow()
 })
 
-app.on('before-quit', (event) => {
-  if (mainWindow) {
-    // Prevent the app from quitting...we need to handle clean up first
-    event.preventDefault()
+// TODO: Render Cleanup
+// app.on('before-quit', (event) => {
+//   if (mainWindow) {
+//     // Prevent the app from quitting...we need to handle clean up first
+//     event.preventDefault()
 
-    // Send the cleanup event to the renderer
-    // When it's done, it'll send back a cleanup event for the main process here
-    mainWindow.webContents.send('sixpence-renderer-cleanup', 'before-quit')
-  }
-  // else - really quit
-})
+//     // Send the cleanup event to the renderer
+//     // When it's done, it'll send back a cleanup event for the main process here
+//     mainWindow.webContents.send('sixpence-renderer-cleanup', 'before-quit')
+//   }
+//   // else - really quit
+// })
 
+// TODO: Main Cleanup
 // This is necessary b/c in the `before-quit` handler we STOP the app from
 // quiting so that we can send events...those events then respond by sending
 // this event to do cleanup and actually exit.

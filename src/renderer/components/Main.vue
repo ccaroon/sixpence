@@ -1,81 +1,128 @@
 <template>
-  <v-container>
-    <v-row>
-      <v-col cols="3">
-        <a href="https://en.wikipedia.org/wiki/Daikon" target="_blank">
-          <v-img
-            max-width="256"
-            max-height="256"
-            src="../assets/logo.png"
-          ></v-img>
-        </a>
-      </v-col>
-      <v-col>
-        <div class="text-h1">{{ pkgJson.name }}
-        </div>
-        <div class="text--subtitle"><v-icon color="black">{{ pkgJson.icon }}</v-icon>{{ pkgJson.codename }}</div>
-        <div class="text--subtitle2 text--secondary">{{ pkgJson.description }}</div>
-        <v-btn color="primary" @click="openGitHub">
-          <v-icon left>mdi-github</v-icon>
-          View on GitHub
+  <div>
+    <v-responsive class="green lighten-1">
+      <v-container fill-height>
+        <v-row align="center">
+          <v-col cols="auto">
+            <img src="../assets/logo.png" />
+          </v-col>
+          <v-col cols="auto">
+            <p class="display-4">Sixpence</p>
+            <p class="subtitle-1">A Simple Budget Manager</p>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-responsive>
+    <v-container>
+      <v-row align="center" justify="space-around" class="pa-1">
+        <v-btn id="main-budget-button" large color="green" @click="$router.push(`/budget`)">
+          <v-icon>mdi-format-list-checks</v-icon>&nbsp;&nbsp;Budget
         </v-btn>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col cols="6">
-        <v-text-field
-          outlined
-          label="message1"
-          v-model="message1"
-        ></v-text-field>
-      </v-col>
-      <v-col cols="6">
-        <v-text-field
-          outlined
-          label="message2"
-          v-model="message2"
-        ></v-text-field>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col offset="5">
-        <v-btn color="success" @click="transmogrify">Transmogrify</v-btn>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col>
-        <v-alert icon="mdi-console" color="black" outlined>{{
-          output
-        }}</v-alert>
-      </v-col>
-    </v-row>
-  </v-container>
+        <v-btn id="main-expense-button" large color="red" @click="$router.push(`/expenses`)">
+          <v-icon>mdi-currency-usd</v-icon>Expenses
+        </v-btn>
+        <v-btn
+          id="main-report-button"
+          large
+          color="orange lighten-2"
+          @click="$router.push(`/report/list`)"
+        >
+          <v-icon>mdi-file-chart</v-icon>Reports
+        </v-btn>
+      </v-row>
+      <v-row align="center" justify="space-around" class="pa-1">
+        <v-btn id="main-settings-button" large color="grey" @click="$router.push(`/settings`)">
+          <v-icon>mdi-settings</v-icon>Settings
+        </v-btn>
+      </v-row>
+    </v-container>
+    <v-divider></v-divider>
+    <template v-if="notifications.length > 0">
+      <v-alert
+        v-for="(note, index) in notifications"
+        :key="index"
+        :icon="note.icon"
+        :type="note.type"
+      >
+        {{ note.message }}
+        <v-btn
+          v-if="note.handler"
+          dark
+          rounded
+          absolute
+          right
+          @click="note.handler.action(note.handler.params)"
+        >Update</v-btn>
+      </v-alert>
+    </template>
+    <template v-else>
+      <v-alert outlined color="grey" icon="mdi-note">No Notifications</v-alert>
+    </template>
+  </div>
 </template>
 
 <script>
-import pkgJson from '../../../package.json'
+import DBMigrations from '../lib/DBMigrations'
 
 export default {
-  name: 'MainScreen',
+  name: 'sixpence-main',
+
+  mounted () {
+    this.checkForDBMigrations()
+  },
 
   methods: {
-    transmogrify: function () {
-      window.Napiform.transmogrify(this.message1, this.message2)
-        .then((data) => {
-          this.output = data
+    applyDBMigrations: function (check) {
+      check.needsApplying
+        .then(needed => {
+          if (needed) {
+            const type = check.migration.critical ? 'error' : 'info'
+            this.addNotification(
+              'mdi-update',
+              type,
+              `Database Update: ${check.migration.name} - ${check.migration.desc}`,
+              { action: this.applyMigration, params: check.migration }
+            )
+          }
+        })
+        .catch(err => {
+          this.addNotification('mdi-alert-octagram', 'error', `Database Update Check Failed: ${err}`)
         })
     },
 
-    openGitHub: function () {
-      window.Main.newWindow(pkgJson.repository.url)
+    checkForDBMigrations: function () {
+      const budgetChecks = DBMigrations.checkBudgetDb()
+      budgetChecks.forEach(this.applyDBMigrations)
+
+      const expenseChecks = DBMigrations.checkExpenseDb()
+      expenseChecks.forEach(this.applyDBMigrations)
+    },
+
+    applyMigration: function (mig) {
+      mig.apply()
+        .then(num => {
+          this.notifications = []
+          if (num === null) {
+            this.addNotification('mdi-alert', 'warning', `${mig.name}: ${mig.note}`)
+          } else {
+            this.addNotification('mdi-update', 'success', `${mig.name} successfully applied. ${num} entries updated.`)
+          }
+        })
+        .catch(err => {
+          this.notifications = []
+          this.addNotification('mdi-alert-octagram', 'error', `${mig.name} failed: ${err}`)
+        })
+    },
+
+    addNotification: function (icon, type, msg, action = null) {
+      this.notifications.push({ icon: icon, type: type, message: msg, handler: action })
     }
   },
 
-  data: () => ({
-    pkgJson,
-    message1: 'Hello, World!',
-    message2: 'This is the way the World Ends!',
-    output: null
-  })
+  data () {
+    return {
+      notifications: []
+    }
+  }
 }
 </script>

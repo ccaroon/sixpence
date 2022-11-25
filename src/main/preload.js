@@ -6,6 +6,12 @@ contextBridge.exposeInMainWorld('Main', {
   }
 })
 
+contextBridge.exposeInMainWorld('Config', {
+  data: () => {
+    return ipcRenderer.invoke('config:data')
+  }
+})
+
 contextBridge.exposeInMainWorld('NodeJS', { process })
 
 contextBridge.exposeInMainWorld('Modules', {
