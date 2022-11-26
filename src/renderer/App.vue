@@ -9,9 +9,9 @@
     >
       <v-list dense>
         <v-list-item
-          v-for="(page, index) in menuMain"
-          @click="goTo(page)"
-          :key="index"
+          v-for="(page, name) in menuMain"
+          @click="goTo(name)"
+          :key="name"
         >
           <v-list-item-action>
             <v-icon>{{ page.icon }}</v-icon>
@@ -21,9 +21,9 @@
       <v-divider></v-divider>
       <v-list dense>
         <v-list-item
-          v-for="(page, index) in menuMisc"
-          @click="goTo(page)"
-          :key="index"
+          v-for="(page, name) in menuMisc"
+          @click="goTo(name)"
+          :key="name"
         >
           <v-list-item-action>
             <v-icon>{{ page.icon }}</v-icon>
@@ -47,6 +47,7 @@ export default {
   components: { About },
   mounted () {
     this.bindShortcutKeys()
+    this.registerMenuHandlers()
   },
 
   methods: {
@@ -59,26 +60,49 @@ export default {
       })
     },
 
+    registerMenuHandlers: function () {
+      // View
+      window.Menu.registerHandler('menu-view-main', (event) => {
+        this.goTo('Main')
+      })
+
+      window.Menu.registerHandler('menu-view-budget', (event) => {
+        this.goTo('Budget')
+      })
+
+      window.Menu.registerHandler('menu-view-expenses', (event) => {
+        this.goTo('Expenses')
+      })
+
+      window.Menu.registerHandler('menu-view-reports', (event) => {
+        this.goTo('Reports')
+      })
+
+      // Help
+      window.Menu.registerHandler('menu-help-about', (event) => {
+        this.showAbout = true
+      })
+    },
+
     closeAbout: function () {
       this.showAbout = false
     },
 
-    goTo: function (page) {
-      this.pageName = page.name
-      this.$router.push(page.path)
+    goTo: function (pageName) {
+      this.$router.push({ name: pageName, params: { } })
     }
   },
 
   data: () => ({
     drawer: true,
     showAbout: false,
-    pageName: 'Home',
-    menuMain: [
-      { name: 'Home', path: '/', icon: 'mdi-home' }
-    ],
-    menuMisc: [
-      { name: 'BlankSlate', path: '/blank', icon: 'fa-chalkboard' }
-    ]
+    menuMain: {
+      Main: { icon: 'fa-house' },
+      Budget: { icon: 'fa-money-bill-trend-up' },
+      Expenses: { icon: 'fa-money-bill-transfer' },
+      Reports: { icon: 'fa-chart-simple' }
+    },
+    menuMisc: {}
   })
 }
 </script>

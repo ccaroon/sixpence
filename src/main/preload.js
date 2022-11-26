@@ -19,3 +19,8 @@ contextBridge.exposeInMainWorld('Modules', {
     version: require('vue/package.json').version
   }
 })
+
+// Menu Action Handler Registration
+contextBridge.exposeInMainWorld('Menu', {
+  registerHandler: (menuId, callback) => ipcRenderer.on(menuId, callback)
+})

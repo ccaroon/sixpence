@@ -19,6 +19,11 @@ const macApp = [
   }
 ]
 
+const aboutMenu = {
+  label: 'About',
+  click: () => BrowserWindow.getFocusedWindow().webContents.send('menu-help-about')
+}
+
 // const settingsSubMenu = {
 //   label: process.platform === 'darwin' ? 'Preferences...' : 'Settings...',
 //   accelerator: mainMetaKey + '+,',
@@ -71,7 +76,7 @@ const template = [
   {
     role: 'help',
     submenu: [
-      ...(isMac ? [] : [{ role: 'about' }]),
+      ...(isMac ? [] : [aboutMenu]),
       {
         label: 'View on GitHub',
         click () { require('electron').shell.openExternal('https://github.com/ccaroon/sixpence') }

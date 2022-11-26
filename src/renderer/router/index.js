@@ -1,20 +1,30 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Main from '../components/Main.vue'
-import BlankSlate from '../components/BlankSlate.vue'
+// import Main from '../components/Main.vue'
+import Placeholder from '../components/Placeholder.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
+    name: 'Main',
     path: '/',
-    name: 'main',
-    component: Main
+    component: Placeholder
   },
   {
-    path: '/blank',
-    name: 'blank-slate',
-    component: BlankSlate
+    name: 'Budget',
+    path: '/budget',
+    component: Placeholder
+  },
+  {
+    name: 'Expenses',
+    path: '/expenses',
+    component: Placeholder
+  },
+  {
+    name: 'Reports',
+    path: '/reports',
+    component: Placeholder
   }
 ]
 

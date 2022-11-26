@@ -10,11 +10,16 @@
 * [ ] Menu
   - [ ] About - Mac vs Others
   - [ ] Settings - Mac vs Others
-  - [ ] Relies on ipcRender, i.e. nodeIntegration
+  - [x] View Options
+  - [-] Relies on ipcRender, i.e. nodeIntegration
 
 ## Renderer
 * [ ] Cleanup Handler
 * [ ] Home Screen
 * [ ] Budget Screen
 * [ ] Expenses Screen
+* [ ]
+
+## Misc
+* [ ] node integration or or off?
 * [ ]
