@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-// import Main from '../components/Main.vue'
+import Main from '../components/Main.vue'
 import Placeholder from '../components/Placeholder.vue'
 
 Vue.use(VueRouter)
@@ -9,7 +9,7 @@ const routes = [
   {
     name: 'Main',
     path: '/',
-    component: Placeholder
+    component: Main
   },
   {
     name: 'Budget',
@@ -24,6 +24,11 @@ const routes = [
   {
     name: 'Reports',
     path: '/reports',
+    component: Placeholder
+  },
+  {
+    name: 'Settings',
+    path: '/settings',
     component: Placeholder
   }
 ]

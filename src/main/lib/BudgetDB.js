@@ -1,7 +1,7 @@
 import Datastore from 'nedb'
 import Moment from 'moment'
 
-const { app } = require('electron').remote
+const { app } = require('electron')
 // -----------------------------------------------------------------------------
 const dbFileName = (process.env.NODE_ENV === 'development') ? 'budget-dev.sxp' : 'budget.sxp'
 const _DB = new Datastore({

@@ -61,6 +61,11 @@ export default {
     },
 
     registerMenuHandlers: function () {
+      // File
+      window.Menu.registerHandler('menu-file-settings', (event) => {
+        this.goTo('Settings')
+      })
+
       // View
       window.Menu.registerHandler('menu-view-main', (event) => {
         this.goTo('Main')

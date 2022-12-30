@@ -40,6 +40,12 @@ const template = [
   {
     label: 'File',
     submenu: [
+      {
+        label: 'Settings...',
+        accelerator: mainMetaKey + ',',
+        click: () => BrowserWindow.getFocusedWindow().webContents.send('menu-file-settings')
+      },
+      { type: 'separator' },
       ...(isMac ? [] : [{ role: 'quit' }])
     ]
   },

@@ -6,6 +6,12 @@ contextBridge.exposeInMainWorld('Main', {
   }
 })
 
+contextBridge.exposeInMainWorld('BudgetDB', {
+  count: (searchTerms) => {
+    return ipcRenderer.invoke('budget-db:count', searchTerms)
+  }
+})
+
 contextBridge.exposeInMainWorld('Config', {
   data: () => {
     return ipcRenderer.invoke('config:data')
