@@ -4,11 +4,24 @@ import { BrowserWindow, Menu, MenuItem } from 'electron'
 const isMac = process.platform === 'darwin'
 const mainMetaKey = isMac ? 'Cmd' : 'Ctrl'
 // -----------------------------------------------------------------------------
+const aboutMenu = {
+  label: 'About',
+  click: () => BrowserWindow.getFocusedWindow().webContents.send('menu-help-about')
+}
+
+const settingsMenu = {
+  label: 'Settings...',
+  accelerator: mainMetaKey + '+,',
+  click: () => BrowserWindow.getFocusedWindow().webContents.send('menu-file-settings')
+}
+
 const macApp = [
   {
     label: 'Sixpence',
     submenu: [
-      { role: 'about' },
+      aboutMenu,
+      { type: 'separator' },
+      settingsMenu,
       { type: 'separator' },
       { role: 'hide' },
       { role: 'hideOthers' },
@@ -18,33 +31,14 @@ const macApp = [
     ]
   }
 ]
-
-const aboutMenu = {
-  label: 'About',
-  click: () => BrowserWindow.getFocusedWindow().webContents.send('menu-help-about')
-}
-
-// const settingsSubMenu = {
-//   label: process.platform === 'darwin' ? 'Preferences...' : 'Settings...',
-//   accelerator: mainMetaKey + '+,',
-//   click: () => BrowserWindow.getFocusedWindow().webContents.send('menu-settings')
-// }
-
 // -----------------------------------------------------------------------------
 // https://www.electronjs.org/docs/latest/api/menu#menuitems
 const template = [
-  // { role: 'appMenu' }
   ...(isMac ? macApp : []),
-
-  // { role: 'fileMenu' }
   {
     label: 'File',
     submenu: [
-      {
-        label: 'Settings...',
-        accelerator: mainMetaKey + ',',
-        click: () => BrowserWindow.getFocusedWindow().webContents.send('menu-file-settings')
-      },
+      ...(isMac ? [] : [settingsMenu]),
       { type: 'separator' },
       ...(isMac ? [] : [{ role: 'quit' }])
     ]
@@ -52,7 +46,6 @@ const template = [
 
   { role: 'editMenu' },
 
-  // { role: 'viewMenu' }
   {
     label: 'View',
     submenu: [
