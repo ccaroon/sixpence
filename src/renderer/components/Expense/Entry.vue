@@ -7,12 +7,18 @@
 
       <v-list-item-content>
         <v-list-item-subtitle>{{ entryType }}</v-list-item-subtitle>
-        <v-list-item-title class="body-1">{{ entry.category }}</v-list-item-title>
+        <v-list-item-title class="body-1">{{
+          entry.category
+        }}</v-list-item-title>
       </v-list-item-content>
 
       <v-list-item-content>
-        <v-list-item-subtitle>{{ format.formatDate(entry.date) }}</v-list-item-subtitle>
-        <v-list-item-title class="body-1">{{ format.formatMoney(entry.amount) }}</v-list-item-title>
+        <v-list-item-subtitle>{{
+          format.formatDate(entry.date)
+        }}</v-list-item-subtitle>
+        <v-list-item-title class="body-1">{{
+          format.formatMoney(entry.amount)
+        }}</v-list-item-title>
       </v-list-item-content>
 
       <v-list-item-content>
@@ -23,9 +29,12 @@
             small
             :color="entryColor('tag')"
             @click="search(tag)"
-          >{{ tag }}</v-chip>
+            >{{ tag }}</v-chip
+          >
         </v-list-item-title>
-        <v-list-item-title v-else class="body-1">{{ entry.notes }}</v-list-item-title>
+        <v-list-item-title v-else class="body-1">{{
+          entry.notes
+        }}</v-list-item-title>
       </v-list-item-content>
 
       <v-list-item-action>
@@ -53,12 +62,18 @@
 
               <v-list-item-content>
                 <v-list-item-subtitle>{{ entryType }}</v-list-item-subtitle>
-                <v-list-item-title class="body-1">{{ entry.category }}</v-list-item-title>
+                <v-list-item-title class="body-1">{{
+                  entry.category
+                }}</v-list-item-title>
               </v-list-item-content>
 
               <v-list-item-content>
-                <v-list-item-subtitle>{{ format.formatDate(entry.date) }}</v-list-item-subtitle>
-                <v-list-item-title class="body-1">{{ format.formatMoney(entry.amount) }}</v-list-item-title>
+                <v-list-item-subtitle>{{
+                  format.formatDate(entry.date)
+                }}</v-list-item-subtitle>
+                <v-list-item-title class="body-1">{{
+                  format.formatMoney(entry.amount)
+                }}</v-list-item-title>
               </v-list-item-content>
 
               <v-list-item-content>
@@ -68,9 +83,12 @@
                     :key="index"
                     small
                     :color="entryColor('tag')"
-                  >{{ tag }}</v-chip>
+                    >{{ tag }}</v-chip
+                  >
                 </v-list-item-title>
-                <v-list-item-title v-else class="body-1">{{ entry.notes }}</v-list-item-title>
+                <v-list-item-title v-else class="body-1">{{
+                  entry.notes
+                }}</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
           </v-list>
@@ -83,14 +101,16 @@
             rounded
             @click="deleteEntry(entry._id)"
             tabindex="-1"
-          >OK</v-btn>
+            >OK</v-btn
+          >
           <v-btn
             color="red darken-1"
             small
             rounded
             @click.native="showDeleteDialog = false"
             tabindex="-1"
-          >Cancel</v-btn>
+            >Cancel</v-btn
+          >
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -99,7 +119,7 @@
 
 <script>
 import Format from '../../lib/Format'
-import Constants from '../../lib/Constants'
+import Constants from '../../../shared/Constants'
 import ExpenseDB from '../../lib/ExpenseDB'
 
 export default {

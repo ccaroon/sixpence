@@ -50,7 +50,7 @@
 
 <script>
 import BudgetDB from '../../lib/BudgetDB'
-import Constants from '../../lib/Constants'
+import Constants from '../../../shared/Constants'
 import Format from '../../lib/Format'
 import Icons from '../../lib/Icons'
 import Moment from 'moment'

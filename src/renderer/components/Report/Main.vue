@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import Constants from '../../lib/Constants'
+import Constants from '../../../shared/Constants'
 
 export default {
   name: 'reports-main',

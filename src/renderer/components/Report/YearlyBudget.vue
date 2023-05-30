@@ -72,7 +72,7 @@
 </template>
 <script>
 import BudgetDB from '../../lib/BudgetDB'
-import Constants from '../../lib/Constants'
+import Constants from '../../../shared/Constants'
 import ExpenseCategory from '../Expense/Category'
 import ExpenseDB from '../../lib/ExpenseDB'
 import Format from '../../lib/Format'

@@ -1,5 +1,5 @@
 import Datastore from 'nedb'
-import Constants from './Constants'
+import Constants from '../../shared/Constants'
 import Moment from 'moment'
 
 const { app } = require('electron')

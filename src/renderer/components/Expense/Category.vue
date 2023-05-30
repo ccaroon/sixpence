@@ -94,7 +94,7 @@
 
 <script>
 import Format from '../../lib/Format'
-import Constants from '../../lib/Constants'
+import Constants from '../../../shared/Constants'
 
 export default {
   name: 'ExpenseCategory',

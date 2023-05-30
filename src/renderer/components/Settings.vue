@@ -33,7 +33,7 @@
   </div>
 </template>
 <script>
-import Constants from '../lib/Constants'
+import Constants from '../../shared/Constants'
 import SettingsOption from './Settings/Option'
 
 export default {

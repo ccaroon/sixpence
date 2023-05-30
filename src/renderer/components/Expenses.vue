@@ -367,7 +367,7 @@
 
 <script>
 import BudgetDB from '../lib/BudgetDB'
-import Constants from '../lib/Constants'
+import Constants from '../../shared/Constants'
 import ExpenseEntry from './Expense/Entry'
 import ExpenseCalendar from './Expense/Calendar'
 import ExpenseCategory from './Expense/Category'

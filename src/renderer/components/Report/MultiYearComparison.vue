@@ -15,13 +15,22 @@
       <v-list dense dark>
         <v-list-item>
           <v-list-item-icon>
-            <v-icon>{{ focusData.data.icon ? focusData.data.icon : 'mdi-all-inclusive'}}</v-icon>
+            <v-icon>{{
+              focusData.data.icon ? focusData.data.icon : "mdi-all-inclusive"
+            }}</v-icon>
           </v-list-item-icon>
 
           <v-list-item-content>
             <v-row no-gutters align="center">
-              <v-col cols="3">{{ focusData.category ? focusData.category : 'Category'}}</v-col>
-              <v-col cols="1" text-center v-for="(year, id) in yearRange" :key="id">
+              <v-col cols="3">{{
+                focusData.category ? focusData.category : "Category"
+              }}</v-col>
+              <v-col
+                cols="1"
+                text-center
+                v-for="(year, id) in yearRange"
+                :key="id"
+              >
                 <v-btn small @click="viewYear(year)">{{ year }}</v-btn>
               </v-col>
             </v-row>
@@ -44,13 +53,15 @@
             <v-col cols="3">{{ category }}</v-col>
 
             <v-col cols="1" v-for="(year, id) in yearRange" :key="id">
-              <span v-if="entry[year]">{{ format.formatMoney(entry[year]['total']) }}</span>
+              <span v-if="entry[year]">{{
+                format.formatMoney(entry[year]["total"])
+              }}</span>
               <span v-else>N/A</span>
             </v-col>
 
             <!-- ACTIONS : Offset to align right -->
             <!-- grid size - ICON - CATEGORY - 1/year amount -->
-            <v-col :offset="12 - 1 - 3 - (yearRange.length)">
+            <v-col :offset="12 - 1 - 3 - yearRange.length">
               <v-btn icon @click="viewEntries(category)">
                 <v-icon>mdi-view-list</v-icon>
               </v-btn>
@@ -68,7 +79,11 @@
         <v-list-item
           v-for="month in constants.MONTHS"
           :key="month.value"
-          :class="month.value % 2 === 0 ? constants.COLORS.GREY : constants.COLORS.GREY_ALT"
+          :class="
+            month.value % 2 === 0
+              ? constants.COLORS.GREY
+              : constants.COLORS.GREY_ALT
+          "
         >
           <v-list-item-icon>
             <v-icon>{{ month.icon }}</v-icon>
@@ -79,9 +94,11 @@
               <span class="subtitle-1">{{ month.text }}</span>
             </v-col>
             <v-col cols="1" v-for="(year, id) in yearRange" :key="id">
-              <span
-                v-if="focusData.data[year]"
-              >{{ format.formatMoney(focusData.data[year]['months'][month.value-1]) }}</span>
+              <span v-if="focusData.data[year]">{{
+                format.formatMoney(
+                  focusData.data[year]["months"][month.value - 1]
+                )
+              }}</span>
               <span v-else>N/A</span>
             </v-col>
           </v-row>
@@ -92,7 +109,7 @@
 </template>
 
 <script>
-import Constants from '../../lib/Constants'
+import Constants from '../../../shared/Constants'
 import ExpenseDB from '../../lib/ExpenseDB'
 import Format from '../../lib/Format'
 import Moment from 'moment'

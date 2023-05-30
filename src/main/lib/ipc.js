@@ -20,7 +20,14 @@ export default {
 
     // DBMigrations
     ipcMain.handle('db-migrations:check', (event) => {
-      return DBMigrations.checkBudgetDb()
+      // const budgetMigs = DBMigrations.checkBudgetDb()
+      const expMigs = DBMigrations.checkExpenseDb()
+      console.log(expMigs)
+      // TODO: error: object could not be cloned b/c .needsApplying is a Promise
+      //       not sure how to fix
+      return expMigs
+      // console.log(budgetMigs, expMigs)
+      // return budgetMigs//.concat(expMigs)
     })
 
     ipcMain.handle('db-migrations:execute', (event, name) => {

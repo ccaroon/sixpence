@@ -7,12 +7,21 @@
 
       <v-list-item-content>
         <v-list-item-subtitle>{{ entryType }}</v-list-item-subtitle>
-        <v-list-item-title class="body-1">{{ entry.category }}</v-list-item-title>
+        <v-list-item-title class="body-1">{{
+          entry.category
+        }}</v-list-item-title>
       </v-list-item-content>
 
       <v-list-item-content>
-        <v-list-item-subtitle>{{ format.formatFrequency(entry.frequency) }} / {{ format.monthNumberToName(entry.firstDue - 1 )}}</v-list-item-subtitle>
-        <v-list-item-title class="body-1">{{ format.formatMoney(entry.amount) }}</v-list-item-title>
+        <v-list-item-subtitle
+          >{{ format.formatFrequency(entry.frequency) }} /
+          {{
+            format.monthNumberToName(entry.firstDue - 1)
+          }}</v-list-item-subtitle
+        >
+        <v-list-item-title class="body-1">{{
+          format.formatMoney(entry.amount)
+        }}</v-list-item-title>
       </v-list-item-content>
 
       <v-list-item-content>
@@ -21,7 +30,12 @@
 
       <template v-if="!readOnly">
         <v-list-item-action>
-          <v-btn icon :disabled="!entry.history" @click="viewHistory()" tabindex="-1">
+          <v-btn
+            icon
+            :disabled="!entry.history"
+            @click="viewHistory()"
+            tabindex="-1"
+          >
             <v-icon>mdi-history</v-icon>
           </v-btn>
         </v-list-item-action>
@@ -40,7 +54,10 @@
       </template>
       <template v-else>
         <v-list-item-content>
-          <v-list-item-title>Archived: {{ format.formatDate(entry.archivedAt) }}</v-list-item-title>
+          <v-list-item-title
+            >Archived:
+            {{ format.formatDate(entry.archivedAt) }}</v-list-item-title
+          >
         </v-list-item-content>
       </template>
     </v-list-item>
@@ -55,7 +72,8 @@
             {{ entry.category }} - Record History
           </v-card-title>
           <v-card-text style="height: 75%">
-            <v-icon color="info">mdi-alert-circle</v-icon>Currently only tracking changes to budgeted amounts.
+            <v-icon color="info">mdi-alert-circle</v-icon>Currently only
+            tracking changes to budgeted amounts.
             <v-list>
               <v-list-item
                 v-for="(record, index) in entry.history"
@@ -68,16 +86,24 @@
                 <v-row no-gutters>
                   <v-col cols="2">
                     <v-list-item-content>
-                      <v-list-item-title>{{ format.formatDate(record.date, 'MMM DD, YYYY') }}</v-list-item-title>
-                      <v-list-item-subtitle>{{ format.formatDate(record.date, 'hh:mm:ssa') }}</v-list-item-subtitle>
+                      <v-list-item-title>{{
+                        format.formatDate(record.date, "MMM DD, YYYY")
+                      }}</v-list-item-title>
+                      <v-list-item-subtitle>{{
+                        format.formatDate(record.date, "hh:mm:ssa")
+                      }}</v-list-item-subtitle>
                     </v-list-item-content>
                   </v-col>
                   <v-col cols="4">
                     <v-list-item-content>
-                      <v-list-item-title v-if="index < entry.history.length-1">
+                      <v-list-item-title
+                        v-if="index < entry.history.length - 1"
+                      >
                         {{ format.formatMoney(record.amount) }}
                         &rarr;
-                        {{ format.formatMoney(entry.history[index+1].amount) }}
+                        {{
+                          format.formatMoney(entry.history[index + 1].amount)
+                        }}
                       </v-list-item-title>
                       <v-list-item-title v-else>
                         {{ format.formatMoney(record.amount) }}
@@ -111,26 +137,49 @@
               </v-list-item-icon>
               <v-list-item-content>
                 <v-list-item-subtitle>{{ entryType }}</v-list-item-subtitle>
-                <v-list-item-title class="body-1">{{ entry.category }}</v-list-item-title>
+                <v-list-item-title class="body-1">{{
+                  entry.category
+                }}</v-list-item-title>
               </v-list-item-content>
 
               <v-list-item-content>
-                <v-list-item-subtitle>{{ format.formatFrequency(entry.frequency) }} / {{ format.monthNumberToName(entry.firstDue - 1 )}}</v-list-item-subtitle>
-                <v-list-item-title class="body-1">{{ format.formatMoney(entry.amount) }}</v-list-item-title>
+                <v-list-item-subtitle
+                  >{{ format.formatFrequency(entry.frequency) }} /
+                  {{
+                    format.monthNumberToName(entry.firstDue - 1)
+                  }}</v-list-item-subtitle
+                >
+                <v-list-item-title class="body-1">{{
+                  format.formatMoney(entry.amount)
+                }}</v-list-item-title>
               </v-list-item-content>
 
               <v-list-item-content>
-                <v-list-item-title class="body-1">{{ entry.notes }}</v-list-item-title>
+                <v-list-item-title class="body-1">{{
+                  entry.notes
+                }}</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
           </v-list>
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions>
-          <v-btn color="green darken-1" small rounded @click="archiveEntry(entry)" tabindex="-1">
+          <v-btn
+            color="green darken-1"
+            small
+            rounded
+            @click="archiveEntry(entry)"
+            tabindex="-1"
+          >
             <v-icon float-left>mdi-package-down</v-icon>Archive
           </v-btn>
-          <v-btn color="red darken-2" small rounded @click="deleteEntry(entry._id)" tabindex="-1">
+          <v-btn
+            color="red darken-2"
+            small
+            rounded
+            @click="deleteEntry(entry._id)"
+            tabindex="-1"
+          >
             <v-icon float-left>mdi-delete-forever</v-icon>Delete Forever
           </v-btn>
           <v-btn
@@ -151,7 +200,7 @@
 </template>
 
 <script>
-import Constants from '../../lib/Constants'
+import Constants from '../../../shared/Constants'
 import BudgetDB from '../../lib/BudgetDB'
 import Format from '../../lib/Format'
 

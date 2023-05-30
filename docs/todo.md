@@ -2,14 +2,18 @@
 
 ## Modernization
 
+## Where Am I?
+* Working on DBMigrations
+  - unresolved promise in migration list `needsApplying` field causing "object annot be cloned" error
+
 ### Main
-* [ ] Config
+* [x] Config
   - [x] dataPath - moved to `settings.js`
   - [x] re-write like Cartaro's
   - [x] support DEV config file
 * [ ] Backup
 * [ ] Cleanup Handler
-* [ ] Menu
+* [x] Menu
   - [x] About - Mac vs Others
   - [x] Settings - Mac vs Others
   - [x] View Options

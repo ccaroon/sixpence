@@ -1,43 +1,46 @@
-// import addIsArchived from '../dbMigrations/addIsArchived'
-// import delIsArchived from '../dbMigrations/delIsArchived'
+import addIsArchived from '../dbMigrations/addIsArchived'
+import delIsArchived from '../dbMigrations/delIsArchived'
 import addArchivedAt from '../dbMigrations/addArchivedAt'
-// import migrateNotesToTags from '../dbMigrations/migrateNotesToTags'
+import migrateNotesToTags from '../dbMigrations/migrateNotesToTags'
 // -----------------------------------------------------------------------------
 const migrations = {
   budgetDB: [
-    // addIsArchived,
-    // delIsArchived,
+    addIsArchived,
+    delIsArchived,
     addArchivedAt
   ],
   expenseDB: [
-    // migrateNotesToTags
+    migrateNotesToTags
   ]
 }
 // -----------------------------------------------------------------------------
 export default {
 
-  checkBudgetDb: function () {
+  checkBudgetDb: async function () {
     const neededMigrations = []
-    migrations.budgetDB.forEach((mig) => {
+    await migrations.budgetDB.forEach((mig) => {
       if (mig.active) {
         const needsApplying = mig.actions.check()
         neededMigrations.push({ migration: mig, needsApplying: needsApplying })
+
         // Have to remove 'actions' since function don't serialize via IPC
         delete mig.actions
       }
     })
-
-    console.log(neededMigrations)
 
     return (neededMigrations)
   },
 
   checkExpenseDb: function () {
     const neededMigrations = []
-    migrations.expenseDB.forEach(async (mig) => {
+
+    migrations.expenseDB.forEach((mig) => {
       if (mig.active) {
-        const needsApplying = await mig.actions.check()
+        console.log(mig.name)
+        // TODO: how to get this stupid `check` Promise to resolve
+        const needsApplying = mig.actions.check()
         neededMigrations.push({ migration: mig, needsApplying: needsApplying })
+
         // Have to remove 'actions' since function don't serialize via IPC
         delete mig.actions
       }

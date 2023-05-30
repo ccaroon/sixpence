@@ -84,8 +84,8 @@ export default {
   name: 'sixpence-main',
 
   mounted () {
-    this.addNotification('mdi-alert', 'warning', 'TODO: Hook-up DB Migrations')
-    // this.checkForDBMigrations()
+    // this.addNotification('mdi-alert', 'warning', 'TODO: Hook-up DB Migrations')
+    this.checkForDBMigrations()
   },
 
   methods: {

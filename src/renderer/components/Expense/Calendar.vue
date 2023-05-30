@@ -27,7 +27,7 @@
 <script>
 import Moment from 'moment'
 
-import Constants from '../../lib/Constants'
+import Constants from '../../../shared/Constants'
 import Format from '../../lib/Format'
 
 export default {
