@@ -17,10 +17,13 @@
 
 ### Renderer
 * [ ] Cleanup Handler
+* [ ] DBMigrations
 * [ ] Home Screen
 * [ ] Budget Screen
 * [ ] Expenses Screen
 * [ ] Settings Screen
+  * [x] UI
+  * [ ] save
 
 ### Misc
 * [ ] node integration on or off?

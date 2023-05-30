@@ -1,12 +1,17 @@
 // Config
 // -----------------------------------------------------------------------------
 class Config {
-  constructor (data) {
+  constructor (data, metaData) {
     this.__data = data
+    this.__metaData = metaData
   }
 
   get data () {
     return this.__data
+  }
+
+  get metaData () {
+    return this.__metaData
   }
 
   get (path, defValue = null, isTransient = false) {

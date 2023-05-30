@@ -9,7 +9,7 @@ Vue.config.productionTip = false
 
 async function loadConfig () {
   const configData = await window.Config.data()
-  const config = new Config(configData)
+  const config = new Config(configData.data, configData.metaData)
 
   global.Sixpence = {
     config

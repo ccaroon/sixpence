@@ -35,8 +35,6 @@
 <script>
 import Constants from '../lib/Constants'
 import SettingsOption from './Settings/Option'
-import Config from '../../main/lib/config'
-Config.load()
 
 export default {
   name: 'settings-main',
@@ -47,17 +45,16 @@ export default {
 
   methods: {
     save: function () {
-      Config.save()
-      alert('Saved')
+      alert('Not Yet Implemented!')
     }
   },
 
   data () {
     return {
       tab: null,
-      metadata: Config.metaData,
+      metadata: global.Sixpence.config.metaData,
       constants: Constants,
-      settings: Config.get()
+      settings: global.Sixpence.config.data
     }
   }
 }

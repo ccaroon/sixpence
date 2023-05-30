@@ -9,7 +9,7 @@
   "private": true,
   "repository": {
     "type": "git",
-    "url": "https://github.com/ccaroon/daikon"
+    "url": "https://github.com/ccaroon/sixpence"
   },
   "scripts": {
     "build": "vue-cli-service electron:build",

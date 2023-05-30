@@ -15,10 +15,20 @@
     </v-responsive>
     <v-container>
       <v-row align="center" justify="space-around" class="pa-1">
-        <v-btn id="main-budget-button" large color="green" @click="$router.push(`/budget`)">
+        <v-btn
+          id="main-budget-button"
+          large
+          color="green"
+          @click="$router.push(`/budget`)"
+        >
           <v-icon>mdi-format-list-checks</v-icon>&nbsp;&nbsp;Budget
         </v-btn>
-        <v-btn id="main-expense-button" large color="red" @click="$router.push(`/expenses`)">
+        <v-btn
+          id="main-expense-button"
+          large
+          color="red"
+          @click="$router.push(`/expenses`)"
+        >
           <v-icon>mdi-currency-usd</v-icon>Expenses
         </v-btn>
         <v-btn
@@ -31,7 +41,12 @@
         </v-btn>
       </v-row>
       <v-row align="center" justify="space-around" class="pa-1">
-        <v-btn id="main-settings-button" large color="grey" @click="$router.push(`/settings`)">
+        <v-btn
+          id="main-settings-button"
+          large
+          color="grey"
+          @click="$router.push(`/settings`)"
+        >
           <v-icon>mdi-settings</v-icon>Settings
         </v-btn>
       </v-row>
@@ -52,7 +67,8 @@
           absolute
           right
           @click="note.handler.action(note.handler.params)"
-        >Update</v-btn>
+          >Update</v-btn
+        >
       </v-alert>
     </template>
     <template v-else>
@@ -69,7 +85,7 @@ export default {
 
   mounted () {
     this.addNotification('mdi-alert', 'warning', 'TODO: Hook-up DB Migrations')
-    this.checkForDBMigrations()
+    // this.checkForDBMigrations()
   },
 
   methods: {

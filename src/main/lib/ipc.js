@@ -29,7 +29,7 @@ export default {
 
     // Config Handlers
     ipcMain.handle('config:data', (event) => {
-      return config.data
+      return { 'data': config.data, 'metaData': config.metaData }
     })
 
     // Other Handlers

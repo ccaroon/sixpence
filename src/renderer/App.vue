@@ -43,7 +43,7 @@ import About from './components/About'
 import Mousetrap from 'mousetrap'
 
 export default {
-  name: 'DaikonApp',
+  name: 'SixpenceApp',
   components: { About },
   mounted () {
     this.bindShortcutKeys()
