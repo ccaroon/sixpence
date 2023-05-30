@@ -12,14 +12,14 @@ export default {
     'Superseded by `addArchivedAt`.'
   ],
 
-  check: function () {
-    return BudgetDB.count({ isArchived: { $exists: false } })
-      .then(num => {
-        return (num > 0)
-      })
-  },
+  actions: {
+    check: async function () {
+      const count = await BudgetDB.count({ isArchived: { $exists: false } })
+      return count
+    },
 
-  apply: function () {
-    return BudgetDB.bulkUpdate({ isArchived: { $exists: false } }, { $set: { isArchived: false } })
+    apply: function () {
+      return BudgetDB.bulkUpdate({ isArchived: { $exists: false } }, { $set: { isArchived: false } })
+    }
   }
 }

@@ -7,14 +7,13 @@ export default {
   critical: true,
   active: true,
 
-  check: function () {
-    return BudgetDB.count({ archivedAt: { $exists: false } })
-      .then(num => {
-        return (num > 0)
-      })
-  },
+  actions: {
+    check: function () {
+      return BudgetDB.count({ archivedAt: { $exists: false } })
+    },
 
-  apply: function () {
-    return BudgetDB.bulkUpdate({ archivedAt: { $exists: false } }, { $set: { archivedAt: null } })
+    apply: function () {
+      return BudgetDB.bulkUpdate({ archivedAt: { $exists: false } }, { $set: { archivedAt: null } })
+    }
   }
 }

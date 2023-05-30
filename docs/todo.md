@@ -11,7 +11,7 @@
   - [ ] About - Mac vs Others
   - [ ] Settings - Mac vs Others
   - [x] View Options
-  - [-] Relies on ipcRender, i.e. nodeIntegration
+  - [-] Relies on ipcRender, i.e. nodeIntegration (found another way)
 
 ## Renderer
 * [ ] Cleanup Handler
@@ -21,5 +21,7 @@
 * [ ]
 
 ## Misc
-* [ ] node integration or or off?
-* [ ]
+* [ ] node integration on or off?
+* [ ] Move DB code to main process
+  1. Move BudgetDB & ExpenseDB modules to main
+  2. Connect to Renderer process via IPC/ContextIsolation

@@ -18,6 +18,16 @@ contextBridge.exposeInMainWorld('Config', {
   }
 })
 
+contextBridge.exposeInMainWorld('DBMigrations', {
+  check: () => {
+    return ipcRenderer.invoke('db-migrations:check')
+  },
+
+  execute: (migName) => {
+    return ipcRenderer.invoke('db-migrations:execute', migName)
+  }
+})
+
 contextBridge.exposeInMainWorld('NodeJS', { process })
 
 contextBridge.exposeInMainWorld('Modules', {

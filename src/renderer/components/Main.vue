@@ -25,7 +25,7 @@
           id="main-report-button"
           large
           color="orange lighten-2"
-          @click="$router.push(`/report/list`)"
+          @click="$router.push(`/reports`)"
         >
           <v-icon>mdi-file-chart</v-icon>Reports
         </v-btn>
@@ -62,56 +62,61 @@
 </template>
 
 <script>
-import DBMigrations from '../lib/DBMigrations'
+// import DBMigrations from '../lib/DBMigrations'
 
 export default {
   name: 'sixpence-main',
 
   mounted () {
+    this.addNotification('mdi-alert', 'warning', 'TODO: Hook-up DB Migrations')
     this.checkForDBMigrations()
   },
 
   methods: {
-    applyDBMigrations: function (check) {
-      check.needsApplying
-        .then(needed => {
-          if (needed) {
-            const type = check.migration.critical ? 'error' : 'info'
+    // applyDBMigrations: function (check) {
+    //   check.needsApplying
+    //     .then(needed => {
+    //       if (needed) {
+    //         const type = check.migration.critical ? 'error' : 'info'
+    //         this.addNotification(
+    //           'mdi-update',
+    //           type,
+    //           `Database Update: ${check.migration.name} - ${check.migration.desc}`,
+    //           { action: this.applyMigration, params: check.migration }
+    //         )
+    //       }
+    //     })
+    //     .catch(err => {
+    //       this.addNotification('mdi-alert-octagram', 'error', `Database Update Check Failed: ${err}`)
+    //     })
+    // },
+
+    checkForDBMigrations: function () {
+      window.DBMigrations.check()
+        .then(migChecks => {
+          migChecks.forEach(migCheck => {
+            const type = migCheck.migration.critical ? 'error' : 'info'
+
             this.addNotification(
               'mdi-update',
               type,
-              `Database Update: ${check.migration.name} - ${check.migration.desc}`,
-              { action: this.applyMigration, params: check.migration }
+              `Database Update: ${migCheck.migration.name} - ${migCheck.migration.desc}`,
+              { action: this.applyMigration, params: migCheck.migration.name }
             )
-          }
+          })
         })
         .catch(err => {
-          this.addNotification('mdi-alert-octagram', 'error', `Database Update Check Failed: ${err}`)
+          this.addNotification('mdi-alert-octagram', 'error', `Database Migration Check Failed: ${err}`)
         })
+
+      // const budgetChecks = DBMigrations.checkBudgetDb()
+      // budgetChecks.forEach(this.applyDBMigrations)
+
+      // const expenseChecks = DBMigrations.checkExpenseDb()
+      // expenseChecks.forEach(this.applyDBMigrations)
     },
 
-    checkForDBMigrations: function () {
-      const budgetChecks = DBMigrations.checkBudgetDb()
-      budgetChecks.forEach(this.applyDBMigrations)
-
-      const expenseChecks = DBMigrations.checkExpenseDb()
-      expenseChecks.forEach(this.applyDBMigrations)
-    },
-
-    applyMigration: function (mig) {
-      mig.apply()
-        .then(num => {
-          this.notifications = []
-          if (num === null) {
-            this.addNotification('mdi-alert', 'warning', `${mig.name}: ${mig.note}`)
-          } else {
-            this.addNotification('mdi-update', 'success', `${mig.name} successfully applied. ${num} entries updated.`)
-          }
-        })
-        .catch(err => {
-          this.notifications = []
-          this.addNotification('mdi-alert-octagram', 'error', `${mig.name} failed: ${err}`)
-        })
+    applyMigration: function (name) {
     },
 
     addNotification: function (icon, type, msg, action = null) {

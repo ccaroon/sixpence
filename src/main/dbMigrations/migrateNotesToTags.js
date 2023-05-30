@@ -8,14 +8,16 @@ export default {
   critical: false,
   active: true,
 
-  check: function () {
-    return ExpenseDB.count({ notes: { $exists: true } })
-      .then(num => {
-        return (num > 0)
-      })
-  },
+  actions: {
+    check: function () {
+      return ExpenseDB.count({ notes: { $exists: true } })
+        .then(num => {
+          return (num > 0)
+        })
+    },
 
-  apply: function () {
-    return Promise.resolve(null)
+    apply: function () {
+      return Promise.resolve(null)
+    }
   }
 }

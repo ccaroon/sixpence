@@ -7,14 +7,14 @@ export default {
   critical: true,
   active: true,
 
-  check: function () {
-    return BudgetDB.count({ isArchived: { $exists: true } })
-      .then(num => {
-        return (num > 0)
-      })
-  },
+  actions: {
+    check: async function () {
+      const count = await BudgetDB.count({ isArchived: { $exists: true } })
+      return count
+    },
 
-  apply: function () {
-    return BudgetDB.bulkUpdate({ isArchived: { $exists: true } }, { $unset: { isArchived: true } })
+    apply: function () {
+      return BudgetDB.bulkUpdate({ isArchived: { $exists: true } }, { $unset: { isArchived: true } })
+    }
   }
 }
