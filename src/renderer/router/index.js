@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Main from '../components/Main.vue'
 import Placeholder from '../components/Placeholder.vue'
+import Settings from '../components/Settings.vue'
 
 Vue.use(VueRouter)
 
@@ -29,7 +30,7 @@ const routes = [
   {
     name: 'Settings',
     path: '/settings',
-    component: Placeholder
+    component: Settings
   }
 ]
 
