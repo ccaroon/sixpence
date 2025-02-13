@@ -1,7 +1,7 @@
 # CHANGELOG
 
-## UNRELEASED: v1.14.0 - Radiant Rupees (????? ??, 2021)
-...
+## UNRELEASED: v2.0.0 - Pristine Penny (????? ??, 2025)
+Complete rewrite using Flet/Flutter
 
 ## v1.13.2 - Glimmering Gil - Patch #2 (May 21, 2022)
 ### Misc
