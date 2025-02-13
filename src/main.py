@@ -23,14 +23,17 @@ def home_screen(page: ft.Page):
     page.add(stack)
 
 
+SCREEN_SCALE_WIDTH = .70
+SCREEN_SCALE_HEIGHT = .90
 def main(page: ft.Page):
     monitors = screeninfo.get_monitors()
 
     mon_width = monitors[0].width
     mon_height = monitors[0].height
 
-    page.window.width = mon_width * ((.70 / 2) + (.70 / 4))
-    page.window.height = mon_height * ((.90 / 2) + (.90 / 4))
+    # TODO: reset to normal/good values
+    page.window.width = mon_width * ((SCREEN_SCALE_WIDTH / 2) + (SCREEN_SCALE_WIDTH / 4))
+    page.window.height = mon_height * ((SCREEN_SCALE_HEIGHT / 2) + (SCREEN_SCALE_HEIGHT / 4))
     page.window.top = mon_height * .10
     page.window.left = mon_width * .25
 

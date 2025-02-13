@@ -1,6 +1,6 @@
 # Sixpence v2
 
-> A Simple Budget Manager
+**A Simple Budget Manager**
 
 This is version 2 of Sixpence. It abandons [Electron][electron] for [Flutter][flutter] using [flet][Flet].
 
@@ -31,10 +31,23 @@ Sixpence allows you to create a budget and then track your progress. It is **not
 
 
 ## Development
-### Build Setup
+Create a Virtual Environment using `venv` or `pyenv` or whatever and activate it.
 
 ``` bash
-TODO
+# Install Poetry
+bash> pip install poetry
+
+# Install Dependencies
+bash> poetry install
+
+# Run in Dev Mode
+bash> flet run
+
+# Build Executable
+bash> flet build <linux|macos|window|web|...>
+
+# Clean Build
+bash> invoke clean
 ```
 
 -----

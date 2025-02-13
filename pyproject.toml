@@ -1,28 +1,28 @@
 [project]
 name = "sixpence"
-version = "0.1.0"
-description = "Simple Budget Planner/Tracker"
+version = "2.0.0a"
+description = "Simple Budget Manager"
 readme = "README.md"
-requires-python = ">=3.9,<4.0.0"
+requires-python = ">=3.13,<4.0.0"
 authors = [
     { name = "Craig N. Caroon", email = "craig@caroon.org" }
 ]
 dependencies = [
-  "flet==0.26.0",
-  "screeninfo (>=0.8.1,<0.9.0)"
+  "flet == 0.26.0",
+  "screeninfo >= 0.8.1"
 ]
 
 [tool.flet]
 # org name in reverse domain name notation, e.g. "com.mycompany".
 # Combined with project.name to build bundle ID for iOS and Android apps
-org = "org.caroon.craig"
+org = "org.caroon"
 
 # project display name that is used as an app title on Android and iOS home screens,
 # shown in window titles and about app dialogs on desktop.
-product = "sixpence"
+product = "Sixpence"
 
 # company name to display in about app dialogs
-company = "Torus Systems"
+company = "Caroon Dot Org"
 
 # copyright text to display in about app dialogs
 copyright = "Copyright (C) 2025 by Craig N. Caroon"
@@ -30,13 +30,9 @@ copyright = "Copyright (C) 2025 by Craig N. Caroon"
 [tool.flet.app]
 path = "src"
 
-[tool.uv]
-dev-dependencies = [
-    "flet[all]==0.26.0",
-]
-
 [tool.poetry]
 package-mode = false
 
 [tool.poetry.group.dev.dependencies]
 flet = {extras = ["all"], version = "0.26.0"}
+invoke = "^2.2.0"
