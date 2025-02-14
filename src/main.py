@@ -1,26 +1,7 @@
 import flet as ft
 import screeninfo
 
-def home_screen(page: ft.Page):
-    icon = ft.Icon(
-        name=ft.Icons.MONEY,
-        size=200
-        # color="red"
-    )
-    title = ft.Text("Sixpence", theme_style=ft.TextThemeStyle.DISPLAY_LARGE)
-    stack = ft.Stack(
-        [icon,title]
-    )
-    # header = ft.Card(
-    #     # color=ft.Colors.LIGHT_GREEN_ACCENT_400,
-    #     content=icon,
-    #     expand=True,
-    #     height=400
-    # )
-    # row = ft.Row([header])
-
-    # page.add(row)
-    page.add(stack)
+from views.home import Home
 
 
 SCREEN_SCALE_WIDTH = .70
@@ -41,10 +22,50 @@ def main(page: ft.Page):
     # page.vertical_alignment = ft.MainAxisAlignment.CENTER
 
     # example for generating page theme colors based on the seed color
-    page.theme = ft.Theme(color_scheme_seed=ft.Colors.GREEN_900)
-    page.update()
+    page.theme = ft.Theme(
+        font_family="Latin Modern Mono",
+        color_scheme_seed=ft.Colors.GREEN_400
+    )
 
-    home_screen(page)
+    homePage = Home()
+    page.views.append(
+        ft.View(
+            "/",
+            [homePage]
+        )
+    )
+    page.update()
 
 
 ft.app(main)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#

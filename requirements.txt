@@ -1,0 +1,8 @@
+# Release
+## Required to Run the App
+## Also need to be listed in pyproject.toml#dependecies
+screeninfo ~= 0.8.1
+
+# Dev
+flet[all] ~= 0.26.0
+invoke ~= 2.2.0
