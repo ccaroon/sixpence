@@ -2,9 +2,9 @@ import flet as ft
 
 
 class Home(ft.Container):
-    def __init__(self):
+    def __init__(self, page):
         super().__init__()
-
+        self.page = page
         self.__layout()
 
 
@@ -48,6 +48,7 @@ class Home(ft.Container):
                             size=25
                         )
                     ),
+                    on_click=lambda _: self.page.go("/budget"),
                     expand=1
                 ),
                 ft.ElevatedButton(
@@ -100,8 +101,6 @@ class Home(ft.Container):
             ],
             alignment=ft.MainAxisAlignment.CENTER
         )
-
-
 
         self.content = ft.Column(
             [

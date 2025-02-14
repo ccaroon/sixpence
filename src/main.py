@@ -1,12 +1,12 @@
 import flet as ft
 import screeninfo
 
-from views.home import Home
-
+from sixpence import Sixpence
 
 SCREEN_SCALE_WIDTH = .70
 SCREEN_SCALE_HEIGHT = .90
 def main(page: ft.Page):
+    # TODO: factor this mess out
     monitors = screeninfo.get_monitors()
 
     mon_width = monitors[0].width
@@ -27,45 +27,7 @@ def main(page: ft.Page):
         color_scheme_seed=ft.Colors.GREEN_400
     )
 
-    homePage = Home()
-    page.views.append(
-        ft.View(
-            "/",
-            [homePage]
-        )
-    )
-    page.update()
+    sixpence_app = Sixpence(page)
 
 
 ft.app(main)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#
