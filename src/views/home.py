@@ -4,7 +4,7 @@ import flet as ft
 class Home(ft.Container):
     def __init__(self, page):
         super().__init__()
-        self.page = page
+        self.__page = page
         self.__layout()
 
 
@@ -48,7 +48,7 @@ class Home(ft.Container):
                             size=25
                         )
                     ),
-                    on_click=lambda _: self.page.go("/budget"),
+                    on_click=lambda _: self.__page.go("/budget"),
                     expand=1
                 ),
                 ft.ElevatedButton(
@@ -69,7 +69,7 @@ class Home(ft.Container):
                     "Reports",
                     color="black",
                     bgcolor="orange",
-                    icon=ft.Icons.AREA_CHART_OUTLINED,
+                    icon=ft.Icons.INSERT_CHART,
                     icon_color="black",
                     style=ft.ButtonStyle(
                         icon_size=25,
