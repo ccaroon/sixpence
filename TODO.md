@@ -1,6 +1,6 @@
 # ToDo
 
-## How?
+## How To Tasks
 * [ ] Get the Documents folder
 * [x] Map Vuetify to Flet/Flutter
 * [x] Change Views
@@ -9,6 +9,22 @@
   * [ ] Per View
 * [ ] Window Events
   * [ ] on "close"
+* [ ] Model vs View (vs Controller?)
+
+
+## Porting Tasks
+* [x] Data Migrations
+* [ ] Config / Settings
+* [ ] Database classes
+* [ ] Views
+  * [ ] Budget
+  * [ ] Expenses
+  * [ ] Reports
+* [ ] Backup on Exit
+
+
+## Enhancement Tasks
+* [ ] Factor out tags like Cartaro
 
 
 ## Notes / Links

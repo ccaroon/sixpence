@@ -34,11 +34,8 @@ Sixpence allows you to create a budget and then track your progress. It is **not
 Create a Virtual Environment using `venv` or `pyenv` or whatever and activate it.
 
 ``` bash
-# Install Poetry
-bash> pip install poetry
-
-# Install Dependencies
-bash> poetry install
+# Install Requirements
+bash> pip install -r requirements.txt
 
 # Run in Dev Mode
 bash> flet run
