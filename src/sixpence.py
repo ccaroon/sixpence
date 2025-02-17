@@ -1,5 +1,6 @@
 import flet as ft
 import screeninfo
+import os
 
 from controls.app_bar import AppBar
 from controls.nav_rail import NavRail
@@ -43,6 +44,18 @@ class Sixpence:
                 "/settings": Settings(self.__page)
             }
         )
+
+        # TODO: factor out
+        # FLET_APP_STORAGE_TEMP == .cache/org.....
+        # FLET_APP_STORAGE_DATA == Documents/flet/sixpence
+        config_home = os.getenv("XDG_CONFIG_HOME", os.getenv("HOME") + "/.config")
+        cache_home = os.getenv("XDG_CACHE_HOME", os.getenv("HOME") + "/.cache")
+        data_home = os.getenv("XDG_DATA_HOME", os.getenv("HOME") + "/Documents")
+
+        self.__page.session.set("config_dir", f"{config_home}/sixpence")
+        self.__page.session.set("cache_dir", f"{cache_home}/sixpence")
+        self.__page.session.set("docs_dir", f"{data_home}/sixpence")
+        # TODO: ensure each of the above dirs exists
 
 
     def __init_window(self):
