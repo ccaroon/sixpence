@@ -1,12 +1,11 @@
 from invoke import task, Collection
 
+import build
+import dev
 
-@task
-def clean(ctx):
-    """ Clean Up Stuff """
-    ctx.run("rm -rf build/")
 
 
 ns = Collection(
-    clean
+    build,
+    dev
 )
