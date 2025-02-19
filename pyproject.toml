@@ -5,7 +5,12 @@ description = "Simple Budget Manager"
 readme = "README.md"
 requires-python = ">=3.13,<4.0.0"
 authors = [{ name = "Craig N. Caroon", email = "craig@caroon.org" }]
-dependencies = ["flet == 0.26.0", "screeninfo ~= 0.8.1", "tinydb ~= 4.8.2"]
+dependencies = [
+    "flet == 0.26.0",
+    "screeninfo ~= 0.8.1",
+    "tinydb ~= 4.8.2",
+    "PyYAML ~= 6.0.2"
+]
 
 [tool.flet]
 # org name in reverse domain name notation, e.g. "com.mycompany".

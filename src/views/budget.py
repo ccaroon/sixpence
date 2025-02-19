@@ -12,6 +12,5 @@ class Budget(ft.Container):
     def __layout(self):
         self.content = ft.Text(
             "Budget Placeholder",
-            color="white",
             weight=ft.FontWeight.BOLD,
             theme_style=ft.TextThemeStyle.DISPLAY_LARGE)

@@ -12,6 +12,5 @@ class Reports(ft.Container):
     def __layout(self):
         self.content = ft.Text(
             "Reports Placeholder",
-            color="white",
             weight=ft.FontWeight.BOLD,
             theme_style=ft.TextThemeStyle.DISPLAY_LARGE)

@@ -1,7 +1,7 @@
 # ToDo
 
 ## How To Tasks
-* [ ] Get the Documents folder
+* [x] Get the Documents folder
 * [x] Map Vuetify to Flet/Flutter
 * [x] Change Views
 * [ ] Keyboard Events
@@ -14,7 +14,7 @@
 
 ## Porting Tasks
 * [x] Data Migrations
-* [ ] Config / Settings
+* [x] Config / Settings
 * [ ] Database classes
 * [ ] Views
   * [ ] Budget

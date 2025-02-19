@@ -3,6 +3,7 @@
 ## Also need to be listed in pyproject.toml#dependecies
 screeninfo ~= 0.8.1
 tinydb ~= 4.8.2
+PyYAML ~= 6.0.2
 
 # Dev
 flet[all] ~= 0.26.0

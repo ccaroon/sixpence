@@ -2,6 +2,8 @@ import flet as ft
 import screeninfo
 import os
 
+from app.config import Config
+
 from controls.app_bar import AppBar
 from controls.nav_rail import NavRail
 from controls.router import Router
@@ -20,6 +22,7 @@ class Sixpence:
         self.__page = page
 
         self.__init_window()
+        self.__init_settings()
 
         self.__page.on_keyboard_event = self.__handle_on_keyboard
 
@@ -45,18 +48,6 @@ class Sixpence:
             }
         )
 
-        # TODO: factor out
-        # FLET_APP_STORAGE_TEMP == .cache/org.....
-        # FLET_APP_STORAGE_DATA == Documents/flet/sixpence
-        config_home = os.getenv("XDG_CONFIG_HOME", os.getenv("HOME") + "/.config")
-        cache_home = os.getenv("XDG_CACHE_HOME", os.getenv("HOME") + "/.cache")
-        data_home = os.getenv("XDG_DATA_HOME", os.getenv("HOME") + "/Documents")
-
-        self.__page.session.set("config_dir", f"{config_home}/sixpence")
-        self.__page.session.set("cache_dir", f"{cache_home}/sixpence")
-        self.__page.session.set("docs_dir", f"{data_home}/sixpence")
-        # TODO: ensure each of the above dirs exists
-
 
     def __init_window(self):
         monitors = screeninfo.get_monitors()
@@ -78,7 +69,45 @@ class Sixpence:
         # TODO: is not working. why????
         # https://flet.dev/docs/reference/types/window/
         # self.__page.window.prevent_close = True
-        self.__page.window.on_event = self.__handle_window_event
+        # self.__page.window.on_event = self.__handle_window_event
+
+
+    def __init_settings(self):
+        # NOTE: Built-in Storage Locations...I don't like them
+        # FLET_APP_STORAGE_TEMP == .cache/org.....
+        # FLET_APP_STORAGE_DATA == Documents/flet/sixpence
+
+        # Where to look for sixpence.yml config/settings file
+        config_home = os.getenv(
+            "XDG_CONFIG_HOME",
+            os.getenv("HOME") + "/.config"
+        )
+        config_dir = f"{config_home}/sixpence"
+        os.makedirs(config_dir, exist_ok=True)
+
+        # Temp Storage
+        cache_home = os.getenv(
+            "XDG_CACHE_HOME",
+            os.getenv("HOME") + "/.cache"
+        )
+        cache_dir = f"{cache_home}/sixpence"
+        os.makedirs(cache_dir, exist_ok=True)
+
+        # Where to Store main files
+        data_home = os.getenv(
+            "XDG_DATA_HOME",
+            os.getenv("HOME") + "/Documents"
+        )
+        docs_dir = f"{data_home}/sixpence"
+        os.makedirs(docs_dir, exist_ok=True)
+
+        self.__page.session.set("config_dir", config_dir)
+        self.__page.session.set("cache_dir", cache_dir)
+        self.__page.session.set("docs_dir", docs_dir)
+
+        # Init Config
+        config = Config.initialize(f"{config_dir}/sixpence.yml")
+        self.__page.session.set("config", config)
 
 
     def __handle_on_keyboard(self, event):
