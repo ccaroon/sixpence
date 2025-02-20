@@ -101,13 +101,18 @@ class Sixpence:
         docs_dir = f"{data_home}/sixpence"
         os.makedirs(docs_dir, exist_ok=True)
 
-        self.__page.session.set("config_dir", config_dir)
-        self.__page.session.set("cache_dir", cache_dir)
-        self.__page.session.set("docs_dir", docs_dir)
-
         # Init Config
-        config = Config.initialize(f"{config_dir}/sixpence.yml")
+        config = Config.initialize(
+            f"{config_dir}/sixpence.yml",
+            transient=["session"]
+        )
         self.__page.session.set("config", config)
+
+        # Set some app/session options
+        # These options are transient and NOT saved to the config file
+        config.set("session:cache_dir", cache_dir)
+        config.set("session:config_dir", config_dir)
+        config.set("session:docs_dir", docs_dir)
 
 
     def __handle_on_keyboard(self, event):

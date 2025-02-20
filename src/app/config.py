@@ -1,5 +1,6 @@
-import yaml
+import copy
 import os
+import yaml
 
 # Singleton class
 class Config:
@@ -12,11 +13,11 @@ class Config:
 
     __instance = None
 
-    def __init__(self, filename=None):
+    def __init__(self, filename=None, transient=None):
         if not Config.__instance:
             if filename == None:
                 raise TypeError("Must Specify a Filename")
-            Config.__instance = Config.__Instance(filename)
+            Config.__instance = Config.__Instance(filename, transient)
 
 
     def force_reload(self):
@@ -28,7 +29,7 @@ class Config:
 
 
     @classmethod
-    def initialize(cls, conf):
+    def initialize(cls, conf, transient=None):
         """
         Create the config file and init to defaults if not exist.
         Then return a Config instance.
@@ -40,7 +41,7 @@ class Config:
                 yaml.safe_dump({}, fptr)
 
             # Config instance for empty file
-            cfg = Config(conf)
+            cfg = Config(conf, transient)
 
             # Set default key/values
             for key_path, value in cls.DEFAULTS.items():
@@ -49,22 +50,22 @@ class Config:
             # Save with defaults
             cfg.save()
         else:
-            cfg = Config(conf)
+            cfg = Config(conf, transient)
 
         return cfg
 
     # --------------------------------------------------------------------------
     class __Instance:
-        def __init__(self, filename):
+        def __init__(self, filename, transient=None):
             self.__filename = filename
+            self.__transient = transient
             self.__read_file()
 
 
         def __read_file(self):
             with open(self.__filename, 'r') as fptr:
                 try:
-                    data = yaml.safe_load(fptr)
-                    self.settings = data.copy()
+                    self.settings = yaml.safe_load(fptr)
                 except Exception as exc:
                     raise Exception(F"Error reading config file {exc.message}")
 
@@ -107,5 +108,23 @@ class Config:
 
 
         def save(self):
+            # Don't save top-level transient keys
+            to_save = copy.deepcopy(self.settings)
+            if self.__transient:
+                for key in self.__transient:
+                    del to_save[key]
+
             with open(self.__filename, 'w') as fptr:
-                yaml.safe_dump(self.settings, fptr)
+                yaml.safe_dump(to_save, fptr)
+
+
+
+
+
+
+
+
+
+
+
+#
