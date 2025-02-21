@@ -25,7 +25,8 @@ class Router:
                             ft.Column([self.__appbar],              expand=2),
                             ft.Column([self.__routes[event.route]], expand=20)
                         ],
-                        vertical_alignment=ft.CrossAxisAlignment.START
+                        vertical_alignment=ft.CrossAxisAlignment.START,
+                        expand=True
                     )
                 ]
                 # App/Nav Bar on Top

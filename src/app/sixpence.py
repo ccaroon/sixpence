@@ -8,6 +8,9 @@ from controls.app_bar import AppBar
 from controls.nav_rail import NavRail
 from controls.router import Router
 
+
+# from utils.icon_search import IconSearch
+
 from views.home import Home
 from views.budget import Budget
 from views.expenses import Expenses
@@ -20,6 +23,8 @@ class Sixpence:
 
     def __init__(self, page):
         self.__page = page
+
+        self.__page.title = "Sixpence"
 
         self.__init_window()
         self.__init_settings()
@@ -47,6 +52,10 @@ class Sixpence:
                 "/settings": Settings(self.__page)
             }
         )
+
+        # x = IconSearch()
+        # print(x.icons[0])
+        # self.__page.session.set("icon_search", IconSearch)
 
 
     def __init_window(self):
