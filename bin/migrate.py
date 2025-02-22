@@ -2,6 +2,7 @@
 import argparse
 import json
 import os
+import yaml
 
 from tinydb import TinyDB
 
@@ -28,9 +29,15 @@ def __munge_shared_fields(entry, icon_search):
             new_value = value["$$date"] // 1000 if value else None
             del entry[field]
 
-            new_field = field.replace("At", "_at")
+            if field == "archivedAt":
+                new_field = "deleted_at"
+            else:
+                new_field = field.replace("At", "_at")
+
             entry[new_field] = new_value
 
+    # TODO: seach based on category instead of `icon`
+    #       ...will get a better mapping
     if "icon" in entry:
         icon_kw = entry["icon"].replace("mdi-", "")
         # entry["icon"] = entry["icon"].replace("mdi-", "")
@@ -57,7 +64,13 @@ def main(args):
     file_base, _ = os.path.splitext(input_file)
     output_file = f"{file_base}-v2.json"
 
-    icon_search = IconSearch()
+    icon_map = {}
+    icon_map_file = "./icon_map.yml"
+    if os.path.exists(icon_map_file):
+        with open(icon_map_file, "r") as fptr:
+            icon_map = yaml.safe_load(fptr)
+
+    icon_search = IconSearch(icon_map=icon_map)
 
     if os.path.exists(output_file):
         confirm = input(f"{output_file} exists. Overwrite? (yes|no)> ")
@@ -83,6 +96,9 @@ def main(args):
 
     # Much faster for lots of records
     db.insert_multiple(records)
+
+    with open(icon_map_file, "w") as ftpr:
+        yaml.safe_dump(icon_search.icon_map, ftpr)
 
     # Slow for lots of records
     # for idx, entry in enumerate(records):

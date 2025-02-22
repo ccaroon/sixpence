@@ -37,8 +37,10 @@ class Sixpence:
         # Overall Color Theme
         self.__page.theme = ft.Theme(
             font_family="Latin Modern Mono",
-            color_scheme_seed=ft.Colors.GREEN_400
+            color_scheme_seed=ft.Colors.GREEN_400,
         )
+
+        self.__page.theme_mode = self.__page.session.get("config").get("app:mode", "system")
 
         self.__appbar = NavRail(self.__page)
         self.__router = Router(

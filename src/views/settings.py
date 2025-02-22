@@ -14,6 +14,7 @@ class Settings(ft.Container):
             ])
         )
 
+        self.__cfg = self.__page.session.get("config")
         self.__layout()
 
 
@@ -42,6 +43,11 @@ class Settings(ft.Container):
                     selected_index=0,
                     tabs=[
                         ft.Tab(
+                            text="App",
+                            icon=ft.Icons.SETTINGS_APPLICATIONS,
+                            content=self.__app()
+                        ),
+                        ft.Tab(
                             text="Backup",
                             icon=ft.Icons.BACKUP,
                             content=self.__backup()
@@ -52,33 +58,32 @@ class Settings(ft.Container):
         )
 
 
-    def __backup(self):
-        cfg = self.__page.session.get("config")
+    def __handle_on_save(self, evt):
+            self.__cfg.save()
+            self.__snack_msg("Settings Saved")
 
+
+    def __backup(self):
         keep_text = ft.Text(
-            f"{cfg.get('backup:keep')}",
+            f"{self.__cfg.get('backup:keep')}",
             theme_style=ft.TextThemeStyle.TITLE_LARGE,
             text_align=ft.TextAlign.CENTER,
             expand=1
         )
 
-        def on_save(evt):
-            cfg.save()
-            self.__snack_msg("Settings Saved")
-
         def on_slider_change(evt):
             new_value = round(evt.control.value)
-            cfg.set("backup:keep", new_value)
+            self.__cfg.set("backup:keep", new_value)
             keep_text.value = new_value
             keep_text.update()
 
         def on_choose_path(evt):
-            cfg.set("backup:path", evt.path)
+            self.__cfg.set("backup:path", evt.path)
             backup_path_text.value = evt.path
             backup_path_text.update()
 
         backup_path_text = ft.Text(
-            f"{cfg.get('backup:path')}",
+            f"{self.__cfg.get('backup:path')}",
             theme_style=ft.TextThemeStyle.TITLE_LARGE,
             text_align=ft.TextAlign.CENTER,
             expand=10
@@ -111,7 +116,7 @@ class Settings(ft.Container):
                                 label="Keep {value} Backup Files",
                                 min=1, max=30,
                                 divisions=30,
-                                value=cfg.get("backup:keep"),
+                                value=self.__cfg.get("backup:keep"),
                                 on_change_end=on_slider_change,
                                 expand=10
                             )
@@ -145,7 +150,7 @@ class Settings(ft.Container):
                             ft.ElevatedButton(
                                 "Save",
                                 icon=ft.Icons.SAVE,
-                                on_click=on_save
+                                on_click=self.__handle_on_save
                             )
                         ],
                         alignment=ft.MainAxisAlignment.CENTER
@@ -153,3 +158,83 @@ class Settings(ft.Container):
                 ]
             )
         )
+
+    def __app(self):
+
+        def on_mode_change(evt):
+            new_mode = list(evt.control.selected)[0]
+            self.__cfg.set("app:mode", new_mode)
+            self.__page.theme_mode = new_mode
+            self.__page.update()
+
+
+        return ft.Container(
+            ft.Column(
+                [
+                    ft.Row(
+                        [
+                            ft.Column(
+                                [
+                                    ft.Text(
+                                        "Mode",
+                                        weight=ft.FontWeight.BOLD,
+                                        theme_style=ft.TextThemeStyle.TITLE_LARGE
+                                    ),
+                                    ft.Text(
+                                        "Light, Dark or System Default",
+                                    ),
+                                ],
+                                expand=1
+                            ),
+                            ft.SegmentedButton(
+                                on_change=on_mode_change,
+                                selected=[self.__cfg.get("app:mode")],
+                                segments=[
+                                    ft.Segment(
+                                        value="light",
+                                        label=ft.Text("Light"),
+                                        icon=ft.Icon(ft.Icons.LIGHT_MODE)
+                                    ),
+                                    ft.Segment(
+                                        value="dark",
+                                        label=ft.Text("Dark"),
+                                        icon=ft.Icon(ft.Icons.DARK_MODE)
+                                    ),
+                                    ft.Segment(
+                                        value="system",
+                                        label=ft.Text("System Default"),
+                                        icon=ft.Icon(ft.Icons.SETTINGS_SUGGEST)
+                                    )
+                                ]
+                            )
+                        ]
+                    ),
+                    ft.Row(
+                        [
+                            ft.ElevatedButton(
+                                "Save",
+                                icon=ft.Icons.SAVE,
+                                on_click=self.__handle_on_save
+                            )
+                        ],
+                        alignment=ft.MainAxisAlignment.CENTER
+                    )
+                ]
+            )
+        )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#

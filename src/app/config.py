@@ -8,7 +8,8 @@ class Config:
 
     DEFAULTS = {
         "backup:path": None,
-        "backup:keep": 5
+        "backup:keep": 5,
+        "app:mode": "system"
     }
 
     __instance = None

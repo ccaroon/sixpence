@@ -16,21 +16,20 @@ class Budget(ft.Container):
         list_view = ft.ListView()
 
         # TODO:
-        # - sort
-        # - exclude deleted/archived
-        budget_items = BudgetItem.fetch()
+        # - exclude deleted entries ... build into Base class?
+        budget_items = BudgetItem.fetch(sort_by="type,category")
         for idx, item in enumerate(budget_items):
             income_color = const.COLOR_INCOME if idx % 2 == 0 else const.COLOR_INCOME_ALT
             exp_color = const.COLOR_EXPENSE if idx % 2 == 0 else const.COLOR_EXPENSE_ALT
             bgcolor = income_color if item.type == BudgetItem.TYPE_INCOME else exp_color
 
             tile = ft.ListTile(
-                leading=ft.Icon(item.icon),
+                leading=ft.Icon(item.icon, color="black"),
                 title=ft.Row(
                     [
-                        ft.Text(item.category, expand=4),
-                        ft.Text(f"${item.amount:0.2f}", expand=4),
-                        ft.Text(item.notes, expand=4),
+                        ft.Text(item.category, color="black", expand=4),
+                        ft.Text(f"${item.amount:0.2f}", color="black", expand=4),
+                        ft.Text(item.notes, color="black", expand=4),
                     ],
                 ),
                 bgcolor=bgcolor

@@ -2,9 +2,14 @@ from flet import Icons as FletIcons
 
 
 class IconSearch:
-    def __init__(self):
+    def __init__(self, **kwargs):
         self.__icons = [icn.value for icn in list(FletIcons)]
-        self.__cache = {}
+        self.__icon_map = kwargs.get("icon_map", {})
+
+
+    @property
+    def icon_map(self):
+        return self.__icon_map
 
 
     def search(self, keyword):
@@ -29,11 +34,12 @@ class IconSearch:
 
         return matches
 
+
     def interactive_search(self, keyword, **kwargs):
         hint = kwargs.get("hint", "N/A")
         choice = None
 
-        cached_icon = self.__cache.get(keyword)
+        cached_icon = self.__icon_map.get(keyword)
         if cached_icon:
             choice = cached_icon
         else:
@@ -41,7 +47,7 @@ class IconSearch:
             search_term = keyword
             while not choice:
                 matches = self.search(search_term)
-                print(f"==> {hint} | {keyword.upper()} <==")
+                print(f"\n==> {hint} | {keyword.upper()} <==")
                 for idx, icon in enumerate(matches):
                     print(f"{idx}) {icon}")
 
@@ -54,7 +60,7 @@ class IconSearch:
                     choice = None
                     search_term = response
 
-            self.__cache[keyword] = choice
+            self.__icon_map[keyword] = choice
 
 
         return choice

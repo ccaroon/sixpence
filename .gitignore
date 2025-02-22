@@ -1,6 +1,7 @@
 __pycache__/
 
 build/
+icon_map.yml
 
 # Flet
 storage/
