@@ -110,3 +110,7 @@ class Home(ft.Container):
                 buttons2
             ]
         )
+
+    def handle_keyboard_event(self, event):
+        # print(f"Home: KBE -> {event}")
+        pass

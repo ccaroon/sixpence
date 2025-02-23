@@ -14,3 +14,8 @@ class Expenses(ft.Container):
             "Expenses Placeholder",
             weight=ft.FontWeight.BOLD,
             theme_style=ft.TextThemeStyle.DISPLAY_LARGE)
+
+
+    def handle_keyboard_event(self, event):
+        # print(f"Expenses: KBE -> {event}")
+        pass

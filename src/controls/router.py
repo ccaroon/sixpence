@@ -6,13 +6,14 @@ class Router:
         self.__appbar = appbar
         self.__routes = route_map
 
-        self.__page.on_route_change = self.handle_route_change
-        self.__page.on_view_pop = self.handle_view_pop
+        self.__page.on_route_change = self.__handle_route_change
+        self.__page.on_view_pop = self.__handle_view_pop
 
+        self.__active_view = self.__routes["/home"]
         self.__page.go("/home")
 
 
-    def handle_route_change(self, event):
+    def __handle_route_change(self, event):
         self.__page.views.clear()
 
         self.__page.views.append(
@@ -36,11 +37,21 @@ class Router:
                 # ]
             )
         )
+
+        self.__active_view = self.__routes[event.route]
         self.__page.update()
 
 
     # TODO: not tested
-    def handle_view_pop(self, event):
+    def __handle_view_pop(self, event):
         self.__page.views.pop()
         top_view = self.__page.views[-1]
         self.__page.go(top_view.route)
+
+
+    def handle_keyboard_event(self, event):
+        """ Passes Keyboard Events to the Active View """
+        # print(
+        #     f"Key: {event.key}, Shift: {event.shift}, Control: {event.ctrl}, Alt: {event.alt}, Meta: {event.meta}"
+        # )
+        self.__active_view.handle_keyboard_event(event)

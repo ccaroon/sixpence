@@ -11,6 +11,7 @@ from controls.router import Router
 
 # from utils.icon_search import IconSearch
 
+from views.about import About
 from views.home import Home
 from views.budget import Budget
 from views.expenses import Expenses
@@ -41,6 +42,9 @@ class Sixpence:
         )
 
         self.__page.theme_mode = self.__page.session.get("config").get("app:mode", "system")
+
+        self.__about_view = About(self.__page)
+        self.__page.overlay.append(self.__about_view)
 
         self.__appbar = NavRail(self.__page)
         self.__router = Router(
@@ -127,25 +131,23 @@ class Sixpence:
 
 
     def __handle_on_keyboard(self, event):
-        # print(
-        #     f"Key: {event.key}, Shift: {event.shift}, Control: {event.ctrl}, Alt: {event.alt}, Meta: {event.meta}"
-        # )
-        if event.ctrl:
-            if event.key == "B":
-                # self.__page.go("/budget")
-                # TODO: does not work
-                self.__appbar.selected_index = 1
-            elif event.key == "E":
-                # self.__page.go("/expenses")
-                self.__appbar.selected_index == 2
-            elif event.key == "R":
-                # self.__page.go("/reports")
-                self.__appbar.selected_index == 3
+        # First, handle "global" keyboard events
+        # TODO: better organize "global" events
+        # -- About
+        if event.ctrl and event.shift and event.key == "?":
+            self.__about_view.display()
+        # -- Quit
+        elif event.ctrl and event.key == "Q":
+            self.__page.window.close()
+        # If not handled, passed to router to distribute to correct View
+        else:
+            self.__router.handle_keyboard_event(event)
 
 
     def __handle_window_event(self, event):
         # if event.data == "close":
-        print(event)
+        # print(event)
+        pass
 
 
 

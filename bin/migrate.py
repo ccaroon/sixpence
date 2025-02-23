@@ -39,9 +39,16 @@ def __munge_shared_fields(entry, icon_search):
     # TODO: seach based on category instead of `icon`
     #       ...will get a better mapping
     if "icon" in entry:
-        icon_kw = entry["icon"].replace("mdi-", "")
+        # TODO: still not quite right.
+        # ... use full category?
+        # ... replace : with _?
+        #
+        category = entry["category"]
+        parts = category.split(":")
+        icon_kw = parts.pop()
+        # icon_kw = entry["icon"].replace("mdi-", "")
         # entry["icon"] = entry["icon"].replace("mdi-", "")
-        new_icon = icon_search.interactive_search(icon_kw, hint=entry["category"])
+        new_icon = icon_search.interactive_search(icon_kw, hint=category)
         entry["icon"] = new_icon
 
 

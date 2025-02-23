@@ -38,3 +38,8 @@ class Budget(ft.Container):
             list_view.controls.append(tile)
 
         self.content = list_view
+
+
+    def handle_keyboard_event(self, event):
+        # print(f"Budget: KBE -> {event}")
+        pass

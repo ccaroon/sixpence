@@ -224,7 +224,10 @@ class Settings(ft.Container):
         )
 
 
-
+    def handle_keyboard_event(self, event):
+        if event.ctrl:
+            if event.key == "S":
+                self.__handle_on_save(None)
 
 
 
