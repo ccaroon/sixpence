@@ -14,31 +14,38 @@ class Router:
 
 
     def __handle_route_change(self, event):
+        view = self.__routes[event.route]
+
         self.__page.views.clear()
+
+        # Layout the New View
+        view_contents = []
+
+        ## Add the NavBar if exists
+        if view.navbar:
+            view_contents.append(view.navbar)
+
+        ## Add the main Layout
+        view_contents.append(
+            ft.Row(
+                [
+                    ft.Column([self.__appbar], expand=2),
+                    ft.Column([view],          expand=20)
+                ],
+                vertical_alignment=ft.CrossAxisAlignment.START,
+                expand=True
+            )
+
+        )
 
         self.__page.views.append(
             ft.View(
                 event.route,
-                [
-                    # App/Nav Bar on the Left
-                    ft.Row(
-                        [
-                            ft.Column([self.__appbar],              expand=2),
-                            ft.Column([self.__routes[event.route]], expand=20)
-                        ],
-                        vertical_alignment=ft.CrossAxisAlignment.START,
-                        expand=True
-                    )
-                ]
-                # App/Nav Bar on Top
-                # [
-                #     self.__appbar,
-                #     self.__routes[event.route]
-                # ]
+                view_contents
             )
         )
 
-        self.__active_view = self.__routes[event.route]
+        self.__active_view = view
         self.__page.update()
 
 

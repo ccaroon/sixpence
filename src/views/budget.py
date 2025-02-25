@@ -3,16 +3,10 @@ import flet as ft
 from models.budget import Budget as BudgetItem
 
 import views.constants as const
+from views.base import Base as BaseView
 
-class Budget(ft.Container):
-    def __init__(self, page):
-        super().__init__(expand=True)
-
-        self.__page = page
-        self.__layout()
-
-
-    def __layout(self):
+class Budget(BaseView):
+    def _layout(self):
         list_view = ft.ListView()
 
         # TODO:
@@ -37,9 +31,15 @@ class Budget(ft.Container):
 
             list_view.controls.append(tile)
 
+        # self.content = ft.Column(
+        #     [
+
+        #         list_view
+        #     ],
+        #     scroll=ft.ScrollMode.AUTO
+        # )
         self.content = list_view
 
 
-    def handle_keyboard_event(self, event):
-        # print(f"Budget: KBE -> {event}")
-        pass
+    def _layout_navbar(self):
+        self._navbar = ft.AppBar(title=ft.Text("Budget"))

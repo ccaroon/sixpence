@@ -1,12 +1,11 @@
 import flet as ft
 
 import views.constants as const
+from views.base import Base as BaseView
 
-class Settings(ft.Container):
+class Settings(BaseView):
     def __init__(self, page):
-        super().__init__()
-
-        self.__page = page
+        # Specific Icon and Text set in __snack_msg()
         self.__snackbar = ft.SnackBar(
             ft.Row([
                 ft.Icon(),
@@ -14,18 +13,19 @@ class Settings(ft.Container):
             ])
         )
 
-        self.__cfg = self.__page.session.get("config")
-        self.__layout()
+        self.__cfg = page.session.get("config")
+
+        super().__init__(page)
 
 
     def __snack_msg(self, message, icon=ft.Icons.INFO_OUTLINE):
         # TODO: not great indexing into content/controls
         self.__snackbar.content.controls[0].name = icon
         self.__snackbar.content.controls[1].value = message
-        self.__page.open(self.__snackbar)
+        self._page.open(self.__snackbar)
 
 
-    def __layout(self):
+    def _layout(self):
         self.content = ft.Column(
             controls=[
                 # Header
@@ -45,12 +45,12 @@ class Settings(ft.Container):
                         ft.Tab(
                             text="App",
                             icon=ft.Icons.SETTINGS_APPLICATIONS,
-                            content=self.__app()
+                            content=self.__app_controls()
                         ),
                         ft.Tab(
                             text="Backup",
                             icon=ft.Icons.BACKUP,
-                            content=self.__backup()
+                            content=self.__backup_controls()
                         )
                     ]
                 )
@@ -63,7 +63,7 @@ class Settings(ft.Container):
             self.__snack_msg("Settings Saved")
 
 
-    def __backup(self):
+    def __backup_controls(self):
         keep_text = ft.Text(
             f"{self.__cfg.get('backup:keep')}",
             theme_style=ft.TextThemeStyle.TITLE_LARGE,
@@ -91,7 +91,7 @@ class Settings(ft.Container):
         file_picker = ft.FilePicker(
             on_result=on_choose_path
         )
-        self.__page.overlay.append(file_picker)
+        self._page.overlay.append(file_picker)
 
         return ft.Container(
             ft.Column(
@@ -159,13 +159,13 @@ class Settings(ft.Container):
             )
         )
 
-    def __app(self):
+    def __app_controls(self):
 
         def on_mode_change(evt):
             new_mode = list(evt.control.selected)[0]
             self.__cfg.set("app:mode", new_mode)
-            self.__page.theme_mode = new_mode
-            self.__page.update()
+            self._page.theme_mode = new_mode
+            self._page.update()
 
 
         return ft.Container(
@@ -228,13 +228,6 @@ class Settings(ft.Container):
         if event.ctrl:
             if event.key == "S":
                 self.__handle_on_save(None)
-
-
-
-
-
-
-
 
 
 

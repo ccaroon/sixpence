@@ -59,10 +59,6 @@ class Sixpence:
             }
         )
 
-        # x = IconSearch()
-        # print(x.icons[0])
-        # self.__page.session.set("icon_search", IconSearch)
-
 
     def __init_window(self):
         monitors = screeninfo.get_monitors()
