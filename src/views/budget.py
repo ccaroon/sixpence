@@ -72,6 +72,7 @@ class Budget(BaseView):
 
     def __on_search_clear(self, evt):
         self.__clear_search_filters()
+        self.__search_control.value = None
         self._update()
 
 
