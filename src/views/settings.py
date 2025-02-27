@@ -28,16 +28,6 @@ class Settings(BaseView):
     def _layout(self):
         self.content = ft.Column(
             controls=[
-                # Header
-                ft.Row(
-                    [
-                        ft.Icon(ft.Icons.SETTINGS, size=const.ICON_LARGE),
-                        ft.Text(
-                            "Settings",
-                            weight=ft.FontWeight.BOLD,
-                            theme_style=ft.TextThemeStyle.DISPLAY_LARGE)
-                    ]
-                ),
                 # Tab View for Settings Groups
                 ft.Tabs(
                     selected_index=0,
@@ -221,6 +211,14 @@ class Settings(BaseView):
                     )
                 ]
             )
+        )
+
+
+    def _layout_navbar(self):
+        self._navbar = ft.AppBar(
+            leading=ft.Icon(ft.Icons.SETTINGS, size=const.ICON_MEDIUM),
+            title=ft.Text("Settings"),
+            bgcolor=ft.Colors.PRIMARY_CONTAINER
         )
 
 

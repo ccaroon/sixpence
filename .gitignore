@@ -2,6 +2,8 @@ __pycache__/
 
 build/
 icon_map.yml
+htmlcov/
+.coverage
 
 # Flet
 storage/

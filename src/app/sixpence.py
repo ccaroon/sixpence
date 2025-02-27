@@ -127,13 +127,21 @@ class Sixpence:
 
 
     def __handle_on_keyboard(self, event):
+        # import pprint
+        # pprint.pprint(event)
+
+        # TODO: simple way to denote cmd-KEY on MacOS &  ctrl-KEY others
+        # MacOS -- cmd == event.meta
+        # Linux -- ??? == event.meta
+
+
         # First, handle "global" keyboard events
         # TODO: better organize "global" events
         # -- About
-        if event.ctrl and event.shift and event.key == "?":
+        if (event.ctrl or event.meta) and event.shift and event.key == "?":
             self.__about_view.display()
         # -- Quit
-        elif event.ctrl and event.key == "Q":
+        elif (event.ctrl or event.meta) and event.key == "Q":
             self.__page.window.close()
         # If not handled, passed to router to distribute to correct View
         else:

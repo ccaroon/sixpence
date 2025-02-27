@@ -12,6 +12,7 @@ run_commands = {
     "Linux": "build/linux/sixpence"
 }
 
+
 @task
 def app(ctx, target=None):
     """ Build The Application for `target` Platform """
@@ -20,6 +21,7 @@ def app(ctx, target=None):
         target = os_to_platform.get(os_name)
     ctx.run(f"flet build {target}", echo=True)
     print("=> Build Complete")
+
 
 @task
 def run(ctx):

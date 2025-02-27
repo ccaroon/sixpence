@@ -4,9 +4,9 @@
 * [x] Get the Documents folder
 * [x] Map Vuetify to Flet/Flutter
 * [x] Change Views
-* [ ] Keyboard Events
+* [x] Keyboard Events
   * [x] Global
-  * [ ] Per View
+  * [x] Per View
 * [ ] Window Events
   * [ ] on "close"
 * [ ] Model vs View (vs Controller?)

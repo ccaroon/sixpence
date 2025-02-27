@@ -8,5 +8,8 @@ screeninfo ~= 0.8.1
 tinydb ~= 4.8.2
 
 # Dev
+coverage ~= 7.6
+faker ~= 36.1
 flet[all] ~= 0.26.0
 invoke ~= 2.2.0
+nose2 ~= 0.15

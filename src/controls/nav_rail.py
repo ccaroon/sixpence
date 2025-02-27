@@ -6,7 +6,7 @@ class NavRail(ft.NavigationRail):
     def __init__(self, page):
         super().__init__(
             selected_index=0,
-            leading=ft.Image(src="../assets/logo.png"),
+            # leading=ft.Image(src="../assets/logo.png"),
             height=999,
             expand=1,
             destinations=[

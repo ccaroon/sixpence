@@ -10,6 +10,7 @@ import tinydb.operations as tyops
 
 from app.config import Config
 from utils.db_helper import DbHelper
+import utils.tools
 # ------------------------------------------------------------------------------
 # IMPORTANT NOTES:
 # 1. `id` is not stored in the database as part of the record. It is "external"
@@ -253,33 +254,28 @@ class Base(ABC):
         query_parts = []
         query_builder = Query()
 
-        for (field, value) in kwargs.items():
-            # field=value
-            # field=cmp:value
-            # cmp can be eq|ne|gt|gte|lt|lte|btw
+        for (field, query_str) in kwargs.items():
+            # field=<value>
+            # field=<cmp>:<value>
+            # <cmp> can be eq|ne|gt|gte|lt|lte|btw
             #   - btw format: field=btw:value1:value2
             # NOTE: Currently `cmp` only valid for numeric searches
-            parts = value.split(':', 1)
-            if len(parts) == 1:
-                test_op = 'eq'
-                test_value = parts[0]
-            elif len(parts) >= 2:
-                test_op = parts[0]
-                test_value = parts[1]
+            # See: DbHelper.parse_query
+            (query_op, query_value) = DbHelper.parse_query(query_str)
 
             if field == 'tags':
                 # NOTE: Does not normalize tags for searching
-                tags = test_value.replace(" ", "").split(',')
+                tags = query_value.replace(" ", "").split(',')
                 query_parts.append(query_builder['tags'].any(tags))
             else:
                 # Can search in boolean, int and string fields
-                query_value = test_value
                 if re.match("(true|false)", query_value, flags=re.IGNORECASE):
                     query_value = True if query_value.lower() == 'true' else False
                     query_parts.append(query_builder[field] == query_value)
-                elif query_value.isdecimal() or re.match(r'\d+:\d+', query_value):
-                    query_parts.append(query_builder[field].test(DbHelper.cmp_integer, test_op, query_value))
-                elif query_value == 'null':
+                # TODO: handle btw -- X:Y
+                elif utils.tools.is_numeric(query_value):
+                    query_parts.append(query_builder[field].test(DbHelper.cmp_numeric, query_op, query_value))
+                elif query_value == "null":
                     query_parts.append(query_builder[field] == None)
                 else:
                     # Assume query_value is a string

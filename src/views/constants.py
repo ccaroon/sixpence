@@ -1,6 +1,7 @@
 from flet import Colors as ftc
 # Icon Sizes
 ICON_LARGE = 80
+ICON_MEDIUM = 50
 
 
 # Colors

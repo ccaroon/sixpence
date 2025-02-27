@@ -1,3 +1,4 @@
+import re
 import sys
 
 class DbHelper:
@@ -7,6 +8,9 @@ class DbHelper:
         bool: False,
         'none': None
     }
+
+    SEARCH_OPS = ("eq","ne","gt","gte","lt","lte","btw")
+    __SEARCH_OPS_RE = re.compile(rf"^({':|'.join(SEARCH_OPS) + ':'})?(.*)$")
 
     @classmethod
     # Used by the sort method.
@@ -27,6 +31,7 @@ class DbHelper:
             types.append(attr_type)
 
         return types
+
 
     @classmethod
     def sort(cls, items, sort_desc):
@@ -50,7 +55,37 @@ class DbHelper:
         # As New List
         return sorted(items, key=key_smith, reverse=reverse)
 
-    # Used to do integer comparisons via the Tinydb.Query.test() method.
+
+    @classmethod
+    def parse_query(cls, query_str):
+        """
+        Parse query string suitable for the mode/base.py `find` method.
+
+        Format: "QUERY_OP:QUERY_VALUE"
+
+        Examples:
+            - foobar
+            - eq:foobar
+            - btw:42:77
+            - gte:54
+        """
+        query_op = None
+        query_val = None
+        match = re.fullmatch(cls.__SEARCH_OPS_RE, query_str)
+        if match:
+            query_op = match.group(1)
+            query_val = match.group(2)
+        else:
+            raise ValueError(f"Invalid Search Query: [{query_str}]")
+
+        # Query OP can be omitted; Default to "eq"
+        # Also, strip off the ending ":" if present
+        query_op = query_op.rstrip(":") if query_op is not None else "eq"
+
+        return (query_op, query_val)
+
+
+    # Used to do numeric comparisons via the Tinydb.Query.test() method.
     # This is used b/c is solves the problem of being able to compare values
     # when a db field's value can be None (null).
     # If the db_val is None assume no match/False.
@@ -58,11 +93,11 @@ class DbHelper:
     # field contains null/None:
     #   => 'TypeError: '>' not supported between instances of 'NoneType' and 'int'
     @staticmethod
-    def cmp_integer(doc_val, op, test_val):
+    def cmp_numeric(doc_val, op, test_val):
         result = False
         if doc_val is not None:
             values = test_val.split(':')
-            values = [int(val) for val in values]
+            values = [float(val) for val in values]
             if op == 'ne':
                 result = doc_val != values[0]
             elif op == 'gt':

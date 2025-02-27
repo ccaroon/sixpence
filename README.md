@@ -38,13 +38,19 @@ Create a Virtual Environment using `venv` or `pyenv` or whatever and activate it
 bash> pip install -r requirements.txt
 
 # Run in Dev Mode
-bash> flet run
+bash> invoke dev.run
 
 # Build Executable
-bash> flet build <linux|macos|window|web|...>
+bash> invoke build.app
+
+# Run Built App
+bash> invoke build.run
 
 # Clean Build
-bash> invoke clean
+bash> invoke build.clean
+
+# Other Commands
+bash> invoke -l
 ```
 
 -----
