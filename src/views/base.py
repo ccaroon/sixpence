@@ -9,8 +9,8 @@ class Base(ft.Container):
         self._page = page
         self._navbar = None
 
-        self._layout()
         self._layout_navbar()
+        self._layout()
 
 
     @property

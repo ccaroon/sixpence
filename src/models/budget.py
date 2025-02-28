@@ -6,6 +6,14 @@ class Budget(Taggable, Base):
     TYPE_INCOME = 0
     TYPE_EXPENSE = 1
 
+    FREQ_DESC = {
+        1: "Monthly",
+        2: "Bi-Monthly",
+        3: "Quarterly",
+        6: "Bi-Yearly",
+        12: "Yearly"
+    }
+
     def __init__(self, id=None, **kwargs):
         # Income or Expense
         self.type = self.TYPE_EXPENSE
@@ -45,6 +53,10 @@ class Budget(Taggable, Base):
         data.update(super()._serialize())
 
         return data
+
+
+    def frequency_desc(self):
+        return self.FREQ_DESC.get(self.frequency, f"{self.frequency} months")
 
 
     def update(self, data):

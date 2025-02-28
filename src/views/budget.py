@@ -1,5 +1,7 @@
 import flet as ft
 
+import locale
+
 import utils.tools
 import views.constants as const
 
@@ -23,26 +25,47 @@ class Budget(BaseView):
             sort_by="type,category",
             **self.__filters
         )
+        inc_total = 0.0
+        exp_total = 0.0
         for idx, item in enumerate(budget_items):
             inc_color = utils.tools.cycle(
                 (const.COLOR_INCOME, const.COLOR_INCOME_ALT), idx)
             exp_color = utils.tools.cycle(
                 (const.COLOR_EXPENSE, const.COLOR_EXPENSE_ALT), idx)
-            bgcolor = inc_color if item.type == BudgetItem.TYPE_INCOME else exp_color
+
+            bgcolor = None
+            if item.type == BudgetItem.TYPE_INCOME:
+                bgcolor = inc_color
+                inc_total += item.amount
+            else:
+                bgcolor = exp_color
+                exp_total += item.amount
+
+            # bgcolor = inc_color if item.type == BudgetItem.TYPE_INCOME else exp_color
 
             tile = ft.ListTile(
                 leading=ft.Icon(item.icon, color="black"),
                 title=ft.Row(
                     [
                         ft.Text(item.category, color="black", expand=4),
-                        ft.Text(f"${item.amount:0.2f}", color="black", expand=4),
+                        ft.Text(
+                            locale.currency(item.amount),
+                            color="black", expand=4),
+                        # ft.Text(f"{item.frequency} months", color="black", expand=4),
                         ft.Text(item.notes, color="black", expand=4),
+                        ft.VerticalDivider(),
+                        ft.IconButton(ft.Icons.EDIT),
+                        ft.IconButton(ft.Icons.DELETE)
                     ],
                 ),
+                subtitle=ft.Text(item.frequency_desc(), color="black"),
                 bgcolor=bgcolor
             )
 
             self.__list_view.controls.append(tile)
+
+        self.__income_total.text = locale.currency(inc_total, grouping=True)
+        self.__expense_total.text = locale.currency(exp_total, grouping=True)
 
         self._page.update()
 
@@ -96,15 +119,36 @@ class Budget(BaseView):
         self.__search_control.focus()
 
 
+    def __on_new_item(self, evt):
+        pass
+
+
     def _layout_navbar(self):
         self.__search_control = ft.TextField(
             label="Search", icon=ft.Icons.SEARCH, on_submit=self.__on_search)
+
+        self.__income_total = ft.OutlinedButton(
+            icon=ft.Icons.ATTACH_MONEY,
+            style=ft.ButtonStyle(bgcolor=const.COLOR_INCOME)
+        )
+        self.__expense_total = ft.OutlinedButton(
+            icon=ft.Icons.MONEY_OFF,
+            style=ft.ButtonStyle(bgcolor=const.COLOR_EXPENSE)
+        )
 
         self._navbar = ft.AppBar(
             leading=ft.Icon(ft.Icons.FORMAT_LIST_BULLETED, size=const.ICON_MEDIUM),
             title=ft.Text("Budget"),
             bgcolor=ft.Colors.PRIMARY_CONTAINER,
             actions=[
+                # New Budget Item Button
+                ft.IconButton(
+                    icon=ft.Icons.FORMAT_LIST_BULLETED_ADD,
+                    on_click=self.__on_new_item),
+                ft.VerticalDivider(),
+                self.__income_total,
+                self.__expense_total,
+                ft.VerticalDivider(),
                 # Frequency Filter buttons
                 ft.SegmentedButton(
                     on_change=self.__on_frequency_change,
@@ -119,8 +163,11 @@ class Budget(BaseView):
                     ]
                 ),
                 ft.VerticalDivider(),
+                # Search - Box and Reset button
                 self.__search_control,
-                ft.IconButton(icon=ft.Icons.CLEAR, on_click=self.__on_search_clear)
+                ft.IconButton(
+                    icon=ft.Icons.CLEAR,
+                    on_click=self.__on_search_clear)
             ]
         )
 

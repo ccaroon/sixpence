@@ -1,5 +1,7 @@
 import flet as ft
 import screeninfo
+
+import locale
 import os
 
 from app.config import Config
@@ -23,6 +25,8 @@ class Sixpence:
     SCREEN_SCALE_HEIGHT = .80 #.90
 
     def __init__(self, page):
+        locale.setlocale(locale.LC_ALL, '')
+
         self.__page = page
 
         self.__page.title = "Sixpence"
