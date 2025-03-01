@@ -36,36 +36,54 @@ class Budget(BaseView):
             bgcolor = None
             if item.type == BudgetItem.TYPE_INCOME:
                 bgcolor = inc_color
-                inc_total += item.amount
+                inc_total += (item.amount / item.frequency)
             else:
                 bgcolor = exp_color
-                exp_total += item.amount
+                exp_total += (item.amount / item.frequency)
 
-            # bgcolor = inc_color if item.type == BudgetItem.TYPE_INCOME else exp_color
+            display_amt = f"{locale.currency(item.amount)}"
+            if item.frequency > 1:
+                display_amt +=  f" ({locale.currency(item.amount / item.frequency)})"
 
             tile = ft.ListTile(
                 leading=ft.Icon(item.icon, color="black"),
                 title=ft.Row(
                     [
-                        ft.Text(item.category, color="black", expand=4),
+                        ft.Text(item.category,
+                            color="black",
+                            theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
+                            weight=ft.FontWeight.BOLD,
+                            expand=4),
                         ft.Text(
-                            locale.currency(item.amount),
-                            color="black", expand=4),
-                        # ft.Text(f"{item.frequency} months", color="black", expand=4),
+                            display_amt,
+                            color="black",
+                            weight=ft.FontWeight.BOLD,
+                            expand=4),
                         ft.Text(item.notes, color="black", expand=4),
                         ft.VerticalDivider(),
-                        ft.IconButton(ft.Icons.EDIT),
-                        ft.IconButton(ft.Icons.DELETE)
+                        ft.IconButton(ft.Icons.HISTORY,
+                            icon_color=ft.Colors.GREY_800),
+                        ft.IconButton(ft.Icons.EDIT,
+                            icon_color=ft.Colors.GREY_800),
+                        ft.IconButton(ft.Icons.DELETE,
+                            icon_color=ft.Colors.GREY_800)
                     ],
                 ),
-                subtitle=ft.Text(item.frequency_desc(), color="black"),
+                subtitle=ft.Text(f"{item.frequency_desc()} / {const.MONTH_NAMES[item.first_due]}", color="black"),
                 bgcolor=bgcolor
             )
 
             self.__list_view.controls.append(tile)
 
-        self.__income_total.text = locale.currency(inc_total, grouping=True)
-        self.__expense_total.text = locale.currency(exp_total, grouping=True)
+        self.__income_total.label.value = locale.currency(
+            inc_total, grouping=True)
+        self.__expense_total.label.value = locale.currency(
+            exp_total, grouping=True)
+        net_balance = inc_total + exp_total
+        self.__net_balance.label.value = locale.currency(
+            net_balance, grouping=True
+        )
+        self.__net_balance.bgcolor = const.COLOR_INCOME_ALT if net_balance >= 0 else const.COLOR_EXPENSE_ALT
 
         self._page.update()
 
@@ -73,6 +91,7 @@ class Budget(BaseView):
     def _layout(self):
         self.__list_view = ft.ListView()
         self.content = self.__list_view
+        self._layout_add_edit()
         self._update()
 
 
@@ -120,62 +139,103 @@ class Budget(BaseView):
 
 
     def __on_new_item(self, evt):
-        pass
+        self._page.open(self.__add_edit_control)
 
 
     def _layout_navbar(self):
         self.__search_control = ft.TextField(
-            label="Search", icon=ft.Icons.SEARCH, on_submit=self.__on_search)
+            label="Search",
+            icon=ft.Icon(ft.Icons.SEARCH, color=ft.Colors.ON_PRIMARY_CONTAINER),
+            on_submit=self.__on_search)
 
-        self.__income_total = ft.OutlinedButton(
-            icon=ft.Icons.ATTACH_MONEY,
-            style=ft.ButtonStyle(bgcolor=const.COLOR_INCOME)
+        self.__income_total = ft.Chip(
+            label=ft.Text("", color="black", size=18),
+            leading=ft.Icon(ft.Icons.ATTACH_MONEY, color="black", size=20),
+            bgcolor=const.COLOR_INCOME,
+            # `on_click` is required or the Chip default to being disabled
+            on_click=lambda evt: None
         )
-        self.__expense_total = ft.OutlinedButton(
-            icon=ft.Icons.MONEY_OFF,
-            style=ft.ButtonStyle(bgcolor=const.COLOR_EXPENSE)
+        self.__expense_total =ft.Chip(
+            label=ft.Text("", color="black", size=18),
+            leading=ft.Icon(ft.Icons.MONEY_OFF, color="black", size=20),
+            bgcolor=const.COLOR_EXPENSE,
+            # `on_click` is required or the Chip default to being disabled
+            on_click=lambda evt: None
+        )
+        self.__net_balance =ft.Chip(
+            label=ft.Text("", color="black", size=18),
+            leading=ft.Icon(ft.Icons.MONEY_ROUNDED, color="black", size=20),
+            bgcolor=const.COLOR_INCOME_ALT,
+            # `on_click` is required or the Chip default to being disabled
+            on_click=lambda evt: None
         )
 
         self._navbar = ft.AppBar(
-            leading=ft.Icon(ft.Icons.FORMAT_LIST_BULLETED, size=const.ICON_MEDIUM),
+            leading=ft.Icon(
+                ft.Icons.FORMAT_LIST_BULLETED,
+                size=const.ICON_MEDIUM),
             title=ft.Text("Budget"),
             bgcolor=ft.Colors.PRIMARY_CONTAINER,
             actions=[
                 # New Budget Item Button
                 ft.IconButton(
                     icon=ft.Icons.FORMAT_LIST_BULLETED_ADD,
+                    icon_color=ft.Colors.ON_PRIMARY_CONTAINER,
                     on_click=self.__on_new_item),
-                ft.VerticalDivider(),
+                ft.VerticalDivider(
+                    color=ft.Colors.ON_PRIMARY_CONTAINER,
+                    leading_indent=5, trailing_indent=5),
                 self.__income_total,
                 self.__expense_total,
-                ft.VerticalDivider(),
+                self.__net_balance,
+                ft.VerticalDivider(
+                    color=ft.Colors.ON_PRIMARY_CONTAINER,
+                    leading_indent=5, trailing_indent=5),
                 # Frequency Filter buttons
                 ft.SegmentedButton(
                     on_change=self.__on_frequency_change,
                     selected={"all"},
                     segments=[
-                        ft.Segment(icon=ft.Icon(ft.Icons.FILTER_1), value=1),
-                        ft.Segment(icon=ft.Icon(ft.Icons.FILTER_2), value=2),
-                        ft.Segment(icon=ft.Icon(ft.Icons.FILTER_3), value=3),
-                        ft.Segment(icon=ft.Icon(ft.Icons.FILTER_6), value=6),
-                        ft.Segment(icon=ft.Icon(ft.Icons.CALENDAR_MONTH), value=12),
-                        ft.Segment(icon=ft.Icon(ft.Icons.ALL_INCLUSIVE), value="all"),
+                        ft.Segment(icon=ft.Icon(ft.Icons.FILTER_1, color=ft.Colors.ON_PRIMARY_CONTAINER), value=1),
+                        ft.Segment(icon=ft.Icon(ft.Icons.FILTER_2, color=ft.Colors.ON_PRIMARY_CONTAINER), value=2),
+                        ft.Segment(icon=ft.Icon(ft.Icons.FILTER_3, color=ft.Colors.ON_PRIMARY_CONTAINER), value=3),
+                        ft.Segment(icon=ft.Icon(ft.Icons.FILTER_6, color=ft.Colors.ON_PRIMARY_CONTAINER), value=6),
+                        ft.Segment(icon=ft.Icon(ft.Icons.CALENDAR_MONTH, color=ft.Colors.ON_PRIMARY_CONTAINER), value=12),
+                        ft.Segment(icon=ft.Icon(ft.Icons.ALL_INCLUSIVE, color=ft.Colors.ON_PRIMARY_CONTAINER), value="all"),
                     ]
                 ),
-                ft.VerticalDivider(),
+                ft.VerticalDivider(
+                    color=ft.Colors.ON_PRIMARY_CONTAINER,
+                    leading_indent=5, trailing_indent=5),
                 # Search - Box and Reset button
                 self.__search_control,
                 ft.IconButton(
                     icon=ft.Icons.CLEAR,
+                    icon_color=ft.Colors.ON_PRIMARY_CONTAINER,
                     on_click=self.__on_search_clear)
             ]
         )
 
 
+    def _layout_add_edit(self):
+        self.__add_edit_control = ft.BottomSheet(
+            ft.Container(
+                ft.Row(
+                    [
+                        ft.Text("Add/Edit BudgetItem Goes Here!"),
+                        ft.ElevatedButton("NoOp")
+                    ]
+                ),
+                padding=25
+            )
+        )
+
     def handle_keyboard_event(self, event):
         if event.ctrl or event.meta:
             if event.key == "F":
                 self.__search_control.focus()
+            elif event.key == "N":
+                self.__on_new_item(None)
 
 
 
