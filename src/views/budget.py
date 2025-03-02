@@ -41,9 +41,9 @@ class Budget(BaseView):
                 bgcolor = exp_color
                 exp_total += (item.amount / item.frequency)
 
-            display_amt = f"{locale.currency(item.amount)}"
+            display_amt = f"{locale.currency(item.amount, grouping=True)}"
             if item.frequency > 1:
-                display_amt +=  f" ({locale.currency(item.amount / item.frequency)})"
+                display_amt += f" ({locale.currency(item.amount / item.frequency, grouping=True)})"
 
             tile = ft.ListTile(
                 leading=ft.Icon(item.icon, color="black"),
@@ -218,17 +218,32 @@ class Budget(BaseView):
 
 
     def _layout_add_edit(self):
+        # icon
+        # category
+        # amount
+        # frequency
+        # first_due
+        # note
         self.__add_edit_control = ft.BottomSheet(
             ft.Container(
                 ft.Row(
                     [
-                        ft.Text("Add/Edit BudgetItem Goes Here!"),
-                        ft.ElevatedButton("NoOp")
+                        ft.AutoComplete(
+                            suggestions=[
+                                ft.AutoCompleteSuggestion(key="one 1", value="One"),
+                                ft.AutoCompleteSuggestion(key="two 2", value="Two"),
+                                ft.AutoCompleteSuggestion(key="three 3", value="Three"),
+                            ],
+                            on_select=lambda e: print(e.control.selected_index, e.selection),
+                        ),
+                        # ft.TextField(label="Category"),
+                        # ft.IconButton(ft.Icons.SAVE)
                     ]
                 ),
                 padding=25
             )
         )
+
 
     def handle_keyboard_event(self, event):
         if event.ctrl or event.meta:

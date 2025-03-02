@@ -25,7 +25,7 @@ class Sixpence:
     SCREEN_SCALE_HEIGHT = .80 #.90
 
     def __init__(self, page):
-        locale.setlocale(locale.LC_ALL, '')
+        locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
 
         self.__page = page
 

@@ -25,6 +25,8 @@
 
 ## Enhancement Tasks
 * [ ] Factor out tags like Cartaro
+* [ ] Budget View for Specific Month
+  - Takes into account montly/bi/yearly items
 
 
 ## Notes / Links
