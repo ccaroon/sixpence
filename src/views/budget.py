@@ -5,6 +5,7 @@ import locale
 import utils.tools
 import views.constants as const
 
+from controls.icon_select import IconSelect
 from models.budget import Budget as BudgetItem
 from views.base import Base as BaseView
 
@@ -219,7 +220,13 @@ class Budget(BaseView):
 
     def _layout_add_edit(self):
         # icon
+        icon_select = IconSelect("money")
         # category
+        category_fld = ft.TextField(
+            label="Category",
+            on_submit=icon_select.update_options,
+            on_blur=icon_select.update_options
+        )
         # amount
         # frequency
         # first_due
@@ -228,20 +235,20 @@ class Budget(BaseView):
             ft.Container(
                 ft.Row(
                     [
-                        ft.AutoComplete(
-                            suggestions=[
-                                ft.AutoCompleteSuggestion(key="one 1", value="One"),
-                                ft.AutoCompleteSuggestion(key="two 2", value="Two"),
-                                ft.AutoCompleteSuggestion(key="three 3", value="Three"),
-                            ],
-                            on_select=lambda e: print(e.control.selected_index, e.selection),
-                        ),
-                        # ft.TextField(label="Category"),
-                        # ft.IconButton(ft.Icons.SAVE)
-                    ]
+                        # Icon
+                        ft.Column([icon_select], expand=2),
+                        # Category
+                        ft.Column([category_fld], expand=5),
+                        # Save Button
+                        ft.Column([ft.IconButton(ft.Icons.SAVE)], alignment=ft.MainAxisAlignment.CENTER, expand=1),
+                    ],
+                    height=75,
+                    vertical_alignment=ft.CrossAxisAlignment.CENTER,
+                    expand=True
                 ),
-                padding=25
-            )
+                padding=10
+            ),
+            shape=ft.ContinuousRectangleBorder(radius=25)
         )
 
 
@@ -253,8 +260,18 @@ class Budget(BaseView):
                 self.__on_new_item(None)
 
 
+# -----
+# Don't really like the AutoComplete control -- keeping this here for now
+# def on_select_icon(evt):
+#     icon_display.name = evt.selection.value
+#     icon_display.update()
 
-
-
-
-#
+# icon_display = ft.Icon(ft.Icons.MONEY)
+# icon_choices = [icon.name for icon in ft.Icons]
+# icon_field = ft.AutoComplete(
+#     suggestions=[ft.AutoCompleteSuggestion(key=item, value=item) for item in icon_choices],
+#     suggestions_max_height=25,
+#     on_select=on_select_icon
+# )
+# ...
+# ft.Column([icon_field], expand=2),

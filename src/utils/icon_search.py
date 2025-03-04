@@ -1,10 +1,21 @@
 from flet import Icons as FletIcons
 
+import inflector
 
 class IconSearch:
+
+    CATEGORY_MAP = {
+        "auto": ["car"],
+        "cash": ["money", "currency"],
+        "income": ["payment", "paymentss"], # ss => Trick inflector :(
+        "salary": ["payment", "paymentss"]  # ss => Trick inflector :(
+    }
+
+
     def __init__(self, **kwargs):
         self.__icons = [icn.value for icn in list(FletIcons)]
         self.__icon_map = kwargs.get("icon_map", {})
+        self.__inflect = inflector.Inflector()
 
 
     @property
@@ -12,14 +23,16 @@ class IconSearch:
         return self.__icon_map
 
 
-    def search(self, keyword):
-        # once found, cache?
-        # ends with: _car
-        # starts with : car_
-        # contains: _car_
+    def by_keyword(self, keyword, **kwargs):
+        keyword = self.__inflect.singularize(keyword)
+        filter_variations = kwargs.get("filter_variations", True)
 
         matches = []
         for icn_name in self.__icons:
+            # Don't add variations
+            if filter_variations and icn_name.endswith(("_sharp", "_rounded")):
+                continue
+
             if keyword == icn_name:
                 matches.append(icn_name)
 
@@ -35,7 +48,29 @@ class IconSearch:
         return matches
 
 
-    def interactive_search(self, keyword, **kwargs):
+    def by_category(self, category):
+        keywords = category.lower().split(":")
+        # Assume more specific keywords at end of category string
+        # Ex: Bills:Water | Personal:Books etc.
+        keywords.reverse()
+
+        found_icons = []
+
+        cat_kws = []
+        for kw in keywords:
+            cat_kws.extend(self.CATEGORY_MAP.get(kw, [kw]))
+
+        for kw in cat_kws:
+            icons = self.by_keyword(kw)
+            # Filter dups, but keep ordered
+            for icon in icons:
+                if icon not in found_icons:
+                    found_icons.append(icon)
+
+        return found_icons
+
+
+    def interactive(self, keyword, **kwargs):
         hint = kwargs.get("hint", "N/A")
         choice = None
 

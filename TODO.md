@@ -22,6 +22,10 @@
   * [ ] Reports
 * [ ] Backup on Exit
 
+## Issues
+* [x] AutoComplete control not working properly insider other containers
+  - Figured out a work-around: Container -> Row -> Column([AutoComplete], expand=True|1)
+
 
 ## Enhancement Tasks
 * [ ] Factor out tags like Cartaro
