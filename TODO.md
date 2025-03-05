@@ -9,7 +9,7 @@
   * [x] Per View
 * [ ] Window Events
   * [ ] on "close"
-* [ ] Model vs View (vs Controller?)
+* [x] Model vs View (vs Controller?)
 
 
 ## Porting Tasks

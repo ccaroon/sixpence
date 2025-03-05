@@ -6,16 +6,12 @@ import os
 
 from app.config import Config
 
-from controls.app_bar import AppBar
 from controls.nav_rail import NavRail
 from controls.router import Router
 
-
-# from utils.icon_search import IconSearch
-
 from views.about import About
 from views.home import Home
-from views.budget import Budget
+from views.budget.main import BudgetView
 from views.expenses import Expenses
 from views.reports import Reports
 from views.settings import Settings
@@ -56,7 +52,7 @@ class Sixpence:
             appbar=self.__appbar,
             route_map={
                 "/home": Home(self.__page),
-                "/budget": Budget(self.__page),
+                "/budget": BudgetView(self.__page),
                 "/expenses": Expenses(self.__page),
                 "/reports": Reports(self.__page),
                 "/settings": Settings(self.__page)

@@ -5,11 +5,11 @@ import locale
 import utils.tools
 import views.constants as const
 
-from controls.icon_select import IconSelect
 from models.budget import Budget as BudgetItem
 from views.base import Base as BaseView
+from views.budget.editor import Editor as BudgetEditor
 
-class Budget(BaseView):
+class BudgetView(BaseView):
 
     def __init__(self, page):
         self.__filters = {"deleted_at": "null"}
@@ -65,7 +65,8 @@ class Budget(BaseView):
                         ft.IconButton(ft.Icons.HISTORY,
                             icon_color=ft.Colors.GREY_800),
                         ft.IconButton(ft.Icons.EDIT,
-                            icon_color=ft.Colors.GREY_800),
+                            icon_color=ft.Colors.GREY_800
+                        ),
                         ft.IconButton(ft.Icons.DELETE,
                             icon_color=ft.Colors.GREY_800)
                     ],
@@ -84,7 +85,7 @@ class Budget(BaseView):
         self.__net_balance.label.value = locale.currency(
             net_balance, grouping=True
         )
-        self.__net_balance.bgcolor = const.COLOR_INCOME_ALT if net_balance >= 0 else const.COLOR_EXPENSE_ALT
+        self.__net_balance.bgcolor = const.COLOR_INCOME if net_balance >= 0 else const.COLOR_EXPENSE
 
         self._page.update()
 
@@ -92,7 +93,9 @@ class Budget(BaseView):
     def _layout(self):
         self.__list_view = ft.ListView()
         self.content = self.__list_view
-        self._layout_add_edit()
+
+        self.__add_edit_control = BudgetEditor()
+
         self._update()
 
 
@@ -139,34 +142,35 @@ class Budget(BaseView):
         self.__search_control.focus()
 
 
-    def __on_new_item(self, evt):
+    def __on_add_edit(self, evt):
         self._page.open(self.__add_edit_control)
 
 
+    # TODO: factor out to a new class
     def _layout_navbar(self):
         self.__search_control = ft.TextField(
             label="Search",
-            icon=ft.Icon(ft.Icons.SEARCH, color=ft.Colors.ON_PRIMARY_CONTAINER),
+            prefix_icon=ft.Icons.SEARCH,
             on_submit=self.__on_search)
 
         self.__income_total = ft.Chip(
             label=ft.Text("", color="black", size=18),
             leading=ft.Icon(ft.Icons.ATTACH_MONEY, color="black", size=20),
-            bgcolor=const.COLOR_INCOME,
+            bgcolor=const.COLOR_INCOME_ALT,
             # `on_click` is required or the Chip default to being disabled
             on_click=lambda evt: None
         )
         self.__expense_total =ft.Chip(
             label=ft.Text("", color="black", size=18),
             leading=ft.Icon(ft.Icons.MONEY_OFF, color="black", size=20),
-            bgcolor=const.COLOR_EXPENSE,
+            bgcolor=const.COLOR_EXPENSE_ALT,
             # `on_click` is required or the Chip default to being disabled
             on_click=lambda evt: None
         )
         self.__net_balance =ft.Chip(
             label=ft.Text("", color="black", size=18),
             leading=ft.Icon(ft.Icons.MONEY_ROUNDED, color="black", size=20),
-            bgcolor=const.COLOR_INCOME_ALT,
+            bgcolor=const.COLOR_INCOME,
             # `on_click` is required or the Chip default to being disabled
             on_click=lambda evt: None
         )
@@ -182,7 +186,7 @@ class Budget(BaseView):
                 ft.IconButton(
                     icon=ft.Icons.FORMAT_LIST_BULLETED_ADD,
                     icon_color=ft.Colors.ON_PRIMARY_CONTAINER,
-                    on_click=self.__on_new_item),
+                    on_click=self.__on_add_edit),
                 ft.VerticalDivider(
                     color=ft.Colors.ON_PRIMARY_CONTAINER,
                     leading_indent=5, trailing_indent=5),
@@ -218,60 +222,9 @@ class Budget(BaseView):
         )
 
 
-    def _layout_add_edit(self):
-        # icon
-        icon_select = IconSelect("money")
-        # category
-        category_fld = ft.TextField(
-            label="Category",
-            on_submit=icon_select.update_options,
-            on_blur=icon_select.update_options
-        )
-        # amount
-        # frequency
-        # first_due
-        # note
-        self.__add_edit_control = ft.BottomSheet(
-            ft.Container(
-                ft.Row(
-                    [
-                        # Icon
-                        ft.Column([icon_select], expand=2),
-                        # Category
-                        ft.Column([category_fld], expand=5),
-                        # Save Button
-                        ft.Column([ft.IconButton(ft.Icons.SAVE)], alignment=ft.MainAxisAlignment.CENTER, expand=1),
-                    ],
-                    height=75,
-                    vertical_alignment=ft.CrossAxisAlignment.CENTER,
-                    expand=True
-                ),
-                padding=10
-            ),
-            shape=ft.ContinuousRectangleBorder(radius=25)
-        )
-
-
     def handle_keyboard_event(self, event):
         if event.ctrl or event.meta:
             if event.key == "F":
                 self.__search_control.focus()
             elif event.key == "N":
-                self.__on_new_item(None)
-
-
-# -----
-# Don't really like the AutoComplete control -- keeping this here for now
-# def on_select_icon(evt):
-#     icon_display.name = evt.selection.value
-#     icon_display.update()
-
-# icon_display = ft.Icon(ft.Icons.MONEY)
-# icon_choices = [icon.name for icon in ft.Icons]
-# icon_field = ft.AutoComplete(
-#     suggestions=[ft.AutoCompleteSuggestion(key=item, value=item) for item in icon_choices],
-#     suggestions_max_height=25,
-#     on_select=on_select_icon
-# )
-# ...
-# ft.Column([icon_field], expand=2),
+                self.__on_add_edit(None)

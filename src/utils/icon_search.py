@@ -3,33 +3,69 @@ from flet import Icons as FletIcons
 import inflector
 
 class IconSearch:
+    IGNORE_WORDS = [
+        "for", "the", "and"
+    ]
 
     CATEGORY_MAP = {
+        "acorntv": ["connected_tv"],
         "auto": ["car"],
+        "bank": ["account_balance"],
+        "britbox": ["connected_tv"],
         "cash": ["money", "currency"],
-        "income": ["payment", "paymentss"], # ss => Trick inflector :(
-        "salary": ["payment", "paymentss"]  # ss => Trick inflector :(
+        "clothes": ["shopify"],
+        "disney+": ["connected_tv"],
+        "electricity": ["electric_bolt"],
+        "fuel": ["gas"],
+        "hulu": ["connected_tv"],
+        "income": ["payment"],
+        "lodging": ["hotel"],
+        "netflix": ["connected_tv"],
+        "paramount+": ["connected_tv"],
+        "salary": ["payment"],
+        "spotify": ["music"],
     }
 
 
     def __init__(self, **kwargs):
         self.__icons = [icn.value for icn in list(FletIcons)]
-        self.__icon_map = kwargs.get("icon_map", {})
         self.__inflect = inflector.Inflector()
 
 
-    @property
-    def icon_map(self):
-        return self.__icon_map
+    def smart_search(self, query, **kwargs):
+        min_len = kwargs.get("min_len", 3)
+
+        found_icons = set()
+        words = query.split()
+
+        # Expand and/or Filter Word List
+        all_words = []
+        for word in words:
+            if len(word) >= min_len and word not in self.IGNORE_WORDS:
+                all_words.extend(self.CATEGORY_MAP.get(word, [word]))
+
+        # Add plural form of all words
+        keywords = []
+        for word in all_words:
+            keywords.append(word)
+            plural = self.__inflect.pluralize(word)
+            if plural != word:
+                keywords.append(plural)
+
+        # Find Icons base on each keyword
+        for kw in keywords:
+            icons = self.by_keyword(kw)
+            found_icons.update(icons)
+
+        return list(found_icons)
 
 
     def by_keyword(self, keyword, **kwargs):
-        keyword = self.__inflect.singularize(keyword)
         filter_variations = kwargs.get("filter_variations", True)
 
         matches = []
         for icn_name in self.__icons:
-            # Don't add variations
+            # Don't include variations
             if filter_variations and icn_name.endswith(("_sharp", "_rounded")):
                 continue
 
@@ -49,20 +85,15 @@ class IconSearch:
 
 
     def by_category(self, category):
+        found_icons = []
         keywords = category.lower().split(":")
         # Assume more specific keywords at end of category string
         # Ex: Bills:Water | Personal:Books etc.
         keywords.reverse()
 
-        found_icons = []
-
-        cat_kws = []
         for kw in keywords:
-            cat_kws.extend(self.CATEGORY_MAP.get(kw, [kw]))
-
-        for kw in cat_kws:
-            icons = self.by_keyword(kw)
-            # Filter dups, but keep ordered
+            icons = self.smart_search(kw)
+            # Filter dupes, but keep ordered
             for icon in icons:
                 if icon not in found_icons:
                     found_icons.append(icon)
@@ -72,16 +103,17 @@ class IconSearch:
 
     def interactive(self, keyword, **kwargs):
         hint = kwargs.get("hint", "N/A")
+        icon_cache = kwargs.get("cache", {})
         choice = None
 
-        cached_icon = self.__icon_map.get(keyword)
+        cached_icon = icon_cache.get(keyword)
         if cached_icon:
             choice = cached_icon
         else:
             choice = None
             search_term = keyword
             while not choice:
-                matches = self.search(search_term)
+                matches = self.smart_search(search_term)
                 print(f"\n==> {hint} | {keyword.upper()} <==")
                 for idx, icon in enumerate(matches):
                     print(f"{idx}) {icon}")
@@ -95,7 +127,6 @@ class IconSearch:
                     choice = None
                     search_term = response
 
-            self.__icon_map[keyword] = choice
-
+            icon_cache[keyword] = choice
 
         return choice

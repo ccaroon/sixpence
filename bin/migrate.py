@@ -112,7 +112,7 @@ def main(args):
     #     print(f"Writing: {idx:04}/{num_recs:04}", end="\r")
     #     db.insert(entry)
 
-    print(f"Sucessfully migrated {num_recs} entries: {output_file}")
+    print(f"Successfully migrated {num_recs} entries: {output_file}")
 
 
 if __name__ == "__main__":

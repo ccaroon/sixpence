@@ -8,7 +8,7 @@ class IconSelect(ft.Dropdown):
         init_icons = self.__icon_search.by_keyword(init_keyword)
 
         super().__init__(
-            label="Icon",
+            # label="Icon",
             leading_icon=ft.Icons.SEARCH,
             options=self.build_options(init_icons),
             enable_filter=True,
