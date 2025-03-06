@@ -7,6 +7,8 @@ class IconSearch:
         "for", "the", "and"
     ]
 
+    # TODO: reverse this mapping
+    #  ICON -> keywords
     CATEGORY_MAP = {
         "acorntv": ["connected_tv"],
         "auto": ["car"],
@@ -18,12 +20,20 @@ class IconSearch:
         "electricity": ["electric_bolt"],
         "fuel": ["gas"],
         "hulu": ["connected_tv"],
+        "icloud": ["cloud"],
         "income": ["payment"],
+        "inspect": ["fact_check"],
+        "inspection": ["fact_check"],
         "lodging": ["hotel"],
         "netflix": ["connected_tv"],
+        "nintendo": ["gamepad"],
         "paramount+": ["connected_tv"],
+        "playstation": ["gamepad"],
+        "psn": ["gamepad"],
         "salary": ["payment"],
         "spotify": ["music"],
+        "tithes": ["church"],
+        "xbox": ["gamepad"],
     }
 
 

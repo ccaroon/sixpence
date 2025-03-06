@@ -9,11 +9,16 @@ class IconSelect(ft.Dropdown):
 
         super().__init__(
             # label="Icon",
-            leading_icon=ft.Icons.SEARCH,
-            options=self.build_options(init_icons),
+            leading_icon=None,
+            options=self.__build_options(init_icons),
             enable_filter=True,
-            on_change=self.on_icon_change
+            on_change=self.__on_change
         )
+
+
+    def init_options(self, category):
+        icons = self.__icon_search.by_category(category)
+        self.options = self.__build_options(icons)
 
 
     def update_options(self, evt):
@@ -22,14 +27,14 @@ class IconSelect(ft.Dropdown):
         where a string of some sort can be entered and used to search the
         icons.
         """
-        icons = self.__icon_search.by_category(evt.control.value)
-        self.options=self.build_options(icons)
-        if icons:
-            self.leading_icon = icons[0]
+        self.init_options(evt.control.value)
+
+        # if icons and self.leading_icon is None:
+        #     self.leading_icon = icons[0]
         self.update()
 
 
-    def build_options(self, icon_list):
+    def __build_options(self, icon_list):
         options = []
         for icon in icon_list:
             options.append(
@@ -38,6 +43,6 @@ class IconSelect(ft.Dropdown):
         return options
 
 
-    def on_icon_change(self, evt):
+    def __on_change(self, evt):
         self.leading_icon = evt.data
         self.update()

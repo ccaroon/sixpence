@@ -159,8 +159,8 @@ class Base(ABC):
 
             try:
                 if safe:
-                    # Mark as deleted by setting the `deleted_at` date instead of
-                    # actually removing the record.
+                    # Mark as deleted by setting the `deleted_at` date instead
+                    # of actually removing the record.
                     self._database().update(tyops.set('deleted_at', self.__deleted_at.int_timestamp), doc_ids=[self.id])
                 else:
                     self._database().remove(doc_ids=[self.id])

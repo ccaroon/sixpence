@@ -2,22 +2,36 @@ import flet as ft
 
 from controls.icon_select import IconSelect
 
+import utils.tools as tools
 import views.constants as const
 
-class Editor(ft.BottomSheet):
-    def __init__(self):
+# TODO:
+# * [x] Required fields / validation / error handling
+# * [x] Map item fields to UI controls
+# * [x] Map UI controls to item fields
+
+class Editor:
+    def __init__(self, **kwargs):
+        self.__handle_on_save = kwargs.get("on_save")
+        self.__item = None
+
         self.__container = self._layout()
 
-        super().__init__(
+        self.__control = ft.BottomSheet(
             self.__container,
             shape=ft.ContinuousRectangleBorder(radius=25),
             size_constraints=ft.BoxConstraints(min_width=1)
         )
 
 
-    def __on_amount_blur(self, evt):
-        amount = float(evt.control.value) if evt.control.value else 0.0
+    @property
+    def control(self):
+        return self.__control
 
+
+    def __update_color(self, amount):
+        # Change the color of the container based on whether it's
+        # and income or expense
         if amount < 0.0:
             self.__container.bgcolor = const.COLOR_EXPENSE_ALT
         elif amount > 0.0:
@@ -28,28 +42,107 @@ class Editor(ft.BottomSheet):
         self.__container.update()
 
 
+    def __on_amount_blur(self, evt):
+        if tools.is_numeric(str(evt.control.value)):
+            amount = float(evt.control.value) if evt.control.value else 0.0
+            self.__update_color(amount)
+
+
+    def __validate(self):
+        valid = True
+
+        # Icon
+        self.__icon_fld.error_text = None
+        if not self.__icon_fld.value:
+            self.__icon_fld.error_text = "Required"
+            valid = False
+
+        # Category
+        self.__category_fld.error_text = None
+        if not self.__category_fld.value:
+            self.__category_fld.error_text = "Required"
+            valid = False
+
+        # Amount
+        self.__amount_fld.error_text = None
+        if not tools.is_numeric(str(self.__amount_fld.value)):
+            self.__amount_fld.error_text = "Invalid"
+            valid = False
+
+        # Frequency
+        self.__freq_fld.error_text = None
+        if not self.__freq_fld.value:
+            self.__freq_fld.error_text = "Required"
+            valid = False
+
+        # First Due
+        self.__first_due_fld.error_text = None
+        if not self.__first_due_fld.value:
+            self.__first_due_fld.error_text = "Required"
+            valid = False
+
+        # Notes
+        # Not required | Free form text | No validation needed
+        self.__note_fld.error_text = None
+
+        self.control.update()
+
+        return valid
+
+
+    def __populate_model(self):
+        self.__item.icon = self.__icon_fld.value
+        self.__item.amount = float(self.__amount_fld.value)
+        self.__item.category = self.__category_fld.value
+        self.__item.frequency = int(self.__freq_fld.value)
+        self.__item.first_due = int(self.__first_due_fld.value)
+        self.__item.notes = self.__note_fld.value
+
+
+    def __populate_controls(self):
+        self.__icon_fld.init_options(self.__item.category)
+        self.__icon_fld.value = self.__item.icon
+        self.__icon_fld.leading_icon = self.__item.icon
+
+        self.__amount_fld.value = self.__item.amount
+        self.__update_color(self.__item.amount)
+        self.__category_fld.value = self.__item.category
+        self.__freq_fld.value = self.__item.frequency
+        self.__first_due_fld.value = self.__item.first_due
+        self.__note_fld.value = self.__item.notes
+
+
     def __on_save(self, evt):
-        print("Save")
+        if self.__validate():
+            self.__populate_model()
+            self.__item.save()
+
+            if self.__handle_on_save:
+                self.__handle_on_save()
+
+            # Close
+            self.control.open = False
+            self.control.update()
 
 
     def _layout(self):
         # icon
-        icon_fld = IconSelect("money")
+        self.__icon_fld = IconSelect("money")
         # category
-        category_fld = ft.TextField(
+        self.__category_fld = ft.TextField(
             label="Category",
             prefix_icon=ft.Icons.CATEGORY,
-            on_submit=icon_fld.update_options,
-            on_blur=icon_fld.update_options
+            on_submit=self.__icon_fld.update_options,
+            on_blur=self.__icon_fld.update_options
         )
         # amount
-        amount_fld = ft.TextField(
+        self.__amount_fld = ft.TextField(
             label="Amount",
             prefix_icon=ft.Icons.ATTACH_MONEY,
             on_blur=self.__on_amount_blur
         )
         # frequency
-        freq_fld = ft.Dropdown(
+        self.__freq_fld = ft.Dropdown(
             label="Freq",
             leading_icon=ft.Icons.EVENT_REPEAT,
             options=[
@@ -62,14 +155,14 @@ class Editor(ft.BottomSheet):
             enable_filter=True
         )
         # first_due
-        first_due_fld = ft.Dropdown(
+        self.__first_due_fld = ft.Dropdown(
             label="First Due",
             leading_icon=ft.Icons.CALENDAR_MONTH,
-            options=[ft.DropdownOption(key=idx, text=name) for idx,name in enumerate(const.MONTH_NAMES[1:])],
+            options=[ft.DropdownOption(key=idx+1, text=name) for idx,name in enumerate(const.MONTH_NAMES[1:])],
             enable_filter=True
         )
         # note
-        note_fld = ft.TextField(
+        self.__note_fld = ft.TextField(
             label="Notes",
             prefix_icon=ft.Icons.STICKY_NOTE_2)
 
@@ -77,32 +170,32 @@ class Editor(ft.BottomSheet):
             ft.Row(
                 [
                     # Icon
-                    ft.Column([icon_fld],
+                    ft.Column([self.__icon_fld],
                         expand=1,
                         alignment=ft.MainAxisAlignment.CENTER
                     ),
                     # Category
-                    ft.Column([category_fld],
+                    ft.Column([self.__category_fld],
                         expand=3,
                         alignment=ft.MainAxisAlignment.CENTER
                     ),
                     # Amount
-                    ft.Column([amount_fld],
+                    ft.Column([self.__amount_fld],
                         expand=2,
                         alignment=ft.MainAxisAlignment.CENTER
                     ),
                     # Frequency
-                    ft.Column([freq_fld],
+                    ft.Column([self.__freq_fld],
                         expand=2,
                         alignment=ft.MainAxisAlignment.CENTER
                     ),
                     # First Due
-                    ft.Column([first_due_fld],
+                    ft.Column([self.__first_due_fld],
                         expand=2,
                         alignment=ft.MainAxisAlignment.CENTER
                     ),
                     # Notes
-                    ft.Column([note_fld],
+                    ft.Column([self.__note_fld],
                         expand=5,
                         alignment=ft.MainAxisAlignment.CENTER
                     ),
@@ -129,8 +222,20 @@ class Editor(ft.BottomSheet):
         return main_container
 
 
-    # def new(self):
-    #     pass
+    def edit(self, item):
+        # Set the BudgetItem being edited
+        self.__item = item
+        self.__populate_controls()
 
-    # def edit(self, item):
-    #     pass
+
+
+
+
+
+
+
+
+
+
+
+#

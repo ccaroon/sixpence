@@ -31,9 +31,13 @@ class Budget(Taggable, Base):
         super().__init__(id=id, **kwargs)
 
 
+    def __str__(self):
+        return f"{self.id} | {self.category} | {self.amount}"
+
+
     def _serialize(self):
         data =  {
-            "type": self.type,
+            "type": self.TYPE_EXPENSE if self.amount < 0.0 else self.TYPE_INCOME,
             "icon":self.icon,
             "category": self.category,
             "amount": self.amount,
@@ -74,13 +78,3 @@ class Budget(Taggable, Base):
             entry["date"] = self._date_setter(entry["date"])
 
         self.tags = data.get("tags", self.tags)
-
-
-
-
-
-
-
-
-
-#

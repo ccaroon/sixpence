@@ -1,6 +1,7 @@
 import flet as ft
 
 import locale
+import pprint
 
 import utils.tools
 import views.constants as const
@@ -14,6 +15,9 @@ class BudgetView(BaseView):
     def __init__(self, page):
         self.__filters = {"deleted_at": "null"}
         super().__init__(page)
+
+        self.__editor = BudgetEditor(on_save=self._update)
+        self._page.overlay.append(self.__editor.control)
 
 
     def _update(self):
@@ -63,12 +67,19 @@ class BudgetView(BaseView):
                         ft.Text(item.notes, color="black", expand=4),
                         ft.VerticalDivider(),
                         ft.IconButton(ft.Icons.HISTORY,
-                            icon_color=ft.Colors.GREY_800),
-                        ft.IconButton(ft.Icons.EDIT,
+                            data=item,
                             icon_color=ft.Colors.GREY_800
                         ),
+                        ft.IconButton(ft.Icons.EDIT,
+                            data=item,
+                            icon_color=ft.Colors.GREY_800,
+                            on_click=self.__on_edit
+                        ),
                         ft.IconButton(ft.Icons.DELETE,
-                            icon_color=ft.Colors.GREY_800)
+                            data=item,
+                            icon_color=ft.Colors.GREY_800,
+                            on_click=self.__on_delete
+                        )
                     ],
                 ),
                 subtitle=ft.Text(f"{item.frequency_desc()} / {const.MONTH_NAMES[item.first_due]}", color="black"),
@@ -93,8 +104,6 @@ class BudgetView(BaseView):
     def _layout(self):
         self.__list_view = ft.ListView()
         self.content = self.__list_view
-
-        self.__add_edit_control = BudgetEditor()
 
         self._update()
 
@@ -142,8 +151,24 @@ class BudgetView(BaseView):
         self.__search_control.focus()
 
 
-    def __on_add_edit(self, evt):
-        self._page.open(self.__add_edit_control)
+    def __on_edit(self, evt):
+        budget_item = evt.control.data
+        self.__editor.edit(budget_item)
+        self._page.open(self.__editor.control)
+
+
+    def __on_new(self, evt):
+        budget_item = BudgetItem()
+        self.__editor.edit(budget_item)
+        self._page.open(self.__editor.control)
+
+
+    def __on_delete(self, evt):
+        # TODO: implement Archive capability
+        # ...i.e. mark as deleted
+        budget_item = evt.control.data
+        budget_item.delete(safe=True)
+        self._update()
 
 
     # TODO: factor out to a new class
@@ -186,7 +211,7 @@ class BudgetView(BaseView):
                 ft.IconButton(
                     icon=ft.Icons.FORMAT_LIST_BULLETED_ADD,
                     icon_color=ft.Colors.ON_PRIMARY_CONTAINER,
-                    on_click=self.__on_add_edit),
+                    on_click=self.__on_new),
                 ft.VerticalDivider(
                     color=ft.Colors.ON_PRIMARY_CONTAINER,
                     leading_indent=5, trailing_indent=5),
@@ -227,4 +252,4 @@ class BudgetView(BaseView):
             if event.key == "F":
                 self.__search_control.focus()
             elif event.key == "N":
-                self.__on_add_edit(None)
+                self.__on_new(None)
