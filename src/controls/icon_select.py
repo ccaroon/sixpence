@@ -9,6 +9,7 @@ class IconSelect(ft.Dropdown):
 
         super().__init__(
             # label="Icon",
+            # hint_text="Choose Icon",
             leading_icon=None,
             options=self.__build_options(init_icons),
             enable_filter=True,
@@ -28,9 +29,9 @@ class IconSelect(ft.Dropdown):
         icons.
         """
         self.init_options(evt.control.value)
-
-        # if icons and self.leading_icon is None:
-        #     self.leading_icon = icons[0]
+        self.border_color = "green"
+        self.border_width = 5
+        self.helper_text = "Choose"
         self.update()
 
 
@@ -45,4 +46,7 @@ class IconSelect(ft.Dropdown):
 
     def __on_change(self, evt):
         self.leading_icon = evt.data
+        self.border_color = "black"
+        self.border_width = 1
+        self.helper_text = None
         self.update()

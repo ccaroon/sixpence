@@ -4,7 +4,8 @@ import inflector
 
 class IconSearch:
     IGNORE_WORDS = [
-        "for", "the", "and"
+        "as", "do", "in", "of", "my", "then", "to", "a", "an", "and", "but",
+        "for", "or", "the",
     ]
 
     # TODO: reverse this mapping
@@ -34,6 +35,7 @@ class IconSearch:
         "spotify": ["music"],
         "tithes": ["church"],
         "xbox": ["gamepad"],
+        "electronics": ["memory"],
     }
 
 
@@ -43,7 +45,7 @@ class IconSearch:
 
 
     def smart_search(self, query, **kwargs):
-        min_len = kwargs.get("min_len", 3)
+        min_len = kwargs.get("min_len", 2)
 
         found_icons = set()
         words = query.split()

@@ -11,7 +11,7 @@ class UtilTest(unittest.TestCase):
     def test_by_keyword(self):
         # multiple matches
         icons = self.__icon_search.by_keyword("gas")
-        self.assertIsNotNone(icons)
+        self.assertTrue(len(icons)> 0)
 
         for icn in icons:
             self.assertIn("gas", icn)
@@ -25,10 +25,10 @@ class UtilTest(unittest.TestCase):
     def test_smart_search(self):
         # Test kw mappings
         icons1 = self.__icon_search.smart_search("gas")
-        self.assertIsNotNone(icons1)
+        self.assertTrue(len(icons1)> 0)
 
         icons2 = self.__icon_search.smart_search("fuel")
-        self.assertIsNotNone(icons2)
+        self.assertTrue(len(icons2)> 0)
 
         self.assertEqual(icons1, icons2)
 
@@ -42,17 +42,20 @@ class UtilTest(unittest.TestCase):
         self.assertTrue("payment" in icons)
         self.assertTrue("payments" in icons)
 
+        # Len == 2
+        icons = self.__icon_search.smart_search("tv")
+        self.assertTrue(len(icons)> 0)
+        self.assertTrue("connected_tv" in icons)
+
+        # ignored words
+        icons = self.__icon_search.smart_search("a the but for my")
+        self.assertTrue(len(icons) == 0)
+
 
     def test_by_category(self):
         # Normal Category
         icons = self.__icon_search.by_category("Auto:Fuel")
-        self.assertIsNotNone(icons)
+        self.assertTrue(len(icons)> 0)
 
         for icn in icons:
             self.assertTrue("car" in icn or "gas" in icn)
-
-
-
-
-
-#

@@ -9,6 +9,7 @@ import views.constants as const
 from models.budget import Budget as BudgetItem
 from views.base import Base as BaseView
 from views.budget.editor import Editor as BudgetEditor
+from views.budget.history import HistoryDialog
 
 class BudgetView(BaseView):
 
@@ -50,6 +51,8 @@ class BudgetView(BaseView):
             if item.frequency > 1:
                 display_amt += f" ({locale.currency(item.amount / item.frequency, grouping=True)})"
 
+            has_history = len(item.history) > 0
+
             tile = ft.ListTile(
                 leading=ft.Icon(item.icon, color="black"),
                 title=ft.Row(
@@ -68,7 +71,9 @@ class BudgetView(BaseView):
                         ft.VerticalDivider(),
                         ft.IconButton(ft.Icons.HISTORY,
                             data=item,
-                            icon_color=ft.Colors.GREY_800
+                            icon_color=ft.Colors.GREY_800 if has_history else ft.Colors.GREY_500,
+                            disabled=not has_history,
+                            on_click=self.__on_history
                         ),
                         ft.IconButton(ft.Icons.EDIT,
                             data=item,
@@ -104,6 +109,9 @@ class BudgetView(BaseView):
     def _layout(self):
         self.__list_view = ft.ListView()
         self.content = self.__list_view
+
+        self.__history_dialog = HistoryDialog(self._page)
+        self._page.overlay.append(self.__history_dialog)
 
         self._update()
 
@@ -161,6 +169,11 @@ class BudgetView(BaseView):
         budget_item = BudgetItem()
         self.__editor.edit(budget_item)
         self._page.open(self.__editor.control)
+
+
+    def __on_history(self, evt):
+        budget_item = evt.control.data
+        self.__history_dialog.display(budget_item)
 
 
     def __on_delete(self, evt):

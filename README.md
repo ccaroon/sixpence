@@ -31,6 +31,15 @@ Sixpence allows you to create a budget and then track your progress. It is **not
 
 
 ## Development
+### Notes / Links
+* https://github.com/xzripper/flet_navigator
+* https://github.com/codingjq/flet-routing-tutorial/tree/main
+* https://flet.dev/docs/getting-started/navigation-and-routing
+* https://m2.material.io/design/color/the-color-system.html#tools-for-picking-colors
+* https://gallery.flet.dev/icons-browser/
+
+
+### Setup
 Create a Virtual Environment using `venv` or `pyenv` or whatever and activate it.
 
 ``` bash

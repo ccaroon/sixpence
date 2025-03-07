@@ -5,11 +5,6 @@ from controls.icon_select import IconSelect
 import utils.tools as tools
 import views.constants as const
 
-# TODO:
-# * [x] Required fields / validation / error handling
-# * [x] Map item fields to UI controls
-# * [x] Map UI controls to item fields
-
 class Editor:
     def __init__(self, **kwargs):
         self.__handle_on_save = kwargs.get("on_save")
@@ -65,7 +60,8 @@ class Editor:
 
         # Amount
         self.__amount_fld.error_text = None
-        if not tools.is_numeric(str(self.__amount_fld.value)):
+        amount = self.__amount_fld.value
+        if not tools.is_numeric(str(amount)) or amount == 0.0:
             self.__amount_fld.error_text = "Invalid"
             valid = False
 
@@ -100,12 +96,13 @@ class Editor:
 
 
     def __populate_controls(self):
-        self.__icon_fld.init_options(self.__item.category)
+        self.__icon_fld.init_options(self.__item.category or "money")
         self.__icon_fld.value = self.__item.icon
-        self.__icon_fld.leading_icon = self.__item.icon
+        self.__icon_fld.leading_icon = self.__item.icon or ft.Icons.SEARCH
 
         self.__amount_fld.value = self.__item.amount
         self.__update_color(self.__item.amount)
+
         self.__category_fld.value = self.__item.category
         self.__freq_fld.value = self.__item.frequency
         self.__first_due_fld.value = self.__item.first_due
@@ -143,7 +140,7 @@ class Editor:
         )
         # frequency
         self.__freq_fld = ft.Dropdown(
-            label="Freq",
+            label="Frequency",
             leading_icon=ft.Icons.EVENT_REPEAT,
             options=[
                 ft.DropdownOption(key=1, text="Monthly"),
