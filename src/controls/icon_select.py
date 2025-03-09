@@ -29,8 +29,8 @@ class IconSelect(ft.Dropdown):
         icons.
         """
         self.init_options(evt.control.value)
-        self.border_color = "green"
-        self.border_width = 5
+        self.border_color = ft.Colors.PRIMARY
+        self.border_width = 3
         self.helper_text = "Choose"
         self.update()
 

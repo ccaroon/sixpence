@@ -17,7 +17,8 @@ class BudgetView(BaseView):
         self.__filters = {"deleted_at": "null"}
         super().__init__(page)
 
-        self.__editor = BudgetEditor(on_save=self._update)
+        self.__editor = BudgetEditor(self._page, on_save=self._update)
+        # TODO: move to Editor
         self._page.overlay.append(self.__editor.control)
 
 
@@ -162,6 +163,7 @@ class BudgetView(BaseView):
     def __on_edit(self, evt):
         budget_item = evt.control.data
         self.__editor.edit(budget_item)
+        # TODO: change to __editor.open|edit
         self._page.open(self.__editor.control)
 
 
@@ -173,6 +175,7 @@ class BudgetView(BaseView):
 
     def __on_history(self, evt):
         budget_item = evt.control.data
+        # TODO: change to __editor.open|edit
         self.__history_dialog.display(budget_item)
 
 

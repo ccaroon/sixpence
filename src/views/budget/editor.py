@@ -112,6 +112,8 @@ class Editor:
     def __on_save(self, evt):
         if self.__validate():
             self.__populate_model()
+
+            # TODO: if edit, prompt for history info & populate
             self.__item.save()
 
             if self.__handle_on_save:
@@ -217,6 +219,33 @@ class Editor:
         )
 
         return main_container
+
+
+    def __layout_history(self):
+        # icon - Category - Change Note
+        self.__history_dlg = ft.AlertDialog(
+            title=ft.Container(
+                ft.Row(
+                    [
+                        ft.Icon(self.__item.icon),
+                        ft.Text(
+                            f"{self.__item.category}",
+                            weight=ft.FontWeight.BOLD,
+                            theme_style=ft.TextThemeStyle.DISPLAY_SMALL
+                        )
+                    ]
+                ),
+                bgcolor=ft.Colors.GREY
+            ),
+            content=ft.TextField(label="Reason For Change"),
+            actions=[
+                ft.ElevatedButton(
+                    "Continue",
+                    color=ft.Colors.PRIMARY,
+                    on_click=self.__on_close
+                )
+            ]
+        )
 
 
     def edit(self, item):
