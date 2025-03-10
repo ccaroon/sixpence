@@ -17,8 +17,7 @@ class HistoryView(ft.AlertDialog):
 
 
     def __on_close(self, evt):
-        self.open = False
-        self.update()
+        self.__page.close(self)
 
 
     def __layout(self):

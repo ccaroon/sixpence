@@ -68,6 +68,10 @@ class BudgetView(BaseView):
                             expand=4),
                         ft.Text(item.notes, color="black", expand=4),
                         ft.VerticalDivider(),
+                        # NOTE: if icon_color is set, then disabled_color has
+                        #       no effect
+                        #       Instead, have to adjust icon_color accoriding
+                        #       to if the button is disabled
                         ft.IconButton(ft.Icons.HISTORY,
                             data=item,
                             icon_color=ft.Colors.GREY_800 if has_history else ft.Colors.GREY_500,
@@ -76,13 +80,15 @@ class BudgetView(BaseView):
                         ),
                         ft.IconButton(ft.Icons.EDIT,
                             data=item,
-                            icon_color=ft.Colors.GREY_800,
-                            on_click=self.__on_edit
+                            icon_color=ft.Colors.GREY_500 if item.deleted_at else ft.Colors.GREY_800,
+                            on_click=self.__on_edit,
+                            disabled=item.deleted_at is not None,
                         ),
                         ft.IconButton(ft.Icons.DELETE,
                             data=item,
-                            icon_color=ft.Colors.GREY_800,
-                            on_click=self.__on_delete
+                            icon_color=ft.Colors.GREY_500 if item.deleted_at else ft.Colors.GREY_800,
+                            on_click=self.__on_delete,
+                            disabled=item.deleted_at is not None
                         )
                     ],
                 ),
@@ -181,8 +187,59 @@ class BudgetView(BaseView):
         self._update()
 
 
+    def __on_active_items(self, evt):
+        self.__filters["deleted_at"] = "null"
+
+        for choice in self.__menu.items:
+            choice.checked = False
+
+        evt.control.checked = True
+        self._update()
+
+
+    def __on_archived_items(self, evt):
+        self.__filters["deleted_at"] = "gt:0"
+
+        for choice in self.__menu.items:
+            choice.checked = False
+
+        evt.control.checked = True
+        self._update()
+
+
+    def __on_month_view(self, evt):
+        banner = ft.Banner(
+            leading=ft.Icon(
+                ft.Icons.WARNING,
+                color=ft.Colors.YELLOW, size=const.ICON_MEDIUM),
+            content=ft.Text("Month View is not yet implemented!",
+                color=ft.Colors.ON_SECONDARY_CONTAINER),
+            bgcolor=ft.Colors.SECONDARY_CONTAINER,
+            actions=[
+                ft.TextButton("Ok",
+                    on_click=lambda evt: self._page.close(banner))
+            ]
+        )
+        self._page.open(banner)
+
+
     # TODO: factor out to a new class
     def _layout_navbar(self):
+        self.__menu = ft.PopupMenuButton(
+            icon=ft.Icons.MENU,
+            items=[
+                ft.PopupMenuItem(icon=ft.Icons.FORMAT_LIST_BULLETED,
+                    text="Active Items", checked=True,
+                    on_click=self.__on_active_items),
+                ft.PopupMenuItem(icon=ft.Icons.ARCHIVE,
+                    text="Archived Items", checked=False,
+                    on_click=self.__on_archived_items),
+                ft.PopupMenuItem(icon=ft.Icons.CALENDAR_MONTH,
+                    text="By Month", checked=False,
+                    on_click=self.__on_month_view)
+            ]
+        )
+
         self.__search_control = ft.TextField(
             label="Search",
             prefix_icon=ft.Icons.SEARCH,
@@ -211,9 +268,7 @@ class BudgetView(BaseView):
         )
 
         self._navbar = ft.AppBar(
-            leading=ft.Icon(
-                ft.Icons.FORMAT_LIST_BULLETED,
-                size=const.ICON_MEDIUM),
+            leading=self.__menu,
             title=ft.Text("Budget"),
             bgcolor=ft.Colors.PRIMARY_CONTAINER,
             actions=[

@@ -37,8 +37,7 @@ class HistoryPrompt(ft.AlertDialog):
             if self.__on_save:
                 self.__on_save()
 
-            self.open = False
-            self.update()
+            self.__page.close(self)
 
 
     def __layout(self):

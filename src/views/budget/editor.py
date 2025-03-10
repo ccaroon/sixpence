@@ -133,8 +133,7 @@ class BudgetEditor:
                     self.__handle_on_save()
 
             # Close
-            self.__control.open = False
-            self.__control.update()
+            self.__page.close(self.__control)
 
 
     def _layout(self):
