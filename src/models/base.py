@@ -212,6 +212,16 @@ class Base(ABC):
         self.update(data)
 
 
+    def clone(self):
+        cloned_type = type(self)
+        cloned_obj = cloned_type(id=self.id)
+
+        obj_data = self.serialize()
+        cloned_obj.update(obj_data)
+
+        return cloned_obj
+
+
     @classmethod
     def fetch(cls, offset=0, count=None, sort_by=None):
         docs = cls._database().all()

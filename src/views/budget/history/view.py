@@ -7,7 +7,7 @@ from models.budget import Budget
 import views.constants as const
 import utils.tools as tools
 
-class HistoryDialog(ft.AlertDialog):
+class HistoryView(ft.AlertDialog):
     def __init__(self, page):
         super().__init__(modal=True)
 

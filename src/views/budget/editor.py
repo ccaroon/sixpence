@@ -1,15 +1,17 @@
 import flet as ft
 
 from controls.icon_select import IconSelect
+from views.budget.history.prompt import HistoryPrompt
 
 import utils.tools as tools
 import views.constants as const
 
-class Editor:
-    def __init__(self, **kwargs):
+class BudgetEditor:
+    def __init__(self, page, **kwargs):
+        self.__page = page
         self.__handle_on_save = kwargs.get("on_save")
-        self.__item = None
 
+        self.__item = None
         self.__container = self._layout()
 
         self.__control = ft.BottomSheet(
@@ -17,11 +19,9 @@ class Editor:
             shape=ft.ContinuousRectangleBorder(radius=25),
             size_constraints=ft.BoxConstraints(min_width=1)
         )
+        self.__page.overlay.append(self.__control)
 
-
-    @property
-    def control(self):
-        return self.__control
+        self.__history_prompt = HistoryPrompt(page)
 
 
     def __update_color(self, amount):
@@ -47,101 +47,114 @@ class Editor:
         valid = True
 
         # Icon
-        self.__icon_fld.error_text = None
-        if not self.__icon_fld.value:
-            self.__icon_fld.error_text = "Required"
+        self.__icon_ctrl.error_text = None
+        if not self.__icon_ctrl.value:
+            self.__icon_ctrl.error_text = "Required"
             valid = False
 
         # Category
-        self.__category_fld.error_text = None
-        if not self.__category_fld.value:
-            self.__category_fld.error_text = "Required"
+        self.__category_ctrl.error_text = None
+        if not self.__category_ctrl.value:
+            self.__category_ctrl.error_text = "Required"
             valid = False
 
         # Amount
-        self.__amount_fld.error_text = None
-        amount = self.__amount_fld.value
+        self.__amount_ctrl.error_text = None
+        amount = self.__amount_ctrl.value
         if not tools.is_numeric(str(amount)) or amount == 0.0:
-            self.__amount_fld.error_text = "Invalid"
+            self.__amount_ctrl.error_text = "Invalid"
             valid = False
 
         # Frequency
-        self.__freq_fld.error_text = None
-        if not self.__freq_fld.value:
-            self.__freq_fld.error_text = "Required"
+        self.__freq_ctrl.error_text = None
+        if not self.__freq_ctrl.value:
+            self.__freq_ctrl.error_text = "Required"
             valid = False
 
         # First Due
-        self.__first_due_fld.error_text = None
-        if not self.__first_due_fld.value:
-            self.__first_due_fld.error_text = "Required"
+        self.__first_due_ctrl.error_text = None
+        if not self.__first_due_ctrl.value:
+            self.__first_due_ctrl.error_text = "Required"
             valid = False
 
         # Notes
         # Not required | Free form text | No validation needed
-        self.__note_fld.error_text = None
+        self.__note_ctrl.error_text = None
 
-        self.control.update()
+        self.__control.update()
 
         return valid
 
 
     def __populate_model(self):
-        self.__item.icon = self.__icon_fld.value
-        self.__item.amount = float(self.__amount_fld.value)
-        self.__item.category = self.__category_fld.value
-        self.__item.frequency = int(self.__freq_fld.value)
-        self.__item.first_due = int(self.__first_due_fld.value)
-        self.__item.notes = self.__note_fld.value
+        self.__item.icon = self.__icon_ctrl.value
+        self.__item.amount = float(self.__amount_ctrl.value)
+        self.__item.category = self.__category_ctrl.value
+        self.__item.frequency = int(self.__freq_ctrl.value)
+        self.__item.first_due = int(self.__first_due_ctrl.value)
+        self.__item.notes = self.__note_ctrl.value
 
 
     def __populate_controls(self):
-        self.__icon_fld.init_options(self.__item.category or "money")
-        self.__icon_fld.value = self.__item.icon
-        self.__icon_fld.leading_icon = self.__item.icon or ft.Icons.SEARCH
+        self.__icon_ctrl.init_options(self.__item.category or "money")
+        self.__icon_ctrl.value = self.__item.icon
+        self.__icon_ctrl.leading_icon = self.__item.icon or ft.Icons.SEARCH
 
-        self.__amount_fld.value = self.__item.amount
+        self.__amount_ctrl.value = self.__item.amount
         self.__update_color(self.__item.amount)
 
-        self.__category_fld.value = self.__item.category
-        self.__freq_fld.value = self.__item.frequency
-        self.__first_due_fld.value = self.__item.first_due
-        self.__note_fld.value = self.__item.notes
+        self.__category_ctrl.value = self.__item.category
+        self.__freq_ctrl.value = self.__item.frequency
+        self.__first_due_ctrl.value = self.__item.first_due
+        self.__note_ctrl.value = self.__item.notes
 
 
     def __on_save(self, evt):
         if self.__validate():
+            # Clone with "old" values
+            old_item = self.__item.clone()
+
+            # Update self.__item with "new" values
             self.__populate_model()
 
-            # TODO: if edit, prompt for history info & populate
-            self.__item.save()
-
-            if self.__handle_on_save:
-                self.__handle_on_save()
+            # Update History if necessary.
+            # Only care about history if `amount` changed.
+            # Also saves __item and calls on-save handler
+            # ...Is edit and amount changed...
+            if old_item.id and (old_item.amount != self.__item.amount):
+                self.__history_prompt.display(
+                    old_item, self.__item,
+                    on_save=self.__handle_on_save
+                )
+            else:
+                # New item, not history to record; just save
+                self.__item.save()
+                if self.__handle_on_save:
+                    self.__handle_on_save()
 
             # Close
-            self.control.open = False
-            self.control.update()
+            self.__control.open = False
+            self.__control.update()
 
 
     def _layout(self):
         # icon
-        self.__icon_fld = IconSelect("money")
+        self.__icon_ctrl = IconSelect("money")
         # category
-        self.__category_fld = ft.TextField(
+        self.__category_ctrl = ft.TextField(
             label="Category",
             prefix_icon=ft.Icons.CATEGORY,
-            on_submit=self.__icon_fld.update_options,
-            on_blur=self.__icon_fld.update_options
+            on_submit=self.__icon_ctrl.update_options,
+            on_blur=self.__icon_ctrl.update_options
         )
         # amount
-        self.__amount_fld = ft.TextField(
+        self.__amount_ctrl = ft.TextField(
             label="Amount",
             prefix_icon=ft.Icons.ATTACH_MONEY,
             on_blur=self.__on_amount_blur
         )
         # frequency
-        self.__freq_fld = ft.Dropdown(
+        self.__freq_ctrl = ft.Dropdown(
             label="Frequency",
             leading_icon=ft.Icons.EVENT_REPEAT,
             options=[
@@ -154,14 +167,14 @@ class Editor:
             enable_filter=True
         )
         # first_due
-        self.__first_due_fld = ft.Dropdown(
+        self.__first_due_ctrl = ft.Dropdown(
             label="First Due",
             leading_icon=ft.Icons.CALENDAR_MONTH,
             options=[ft.DropdownOption(key=idx+1, text=name) for idx,name in enumerate(const.MONTH_NAMES[1:])],
             enable_filter=True
         )
         # note
-        self.__note_fld = ft.TextField(
+        self.__note_ctrl = ft.TextField(
             label="Notes",
             prefix_icon=ft.Icons.STICKY_NOTE_2)
 
@@ -169,32 +182,32 @@ class Editor:
             ft.Row(
                 [
                     # Icon
-                    ft.Column([self.__icon_fld],
+                    ft.Column([self.__icon_ctrl],
                         expand=1,
                         alignment=ft.MainAxisAlignment.CENTER
                     ),
                     # Category
-                    ft.Column([self.__category_fld],
+                    ft.Column([self.__category_ctrl],
                         expand=3,
                         alignment=ft.MainAxisAlignment.CENTER
                     ),
                     # Amount
-                    ft.Column([self.__amount_fld],
+                    ft.Column([self.__amount_ctrl],
                         expand=2,
                         alignment=ft.MainAxisAlignment.CENTER
                     ),
                     # Frequency
-                    ft.Column([self.__freq_fld],
+                    ft.Column([self.__freq_ctrl],
                         expand=2,
                         alignment=ft.MainAxisAlignment.CENTER
                     ),
                     # First Due
-                    ft.Column([self.__first_due_fld],
+                    ft.Column([self.__first_due_ctrl],
                         expand=2,
                         alignment=ft.MainAxisAlignment.CENTER
                     ),
                     # Notes
-                    ft.Column([self.__note_fld],
+                    ft.Column([self.__note_ctrl],
                         expand=5,
                         alignment=ft.MainAxisAlignment.CENTER
                     ),
@@ -221,47 +234,8 @@ class Editor:
         return main_container
 
 
-    def __layout_history(self):
-        # icon - Category - Change Note
-        self.__history_dlg = ft.AlertDialog(
-            title=ft.Container(
-                ft.Row(
-                    [
-                        ft.Icon(self.__item.icon),
-                        ft.Text(
-                            f"{self.__item.category}",
-                            weight=ft.FontWeight.BOLD,
-                            theme_style=ft.TextThemeStyle.DISPLAY_SMALL
-                        )
-                    ]
-                ),
-                bgcolor=ft.Colors.GREY
-            ),
-            content=ft.TextField(label="Reason For Change"),
-            actions=[
-                ft.ElevatedButton(
-                    "Continue",
-                    color=ft.Colors.PRIMARY,
-                    on_click=self.__on_close
-                )
-            ]
-        )
-
-
     def edit(self, item):
         # Set the BudgetItem being edited
         self.__item = item
         self.__populate_controls()
-
-
-
-
-
-
-
-
-
-
-
-
-#
+        self.__page.open(self.__control)

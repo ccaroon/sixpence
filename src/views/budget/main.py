@@ -8,8 +8,8 @@ import views.constants as const
 
 from models.budget import Budget as BudgetItem
 from views.base import Base as BaseView
-from views.budget.editor import Editor as BudgetEditor
-from views.budget.history import HistoryDialog
+from views.budget.editor import BudgetEditor
+from views.budget.history.view import HistoryView
 
 class BudgetView(BaseView):
 
@@ -18,8 +18,6 @@ class BudgetView(BaseView):
         super().__init__(page)
 
         self.__editor = BudgetEditor(self._page, on_save=self._update)
-        # TODO: move to Editor
-        self._page.overlay.append(self.__editor.control)
 
 
     def _update(self):
@@ -111,8 +109,8 @@ class BudgetView(BaseView):
         self.__list_view = ft.ListView()
         self.content = self.__list_view
 
-        self.__history_dialog = HistoryDialog(self._page)
-        self._page.overlay.append(self.__history_dialog)
+        self.__history_view = HistoryView(self._page)
+        self._page.overlay.append(self.__history_view)
 
         self._update()
 
@@ -163,20 +161,16 @@ class BudgetView(BaseView):
     def __on_edit(self, evt):
         budget_item = evt.control.data
         self.__editor.edit(budget_item)
-        # TODO: change to __editor.open|edit
-        self._page.open(self.__editor.control)
 
 
     def __on_new(self, evt):
         budget_item = BudgetItem()
         self.__editor.edit(budget_item)
-        self._page.open(self.__editor.control)
 
 
     def __on_history(self, evt):
         budget_item = evt.control.data
-        # TODO: change to __editor.open|edit
-        self.__history_dialog.display(budget_item)
+        self.__history_view.display(budget_item)
 
 
     def __on_delete(self, evt):
