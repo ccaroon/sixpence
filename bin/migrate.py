@@ -18,7 +18,7 @@ def __read_sxp_db(filename):
     return records
 
 
-def __munge_shared_fields(entry, icon_search):
+def __munge_shared_fields(entry, icon_search, icon_cache):
     # delete _id
     del entry["_id"]
 
@@ -36,19 +36,8 @@ def __munge_shared_fields(entry, icon_search):
 
             entry[new_field] = new_value
 
-    # TODO: seach based on category instead of `icon`
-    #       ...will get a better mapping
     if "icon" in entry:
-        # TODO: still not quite right.
-        # ... use full category?
-        # ... replace : with _?
-        #
-        category = entry["category"]
-        parts = category.split(":")
-        icon_kw = parts.pop()
-        # icon_kw = entry["icon"].replace("mdi-", "")
-        # entry["icon"] = entry["icon"].replace("mdi-", "")
-        new_icon = icon_search.interactive_search(icon_kw, hint=category)
+        new_icon = icon_search.interactive(entry["category"], cache=icon_cache)
         entry["icon"] = new_icon
 
 
@@ -71,13 +60,13 @@ def main(args):
     file_base, _ = os.path.splitext(input_file)
     output_file = f"{file_base}-v2.json"
 
-    icon_map = {}
+    icon_cache = {}
     icon_map_file = "./icon_map.yml"
     if os.path.exists(icon_map_file):
         with open(icon_map_file, "r") as fptr:
-            icon_map = yaml.safe_load(fptr)
+            icon_cache = yaml.safe_load(fptr)
 
-    icon_search = IconSearch(icon_map=icon_map)
+    icon_search = IconSearch()
 
     if os.path.exists(output_file):
         confirm = input(f"{output_file} exists. Overwrite? (yes|no)> ")
@@ -93,7 +82,7 @@ def main(args):
     num_recs = len(records)
     for idx, entry in enumerate(records):
         print(f"Converting: {entry["_id"]} | {idx:04}/{num_recs:04}", end="\r")
-        __munge_shared_fields(entry, icon_search)
+        __munge_shared_fields(entry, icon_search, icon_cache)
         __munge_budget_fields(entry)
 
     print("\nData Conversion Complete!")
@@ -105,12 +94,7 @@ def main(args):
     db.insert_multiple(records)
 
     with open(icon_map_file, "w") as ftpr:
-        yaml.safe_dump(icon_search.icon_map, ftpr)
-
-    # Slow for lots of records
-    # for idx, entry in enumerate(records):
-    #     print(f"Writing: {idx:04}/{num_recs:04}", end="\r")
-    #     db.insert(entry)
+        yaml.safe_dump(icon_cache, ftpr)
 
     print(f"Successfully migrated {num_recs} entries: {output_file}")
 

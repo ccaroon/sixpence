@@ -8,34 +8,41 @@ class IconSearch:
         "for", "or", "the",
     ]
 
-    # TODO: reverse this mapping
-    #  ICON -> keywords
-    CATEGORY_MAP = {
-        "acorntv": ["connected_tv"],
-        "auto": ["car"],
-        "bank": ["account_balance"],
-        "britbox": ["connected_tv"],
-        "cash": ["money", "currency"],
-        "clothes": ["shopify"],
-        "disney+": ["connected_tv"],
-        "electricity": ["electric_bolt"],
-        "fuel": ["gas"],
-        "hulu": ["connected_tv"],
-        "icloud": ["cloud"],
-        "income": ["payment"],
-        "inspect": ["fact_check"],
-        "inspection": ["fact_check"],
-        "lodging": ["hotel"],
-        "netflix": ["connected_tv"],
-        "nintendo": ["gamepad"],
-        "paramount+": ["connected_tv"],
-        "playstation": ["gamepad"],
-        "psn": ["gamepad"],
-        "salary": ["payment"],
-        "spotify": ["music"],
-        "tithes": ["church"],
-        "xbox": ["gamepad"],
-        "electronics": ["memory"],
+    # KNOWN-ICON-KW -> PERSONAL-KW
+    KEYWORD_MAP = {
+        "account_balance": ["bank", "loan"],
+        "apartment": ["housing"],
+        "audio": ["audible", "audiobook"],
+        "car": ["auto", "automobile"],
+        "card_membership": ["registration"],
+        "church": ["tithes"],
+        "cloud": ["aws", "icloud"],
+        "connected_tv": ["acorntv", "britbox", "cbs", "disney+", "hulu", "paramount+", "netflix"],
+        "desk": ["office"],
+        "double_arrow": ["transfer"],
+        "electric_bolt": ["electricity"],
+        "fact_check": ["inspect", "inspection"],
+        "fastfood": ["eating", "foodcourt"],
+        "gamepad": ["nintendo", "playstation", "psn", "xbox"],
+        "gas": ["fuel"],
+        "giftcard": ["gift"],
+        "hotel": ["lodging"],
+        "house": ["mortgage"],
+        "medical_services": ["health"],
+        "medication": ["medicine"],
+        "memory": ["electronics"],
+        "menu_book": ["book", "kindle"],
+        "money_off": ["taxes"],
+        "money": ["allowance", "cash", "charity"],
+        "monitor_heart": ["life"],
+        "music": ["spotify"],
+        "payments": ["income", "salary"],
+        "remove_red_eye": ["optometrist"],
+        "shield": ["insurance"],
+        "shipping": ["amazon", "fedex", "ups", "usps"],
+        "shopify": ["clothes"],
+        "signal_wifi": ["internet"],
+        "water_drop": ["water", "water/sewer"],
     }
 
 
@@ -51,18 +58,26 @@ class IconSearch:
         words = query.split()
 
         # Expand and/or Filter Word List
-        all_words = []
+        keywords = []
         for word in words:
             if len(word) >= min_len and word not in self.IGNORE_WORDS:
-                all_words.extend(self.CATEGORY_MAP.get(word, [word]))
+                singular = self.__inflect.singularize(word)
+                plural = self.__inflect.pluralize(word)
+                mapped_kw = []
+                for icon_kw, personal_kws in self.KEYWORD_MAP.items():
+                    if (
+                        word in personal_kws or
+                        singular in personal_kws or
+                        plural in personal_kws
+                    ):
+                        mapped_kw.append(icon_kw)
 
-        # Add plural form of all words
-        keywords = []
-        for word in all_words:
-            keywords.append(word)
-            plural = self.__inflect.pluralize(word)
-            if plural != word:
-                keywords.append(plural)
+                if mapped_kw:
+                    keywords.extend(mapped_kw)
+                else:
+                    singular = self.__inflect.singularize(word)
+                    plural = self.__inflect.pluralize(word)
+                    keywords.extend(set([word, singular, plural]))
 
         # Find Icons base on each keyword
         for kw in keywords:
@@ -106,6 +121,7 @@ class IconSearch:
         for kw in keywords:
             icons = self.smart_search(kw)
             # Filter dupes, but keep ordered
+            icons.sort()
             for icon in icons:
                 if icon not in found_icons:
                     found_icons.append(icon)
@@ -125,8 +141,8 @@ class IconSearch:
             choice = None
             search_term = keyword
             while not choice:
-                matches = self.smart_search(search_term)
-                print(f"\n==> {hint} | {keyword.upper()} <==")
+                matches = self.by_category(search_term)
+                print(f"\n==> {hint} | {keyword} <==")
                 for idx, icon in enumerate(matches):
                     print(f"{idx}) {icon}")
 
@@ -134,11 +150,19 @@ class IconSearch:
 
                 if response.isdigit():
                     idx = int(response)
+                    while idx >= len(matches):
+                        response = input(f"Invalid Choice> ")
+                        idx = int(response)
+
                     choice = matches[idx]
                 else:
-                    choice = None
-                    search_term = response
+                    if response == "Q":
+                        exit(0)
+                    else:
+                        choice = None
+                        search_term = response
 
+            print(f"==> Caching: {keyword} -> {choice}\n")
             icon_cache[keyword] = choice
 
         return choice

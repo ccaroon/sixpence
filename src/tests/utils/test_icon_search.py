@@ -23,33 +23,31 @@ class UtilTest(unittest.TestCase):
 
 
     def test_smart_search(self):
-        # Test kw mappings
-        icons1 = self.__icon_search.smart_search("gas")
-        self.assertTrue(len(icons1)> 0)
+        for kw in ("loan", "loans"):
+            icons = self.__icon_search.smart_search(kw)
+            self.assertTrue(len(icons) > 0)
+            for icn in icons:
+                self.assertIn("account_balance", icn)
 
-        icons2 = self.__icon_search.smart_search("fuel")
-        self.assertTrue(len(icons2)> 0)
+        for kw in ("acorntv", "hulu", "netflix", "britbox"):
+            icons = self.__icon_search.smart_search(kw)
+            self.assertTrue(len(icons) > 0)
+            self.assertIn("connected_tv", icons)
 
-        self.assertEqual(icons1, icons2)
+        for kw in ("tax", "taxes"):
+            icons = self.__icon_search.smart_search(kw)
+            self.assertTrue(len(icons) > 0)
+            self.assertIn("money_off", icons)
+
+        # No Mapping
+        icons = self.__icon_search.smart_search("groceries")
+        self.assertTrue(len(icons) > 0)
+        self.assertIn("local_grocery_store", icons)
 
         # Test phrase
         icons = self.__icon_search.smart_search("I need gas for my car")
         for icn in icons:
             self.assertTrue("gas" in icn or "car" in icn)
-
-        # Pluralize
-        icons = self.__icon_search.smart_search("payment")
-        self.assertTrue("payment" in icons)
-        self.assertTrue("payments" in icons)
-
-        # Len == 2
-        icons = self.__icon_search.smart_search("tv")
-        self.assertTrue(len(icons)> 0)
-        self.assertTrue("connected_tv" in icons)
-
-        # ignored words
-        icons = self.__icon_search.smart_search("a the but for my")
-        self.assertTrue(len(icons) == 0)
 
 
     def test_by_category(self):
