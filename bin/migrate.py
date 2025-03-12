@@ -8,113 +8,207 @@ from tinydb import TinyDB
 
 from icon_search import IconSearch
 
-def __read_sxp_db(filename):
-    records = []
-    with open(args.input_file, "r") as fptr:
-        while line := fptr.readline():
-            entry = json.loads(line)
-            records.append(entry)
+class DbMigrator:
+    CACHE_FILE = "./migration_cache.yml"
+    def __init__(self, old_db_path):
+        self.__old_db_path = old_db_path
+        file_base, _ = os.path.splitext(self.__old_db_path)
+        self.__new_db_path = f"{file_base}-v2.json"
 
-    return records
+        self.__icon_search = IconSearch()
+
+        self.__cache = { "icons": {}, "tags": {}}
+        self.__read_cache()
+        self.__icon_cache = self.__cache["icons"]
+        self.__tag_cache = self.__cache["tags"]
 
 
-def __munge_shared_fields(entry, icon_search, icon_cache):
-    # delete _id
-    del entry["_id"]
+    def __read_cache(self):
+        if os.path.exists(self.CACHE_FILE):
+            with open(self.CACHE_FILE, "r") as fptr:
+                self.__cache = yaml.safe_load(fptr)
 
-    # reformat/rename date fields
-    for field in ("date", "createdAt", "updatedAt", "archivedAt"):
-        if field in entry:
-            value = entry.get(field)
-            new_value = value["$$date"] // 1000 if value else None
-            del entry[field]
 
-            if field == "archivedAt":
-                new_field = "deleted_at"
+    def __write_cache(self):
+        with open(self.CACHE_FILE, "w") as ftpr:
+            yaml.safe_dump(self.__cache, ftpr)
+
+
+    def __read_old_db(self):
+        records = []
+        with open(self.__old_db_path, "r") as fptr:
+            while line := fptr.readline():
+                entry = json.loads(line)
+                records.append(entry)
+
+        return records
+
+
+    def __note2tags(self, entry):
+        notes = entry["notes"]
+
+        tags = self.__tag_cache.get(notes, [])
+        if not tags:
+            deleted = "Deleted" if entry.get("deleted_at") else "Active"
+            print("#######################################################")
+            print(f"# Note -> Tag: {entry['category']} | {entry['amount']} | {deleted}")
+            print("#######################################################")
+            print(f"\t=> {entry['notes']}")
+            tag_str = ""
+            while not tag_str:
+                tag_str = input(f"Note2Tags> ")
+                if tag_str == "Q":
+                    self.__cleanup_exit("Quitting!")
+
+                if tag_str:
+                    tags = tag_str.split(",")
+                    tags = [tg.strip() for tg in tags]
+
+        self.__tag_cache[notes] = tags
+
+        return tags
+
+
+    def __find_icon(self, keyword):
+        choice = None
+
+        cached_icon = self.__icon_cache.get(keyword)
+        if cached_icon:
+            choice = cached_icon
+        else:
+            choice = None
+            search_term = keyword
+            while not choice:
+                matches = self.__icon_search.by_category(search_term)
+                print("#######################################################")
+                print(f"# Choose Icon: {keyword}                           ")
+                print("#######################################################")
+                for idx, icon in enumerate(matches):
+                    print(f"{idx}) {icon}")
+
+                response = input(f"Icon # | New Keyword> ")
+
+                if response.isdigit():
+                    idx = int(response)
+                    while idx >= len(matches):
+                        response = input(f"Invalid Choice> ")
+                        idx = int(response)
+
+                    choice = matches[idx]
+                else:
+                    if response == "Q":
+                        self.__cleanup_exit("Quitting!")
+                    else:
+                        choice = None
+                        search_term = response
+
+            self.__icon_cache[keyword] = choice
+
+        return choice
+
+
+    def __cleanup_exit(self, msg, code=0):
+        self.__write_cache()
+        print(msg)
+        exit(code)
+
+
+    def migrate(self):
+        if os.path.exists(self.__new_db_path):
+            confirm = input(f"{self.__new_db_path} exists. Overwrite? (yes|no)> ")
+            if confirm == "yes":
+                os.remove(self.__new_db_path)
             else:
-                new_field = field.replace("At", "_at")
+                self.__cleanup_exit("Migration Cancelled!")
 
-            entry[new_field] = new_value
+        old_records = self.__read_old_db()
 
-    if "icon" in entry:
-        new_icon = icon_search.interactive(entry["category"], cache=icon_cache)
-        entry["icon"] = new_icon
+        db = TinyDB(self.__new_db_path)
+        num_recs = len(old_records)
+        new_records = []
+        for idx, entry in enumerate(old_records):
+            print(f"Converting: {entry["_id"]} | {idx+1:04}/{num_recs:04}")
+            self.__munge_expenses_fields(entry)
+            self.__munge_budget_fields(entry)
+            self.__munge_shared_fields(entry)
+
+            new_records.append(entry)
+
+        print("\nData Conversion Complete!")
+
+        # Sort the records on creation date
+        new_records.sort(key=lambda entry: entry["created_at"])
+
+        # Much faster for lots of records
+        db.insert_multiple(new_records)
+
+        self.__cleanup_exit(f"Migrated {num_recs} entries: {self.__new_db_path}")
 
 
-def __munge_budget_fields(entry):
-    if "history" in entry:
-        for item in entry["history"]:
-            item["date"] //= 1000
+    def __munge_shared_fields(self, entry):
+        # delete _id
+        del entry["_id"]
 
-    if "firstDue" in entry:
-        entry["first_due"] = entry["firstDue"]
-        del entry["firstDue"]
+        # reformat/rename date fields
+        for field in ("date", "createdAt", "updatedAt", "archivedAt"):
+            if field in entry:
+                value = entry.get(field)
+                new_value = value["$$date"] // 1000 if value else None
+                del entry[field]
+
+                if field == "archivedAt":
+                    new_field = "deleted_at"
+                else:
+                    new_field = field.replace("At", "_at")
+
+                entry[new_field] = new_value
+
+        if "icon" in entry:
+            new_icon = self.__find_icon(entry["category"])
+            entry["icon"] = new_icon
+
+        if entry.get("notes"):
+            tags = self.__note2tags(entry)
+            del entry["notes"]
+            entry["tags"] = tags
 
 
-def __munge_expenses_fields(entry):
-    category_repair = {
-        "Home:Improvement": "Home:Improvements",
-        "Home:Repair": "Home:Maintenance",
-        "Bank:Fee": "Bank:Fees",
-        "Travel": "Personal:Travel:Misc",
-        "Travel:Dining": "Personal:Travel:Dining",
-        "Travel:Lodging": "Personal:Travel:Lodging",
-        "Travel:Misc": "Personal:Travel:Misc",
-    }
-    # Fix Categories
-    if entry["category"] in category_repair:
-        entry["category"] = category_repair.get(entry["category"])
+    def __munge_budget_fields(self, entry):
+        if "history" in entry:
+            for item in entry["history"]:
+                item["date"] //= 1000
+
+        if "firstDue" in entry:
+            entry["first_due"] = entry["firstDue"]
+            del entry["firstDue"]
+
+
+    def __munge_expenses_fields(self, entry):
+        category_repair = {
+            "Home:Improvement": "Home:Improvements",
+            "Home:Repair": "Home:Maintenance",
+            "Bank:Fee": "Bank:Fees",
+            "Travel": "Personal:Travel:Misc",
+            "Travel:Dining": "Personal:Travel:Dining",
+            "Travel:Lodging": "Personal:Travel:Lodging",
+            "Travel:Misc": "Personal:Travel:Misc",
+        }
+        # Fix Categories
+        if entry["category"] in category_repair:
+            entry["category"] = category_repair.get(entry["category"])
 
 
 def main(args):
-    input_file = args.input_file
-    file_base, _ = os.path.splitext(input_file)
-    output_file = f"{file_base}-v2.json"
-
-    icon_cache = {}
-    icon_map_file = "./icon_map.yml"
-    if os.path.exists(icon_map_file):
-        with open(icon_map_file, "r") as fptr:
-            icon_cache = yaml.safe_load(fptr)
-
-    icon_search = IconSearch()
-
-    if os.path.exists(output_file):
-        confirm = input(f"{output_file} exists. Overwrite? (yes|no)> ")
-        if confirm == "yes":
-            os.remove(output_file)
-        else:
-            print("Migration Cancelled!")
-            exit(1)
-
-    records = __read_sxp_db(input_file)
-
-    db = TinyDB(output_file)
-    num_recs = len(records)
-    for idx, entry in enumerate(records):
-        print(f"Converting: {entry["_id"]} | {idx:04}/{num_recs:04}", end="\r")
-        __munge_expenses_fields(entry)
-        __munge_budget_fields(entry)
-        __munge_shared_fields(entry, icon_search, icon_cache)
-
-    print("\nData Conversion Complete!")
-
-    # Sort the records on creation date
-    records.sort(key=lambda entry: entry["created_at"])
-
-    # Much faster for lots of records
-    db.insert_multiple(records)
-
-    with open(icon_map_file, "w") as ftpr:
-        yaml.safe_dump(icon_cache, ftpr)
-
-    print(f"Successfully migrated {num_recs} entries: {output_file}")
+    migrator = DbMigrator(args.old_db_file)
+    migrator.migrate()
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Migrate data from Old (NedDB) format to New (TinyDb) format")
+    parser = argparse.ArgumentParser(
+        description="Migrate Old DB Format (NedDB) to New DB (TinyDb) format"
+    )
 
-    parser.add_argument("input_file", type=str)
+    parser.add_argument("old_db_file", type=str)
 
     args = parser.parse_args()
     main(args)

@@ -24,7 +24,6 @@ class Budget(Taggable, Base):
         self.first_due = 1
         # In Months
         self.frequency = 1
-        self.notes = None
         # History -> {date, amount, note}
         self.history = []
 
@@ -42,8 +41,7 @@ class Budget(Taggable, Base):
             "category": self.category,
             "amount": self.amount,
             "first_due": self.first_due,
-            "frequency": self.frequency,
-            "notes": self.notes
+            "frequency": self.frequency
         }
 
         # Fix "date" in history
@@ -70,7 +68,6 @@ class Budget(Taggable, Base):
         self.amount = data.get("amount", self.amount)
         self.first_due = data.get("first_due", self.first_due)
         self.frequency = data.get("frequency", self.frequency)
-        self.notes = data.get("notes", self.notes)
         self.history = data.get("history", self.history)
 
         # history.date to Arrow

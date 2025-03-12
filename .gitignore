@@ -1,7 +1,7 @@
 __pycache__/
 
 build/
-icon_map.yml
+migration_cache.yml
 htmlcov/
 .coverage
 
