@@ -66,7 +66,8 @@ class BudgetView(BaseView):
                             color="black",
                             weight=ft.FontWeight.BOLD,
                             expand=4),
-                        ft.Text(item.notes, color="black", expand=4),
+                        # TODO: Support Tags instead of Notes
+                        ft.Text("TAGS GO HERE", color="black", expand=4),
                         ft.VerticalDivider(),
                         # NOTE: if icon_color is set, then disabled_color has
                         #       no effect

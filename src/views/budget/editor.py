@@ -92,7 +92,8 @@ class BudgetEditor:
         self.__item.category = self.__category_ctrl.value
         self.__item.frequency = int(self.__freq_ctrl.value)
         self.__item.first_due = int(self.__first_due_ctrl.value)
-        self.__item.notes = self.__note_ctrl.value
+        # TODO: support Tags
+        # self.__item.tags = self.__note_ctrl.value.split(",")
 
 
     def __populate_controls(self):
@@ -106,7 +107,8 @@ class BudgetEditor:
         self.__category_ctrl.value = self.__item.category
         self.__freq_ctrl.value = self.__item.frequency
         self.__first_due_ctrl.value = self.__item.first_due
-        self.__note_ctrl.value = self.__item.notes
+        # TODO: support Tags
+        # self.__note_ctrl.value = self.__item.tags
 
 
     def __on_save(self, evt):
