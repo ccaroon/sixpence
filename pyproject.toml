@@ -13,8 +13,8 @@ org = "org.caroon"
 product = "Sixpence"
 company = "Caroon Dot Org"
 copyright = "Copyright (C) 2025 by Craig N. Caroon"
-# NOTE: keep up-to-date with git rev?
-build_number = 1
+# NOTE: YYMMDD
+build_number = 250312
 
 [tool.flet.app]
 path = "src"

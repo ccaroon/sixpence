@@ -52,7 +52,18 @@ def __munge_budget_fields(entry):
 
 
 def __munge_expenses_fields(entry):
-    pass
+    category_repair = {
+        "Home:Improvement": "Home:Improvements",
+        "Home:Repair": "Home:Maintenance",
+        "Bank:Fee": "Bank:Fees",
+        "Travel": "Personal:Travel:Misc",
+        "Travel:Dining": "Personal:Travel:Dining",
+        "Travel:Lodging": "Personal:Travel:Lodging",
+        "Travel:Misc": "Personal:Travel:Misc",
+    }
+    # Fix Categories
+    if entry["category"] in category_repair:
+        entry["category"] = category_repair.get(entry["category"])
 
 
 def main(args):
@@ -82,8 +93,9 @@ def main(args):
     num_recs = len(records)
     for idx, entry in enumerate(records):
         print(f"Converting: {entry["_id"]} | {idx:04}/{num_recs:04}", end="\r")
-        __munge_shared_fields(entry, icon_search, icon_cache)
+        __munge_expenses_fields(entry)
         __munge_budget_fields(entry)
+        __munge_shared_fields(entry, icon_search, icon_cache)
 
     print("\nData Conversion Complete!")
 
