@@ -44,7 +44,7 @@ Create a Virtual Environment using `venv` or `pyenv` or whatever and activate it
 
 ``` bash
 # Install Requirements
-bash> pip install -r requirements.txt
+bash> pip install -r requirements-dev.txt
 
 # Run in Dev Mode
 bash> invoke dev.run
