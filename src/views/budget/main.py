@@ -32,18 +32,22 @@ class BudgetView(BaseView):
         )
         inc_total = 0.0
         exp_total = 0.0
+
         for idx, item in enumerate(budget_items):
-            inc_color = utils.tools.cycle(
-                (const.COLOR_INCOME, const.COLOR_INCOME_ALT), idx)
-            exp_color = utils.tools.cycle(
-                (const.COLOR_EXPENSE, const.COLOR_EXPENSE_ALT), idx)
+            inc_color = utils.tools.cycle(const.INCOME_COLORS, idx)
+            inc_color_alt = utils.tools.cycle(const.INCOME_COLORS, idx+1)
+            exp_color = utils.tools.cycle(const.EXPENSE_COLORS, idx)
+            exp_color_alt = utils.tools.cycle(const.EXPENSE_COLORS, idx+1)
 
             bgcolor = None
+            tag_color = None
             if item.type == BudgetItem.TYPE_INCOME:
                 bgcolor = inc_color
+                tag_color = inc_color_alt
                 inc_total += (item.amount / item.frequency)
             else:
                 bgcolor = exp_color
+                tag_color = exp_color_alt
                 exp_total += (item.amount / item.frequency)
 
             display_amt = f"{locale.currency(item.amount, grouping=True)}"
@@ -51,6 +55,16 @@ class BudgetView(BaseView):
                 display_amt += f" ({locale.currency(item.amount / item.frequency, grouping=True)})"
 
             has_history = len(item.history) > 0
+
+            tags = []
+            for tag_name in item.tag_list():
+                tags.append(
+                    ft.Chip(
+                        label=ft.Text(tag_name),
+                        bgcolor=tag_color,
+                        on_click=self.__filter_by_tag
+                    )
+                )
 
             tile = ft.ListTile(
                 leading=ft.Icon(item.icon, color="black"),
@@ -67,7 +81,7 @@ class BudgetView(BaseView):
                             weight=ft.FontWeight.BOLD,
                             expand=4),
                         # TODO: Support Tags instead of Notes
-                        ft.Text("TAGS GO HERE", color="black", expand=4),
+                        ft.Row(tags, expand=4),
                         ft.VerticalDivider(),
                         # NOTE: if icon_color is set, then disabled_color has
                         #       no effect
@@ -134,7 +148,7 @@ class BudgetView(BaseView):
 
 
     def __clear_search_filters(self):
-        for field in ("amount", "category"):
+        for field in ("amount", "category", "tags"):
             if field in self.__filters:
                 del self.__filters[field]
 
@@ -142,6 +156,11 @@ class BudgetView(BaseView):
     def __on_search_clear(self, evt):
         self.__clear_search_filters()
         self.__search_control.value = None
+        self._update()
+
+
+    def __filter_by_tag(self, evt):
+        self.__filters["tags"] = evt.control.label.value
         self._update()
 
 
@@ -156,9 +175,13 @@ class BudgetView(BaseView):
         if utils.tools.is_numeric(value):
             op = "gte" if float(value) >= 0 else "lte"
             self.__filters["amount"] = f"{op}:{value}"
-        # Search in the category for the given string
         else:
-            if value:
+            # tags:my stuff
+            if value.startswith("tags:"):
+                (_, tag_name) = value.split(":",2)
+                self.__filters["tags"] = tag_name
+            # Search in the category for the given string
+            else:
                 self.__filters["category"] = value
 
         self._update()

@@ -15,7 +15,16 @@ class Taggable:
     def tags(self, new_tags):
         self.__tags = set()
         for tag in new_tags:
-            self.tag(tag)
+            if tag:
+                self.tag(tag)
+
+
+    def tag_list(self):
+        """ Tag names in a sorted list """
+        sorted_tags = list(self.__tags)
+        sorted_tags.sort()
+
+        return [tg.name for tg in sorted_tags]
 
 
     def tag(self, tag):

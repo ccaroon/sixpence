@@ -79,7 +79,7 @@ class BudgetEditor:
 
         # Notes
         # Not required | Free form text | No validation needed
-        self.__note_ctrl.error_text = None
+        self.__tags_ctrl.error_text = None
 
         self.__control.update()
 
@@ -92,8 +92,8 @@ class BudgetEditor:
         self.__item.category = self.__category_ctrl.value
         self.__item.frequency = int(self.__freq_ctrl.value)
         self.__item.first_due = int(self.__first_due_ctrl.value)
-        # TODO: support Tags
-        # self.__item.tags = self.__note_ctrl.value.split(",")
+        new_tags = self.__tags_ctrl.value.split(",")
+        self.__item.tags = new_tags
 
 
     def __populate_controls(self):
@@ -107,8 +107,7 @@ class BudgetEditor:
         self.__category_ctrl.value = self.__item.category
         self.__freq_ctrl.value = self.__item.frequency
         self.__first_due_ctrl.value = self.__item.first_due
-        # TODO: support Tags
-        # self.__note_ctrl.value = self.__item.tags
+        self.__tags_ctrl.value = ",".join(self.__item.tag_list())
 
 
     def __on_save(self, evt):
@@ -174,10 +173,12 @@ class BudgetEditor:
             options=[ft.DropdownOption(key=idx+1, text=name) for idx,name in enumerate(const.MONTH_NAMES[1:])],
             enable_filter=True
         )
-        # note
-        self.__note_ctrl = ft.TextField(
-            label="Notes",
-            prefix_icon=ft.Icons.STICKY_NOTE_2)
+        # tags
+        self.__tags_ctrl = ft.TextField(
+            label="Tags",
+            prefix_icon=ft.Icons.TAG,
+            hint_text="Comma-separted list"
+        )
 
         main_container = ft.Container(
             ft.Row(
@@ -208,7 +209,7 @@ class BudgetEditor:
                         alignment=ft.MainAxisAlignment.CENTER
                     ),
                     # Notes
-                    ft.Column([self.__note_ctrl],
+                    ft.Column([self.__tags_ctrl],
                         expand=5,
                         alignment=ft.MainAxisAlignment.CENTER
                     ),

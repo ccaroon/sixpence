@@ -8,6 +8,7 @@ from datetime import datetime
 from tinydb import TinyDB, Query
 import tinydb.operations as tyops
 
+import models
 from app.config import Config
 from utils.db_helper import DbHelper
 import utils.tools
@@ -274,8 +275,8 @@ class Base(ABC):
             (query_op, query_value) = DbHelper.parse_query(query_str)
 
             if field == 'tags':
-                # NOTE: Does not normalize tags for searching
-                tags = query_value.replace(" ", "").split(',')
+                tags = query_value.split(',')
+                tags = [models.tag.Tag.normalize(tg) for tg in tags]
                 query_parts.append(query_builder['tags'].any(tags))
             else:
                 # Can search in boolean, int and string fields

@@ -26,6 +26,7 @@ class Tag(Base):
 
     @classmethod
     def normalize(cls, name):
+        norm_name = name.strip()
         norm_name = name.lower()
         norm_name = re.sub(r'^\W+|\W+$',      '',  norm_name)
         norm_name = re.sub(r'[^a-zA-Z0-9_\-.]', ' ', norm_name)
@@ -43,6 +44,14 @@ class Tag(Base):
         return {
             'name': self.name
         }
+
+
+    def __lt__(self, other_tag):
+        return self.name < other_tag.name
+
+
+    def __gt__(self, other_tag):
+        return self.name > other_tag.name
 
 
     def __eq__(self, other_tag):

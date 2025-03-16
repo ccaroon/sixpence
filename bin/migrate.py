@@ -2,6 +2,7 @@
 import argparse
 import json
 import os
+import re
 import yaml
 
 from tinydb import TinyDB
@@ -44,6 +45,17 @@ class DbMigrator:
         return records
 
 
+    # NOTE: "Borrowed" from src/models/tag.py
+    def __normalize_tag(self, name):
+        norm_name = name.strip()
+        norm_name = name.lower()
+        norm_name = re.sub(r'^\W+|\W+$',      '',  norm_name)
+        norm_name = re.sub(r'[^a-zA-Z0-9_\-.]', ' ', norm_name)
+        norm_name = re.sub(r'\s+',            '-', norm_name)
+
+        return norm_name
+
+
     def __note2tags(self, entry):
         notes = entry["notes"]
 
@@ -62,9 +74,9 @@ class DbMigrator:
 
                 if tag_str:
                     tags = tag_str.split(",")
-                    tags = [tg.strip() for tg in tags]
+                    tags = [self.__normalize_tag(tg) for tg in tags]
 
-        self.__tag_cache[notes] = tags
+            self.__tag_cache[notes] = tags
 
         return tags
 
