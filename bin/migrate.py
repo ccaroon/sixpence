@@ -5,6 +5,8 @@ import os
 import re
 import yaml
 
+import arrow
+
 from tinydb import TinyDB
 
 from icon_search import IconSearch
@@ -61,16 +63,17 @@ class DbMigrator:
 
         tags = self.__tag_cache.get(notes, [])
         if not tags:
+            date = arrow.get(entry["date"])
             deleted = "Deleted" if entry.get("deleted_at") else "Active"
             print("#######################################################")
-            print(f"# Note -> Tag: {entry['category']} | {entry['amount']} | {deleted}")
+            print(f"# Note -> Tag: {entry['category']} | {entry['amount']} | {date.format('YYYY-MM-DD')} | {deleted}")
             print("#######################################################")
             print(f"\t=> {entry['notes']}")
             tag_str = ""
             while not tag_str:
                 tag_str = input(f"Note2Tags> ")
                 if tag_str == "Q":
-                    self.__cleanup_exit("Quitting!")
+                    raise RuntimeError("note2tag -- user exit")
 
                 if tag_str:
                     tags = tag_str.split(",")
@@ -109,7 +112,7 @@ class DbMigrator:
                     choice = matches[idx]
                 else:
                     if response == "Q":
-                        self.__cleanup_exit("Quitting!")
+                        raise RuntimeError("find_icon -- user exit")
                     else:
                         choice = None
                         search_term = response
@@ -139,12 +142,18 @@ class DbMigrator:
         num_recs = len(old_records)
         new_records = []
         for idx, entry in enumerate(old_records):
-            print(f"Converting: {entry["_id"]} | {idx+1:04}/{num_recs:04}")
-            self.__munge_expenses_fields(entry)
-            self.__munge_budget_fields(entry)
-            self.__munge_shared_fields(entry)
+            try:
+                print(f"Converting: {entry["_id"]} | {idx+1:04}/{num_recs:04}")
+                self.__munge_expenses_fields(entry)
+                self.__munge_budget_fields(entry)
+                self.__munge_shared_fields(entry)
 
-            new_records.append(entry)
+                new_records.append(entry)
+            except Exception:
+                # don't care what error is
+                # break so to write converted records, cache
+                # and exit cleanly
+                break
 
         print("\nData Conversion Complete!")
 
@@ -208,6 +217,15 @@ class DbMigrator:
         # Fix Categories
         if entry["category"] in category_repair:
             entry["category"] = category_repair.get(entry["category"])
+
+        # normalize tags
+        if "tags" in entry:
+            new_tags = []
+            for tag in entry["tags"]:
+                new_tags.append(self.__normalize_tag(tag))
+
+            entry["tags"] = new_tags
+
 
 
 def main(args):

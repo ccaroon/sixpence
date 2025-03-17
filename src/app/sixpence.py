@@ -12,13 +12,13 @@ from controls.router import Router
 from views.about import About
 from views.home import Home
 from views.budget.main import BudgetView
-from views.expenses import Expenses
+from views.expenses.main import ExpensesView
 from views.reports import Reports
 from views.settings import Settings
 
 class Sixpence:
-    SCREEN_SCALE_WIDTH  = .60 #.70
-    SCREEN_SCALE_HEIGHT = .80 #.90
+    SCREEN_SCALE_WIDTH  = .75 #.60 #.70
+    SCREEN_SCALE_HEIGHT = .90 #.80 #.90
 
     def __init__(self, page):
         locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
@@ -53,7 +53,7 @@ class Sixpence:
             route_map={
                 "/home": Home(self.__page),
                 "/budget": BudgetView(self.__page),
-                "/expenses": Expenses(self.__page),
+                "/expenses": ExpensesView(self.__page),
                 "/reports": Reports(self.__page),
                 "/settings": Settings(self.__page)
             }

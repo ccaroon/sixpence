@@ -3,6 +3,8 @@ import flet as ft
 import views.constants as const
 from views.base import Base as BaseView
 
+# TODO: add `app:timezone`
+
 class Settings(BaseView):
     def __init__(self, page):
         # Specific Icon and Text set in __snack_msg()

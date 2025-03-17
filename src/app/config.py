@@ -9,7 +9,8 @@ class Config:
     DEFAULTS = {
         "backup:path": None,
         "backup:keep": 5,
-        "app:mode": "system"
+        "app:mode": "system",
+        "app:timezone": 'US/Eastern'
     }
 
     __instance = None

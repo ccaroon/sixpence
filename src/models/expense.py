@@ -10,12 +10,14 @@ class Expense(Taggable, Base):
     def __init__(self, id=None, **kwargs):
         # Income or Expense
         self.type = self.TYPE_EXPENSE
-        self.__date = arrow.now(Base.TIMEZONE)
+        self.__date = None
         self.icon = None
         self.category = None
         self.amount = 0.0
 
         super().__init__(id=id, **kwargs)
+
+        self.__date = arrow.now(self._cfg.get("app:timezone"))
 
 
     @property

@@ -19,9 +19,6 @@ import utils.tools
 # 2. Datetime fields are assumed to be Arrow instances in code and epoch timestamps when serialized.
 # ------------------------------------------------------------------------------
 class Base(ABC):
-    # TODO: Don't hard-code TZ
-    TIMEZONE = 'US/Eastern'
-
     DATABASE_NAME = None
     TABLE_NAME = "_default"
 
@@ -29,6 +26,7 @@ class Base(ABC):
 
     def __init__(self, id=None, **kwargs):
         kwargs['id'] = id
+        self._cfg = Config()
         self.__unserialize(kwargs)
 
 
@@ -68,8 +66,8 @@ class Base(ABC):
     @classmethod
     def _database(cls):
         if not cls.__DATABASE:
-            cfg = Config()
             # TODO: env is not set anywhere yet
+            cfg = Config()
             env = cfg.get("session:env", "prod")
             doc_dir = cfg.get("session:docs_dir")
 
@@ -88,8 +86,7 @@ class Base(ABC):
         if isinstance(date_value, arrow.Arrow):
             new_date = date_value
         elif isinstance(date_value, str):
-            new_date = arrow.get(date_value)
-            # new_date.replace(tzinfo=Base.TIMEZONE)
+            new_date = arrow.get(date_value, self._cfg.get("app:timezone"))
         elif isinstance(date_value, int):
             new_date = self._epoch_to_date_obj(date_value)
         elif not date_value and null_ok:
@@ -101,8 +98,7 @@ class Base(ABC):
 
 
     def _epoch_to_date_obj(self, ts):
-        # Datetimes are assumed to be in `TIMEZONE` epoch format
-        date_obj = arrow.get(datetime.fromtimestamp(ts), Base.TIMEZONE) if ts else None
+        date_obj = arrow.get(datetime.fromtimestamp(ts), self._cfg.get("app:timezone")) if ts else None
         return date_obj
 
 
@@ -124,7 +120,7 @@ class Base(ABC):
 
 
     def save(self):
-        now = arrow.now(Base.TIMEZONE)
+        now = arrow.now(self._cfg.get("app:timezone"))
 
         if self.deleted_at:
             raise RuntimeError(F"Can't Save ... Object deleted [{self.deleted_at.humanize()}].")
@@ -155,7 +151,7 @@ class Base(ABC):
 
     def delete(self, safe=False):
         if self.id:
-            now = arrow.now(Base.TIMEZONE)
+            now = arrow.now(self._cfg.get("app:timezone"))
             self.__deleted_at = now
 
             try:
@@ -283,8 +279,7 @@ class Base(ABC):
                 if re.match("(true|false)", query_value, flags=re.IGNORECASE):
                     query_value = True if query_value.lower() == 'true' else False
                     query_parts.append(query_builder[field] == query_value)
-                # TODO: handle btw -- X:Y
-                elif utils.tools.is_numeric(query_value):
+                elif query_op == "btw" or utils.tools.is_numeric(query_value):
                     query_parts.append(query_builder[field].test(DbHelper.cmp_numeric, query_op, query_value))
                 elif query_value == "null":
                     query_parts.append(query_builder[field] == None)
