@@ -5,6 +5,7 @@ import locale
 import pprint
 
 import utils.tools
+from utils. date_helper import DateHelper
 import views.constants as const
 
 from models.expense import Expense
@@ -14,19 +15,17 @@ from views.base import Base as BaseView
 class ExpensesView(BaseView):
 
     def __init__(self, page):
-
-        cfg = page.session.get("config")
-        now = arrow.now(cfg.get("app:timezone"))
-
-        self.__start_date = now.floor("month").int_timestamp
-        self.__end_date = now.ceil("month").int_timestamp
+        # cfg = page.session.get("config")
+        now = DateHelper.now()
+        self.__start_date = now.floor("month")
+        self.__end_date = now.ceil("month")
 
         self.__filters = {
-            "date": f"btw:{self.__start_date}:{self.__end_date}"
+            "date": f"btw:{self.__start_date.int_timestamp}:{self.__end_date.int_timestamp}"
         }
         super().__init__(page)
 
-        # self.__editor = ExpenseEditor(self._page, on_save=self._update)
+        # self.__editor = (self._page, on_save=self._update)
 
 
     def _update(self):
@@ -79,13 +78,12 @@ class ExpensesView(BaseView):
                             color="black",
                             theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
                             weight=ft.FontWeight.BOLD,
-                            expand=4),
+                            expand=3),
                         ft.Text(
                             display_amt,
                             color="black",
                             weight=ft.FontWeight.BOLD,
-                            expand=4),
-                        # TODO: Support Tags instead of Notes
+                            expand=3),
                         ft.Row(tags, expand=4),
                         ft.VerticalDivider(),
                         # NOTE: if icon_color is set, then disabled_color has
@@ -106,7 +104,9 @@ class ExpensesView(BaseView):
                         )
                     ],
                 ),
-                subtitle=ft.Text("...what...", color="black"),
+                subtitle=ft.Text(
+                    item.date.format("MMM DD, YYYY"),
+                    color="black"),
                 bgcolor=bgcolor
             )
 
@@ -185,11 +185,39 @@ class ExpensesView(BaseView):
 
 
     def __on_delete(self, evt):
-        # TODO: implement Archive capability
-        # ...i.e. mark as deleted
+        # TODO: implement Confirm delete diag
         expense = evt.control.data
-        expense.delete(safe=True)
+        expense.delete()
         self._update()
+
+
+    def __set_month(self, date:arrow.arrow.Arrow):
+        self.__start_date = date.floor("month")
+        self.__end_date = date.ceil("month")
+
+        self.__filters["date"] = f"btw:{self.__start_date.int_timestamp}:{self.__end_date.int_timestamp}"
+
+        self.__date_picker.text = self.__start_date.format("MMM YYYY")
+        self._update()
+
+
+    def __on_current_month(self, evt):
+        self.__set_month(DateHelper.now())
+
+
+    def __on_date_change(self, evt):
+        chosen_date = arrow.get(evt.control.value)
+        self.__set_month(chosen_date)
+
+
+    def __on_prev_month(self, evt):
+        prev_month = self.__start_date.shift(months=-1)
+        self.__set_month(prev_month)
+
+
+    def __on_next_month(self, evt):
+        next_month = self.__start_date.shift(months=+1)
+        self.__set_month(next_month)
 
 
     # TODO: factor out to a new class
@@ -201,6 +229,17 @@ class ExpensesView(BaseView):
                     text="TODO-TODO", checked=True,
                     on_click=lambda evt: None)
             ]
+        )
+
+        self.__date_picker = ft.ElevatedButton(
+            self.__start_date.format("MMM YYYY"),
+            # icon=ft.Icons.CALENDAR_MONTH,
+            on_click=lambda e: self._page.open(
+                ft.DatePicker(
+                    current_date=self.__start_date,
+                    on_change=self.__on_date_change
+                )
+            )
         )
 
         self.__search_control = ft.TextField(
@@ -240,6 +279,19 @@ class ExpensesView(BaseView):
                     icon=ft.Icons.FORMAT_LIST_BULLETED_ADD,
                     icon_color=ft.Colors.ON_PRIMARY_CONTAINER,
                     on_click=self.__on_new),
+                ft.VerticalDivider(
+                    color=ft.Colors.ON_PRIMARY_CONTAINER,
+                    leading_indent=5, trailing_indent=5),
+                ft.IconButton(
+                    icon=ft.Icons.CALENDAR_MONTH,
+                    icon_color=ft.Colors.ON_PRIMARY_CONTAINER,
+                    on_click=self.__on_current_month
+                ),
+                ft.IconButton(
+                    icon=ft.Icons.ARROW_LEFT, on_click=self.__on_prev_month),
+                self.__date_picker,
+                ft.IconButton(
+                    icon=ft.Icons.ARROW_RIGHT, on_click=self.__on_next_month),
                 ft.VerticalDivider(
                     color=ft.Colors.ON_PRIMARY_CONTAINER,
                     leading_indent=5, trailing_indent=5),

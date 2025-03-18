@@ -1,5 +1,3 @@
-import arrow
-
 from .base import Base
 from .taggable import Taggable
 
@@ -16,8 +14,6 @@ class Expense(Taggable, Base):
         self.amount = 0.0
 
         super().__init__(id=id, **kwargs)
-
-        self.__date = arrow.now(self._cfg.get("app:timezone"))
 
 
     @property
