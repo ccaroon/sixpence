@@ -10,12 +10,11 @@ import views.constants as const
 
 from models.expense import Expense
 from views.base import Base as BaseView
-# from views.expenses.editor import ExpenseEditor
+from views.expenses.editor import ExpenseEditor
 
 class ExpensesView(BaseView):
 
     def __init__(self, page):
-        # cfg = page.session.get("config")
         now = DateHelper.now()
         self.__start_date = now.floor("month")
         self.__end_date = now.ceil("month")
@@ -25,7 +24,7 @@ class ExpensesView(BaseView):
         }
         super().__init__(page)
 
-        # self.__editor = (self._page, on_save=self._update)
+        self.__editor = ExpenseEditor(self._page, on_save=self._update)
 
 
     def _update(self):
@@ -173,15 +172,15 @@ class ExpensesView(BaseView):
 
 
     def __on_edit(self, evt):
-        # expense = evt.control.data
-        # self.__editor.edit(expense)
-        pass
+        expense = evt.control.data
+        self.__editor.edit(expense)
 
 
     def __on_new(self, evt):
-        # expense = Expense()
-        # self.__editor.edit(expense)
-        pass
+        expense = Expense(
+            date=DateHelper.now()
+        )
+        self.__editor.edit(expense)
 
 
     def __on_delete(self, evt):

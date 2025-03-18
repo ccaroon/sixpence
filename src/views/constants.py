@@ -1,8 +1,8 @@
 from flet import Colors as ftc
 # Icon Sizes
-ICON_LARGE = 80
+ICON_SMALL = 20
 ICON_MEDIUM = 50
-
+ICON_LARGE = 80
 
 # Colors
 COLOR_INCOME = ftc.GREEN_ACCENT_400
