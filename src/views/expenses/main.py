@@ -65,7 +65,8 @@ class ExpensesView(BaseView):
                     ft.Chip(
                         label=ft.Text(tag_name),
                         bgcolor=tag_color,
-                        on_click=self.__filter_by_tag
+                        on_click=self.__filter_by_tag,
+                        padding=ft.padding.all(0)
                     )
                 )
 
@@ -329,3 +330,5 @@ class ExpensesView(BaseView):
                 self.__search_control.focus()
             elif event.key == "N":
                 self.__on_new(None)
+        elif event.key in ("Arrow Up", "Arrow Down"):
+            self.__editor.handle_keyboard_event(event)

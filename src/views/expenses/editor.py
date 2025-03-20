@@ -1,19 +1,27 @@
-import arrow
 import flet as ft
 
-from controls.icon_select import IconSelect
+import pprint
+
+from models.budget import Budget
 
 from utils.date_helper import DateHelper
+from utils.icon_search import IconSearch
 import utils.tools as tools
 import views.constants as const
 
 # date | category | amount | tags | save
+# TODO:
+# [x] +/- change date
+# [ ] tags as chips
 
 class ExpenseEditor:
+    DEFAULT_ICON = ft.Icons.QUESTION_MARK
+
     def __init__(self, page, **kwargs):
         self.__page = page
         self.__handle_on_save = kwargs.get("on_save")
 
+        self.__icon_search = IconSearch()
         self.__item = None
         self.__container = self._layout()
 
@@ -23,6 +31,8 @@ class ExpenseEditor:
             size_constraints=ft.BoxConstraints(min_width=1)
         )
         self.__page.overlay.append(self.__control)
+
+        self.__categories = Budget.categories()
 
 
     def __update_color(self, amount):
@@ -49,7 +59,7 @@ class ExpenseEditor:
 
         # Date
         self.__date_ctrl.error_text = None
-        if not self.__date_ctrl.value:
+        if not self.__date_ctrl.text:
             self.__date_ctrl.error_text = "Required"
             valid = False
 
@@ -76,11 +86,19 @@ class ExpenseEditor:
 
 
     def __populate_model(self):
-        # TODO: date
-        self.__item.date = arrow.get(self.__date_picker.value)
+        # date
+        self.__item.date = DateHelper.as_arrow(self.__date_picker.value)
 
         # category
         self.__item.category = self.__category_ctrl.value
+
+        # icon
+        icon = self.__category_ctrl.prefix_icon
+        if icon == self.DEFAULT_ICON:
+            icons = self.__icon_search.by_category(self.__item.category)
+            icon = icons[0]
+
+        self.__item.icon = icon
 
         # amount
         self.__item.amount = float(self.__amount_ctrl.value)
@@ -97,6 +115,10 @@ class ExpenseEditor:
 
         # category
         self.__category_ctrl.value = self.__item.category
+        self.__category_ctrl.prefix_icon = self.__item.icon or ft.Icons.CATEGORY
+        self.__category_ctrl.suffix_icon = None
+        self.__category_ctrl.border_color = None
+        self.__category_ctrl.helper_text = None
 
         # amount
         self.__amount_ctrl.value = self.__item.amount
@@ -121,9 +143,33 @@ class ExpenseEditor:
 
 
     def __on_choose_date(self, evt):
-        chosen_date = arrow.get(evt.control.value)
+        chosen_date = DateHelper.as_arrow(evt.control.value)
         self.__date_ctrl.text = chosen_date.format("MM-DD-YYYY")
         self.__date_ctrl.update()
+
+
+    def __on_category_blur(self, evt):
+        cat = Budget.normalize_category(evt.control.value)
+
+        icon = self.__categories.get(cat)
+        sfx_icon = None
+        border_color = None
+        msg = None
+
+        # I.e. Category not found
+        if not icon:
+            icons = self.__icon_search.by_category(cat)
+            icon = icons[0] if icons else self.DEFAULT_ICON
+            sfx_icon = ft.Icons.QUESTION_MARK
+            border_color = ft.Colors.AMBER
+            msg = "Unbudgeted"
+
+        self.__category_ctrl.value = cat
+        self.__category_ctrl.prefix_icon = icon
+        self.__category_ctrl.suffix_icon = sfx_icon
+        self.__category_ctrl.border_color = border_color
+        self.__category_ctrl.helper_text = msg
+        self.__category_ctrl.update()
 
 
     def _layout(self):
@@ -150,9 +196,14 @@ class ExpenseEditor:
             on_click=lambda e: self.__page.open(self.__date_picker)
         )
         # category
+        # - text field
+        # - text field, on submit/blur match against cat list and update color/hint
+        # - drop down but no type-your-own-category
+        # - text field + drop down -> filter & populate dd list
         self.__category_ctrl = ft.TextField(
             label="Category",
-            prefix_icon=ft.Icons.CATEGORY
+            prefix_icon=ft.Icons.CATEGORY,
+            on_blur=self.__on_category_blur
         )
         # amount
         self.__amount_ctrl = ft.TextField(
@@ -161,6 +212,8 @@ class ExpenseEditor:
             on_blur=self.__on_amount_blur
         )
         # tags
+        # TODO:text field + chips
+        #      chips with (x) and ?? to indicate if existing or new
         self.__tags_ctrl = ft.TextField(
             label="Tags",
             prefix_icon=ft.Icons.TAG,
@@ -176,17 +229,17 @@ class ExpenseEditor:
                         alignment=ft.MainAxisAlignment.CENTER),
                     # Category
                     ft.Column([self.__category_ctrl],
-                        expand=2,
+                        expand=3,
                         alignment=ft.MainAxisAlignment.CENTER
                     ),
                     # Amount
                     ft.Column([self.__amount_ctrl],
-                        expand=2,
+                        expand=1,
                         alignment=ft.MainAxisAlignment.CENTER
                     ),
                     # Tags
                     ft.Column([self.__tags_ctrl],
-                        expand=5,
+                        expand=4,
                         alignment=ft.MainAxisAlignment.CENTER
                     ),
                     # Save Button
@@ -217,3 +270,32 @@ class ExpenseEditor:
         self.__item = item
         self.__populate_controls()
         self.__page.open(self.__control)
+
+
+    def handle_keyboard_event(self, evt):
+        # Dec/Inc Date
+        if evt.key in ("Arrow Up", "Arrow Down"):
+            date = self.__date_picker.value
+            if date:
+                date = DateHelper.as_arrow(date)
+            else:
+                date = DateHelper.now()
+
+            new_date = None
+            if evt.key == "Arrow Down":
+                new_date = date.shift(days=-1)
+            elif evt.key == "Arrow Up":
+                new_date = date.shift(days=+1)
+
+            self.__date_picker.value = new_date
+            self.__date_ctrl.text = new_date.format("MM-DD-YYYY")
+            self.__date_ctrl.update()
+
+
+
+
+
+
+
+
+#

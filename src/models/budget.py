@@ -1,3 +1,5 @@
+import re
+
 from .base import Base
 from .taggable import Taggable
 
@@ -75,3 +77,51 @@ class Budget(Taggable, Base):
             entry["date"] = self._date_setter(entry["date"])
 
         self.tags = data.get("tags", self.tags)
+
+
+    @classmethod
+    def normalize_category(cls, value:str):
+        # Normalize Category
+        # Auto:Fuel -> Auto:Fuel
+        # auto:fuel -> Auto:Fuel
+        # personal:eating out -> Personal:Eating Out
+        parts = value.split(":")
+        cat_parts = []
+        for part in parts:
+            if re.search(r"\s", part):
+                sub_parts = part.split()
+                sub_values = []
+                for sub_part in sub_parts:
+                    sub_part = sub_part.strip()
+                    # Preserve case if is all uppercase string
+                    # E.g. Personal:HABA != Personal:Haba
+                    if sub_part.isupper():
+                        sub_values.append(sub_part)
+                    else:
+                        sub_values.append(sub_part.capitalize())
+                cat_parts.append(" ".join(sub_values))
+            else:
+                # Preserve case if is all uppercase string
+                # E.g. Personal:HABA != Personal:Haba
+                if part.isupper():
+                    cat_parts.append(part)
+                else:
+                    cat_parts.append(part.capitalize())
+
+        category = ":".join(cat_parts)
+        return category
+
+
+    @classmethod
+    def categories(cls):
+        items = cls.fetch(sort_by="category")
+        categories = {}
+
+        for item in items:
+            categories[item.category] = item.icon
+
+        return categories
+
+
+
+#

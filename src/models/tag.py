@@ -28,9 +28,15 @@ class Tag(Base):
     def normalize(cls, name):
         norm_name = name.strip()
         norm_name = name.lower()
-        norm_name = re.sub(r'^\W+|\W+$',      '',  norm_name)
-        norm_name = re.sub(r'[^a-zA-Z0-9_\-.]', ' ', norm_name)
-        norm_name = re.sub(r'\s+',            '-', norm_name)
+
+        # Start/End with non-word char => strip
+        norm_name = re.sub(r"^\W+|\W+$", "", norm_name)
+        # Strip Misc Char that don't want as space
+        norm_name = re.sub(r"[']", "", norm_name)
+        # Non-var chars => space
+        norm_name = re.sub(r"[^a-zA-Z0-9_\-.]", " ", norm_name)
+        # Spaces => '-'
+        norm_name = re.sub(r"\s+", "-", norm_name)
 
         return norm_name
 
