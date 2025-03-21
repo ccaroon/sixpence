@@ -1,5 +1,5 @@
-from .base import Base
-from .taggable import Taggable
+from models.base import Base
+from models.taggable import Taggable
 
 class Expense(Taggable, Base):
     TYPE_INCOME = 0

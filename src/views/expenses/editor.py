@@ -12,7 +12,7 @@ import views.constants as const
 # date | category | amount | tags | save
 # TODO:
 # [x] +/- change date
-# [ ] tags as chips
+# [ ] tags as input w/ chips
 
 class ExpenseEditor:
     DEFAULT_ICON = ft.Icons.QUESTION_MARK
@@ -33,6 +33,19 @@ class ExpenseEditor:
         self.__page.overlay.append(self.__control)
 
         self.__categories = Budget.categories()
+
+
+    def __find_category(self, keyword):
+        category = keyword
+        kw_cmp = keyword.lower()
+
+        for cat_name in self.__categories.keys():
+            cn_cmp = cat_name.lower()
+            if kw_cmp in cn_cmp:
+                category = cat_name
+                break
+
+        return category
 
 
     def __update_color(self, amount):
@@ -149,22 +162,23 @@ class ExpenseEditor:
 
 
     def __on_category_blur(self, evt):
-        cat = Budget.normalize_category(evt.control.value)
+        cat_kw = self.__find_category(evt.control.value)
+        cat_name = Budget.normalize_category(cat_kw)
 
-        icon = self.__categories.get(cat)
+        icon = self.__categories.get(cat_name)
         sfx_icon = None
         border_color = None
         msg = None
 
         # I.e. Category not found
         if not icon:
-            icons = self.__icon_search.by_category(cat)
+            icons = self.__icon_search.by_category(cat_name)
             icon = icons[0] if icons else self.DEFAULT_ICON
             sfx_icon = ft.Icons.QUESTION_MARK
             border_color = ft.Colors.AMBER
             msg = "Unbudgeted"
 
-        self.__category_ctrl.value = cat
+        self.__category_ctrl.value = cat_name
         self.__category_ctrl.prefix_icon = icon
         self.__category_ctrl.suffix_icon = sfx_icon
         self.__category_ctrl.border_color = border_color

@@ -1,4 +1,4 @@
-from .tag import Tag
+from models.tag import Tag
 
 class Taggable:
     def __init__(self, id=None, **kwargs):

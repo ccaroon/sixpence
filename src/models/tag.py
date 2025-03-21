@@ -1,7 +1,7 @@
 import re
 from tinydb import where
 
-from .base import Base
+from models.base import Base
 
 class Tag(Base):
     def __init__(self, id=None, **kwargs):

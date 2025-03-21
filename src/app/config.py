@@ -114,7 +114,8 @@ class Config:
             to_save = copy.deepcopy(self.settings)
             if self.__transient:
                 for key in self.__transient:
-                    del to_save[key]
+                    if key in to_save:
+                        del to_save[key]
 
             with open(self.__filename, 'w') as fptr:
                 yaml.safe_dump(to_save, fptr)

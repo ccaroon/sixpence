@@ -3,38 +3,30 @@ import argparse
 import json
 import os
 import re
-import yaml
 
 import arrow
 
 from tinydb import TinyDB
 
-from icon_search import IconSearch
+from app.config import Config
+from utils.icon_search import IconSearch
+from models.tag import Tag
 
 class DbMigrator:
-    CACHE_FILE = "./migration_cache.yml"
-    def __init__(self, old_db_path):
+    def __init__(self, old_db_path, **kwargs):
         self.__old_db_path = old_db_path
-        file_base, _ = os.path.splitext(self.__old_db_path)
-        self.__new_db_path = f"{file_base}-v2.json"
+        self.__working_dir = kwargs.get("working_dir", "/tmp")
 
+        file_name = os.path.basename(self.__old_db_path)
+        self.__new_db_path = f"{self.__working_dir}/{file_name.capitalize()}.json"
+
+        self.__config = Config.initialize(
+            f"{self.__working_dir}/migration.yml", transient=["session"])
+        self.__config.set("session:docs_dir", self.__working_dir)
         self.__icon_search = IconSearch()
 
-        self.__cache = { "icons": {}, "tags": {}}
-        self.__read_cache()
-        self.__icon_cache = self.__cache["icons"]
-        self.__tag_cache = self.__cache["tags"]
-
-
-    def __read_cache(self):
-        if os.path.exists(self.CACHE_FILE):
-            with open(self.CACHE_FILE, "r") as fptr:
-                self.__cache = yaml.safe_load(fptr)
-
-
-    def __write_cache(self):
-        with open(self.CACHE_FILE, "w") as ftpr:
-            yaml.safe_dump(self.__cache, ftpr)
+        self.__icon_cache = self.__config.get("icons", {})
+        self.__tag_cache = self.__config.get("tags", {})
 
 
     def __read_old_db(self):
@@ -51,9 +43,15 @@ class DbMigrator:
     def __normalize_tag(self, name):
         norm_name = name.strip()
         norm_name = name.lower()
-        norm_name = re.sub(r'^\W+|\W+$',      '',  norm_name)
-        norm_name = re.sub(r'[^a-zA-Z0-9_\-.]', ' ', norm_name)
-        norm_name = re.sub(r'\s+',            '-', norm_name)
+
+        # Start/End with non-word char => strip
+        norm_name = re.sub(r"^\W+|\W+$", "", norm_name)
+        # Strip Misc Char that don't want as space
+        norm_name = re.sub(r"[']", "", norm_name)
+        # Non-var chars => space
+        norm_name = re.sub(r"[^a-zA-Z0-9_\-.]", " ", norm_name)
+        # Spaces => '-'
+        norm_name = re.sub(r"\s+", "-", norm_name)
 
         return norm_name
 
@@ -63,7 +61,7 @@ class DbMigrator:
 
         tags = self.__tag_cache.get(notes, [])
         if not tags:
-            date = arrow.get(entry["date"])
+            date = arrow.get(entry["created_at"])
             deleted = "Deleted" if entry.get("deleted_at") else "Active"
             print("#######################################################")
             print(f"# Note -> Tag: {entry['category']} | {entry['amount']} | {date.format('YYYY-MM-DD')} | {deleted}")
@@ -122,8 +120,16 @@ class DbMigrator:
         return choice
 
 
+    def __write_tags(self, tags:list[str]):
+        # Update Tags DB
+        for tg_name in tags:
+            if not Tag.exists(tg_name):
+                new_tg = Tag(name=tg_name)
+                new_tg.save()
+
+
     def __cleanup_exit(self, msg, code=0):
-        self.__write_cache()
+        self.__config.save()
         print(msg)
         exit(code)
 
@@ -149,10 +155,11 @@ class DbMigrator:
                 self.__munge_shared_fields(entry)
 
                 new_records.append(entry)
-            except Exception:
-                # don't care what error is
-                # break so to write converted records, cache
+            except Exception as err:
+                # don't really care to much what error is here
+                # just break so to write converted records, cache
                 # and exit cleanly
+                print(err)
                 break
 
         print("\nData Conversion Complete!")
@@ -193,6 +200,8 @@ class DbMigrator:
             del entry["notes"]
             entry["tags"] = tags
 
+            self.__write_tags(tags)
+
 
     def __munge_budget_fields(self, entry):
         if "history" in entry:
@@ -225,11 +234,11 @@ class DbMigrator:
                 new_tags.append(self.__normalize_tag(tag))
 
             entry["tags"] = new_tags
-
+            self.__write_tags(new_tags)
 
 
 def main(args):
-    migrator = DbMigrator(args.old_db_file)
+    migrator = DbMigrator(args.old_db_file, working_dir=args.working_dir)
     migrator.migrate()
 
 
@@ -239,6 +248,7 @@ if __name__ == "__main__":
     )
 
     parser.add_argument("old_db_file", type=str)
+    parser.add_argument("working_dir", type=str)
 
     args = parser.parse_args()
     main(args)

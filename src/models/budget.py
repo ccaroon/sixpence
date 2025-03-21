@@ -1,7 +1,7 @@
 import re
 
-from .base import Base
-from .taggable import Taggable
+from models.base import Base
+from models.taggable import Taggable
 
 class Budget(Taggable, Base):
 

@@ -1,1 +1,0 @@
-../src/utils/icon_search.py

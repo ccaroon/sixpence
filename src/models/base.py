@@ -73,9 +73,9 @@ class Base(ABC):
 
             db_name = cls.__db_name()
             if (env != "prod"):
-                db_name += F"-{env}"
+                db_name += f"-{env}"
 
-            cls.__DATABASE = TinyDB(F"{doc_dir}/{db_name}.json")
+            cls.__DATABASE = TinyDB(f"{doc_dir}/{db_name}.json")
 
         return cls.__DATABASE.table(cls.TABLE_NAME)
 
