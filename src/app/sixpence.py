@@ -17,8 +17,8 @@ from views.reports import Reports
 from views.settings import Settings
 
 class Sixpence:
-    SCREEN_SCALE_WIDTH  = .75 #.60 #.70
-    SCREEN_SCALE_HEIGHT = .90 #.80 #.90
+    SCREEN_SCALE_WIDTH  = .60 #.70
+    SCREEN_SCALE_HEIGHT = .80 #.90
 
     def __init__(self, page):
         locale.setlocale(locale.LC_ALL, "en_US.UTF-8")

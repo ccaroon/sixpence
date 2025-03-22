@@ -10,9 +10,37 @@ from tinydb import TinyDB
 
 from app.config import Config
 from utils.icon_search import IconSearch
+from models.budget import Budget
 from models.tag import Tag
 
+
 class DbMigrator:
+    CATEGORY_FIXES = {
+        "Bank:Fee": "Bank:Fees",
+        "Charity": "Personal:Charity",
+        "Home:Improvement": "Home:Improvements",
+        "Home:Repair": "Home:Maintenance",
+        "Mortgage": "Home:Mortgage",
+        "Personal:Entertainment:Acorntv": "Subscriptions:Acorntv",
+        "Personal:Entertainment:Britbox": "Subscriptions:Britbox",
+        "Personal:Entertainment:Disney+": "Subscriptions:Disney+",
+        "Personal:Entertainment:Hulu": "Subscriptions:Hulu",
+        "Personal:Entertainment:Netflix": "Subscriptions:Netflix",
+        "Personal:Entertainment:Paramount+": "Subscriptions:Paramount+",
+        "Personal:Entertainment:Spotify": "Subscriptions:Spotify",
+        "Personal:Subscriptions:Amazon Prime": "Subscriptions:Amazon Prime",
+        "Personal:Subscriptions:Audible": "Subscriptions:Audible",
+        "Personal:Subscriptions:Icloud": "Subscriptions:Icloud",
+        "Personal:Subscriptions:Kindle Unlimited": "Subscriptions:Kindle Unlimited",
+        "Personal:Subscriptions:Nintendo": "Subscriptions:Nintendo Online",
+        "Personal:Subscriptions:Prime Video No Ads": "Subscriptions:Prime Video Ad Free",
+        "Personal:Subscriptions:PSN": "Subscriptions:Playstation Network",
+        "Personal:Travel:Lodging": "Travel:Lodging",
+        "Salary:Paycheck": "Income:Salary",
+        "Travel": "Travel:Misc",
+    }
+
+
     def __init__(self, old_db_path, **kwargs):
         self.__old_db_path = old_db_path
         self.__working_dir = kwargs.get("working_dir", "/tmp")
@@ -177,6 +205,13 @@ class DbMigrator:
         # delete _id
         del entry["_id"]
 
+        # Standardize & Fix Categories
+        entry["category"] = Budget.normalize_category(entry["category"])
+
+        # Fix Categories
+        if entry["category"] in self.CATEGORY_FIXES:
+            entry["category"] = self.CATEGORY_FIXES.get(entry["category"])
+
         # reformat/rename date fields
         for field in ("date", "createdAt", "updatedAt", "archivedAt"):
             if field in entry:
@@ -214,19 +249,6 @@ class DbMigrator:
 
 
     def __munge_expenses_fields(self, entry):
-        category_repair = {
-            "Home:Improvement": "Home:Improvements",
-            "Home:Repair": "Home:Maintenance",
-            "Bank:Fee": "Bank:Fees",
-            "Travel": "Personal:Travel:Misc",
-            "Travel:Dining": "Personal:Travel:Dining",
-            "Travel:Lodging": "Personal:Travel:Lodging",
-            "Travel:Misc": "Personal:Travel:Misc",
-        }
-        # Fix Categories
-        if entry["category"] in category_repair:
-            entry["category"] = category_repair.get(entry["category"])
-
         # normalize tags
         if "tags" in entry:
             new_tags = []

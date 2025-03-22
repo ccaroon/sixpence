@@ -13,6 +13,7 @@ import views.constants as const
 # TODO:
 # [x] +/- change date
 # [ ] tags as input w/ chips
+# [ ] Default tags to Budget item's tags
 
 class ExpenseEditor:
     DEFAULT_ICON = ft.Icons.QUESTION_MARK
