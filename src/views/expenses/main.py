@@ -226,14 +226,13 @@ class ExpensesView(BaseView):
             icon=ft.Icons.MENU,
             items=[
                 ft.PopupMenuItem(icon=ft.Icons.FORMAT_LIST_BULLETED,
-                    text="TODO-TODO", checked=True,
+                    text="Placeholder Item", checked=True,
                     on_click=lambda evt: None)
             ]
         )
 
         self.__date_picker = ft.ElevatedButton(
             self.__start_date.format("MMM YYYY"),
-            # icon=ft.Icons.CALENDAR_MONTH,
             on_click=lambda e: self._page.open(
                 ft.DatePicker(
                     current_date=self.__start_date,

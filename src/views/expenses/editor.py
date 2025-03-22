@@ -2,18 +2,13 @@ import flet as ft
 
 import pprint
 
+from models.tag import Tag
 from models.budget import Budget
 
 from utils.date_helper import DateHelper
 from utils.icon_search import IconSearch
 import utils.tools as tools
 import views.constants as const
-
-# date | category | amount | tags | save
-# TODO:
-# [x] +/- change date
-# [ ] tags as input w/ chips
-# [ ] Default tags to Budget item's tags
 
 class ExpenseEditor:
     DEFAULT_ICON = ft.Icons.QUESTION_MARK
@@ -187,6 +182,29 @@ class ExpenseEditor:
         self.__category_ctrl.update()
 
 
+    def __on_tags_blur(self, evt):
+        tag_str = evt.control.value
+        tag_names = tag_str.split(",")
+        tag_names = [Tag.normalize(tg) for tg in tag_names]
+
+        unknown_tags = []
+        for tg_name in tag_names:
+            if not Tag.exists(tg_name):
+                unknown_tags.append(tg_name)
+
+        msg = None
+        border_color = None
+        if unknown_tags:
+            msg = f"New Tags: {",".join(unknown_tags)}"
+            border_color = ft.Colors.AMBER
+
+        # Set value as normalized names
+        self.__tags_ctrl.value = ",".join(tag_names)
+        self.__tags_ctrl.helper_text = msg
+        self.__tags_ctrl.border_color = border_color
+        self.__tags_ctrl.update()
+
+
     def _layout(self):
         # date
         self.__date_picker = ft.DatePicker(
@@ -227,12 +245,11 @@ class ExpenseEditor:
             on_blur=self.__on_amount_blur
         )
         # tags
-        # TODO:text field + chips
-        #      chips with (x) and ?? to indicate if existing or new
         self.__tags_ctrl = ft.TextField(
             label="Tags",
             prefix_icon=ft.Icons.TAG,
-            hint_text="Comma-separted list"
+            hint_text="Comma-separted list",
+            on_blur=self.__on_tags_blur
         )
 
         main_container = ft.Container(

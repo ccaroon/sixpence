@@ -40,6 +40,19 @@ class DbMigrator:
         "Travel": "Travel:Misc",
     }
 
+    # TODO: revisit after "real" note2tags conversion
+    TAG_FIXES = {
+        "2017-honda-civic": "2017-honda-civic-sport",
+        "civic": "2017-honda-civic-sport",
+        "cengage": "cengage-group",
+        "cengage-learing-inc": "cengage-group",
+        "amazon": "amazon.com",
+        "veloster": "2016-hyundai-veloster",
+        "paypay": "paypal",
+        "switch": "nintendo switch",
+    }
+
+
 
     def __init__(self, old_db_path, **kwargs):
         self.__old_db_path = old_db_path
