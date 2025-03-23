@@ -1,0 +1,6 @@
+app:
+  mode: light
+  timezone: US/Eastern
+backup:
+  keep: 7
+  path: /home/ccaroon/backups

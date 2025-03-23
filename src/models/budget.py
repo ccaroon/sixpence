@@ -60,6 +60,18 @@ class Budget(Taggable, Base):
 
 
     def frequency_desc(self):
+        """
+        Items frequency as a descriptive strint
+
+        Return:
+            str: Description fo the frequency value
+
+        Example:
+            1 => Monthly
+            3 => Quarterly
+            12 => Yearly
+            14 => 14 months
+        """
         return self.FREQ_DESC.get(self.frequency, f"{self.frequency} months")
 
 
@@ -81,10 +93,20 @@ class Budget(Taggable, Base):
 
     @classmethod
     def normalize_category(cls, value:str):
-        # Normalize Category
-        # Auto:Fuel -> Auto:Fuel
-        # auto:fuel -> Auto:Fuel
-        # personal:eating out -> Personal:Eating Out
+        """
+        Normalize a category name
+
+        Params:
+            value(str): A Category name to be normalized
+
+        Returns:
+            str: Normalized category name
+
+        Examples:
+            Auto:Fuel -> Auto:Fuel
+            auto:fuel -> Auto:Fuel
+            personal:eating out -> Personal:Eating Out
+        """
         parts = value.split(":")
         cat_parts = []
         for part in parts:
@@ -114,6 +136,12 @@ class Budget(Taggable, Base):
 
     @classmethod
     def categories(cls):
+        """
+        Category Name to Icon Name mapping
+
+        Returns:
+            dict: key -> category_name | value -> icon_name
+        """
         items = cls.fetch(sort_by="category")
         categories = {}
 
@@ -121,6 +149,51 @@ class Budget(Taggable, Base):
             categories[item.category] = item.icon
 
         return categories
+
+
+    def due_months(self):
+        """
+        Compute a list of months that this item is due based on frequency and
+        first_due month.
+
+        Returns:
+            list[int]: list of month numbers
+        """
+        due_months = []
+        will_get = (12 - self.first_due) + 1
+        more_needed = 12 - will_get
+
+        for m in range(self.first_due, 12 + more_needed + 1, self.frequency):
+            month = m if m <= 12 else m - 12
+            due_months.append(month)
+
+        return due_months
+
+
+    @classmethod
+    def for_month(cls, month_num:int):
+        """
+        All budgeted items that are due in the given month
+
+        Params:
+            month_num (int): A month number: 1 to 12
+
+        Returns:
+            list[Budget]: List of Budget items.
+        """
+        items = cls.fetch()
+        wanted_items = []
+        for itm in items:
+            if month_num in itm.due_months():
+                wanted_items.append(itm)
+
+        return wanted_items
+
+
+
+
+
+
 
 
 
