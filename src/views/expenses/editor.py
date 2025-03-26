@@ -28,14 +28,12 @@ class ExpenseEditor:
         )
         self.__page.overlay.append(self.__control)
 
-        self.__categories = Budget.categories()
-
 
     def __find_category(self, keyword):
         category = keyword
         kw_cmp = keyword.lower()
 
-        for cat_name in self.__categories.keys():
+        for cat_name in self.__budget_by_cat.keys():
             cn_cmp = cat_name.lower()
             if kw_cmp in cn_cmp:
                 category = cat_name
@@ -160,26 +158,53 @@ class ExpenseEditor:
     def __on_category_blur(self, evt):
         cat_kw = self.__find_category(evt.control.value)
         cat_name = Budget.normalize_category(cat_kw)
+        budget_items = self.__budget_by_cat.get(cat_name)
 
-        icon = self.__categories.get(cat_name)
+        icon = None
         sfx_icon = None
         border_color = None
         msg = None
+        bdg_amount = None
+        bdg_tags = None
 
-        # I.e. Category not found
-        if not icon:
+        if budget_items:
+            icon = budget_items[0].icon
+            bdg_amount = sum([bi.amount for bi in budget_items])
+            bdg_tags = set()
+            for bi in budget_items:
+                bdg_tags.update(bi.tag_list())
+        else:
+            # I.e. Category not found
             icons = self.__icon_search.by_category(cat_name)
             icon = icons[0] if icons else self.DEFAULT_ICON
             sfx_icon = ft.Icons.QUESTION_MARK
             border_color = ft.Colors.AMBER
             msg = "Unbudgeted"
 
+        # Update Category Control
         self.__category_ctrl.value = cat_name
         self.__category_ctrl.prefix_icon = icon
         self.__category_ctrl.suffix_icon = sfx_icon
         self.__category_ctrl.border_color = border_color
         self.__category_ctrl.helper_text = msg
         self.__category_ctrl.update()
+
+        # Update amount hint &  bg color
+        if bdg_amount:
+            if self.__amount_ctrl.value == 0.0:
+                self.__amount_ctrl.value = None
+                self.__amount_ctrl.hint_text = bdg_amount
+                self.__update_color(bdg_amount)
+        else:
+            self.__amount_ctrl.hint_text = None
+
+        self.__amount_ctrl.update()
+
+        # Update tags
+        if bdg_tags:
+            if not self.__tags_ctrl.value:
+                self.__tags_ctrl.value = ",".join(bdg_tags)
+                self.__tags_ctrl.update()
 
 
     def __on_tags_blur(self, evt):
@@ -297,9 +322,25 @@ class ExpenseEditor:
         return main_container
 
 
-    def edit(self, item):
+    def edit(self, item, budget):
+        """
+        Prep and open the Editor for the given item
+
+        Args:
+            item (Expense): An Expense entry to edit
+            budget (list): Budget items for the currently view month
+        """
         # Set the Expense item being edited
         self.__item = item
+
+        # Create category -> budget items mapping
+        self.__budget_by_cat = {}
+        for budget_item in budget:
+            if budget_item.category in self.__budget_by_cat:
+                self.__budget_by_cat[budget_item.category].append(budget_item)
+            else:
+                self.__budget_by_cat[budget_item.category] = [budget_item]
+
         self.__populate_controls()
         self.__page.open(self.__control)
 

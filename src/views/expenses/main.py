@@ -8,6 +8,7 @@ import utils.tools
 from utils. date_helper import DateHelper
 import views.constants as const
 
+from models.budget import Budget
 from models.expense import Expense
 from views.base import Base as BaseView
 from views.expenses.editor import ExpenseEditor
@@ -24,6 +25,7 @@ class ExpensesView(BaseView):
         }
         super().__init__(page)
 
+        self.__budget = Budget.for_month(self.__start_date.month)
         self.__editor = ExpenseEditor(self._page, on_save=self._update)
 
 
@@ -31,7 +33,6 @@ class ExpensesView(BaseView):
         self.__list_view.controls.clear()
 
         # pprint.pprint(f"Filters: [{self.__filters}]")
-
         expenses = Expense.find(
             op="and",
             sort_by="type,date",
@@ -174,14 +175,14 @@ class ExpensesView(BaseView):
 
     def __on_edit(self, evt):
         expense = evt.control.data
-        self.__editor.edit(expense)
+        self.__editor.edit(expense, self.__budget)
 
 
     def __on_new(self, evt):
         expense = Expense(
             date=DateHelper.now()
         )
-        self.__editor.edit(expense)
+        self.__editor.edit(expense, self.__budget)
 
 
     def __on_delete(self, evt):
@@ -198,6 +199,8 @@ class ExpensesView(BaseView):
         self.__filters["date"] = f"btw:{self.__start_date.int_timestamp}:{self.__end_date.int_timestamp}"
 
         self.__date_picker.text = self.__start_date.format("MMM YYYY")
+
+        self.__budget = Budget.for_month(self.__start_date.month)
         self._update()
 
 

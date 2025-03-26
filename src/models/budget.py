@@ -173,7 +173,7 @@ class Budget(Taggable, Base):
     @classmethod
     def for_month(cls, month_num:int):
         """
-        All budgeted items that are due in the given month
+        All non-deleted budgeted items that are due in the given month
 
         Params:
             month_num (int): A month number: 1 to 12
@@ -181,7 +181,7 @@ class Budget(Taggable, Base):
         Returns:
             list[Budget]: List of Budget items.
         """
-        items = cls.fetch()
+        items = cls.find(deleted_at="null")
         wanted_items = []
         for itm in items:
             if month_num in itm.due_months():
