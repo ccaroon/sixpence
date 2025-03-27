@@ -3,11 +3,14 @@ import screeninfo
 
 import locale
 import os
+import pprint
 
 from app.config import Config
 
 from controls.nav_rail import NavRail
 from controls.router import Router
+
+from utils.archive import Archive
 
 from views.about import About
 from views.home import Home
@@ -31,9 +34,6 @@ class Sixpence:
         self.__init_settings()
 
         self.__page.on_keyboard_event = self.__handle_on_keyboard
-
-        # page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-        # page.vertical_alignment = ft.MainAxisAlignment.CENTER
 
         # Overall Color Theme
         self.__page.theme = ft.Theme(
@@ -77,10 +77,9 @@ class Sixpence:
         self.__page.window.top = mon_height * 0.0
 
         # Window Events
-        # TODO: is not working. why????
         # https://flet.dev/docs/reference/types/window/
-        # self.__page.window.prevent_close = True
-        # self.__page.window.on_event = self.__handle_window_event
+        self.__page.window.prevent_close = True
+        self.__page.window.on_event = self.__handle_window_event
 
 
     def __init_settings(self):
@@ -126,6 +125,21 @@ class Sixpence:
         config.set("session:docs_dir", docs_dir)
 
 
+    def __backup_data(self):
+        config = self.__page.session.get("config")
+
+        keep = config.get("backup:keep", 14)
+        backup_path = config.get("backup:path", ".")
+        docs_dir = config.get("session:docs_dir")
+
+        os.makedirs(backup_path, exist_ok=True)
+
+        archive = Archive(backup_path)
+        archive.add(docs_dir)
+        archive.add(config.get("session:config_dir")+"/sixpence.yml")
+        archive.clean("sixpence", keep)
+
+
     def __handle_on_keyboard(self, event):
         # import pprint
         # pprint.pprint(event)
@@ -142,16 +156,17 @@ class Sixpence:
             self.__about_view.display()
         # -- Quit
         elif (event.ctrl or event.meta) and event.key == "Q":
-            self.__page.window.close()
+            self.__backup_data()
+            self.__page.window.destroy()
         # If not handled, passed to router to distribute to correct View
         else:
             self.__router.handle_keyboard_event(event)
 
 
-    def __handle_window_event(self, event):
-        # if event.data == "close":
-        # print(event)
-        pass
+    def __handle_window_event(self, evt):
+        if evt.data == "close":
+            self.__backup_data()
+            evt.page.window.destroy()
 
 
 

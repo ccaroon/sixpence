@@ -23,4 +23,4 @@ class DateHelper:
     @classmethod
     def as_arrow(cls, date_time):
         cls.__init()
-        return arrow.get(date_time, cls.__TIMEZONE)
+        return arrow.get(date_time).replace(tzinfo=cls.__TIMEZONE)
