@@ -100,7 +100,7 @@ class ExpensesView(BaseView):
                         ft.IconButton(ft.Icons.DELETE,
                             data=item,
                             icon_color=ft.Colors.GREY_500 if item.deleted_at else ft.Colors.GREY_800,
-                            on_click=self.__on_delete,
+                            on_click=self.__on_delete_confirm,
                             disabled=item.deleted_at is not None
                         )
                     ],
@@ -129,6 +129,7 @@ class ExpensesView(BaseView):
     def _layout(self):
         self.__list_view = ft.ListView()
         self.content = self.__list_view
+        self.__layout_dlg()
         self._update()
 
 
@@ -186,10 +187,30 @@ class ExpensesView(BaseView):
 
 
     def __on_delete(self, evt):
-        # TODO: implement Confirm delete diag
-        expense = evt.control.data
-        expense.delete()
-        self._update()
+        self._page.close(self.__confirm_dlg)
+
+        if evt.control.text == "Yes":
+            expense = self.__confirm_dlg.data
+            expense.delete()
+            self._update()
+
+
+    def __on_delete_confirm(self, evt):
+        item = evt.control.data
+
+        self.__confirm_dlg.content = ft.Column(
+            [
+                ft.Text("Are you sure you want to delete this Expense?"),
+                ft.Text(
+                    f"{item.date.format("MMM DD, YYYY")} | {item.category} | {locale.currency(item.amount, grouping=True)}?",
+                    weight=ft.FontWeight.BOLD
+                )
+            ],
+            tight=True
+        )
+
+        self.__confirm_dlg.data = item
+        self._page.open(self.__confirm_dlg)
 
 
     def __set_month(self, date:arrow.arrow.Arrow):
@@ -324,6 +345,20 @@ class ExpensesView(BaseView):
                     on_click=self.__on_search_clear)
             ]
         )
+
+
+    def __layout_dlg(self):
+        self.__confirm_dlg = ft.AlertDialog(
+            modal=True,
+            title=ft.Text("Please Confirm"),
+            content=ft.Text("PLACEHOLDER"),
+            actions=[
+                ft.TextButton("Yes", on_click=self.__on_delete),
+                ft.TextButton("No", on_click=self.__on_delete),
+            ]
+        )
+
+        self._page.overlay.append(self.__confirm_dlg)
 
 
     def handle_keyboard_event(self, event):
