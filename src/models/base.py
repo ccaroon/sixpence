@@ -66,9 +66,8 @@ class Base(ABC):
     @classmethod
     def _database(cls):
         if not cls.__DATABASE:
-            # TODO: env is not set anywhere yet
             cfg = Config()
-            env = cfg.get("session:env", "prod")
+            env = cfg.get("session:env", "dev")
             doc_dir = cfg.get("session:docs_dir")
 
             db_name = cls.__db_name()

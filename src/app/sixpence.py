@@ -26,9 +26,10 @@ class Sixpence:
     def __init__(self, page):
         locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
 
+        self.__app_name = "sixpence"
         self.__page = page
 
-        self.__page.title = "Sixpence"
+        self.__page.title = self.__app_name.capitalize()
 
         self.__init_window()
         self.__init_settings()
@@ -46,6 +47,17 @@ class Sixpence:
         self.__about_view = About(self.__page)
         self.__page.overlay.append(self.__about_view)
 
+        self.__snack_icon = ft.Icon(color=ft.Colors.ON_SECONDARY_CONTAINER)
+        self.__snack_txt = ft.Text("", color=ft.Colors.ON_SECONDARY_CONTAINER)
+        self.__snackbar = ft.SnackBar(
+            ft.Row([
+                self.__snack_icon,
+                self.__snack_txt,
+            ]),
+            bgcolor=ft.Colors.SECONDARY_CONTAINER
+        )
+        self.__page.overlay.append(self.__snackbar)
+
         self.__appbar = NavRail(self.__page)
         self.__router = Router(
             self.__page,
@@ -58,6 +70,12 @@ class Sixpence:
                 "/settings": Settings(self.__page)
             }
         )
+
+
+    def __snack_msg(self, message, icon=ft.Icons.INFO_OUTLINE):
+        self.__snack_icon.name = icon
+        self.__snack_txt.value = message
+        self.__page.open(self.__snackbar)
 
 
     def __init_window(self):
@@ -82,17 +100,29 @@ class Sixpence:
         self.__page.window.on_event = self.__handle_window_event
 
 
+    def __determine_env(self):
+        """
+        Determine mode (dev or prod) based on FLET env var(s)
+        """
+        env = "dev"
+        # NOTE: wish there was a better way, but can't find one
+        data_dir = os.getenv("FLET_APP_STORAGE_DATA")
+        # ~/Documents/flet/org.caroon.sixpence
+        if data_dir.endswith("flet/org.caroon.sixpence"):
+            env = "prod"
+
+        return env
+
+
     def __init_settings(self):
-        # NOTE: Built-in Storage Locations...I don't like them
-        # FLET_APP_STORAGE_TEMP == .cache/org.....
-        # FLET_APP_STORAGE_DATA == Documents/flet/sixpence
+        env = self.__determine_env()
 
         # Where to look for sixpence.yml config/settings file
         config_home = os.getenv(
             "XDG_CONFIG_HOME",
             os.getenv("HOME") + "/.config"
         )
-        config_dir = f"{config_home}/sixpence"
+        config_dir = f"{config_home}/{self.__app_name}"
         os.makedirs(config_dir, exist_ok=True)
 
         # Temp Storage
@@ -100,7 +130,7 @@ class Sixpence:
             "XDG_CACHE_HOME",
             os.getenv("HOME") + "/.cache"
         )
-        cache_dir = f"{cache_home}/sixpence"
+        cache_dir = f"{cache_home}/{self.__app_name}"
         os.makedirs(cache_dir, exist_ok=True)
 
         # Where to Store main files
@@ -108,18 +138,20 @@ class Sixpence:
             "XDG_DATA_HOME",
             os.getenv("HOME") + "/Documents"
         )
-        docs_dir = f"{data_home}/sixpence"
+        docs_dir = f"{data_home}/{self.__app_name}"
         os.makedirs(docs_dir, exist_ok=True)
 
         # Init Config
+        suffix = f"-{env}" if env != "prod" else ""
         config = Config.initialize(
-            f"{config_dir}/sixpence.yml",
+            f"{config_dir}/settings{suffix}.yml",
             transient=["session"]
         )
         self.__page.session.set("config", config)
 
         # Set some app/session options
         # These options are transient and NOT saved to the config file
+        config.set("session:env", env)
         config.set("session:cache_dir", cache_dir)
         config.set("session:config_dir", config_dir)
         config.set("session:docs_dir", docs_dir)
@@ -130,14 +162,14 @@ class Sixpence:
 
         keep = config.get("backup:keep", 14)
         backup_path = config.get("backup:path", ".")
-        docs_dir = config.get("session:docs_dir")
 
-        os.makedirs(backup_path, exist_ok=True)
+        backup = Archive(f"{backup_path}/{self.__app_name}.tgz")
+        backup.add(config.get("session:docs_dir"))
+        backup.add(config.get("session:config_dir"))
 
-        archive = Archive(backup_path)
-        archive.add(docs_dir)
-        archive.add(config.get("session:config_dir")+"/sixpence.yml")
-        archive.clean("sixpence", keep)
+        backup.write()
+
+        backup.clean(older_than=keep)
 
 
     def __handle_on_keyboard(self, event):
@@ -154,10 +186,18 @@ class Sixpence:
         # -- About
         if (event.ctrl or event.meta) and event.shift and event.key == "?":
             self.__about_view.display()
-        # -- Quit
-        elif (event.ctrl or event.meta) and event.key == "Q":
+        elif (event.ctrl or event.meta) and event.key == "B":
             self.__backup_data()
-            self.__page.window.destroy()
+            self.__snack_msg("Backup Complete", ft.Icons.BACKUP)
+        # -- Quit
+        # NOTE: Quitting the app seems to be hard-coded into flet/flutter
+        # Catching this keyboard event works, but there not time to execute
+        # anything before the app is forcefully destroyed.
+        # I.e. window.destroy() has already been initiated by the time
+        # this code start to run.
+        # elif (event.ctrl or event.meta) and event.key == "Q":
+            # self.__backup_data()
+            # self.__page.window.destroy() <-- not even necessary
         # If not handled, passed to router to distribute to correct View
         else:
             self.__router.handle_keyboard_event(event)

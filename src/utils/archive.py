@@ -1,74 +1,51 @@
 import os
-import shutil
+import tarfile
 
 from utils.date_helper import DateHelper
 
-# NOTES & TODO:
 # https://docs.python.org/3/library/archiving.html
-# * [ ] Make interface more like creating & adding files/dirs to an Archive file
-#   - new archive
-#   - add files
-#   - add dirs
-#   - write
-# * [ ] Use one of the built-in archive modules (above)
 class Archive:
     def __init__(self, path):
-        if not os.path.isdir(path):
-            raise ValueError("Path must be a directory.")
+        # path = /home/smith/backup/Sixpense/sixpence.tgz
 
-        self.path = path
+        # /home/smith/backup/Sixpence | sixpence.tgz
+        (dir_name, file_name) = os.path.split(path)
+
+        # sixpence | .tgz
+        (file_base, file_ext) = os.path.splitext(file_name)
+
+        self.__base_path = dir_name
+        self.__file_base = file_base
+
+        os.makedirs(self.__base_path, exist_ok=True)
+
+        # /home/smith/backup/Sixpense/sixpence-YYYYMMDD_HHmmss.tgz
+        dt_stamp = DateHelper.now().format("YYYYMMDD_HHmmss")
+        self.__path = f"{self.__base_path}/{self.__file_base}-{dt_stamp}{file_ext}"
+
+        self.__items = []
 
 
-    def add(self, src):
+    def add(self, name):
         """Add a new file or directory to the Archive"""
-        if os.path.isdir(src):
-            self._add_dir(src)
-        elif os.path.isfile(src):
-            self._add_file(src)
-        else:
-            raise ValueError("Unsupported Src Type or Invalid Path")
+        self.__items.append(name)
 
 
-    def __build_dst_path(self, src):
-        ds = DateHelper.now().format("YYYYMMDD_HHmm")
-        src_file = os.path.basename(src)
-        parts = os.path.splitext(src_file)
-        dest = f"{self.path}/{parts[0]}-{ds}"
-
-        # Add ext
-        if parts[1]:
-            dest += f"{parts[1]}"
-
-        return dest
+    def write(self):
+        with tarfile.open(self.__path, "x:gz", ) as tf:
+            for item in self.__items:
+                tf.add(item)
 
 
-    def _add_dir(self, src):
-        dst = self.__build_dst_path(src)
-        shutil.make_archive(dst, 'zip', src)
-
-
-    def _add_file(self, src):
-        dst = self.__build_dst_path(src)
-        shutil.copyfile(src, dst)
-
-
-    def files(self):
-        return os.listdir(self.path)
-
-
-    def remove(self, filename):
-        file_path = os.path.join(self.path, filename)
-        if os.path.isfile(file_path):
-            os.remove(file_path)
-
-
-    def clean(self, prefix, older_than):
+    def clean(self, older_than):
         """Clean up the Archive"""
         cut_off_date = DateHelper.now().shift(days=older_than * -1)
 
-        for file in self.files():
-            if file.startswith(prefix):
-                mtime = os.path.getmtime(os.path.join(self.path, file))
-                file_date = DateHelper.as_arrow(mtime)
-                if file_date < cut_off_date:
-                    self.remove(file)
+        for _, _, files in os.walk(self.__base_path):
+            for file in files:
+                if file.startswith(self.__file_base):
+                    file_path = os.path.join(self.__base_path, file)
+                    mtime = os.path.getmtime(file_path)
+                    file_date = DateHelper.as_arrow(mtime)
+                    if file_date < cut_off_date:
+                        os.remove(file_path)
