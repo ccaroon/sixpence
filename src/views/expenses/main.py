@@ -6,7 +6,7 @@ import pprint
 
 import utils.tools
 from utils. date_helper import DateHelper
-import views.constants as const
+import utils.constants as const
 
 from models.budget import Budget
 from models.expense import Expense

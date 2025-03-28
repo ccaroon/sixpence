@@ -1,29 +1,36 @@
 import flet as ft
 
-import views.constants as const
+import utils.constants as const
 from views.base import Base as BaseView
 
 # TODO: add `app:timezone`
 
 class Settings(BaseView):
     def __init__(self, page):
-        # Specific Icon and Text set in __snack_msg()
-        self.__snackbar = ft.SnackBar(
-            ft.Row([
-                ft.Icon(),
-                ft.Text(""),
-            ])
-        )
-
         self.__cfg = page.session.get("config")
 
         super().__init__(page)
 
+        self.__layout_snackbar()
+
+
+    def __layout_snackbar(self):
+        # Specific Icon and Text set in __snack_msg()
+        self.__snack_icon = ft.Icon(color=ft.Colors.ON_SECONDARY_CONTAINER)
+        self.__snack_txt = ft.Text("", color=ft.Colors.ON_SECONDARY_CONTAINER)
+        self.__snackbar = ft.SnackBar(
+            ft.Row([
+                self.__snack_icon,
+                self.__snack_txt,
+            ]),
+            bgcolor=ft.Colors.SECONDARY_CONTAINER
+        )
+        self._page.overlay.append(self.__snackbar)
+
 
     def __snack_msg(self, message, icon=ft.Icons.INFO_OUTLINE):
-        # TODO: not great indexing into content/controls
-        self.__snackbar.content.controls[0].name = icon
-        self.__snackbar.content.controls[1].value = message
+        self.__snack_icon.name = icon
+        self.__snack_txt.value = message
         self._page.open(self.__snackbar)
 
 

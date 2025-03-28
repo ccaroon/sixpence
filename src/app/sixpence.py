@@ -29,11 +29,10 @@ class Sixpence:
         self.__app_name = "sixpence"
         self.__page = page
 
-        self.__page.title = self.__app_name.capitalize()
-
         self.__init_window()
         self.__init_settings()
 
+        self.__page.title = self.__app_name.capitalize()
         self.__page.on_keyboard_event = self.__handle_on_keyboard
 
         # Overall Color Theme

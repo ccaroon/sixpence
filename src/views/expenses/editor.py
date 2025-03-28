@@ -8,7 +8,7 @@ from models.budget import Budget
 from utils.date_helper import DateHelper
 from utils.icon_search import IconSearch
 import utils.tools as tools
-import views.constants as const
+import utils.constants as const
 
 class ExpenseEditor:
     DEFAULT_ICON = ft.Icons.QUESTION_MARK

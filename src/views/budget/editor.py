@@ -5,7 +5,7 @@ from views.budget.history.prompt import HistoryPrompt
 
 from models.tag import Tag
 import utils.tools as tools
-import views.constants as const
+import utils.constants as const
 
 class BudgetEditor:
     def __init__(self, page, **kwargs):

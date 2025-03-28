@@ -4,7 +4,7 @@ import locale
 import pprint
 
 import utils.tools
-import views.constants as const
+import utils.constants as const
 
 from models.budget import Budget as BudgetItem
 from views.base import Base as BaseView

@@ -2,7 +2,7 @@ import flet as ft
 
 import arrow
 
-import views.constants as const
+import utils.constants as const
 
 class HistoryPrompt(ft.AlertDialog):
     def __init__(self, page, **kwargs):

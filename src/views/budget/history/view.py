@@ -4,7 +4,7 @@ import arrow
 import locale
 
 from models.budget import Budget
-import views.constants as const
+import utils.constants as const
 import utils.tools as tools
 
 class HistoryView(ft.AlertDialog):

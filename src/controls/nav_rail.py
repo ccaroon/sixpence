@@ -1,5 +1,6 @@
 import flet as ft
 
+import utils.constants as const
 
 class NavRail(ft.NavigationRail):
 
@@ -41,10 +42,20 @@ class NavRail(ft.NavigationRail):
 
         self.__page = page
 
+        if self.__page.session.get("config").get("session:env") != "prod":
+            self.destinations.append(
+                ft.NavigationRailDestination(
+                    icon=ft.Icon(ft.Icons.LOGO_DEV, color="red", size=const.ICON_MEDIUM),
+                    selected_icon=ft.Icon(ft.Icons.LOGO_DEV, color="red", size=const.ICON_MEDIUM),
+                    label="DEVELOPER MODE"
+                )
+            )
+
 
     def __handle_on_change(self, event):
         index = event.control.selected_index
         dest = event.control.destinations[index]
 
-        route = f"/{dest.label.lower()}"
-        self.__page.go(route)
+        if dest.label != "DEVELOPER MODE":
+            route = f"/{dest.label.lower()}"
+            self.__page.go(route)
