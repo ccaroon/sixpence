@@ -1,9 +1,14 @@
 from models.base import Base
 from models.taggable import Taggable
 
+from utils.date_helper import DateHelper
+
 class Expense(Taggable, Base):
     TYPE_INCOME = 0
     TYPE_EXPENSE = 1
+
+    ROLLOVER_CATEGORY = "Sixpence:Rollover"
+    ROLLOVER_ICON = "currency_exchange"
 
     def __init__(self, id=None, **kwargs):
         # Income or Expense
@@ -43,6 +48,67 @@ class Expense(Taggable, Base):
         data.update(super()._serialize())
 
         return data
+
+    @classmethod
+    def update_rollover(cls, month, **kwargs):
+        """
+        Compute the balance at the end of the month previous to the given `month`.
+        Then insert an Expense with that amount as the Starting Balance for the
+        given `month`.
+
+        Args:
+            month (arrow) - Month for which to compute starting balance
+
+        KWArgs:
+            force_update (bool) - If rollover entry already exists, force it to be updated.
+        """
+        force_update = kwargs.get("force_update", False)
+        month_start = month.floor("month")
+        month_end = month.ceil("month")
+
+        prev_month = month.shift(months=-1)
+        prev_start = prev_month.floor("month")
+        prev_end = prev_month.ceil("month")
+
+        # Check if Rollover entry already exists for given `month`
+        existing_entry = None
+        entries = Expense.find(
+            op="and",
+            category=cls.ROLLOVER_CATEGORY,
+            date=f"btw:{month_start.int_timestamp}:{month_end.int_timestamp}"
+        )
+        if entries and len(entries) == 1:
+            existing_entry = entries[0]
+
+        if not existing_entry or force_update:
+            # Load data for prev month
+            entries = Expense.find(
+                date=f"btw:{prev_start.int_timestamp}:{prev_end.int_timestamp}"
+            )
+
+            # Compute ending balance for Previous Month
+            income = 0.0
+            expense = 0.0
+            for entry in entries:
+                if entry.amount >= 0.0:
+                    income += entry.amount
+                else:
+                    expense += entry.amount
+
+            entry_to_save = None
+            if existing_entry:
+                entry_to_save = existing_entry
+                entry_to_save.amount = round(income + expense, 2)
+            else:
+                entry_to_save = Expense(
+                    date=month_start,
+                    icon=cls.ROLLOVER_ICON,
+                    category=cls.ROLLOVER_CATEGORY,
+                    amount=round(income + expense, 2),
+                    tags=['Sixpence', 'Balance Rollover']
+                )
+
+            entry_to_save.save()
 
 
     def update(self, data):

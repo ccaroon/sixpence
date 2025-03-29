@@ -114,8 +114,6 @@ class Sixpence:
         env = "dev"
         # NOTE: wish there was a better way, but can't find one
         data_dir = os.getenv("FLET_APP_STORAGE_DATA")
-        print(f"FLET_APP_STORAGE_DATA: [{data_dir}]")
-        # if data_dir.endswith("flet/org.caroon.sixpence"):
         if "/Documents/flet/" in data_dir:
             env = "prod"
 

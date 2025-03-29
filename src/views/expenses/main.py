@@ -20,6 +20,8 @@ class ExpensesView(BaseView):
         self.__start_date = now.floor("month")
         self.__end_date = now.ceil("month")
 
+        Expense.update_rollover(now)
+
         self.__filters = {
             "date": f"btw:{self.__start_date.int_timestamp}:{self.__end_date.int_timestamp}"
         }
