@@ -99,6 +99,14 @@ class Sixpence:
         self.__page.window.on_event = self.__handle_window_event
 
 
+
+    # FLET_APP_STORAGE_DATA
+    # * linux:
+    #   - dev   -> ~/src/github/sixpence/storage/data
+    #   - prod: -> ~/Documents/flet/sixpence
+    # * macos:
+    #   - dev:  -> ~/src/github/sixpence/storage/data
+    #   - prod: -> ~/Documents/flet/org.caroon.sixpence
     def __determine_env(self):
         """
         Determine mode (dev or prod) based on FLET env var(s)
@@ -106,8 +114,9 @@ class Sixpence:
         env = "dev"
         # NOTE: wish there was a better way, but can't find one
         data_dir = os.getenv("FLET_APP_STORAGE_DATA")
-        # ~/Documents/flet/org.caroon.sixpence
-        if data_dir.endswith("flet/org.caroon.sixpence"):
+        print(f"FLET_APP_STORAGE_DATA: [{data_dir}]")
+        # if data_dir.endswith("flet/org.caroon.sixpence"):
+        if "/Documents/flet/" in data_dir:
             env = "prod"
 
         return env
