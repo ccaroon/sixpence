@@ -3,7 +3,6 @@ import argparse
 import json
 import os
 import re
-
 import arrow
 
 from tinydb import TinyDB
@@ -40,18 +39,23 @@ class DbMigrator:
         "Travel": "Travel:Misc",
     }
 
-    # TODO: revisit after "real" note2tags conversion
-    TAG_FIXES = {
+    TAG_SHORTCUTS = {
         "2017-honda-civic": "2017-honda-civic-sport",
-        "civic": "2017-honda-civic-sport",
-        "cengage": "cengage-group",
-        "cengage-learing-inc": "cengage-group",
+        "5520": "5520 middleton road",
         "amazon": "amazon.com",
+        "cengage": "cengage-group",
+        "civic": "2017-honda-civic-sport",
+        "jimmys": "jimmys-famous-hot-dogs",
+        "moes": "moes-southwest-grill",
         "veloster": "2016-hyundai-veloster",
-        "paypay": "paypal",
-        "switch": "nintendo switch",
+        "nate": "nathan",
+        "lei": "lei-home-enhancements",
+        "cookout": "cook-out",
+        "quad": "quadcopter",
+        "coachmen": "2017 coachmen catalina",
+        "mom": "linda-caroon",
+        "dad": "tom-caroon",
     }
-
 
 
     def __init__(self, old_db_path, **kwargs):
@@ -63,11 +67,17 @@ class DbMigrator:
 
         self.__config = Config.initialize(
             f"{self.__working_dir}/migration.yml", transient=["session"])
+        self.__config.set("session:env", "prod")
         self.__config.set("session:docs_dir", self.__working_dir)
         self.__icon_search = IconSearch()
 
-        self.__icon_cache = self.__config.get("icons", {})
-        self.__tag_cache = self.__config.get("tags", {})
+        if not self.__config.get("icons"):
+            self.__config.set("icons", {})
+        self.__icon_cache = self.__config.get("icons")
+
+        if not self.__config.get("tags"):
+            self.__config.set("tags", {})
+        self.__tag_cache = self.__config.get("tags")
 
 
     def __read_old_db(self):
@@ -94,14 +104,18 @@ class DbMigrator:
         # Spaces => '-'
         norm_name = re.sub(r"\s+", "-", norm_name)
 
+        fixed_tag =self.TAG_SHORTCUTS.get(norm_name)
+        if fixed_tag:
+            norm_name = fixed_tag
+
         return norm_name
 
 
     def __note2tags(self, entry):
-        notes = entry["notes"]
+        cache_key = f"{entry['created_at']}|{entry['category']}|{entry['notes']}"
+        tags = self.__tag_cache.get(cache_key, None)
 
-        tags = self.__tag_cache.get(notes, [])
-        if not tags:
+        if tags is None:
             date = arrow.get(entry["created_at"])
             deleted = "Deleted" if entry.get("deleted_at") else "Active"
             print("#######################################################")
@@ -115,10 +129,14 @@ class DbMigrator:
                     raise RuntimeError("note2tag -- user exit")
 
                 if tag_str:
-                    tags = tag_str.split(",")
-                    tags = [self.__normalize_tag(tg) for tg in tags]
+                    if tag_str == "--":
+                        tags = []
+                    else:
+                        tags = tag_str.split(",")
 
-            self.__tag_cache[notes] = tags
+                        tags = [self.__normalize_tag(tg) for tg in tags]
+
+            self.__tag_cache[cache_key] = tags
 
         return tags
 
@@ -211,7 +229,7 @@ class DbMigrator:
         # Much faster for lots of records
         db.insert_multiple(new_records)
 
-        self.__cleanup_exit(f"Migrated {num_recs} entries: {self.__new_db_path}")
+        self.__cleanup_exit(f"Migrated {len(new_records)} entries: {self.__new_db_path}")
 
 
     def __munge_shared_fields(self, entry):

@@ -29,7 +29,7 @@ def migrate(ctx, data_type):
         out_db = "Expenses.sxp.json"
         new_db = "Expenses.json"
 
-    ctx.run(f"{util.ROOT_DIR}/bin/migrate.py {old_db} {NEW_DATA_DIR}", echo=True)
+    ctx.run(f"{util.ROOT_DIR}/bin/migrate.py {old_db} {NEW_DATA_DIR}", echo=True, pty=True)
 
     ctx.run(f"cp {NEW_DATA_DIR}/{out_db} ~/Documents/sixpence/{new_db}", echo=True)
     ctx.run(f"cp {NEW_DATA_DIR}/Tags.json ~/Documents/sixpence/Tags.json", echo=True)
