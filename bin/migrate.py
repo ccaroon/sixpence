@@ -53,6 +53,7 @@ class DbMigrator:
         "acro-bee": "acrobee",
         "akashi-sushi": "akashi",
         "alien": "aliens",
+        "allowance": "craig-allowance",
         "amazon": "amazon.com",
         "apple": "apple.com",
         "appstate": "appalachian-state-university",
