@@ -1,13 +1,13 @@
 from invoke import task, Collection
 
-import build
+import app
 import check
 import dev
 
 
 
 ns = Collection(
-    build,
+    app,
     check,
     dev
 )
