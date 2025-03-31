@@ -1,7 +1,6 @@
 __pycache__/
 
 build/
-migration_cache.yml
 htmlcov/
 .coverage
 

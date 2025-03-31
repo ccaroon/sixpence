@@ -1,0 +1,4861 @@
+app: null
+backup: null
+icons:
+  Auto:AAA: car_crash
+  Auto:Fuel: local_gas_station
+  Auto:Inspection: fact_check
+  Auto:Insurance: shield
+  Auto:Misc: directions_car
+  Auto:Parking: local_parking
+  Auto:Registration: card_membership
+  Auto:Repair: car_repair
+  Auto:Taxes: money_off
+  Bank:Credit: payment
+  Bank:Fees: money_off
+  Bills:Electricity: electric_bolt
+  Bills:Gas: gas_meter
+  Bills:Internet: signal_wifi_4_bar
+  Bills:Life Insurance: monitor_heart
+  Bills:Phone: phone_iphone
+  Bills:Water/sewer: water_drop
+  Christmas:Gifts: card_giftcard
+  College:Books & Materials: menu_book
+  College:Housing: apartment
+  College:Misc: school
+  Home:Appliances: blender
+  Home:Furnishings: bedroom_parent
+  Home:Gardening: emoji_nature
+  Home:Improvements: home_repair_service
+  Home:Landscaping: landscape
+  Home:Maintenance: home_repair_service
+  Home:Misc: house
+  Home:Mortgage: house
+  Home:Pest Control: pest_control
+  Income:From Savings: savings
+  Income:Interest: payments
+  Income:Misc: payments
+  Income:Refund: payments
+  Income:Reimbursement: payments
+  Income:Salary: payments
+  Loans:Car: account_balance
+  Medical:Dentist: medical_information
+  Medical:Doctor: medical_information
+  Medical:Medicine: medication
+  Medical:Misc: medical_services
+  Medical:Optometrist: remove_red_eye
+  Personal:Books: menu_book
+  Personal:Charity: money
+  Personal:Clothes: shopify
+  Personal:Computer: computer
+  Personal:Eating Out: fastfood
+  Personal:Electronics: memory
+  Personal:Entertainment: nightlife
+  Personal:Entertainment:CBS All Access: connected_tv
+  Personal:Entertainment:Misc: menu
+  Personal:Gifts: card_giftcard
+  Personal:Groceries: local_grocery_store
+  Personal:HABA: clean_hands
+  Personal:Misc: menu
+  Personal:Office Supplies: desk
+  Personal:Recreation: pedal_bike
+  Personal:Services: miscellaneous_services
+  Personal:Software: computer
+  Personal:Subscriptions: subscriptions
+  Personal:Subscriptions:Apple: apple
+  Personal:Subscriptions:Misc: menu
+  Personal:Taxes: money_off
+  Personal:Tithes: church
+  Personal:Video Games: games
+  Pets:Food: pets
+  Pets:Medical: pets
+  Pets:Medicine: pets
+  Pets:Misc: pets
+  RV:Insurance: shield
+  RV:Loan: account_balance
+  RV:Registration: card_membership
+  RV:Storage: rv_hookup
+  RV:Taxes: rv_hookup
+  Sixpence:Rollover: currency_exchange
+  Subscriptions:Acorntv: connected_tv
+  Subscriptions:Amazon Prime: local_shipping
+  Subscriptions:Audible: audio_file
+  Subscriptions:Britbox: connected_tv
+  Subscriptions:Disney+: connected_tv
+  Subscriptions:Games Magazine: subscriptions
+  Subscriptions:Hulu: connected_tv
+  Subscriptions:Icloud: cloud
+  Subscriptions:Kindle Unlimited: menu_book
+  Subscriptions:Netflix: connected_tv
+  Subscriptions:Nintendo Online: gamepad
+  Subscriptions:Paramount+: connected_tv
+  Subscriptions:Playstation Network: gamepad
+  Subscriptions:Prime Video Ad Free: connected_tv
+  Subscriptions:Spotify: my_library_music
+  Transfer:Allowance: double_arrow
+  Transfer:Misc: menu
+  Transfer:Reimbursement: double_arrow
+  Transfer:Savings: double_arrow
+  Travel:Dining: local_dining
+  Travel:Lodging: hotel
+  Travel:Misc: travel_explore
+keep: 5
+mode: system
+path: null
+tags:
+  1518974390|Income:Salary|Cengage Learning, Inc:
+  - cengage-group
+  - craig
+  1518974668|Transfer:Savings|Savings Account:
+  - salary
+  1518974711|Transfer:Allowance|Nathan:
+  - nathan
+  1518974763|Auto:Fuel|Average:
+  - average
+  1518975035|Auto:Insurance|Craig & Cate:
+  - craig
+  - cate
+  - usaa
+  1518975652|Home:Mortgage|5520 Middleton Road:
+  - 5520-middleton-road
+  - chase
+  1518975827|Pets:Food|Tootsie - (70.80 * 15) / 12 + Treats:
+  - tootsie
+  1518976075|Pets:Medicine|Tootsie - Insulin:
+  - tootsie
+  - vetsulin
+  1518976210|Pets:Medical|Tootsie - Needles:
+  - tootsie
+  - needles
+  1518976640|Bills:Electricity|Average:
+  - 5520-middleton-road
+  - duke-energy
+  - average
+  1518977064|Bills:Gas|Average:
+  - enbridge
+  - 5520-middleton-road
+  - average
+  1518977415|Bills:Internet|AT&T Fiber:
+  - at-t
+  - 5520-middleton-road
+  1518977474|Bills:Phone|AT&T x 3 Phones:
+  - at-t
+  - craig
+  - cate
+  - nathan
+  1518977601|Bills:Water/sewer|Average:
+  - durham-county
+  - 5520-middleton-road
+  - storm-water
+  - yard-waste
+  - average
+  1518978011|Loans:Car|2017 Honda Civic Sport:
+  - 2017-honda-civic-sport
+  1518978061|Personal:Charity|Patreon - Stant Litore:
+  - patreon
+  - stant-litore
+  '1518989712|Bills:Life Insurance|Craig #1':
+  - usaa
+  - craig
+  '1518989744|Bills:Life Insurance|Craig #2':
+  - craig
+  - usaa
+  1518989777|Bills:Life Insurance|Nathan:
+  - usaa
+  - nathan
+  1518989807|Bills:Life Insurance|Cate:
+  - usaa
+  - cate
+  1518990026|Home:Pest Control|Terminix:
+  - terminix
+  - 5520-middleton-road
+  1518990288|Auto:Inspection|Nathan:
+  - nathan
+  1518990314|Auto:Inspection|Craig - Civic:
+  - 2017-honda-civic-sport
+  1518990441|Auto:Registration|Nathan:
+  - 2017-hyundai-accent
+  - durham-county
+  1518990469|Auto:Registration|Craig:
+  - 2017-honda-civic-sport
+  - durham-county
+  1518990949|Auto:Taxes|Nathan:
+  - durham-county
+  - 2017-hyundai-accent
+  1518991209|Auto:Taxes|Craig:
+  - durham-county
+  - 2017-honda-civic-sport
+  1518991371|Subscriptions:Audible|Gold: []
+  1518991486|Personal:Office Supplies|TurboTax:
+  - turbotax.com
+  1518991815|Bills:Water/sewer|Storm Water Fee:
+  - delete-me
+  1518991960|Subscriptions:Amazon Prime|2-Day Delivery; Video, etc:
+  - tv-service
+  - shopping
+  1518992068|Auto:AAA|Plus Membership for 3 People:
+  - craig
+  - cate
+  - nathan
+  - plus-membership
+  1520555355|Home:Pest Control|Terminix - Termites:
+  - terminix
+  - termite-plan
+  - 5520-middleton-road
+  1520555772|Home:Maintenance|HVAC Checkup:
+  - 5520-middleton-road
+  - hvac
+  1520556066|Pets:Medicine|Tootsie - NexGard (Flea & Tick):
+  - tootsie
+  - nexgard
+  1520556387|Pets:Medicine|Tootsie - Interceptor (Worm):
+  - tootsie
+  - interceptor-plus
+  1522617792|Personal:Eating Out|After Church with Nathan:
+  - nathan
+  1522617917|Personal:Clothes|Nathan for Prom:
+  - nathan
+  - prom
+  1522799776|Personal:Misc|Camp Card from Cub Scouts Pack 880:
+  - nathan
+  - cub-scouts
+  1522799909|Personal:Charity|Patreon - Stant Litore:
+  - patreon
+  - stant-litore
+  1522800875|Auto:Fuel|Craig - 2017 Civic:
+  - 2017-honda-civic-sport
+  1522883029|Pets:Food|1 case food; 2 pk treats:
+  - tootsie
+  1522883064|Pets:Medical|1 pkg syringes:
+  - tootsie
+  - needles
+  1523060644|Subscriptions:Playstation Network|Playstation Network:
+  - craig
+  1523061491|Transfer:Misc|To Nathan Checking - Pants & Gas:
+  - nathan
+  1523061607|Personal:Groceries|Beer - Ponysaurus Biere Garde:
+  - beer
+  - sams-bottle-shop
+  1523061672|Personal:Eating Out|Large Pep:
+  - randys-pizza
+  1523219660|Personal:Eating Out|ATM - Lunch with Adam and Andre:
+  - cash
+  - lunch
+  1523219734|Personal:Groceries|Milk & Donuts:
+  - 5520 middleton road
+  - food-lion
+  1523220082|Auto:Fuel|Craig:
+  - 2017-honda-civic-sport
+  1523220899|Bills:Internet|AT&T Fiber:
+  - at-t
+  - 5520-middleton-road
+  1523220917|Bills:Phone|AT&T:
+  - at-t
+  - craig
+  - cate
+  - nathan
+  1523221647|Loans:Car|2017 Honda Civic:
+  - 2017-honda-civic-sport
+  1523310223|Personal:Video Games|Far Cry 4 (PS4):
+  - ps4
+  - far-cry
+  - craig
+  1523579095|Personal:Eating Out|Jimmy's:
+  - jimmys-famous-hot-dogs
+  1523579142|Personal:Eating Out|Lunch - Burger King:
+  - burger-king
+  - lunch
+  - craig
+  1523748781|Personal:Eating Out|Lunch:
+  - lunch
+  - craig
+  1523748912|Home:Landscaping|Lowes - Stone to build up fire pit:
+  - lowes
+  - 5520 middleton road
+  1523749321|Home:Furnishings|Lowes - Accent Table:
+  - 5520-middleton-road
+  - lowes
+  1523749371|Home:Maintenance|Lowes - Ext cord, felt pads, pipe cap:
+  - lowes
+  - 5520-middleton-road
+  1523749425|Personal:Eating Out|Bo's and Lowes:
+  - bojangles
+  1523749509|Personal:Eating Out|East Coast Asian Bistro:
+  - east-coast-asian-bistro
+  '1523749663|Income:Salary|Salary #1':
+  - craig
+  - cengage-group
+  1523749763|Transfer:Savings|Salary:
+  - salary
+  - craig
+  - cengage-group
+  1523749838|Personal:Misc|Nate Apple Store:
+  - nathan
+  - apple.com
+  - ios
+  1523750344|Bank:Fees|Wells Fargo ATM Fee:
+  - wells-fargo
+  - atm-fee
+  1523750638|Transfer:Misc|Nathan - Art Supplies:
+  - nathan
+  1523750978|Personal:Tithes|MUMC:
+  - mcumc
+  1523834478|Personal:Entertainment|Rent The Andromedia Strain:
+  - amazon.com
+  - movie-rental
+  1523834513|Personal:Eating Out|Moe's After Church:
+  - moes-southwest-grill
+  '1524095032|Personal:Video Games|Far Cry 3: Blood Dragon':
+  - ps3
+  - far-cry
+  1524095216|Personal:Eating Out|Cook out:
+  - cook-out
+  '1524095629|Personal:Video Games|Far Cry 2/3; Far Cry: Primal':
+  - craig
+  - xbox
+  - far-cry
+  1524095657|Personal:Electronics|BT Mouse & Keybd; Pi NoIR Camera:
+  - craig
+  - raspberry-pi
+  - amazon.com
+  1524267734|Personal:Misc|Gas x 2; HABA @ Walmart:
+  - wal-mart
+  - cate
+  1524267800|Personal:Eating Out|Pizza Hut w/ Nathan:
+  - pizza-hut
+  - nathan
+  1524267869|Auto:Fuel|Sheetz:
+  - sheetz
+  1524267926|Personal:Groceries|Sheetz - Gummie Bears / Worms:
+  - sheetz
+  1524355540|Personal:Eating Out|5 Guys with Nate:
+  - five-guys
+  - nathan
+  1524355930|Home:Furnishings|Box Kite Floor Lamp:
+  - 5520 middleton road
+  - living-room
+  1524356025|Personal:Gifts|LEGO Catamaran for Mason:
+  - mason-caroon
+  - lego
+  1524356096|Personal:Misc|LEGO + Hot Wheels:
+  - lego
+  - hot-wheels
+  1524356142|Personal:Misc|HABA, Poo bags, etc:
+  - haba
+  - poo-bags
+  - target
+  1524433754|Personal:Eating Out|Moe's after Church:
+  - moes-southwest-grill
+  1524699926|Personal:Eating Out|Chirba:
+  - chirba
+  1524699968|Personal:Office Supplies|Ship Care Pkg to Nate:
+  - usps
+  - nathan
+  1524700045|Auto:Misc|Air Pump: []
+  1524778184|Income:Salary|Sixpence Starting Balance: []
+  1524778411|Auto:Repair|Rotate tires; patch leaky tire; oil change:
+  - 2017-honda-civic-sport
+  1524865820|Sixpence:Rollover|Balance Rolled Over from Previous Month: []
+  1524875500|Transfer:Savings|Salary:
+  - salary
+  - craig
+  - cengage-group
+  1524875668|Transfer:Allowance|To Nathan Checking - Allowance:
+  - nathan
+  1524875973|Personal:Clothes|Scottish Ghillie Shirt:
+  - amazon.com
+  - craig
+  1524876068|Personal:Clothes|Kilt, Celtic belt and buckle:
+  - craig
+  - kilt
+  - amazon.com
+  1524877114|RV:Loan|All Interest:
+  - 2017 coachmen catalina
+  1524963931|Home:Maintenance|Hose; Mailbox; Stones, etc:
+  - 5520 middleton road
+  - lowes
+  1524963967|Personal:Eating Out|Bo's:
+  - bojangles
+  1524964016|Home:Maintenance|Board to mount mailbox:
+  - 5520 middleton road
+  - lowes
+  - mailbox
+  1524964197|Personal:Tithes|MUMC:
+  - mcumc
+  1525039587|Personal:Eating Out|Moe's:
+  - moes-southwest-grill
+  1525039650|Personal:Clothes|Craig - 3pk white socks:
+  - craig
+  1525040250|Bills:Life Insurance|Nathan:
+  - nathan
+  - usaa
+  1525040737|Personal:Tithes|FBCENC:
+  - fbcenc
+  1525040858|Personal:Tithes|Durham Rescue Mission:
+  - durham-rescue-mission
+  1525219357|Personal:Video Games|Persona 4 (PS2); 128Mb Mem Card:
+  - persona
+  - ps2
+  - craig
+  1525219502|Personal:Charity|Patreon - Stant Litore:
+  - patreon
+  - stant-litore
+  1525220459|Auto:Fuel|Craig:
+  - 2017-honda-civic-sport
+  1525220568|Sixpence:Rollover|Balance Rolled Over from Previous Month: []
+  1525298239|Pets:Food|1 Case Canned:
+  - tootsie
+  1525531303|Home:Appliances|Bella Espresso Machine:
+  - craig
+  - 5520 middleton road
+  - kitchen
+  1525534541|Home:Furnishings|4pc Espresso Cup & Saucer set:
+  - 5520 middleton road
+  - kitchen
+  1525534587|Personal:Video Games|Radiant Historia ... (3DS):
+  - nintendo-3ds
+  - craig
+  1525537310|Loans:Car|Civic:
+  - 2017-honda-civic-sport
+  1525559482|Home:Furnishings|2 pillows; hour glass; dino head; elephant:
+  - 5520-middleton-road
+  1525559530|Personal:Eating Out|Taco Bell:
+  - taco-bell
+  1525822866|Personal:Eating Out|Cook Out:
+  - cook-out
+  1525822951|Personal:Misc|Mom's Day Card for ... uh ... Mom!:
+  - mothers-day
+  1525823269|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  1525823666|Transfer:Misc|To Nathan Checking - Cleaning/Packing:
+  - nathan
+  1525984985|Travel:Lodging|Pick up Nate from App for Summer:
+  - appalachian-state-university
+  1525985071|Personal:Eating Out|Troy's Diner - Breakfast:
+  - troys-diner
+  - breakfast
+  1525985171|Auto:Fuel|Nate - G6:
+  - nathan
+  - 2009-pontiac-g6
+  1525985206|Auto:Fuel|Craig - Civic:
+  - 2017-honda-civic-sport
+  1526133177|Personal:Eating Out|Melting Pot - Mother's Day, 1st Yr College, etc:
+  - melting-pot
+  - mothers-day
+  - nathan
+  - craig
+  - cate
+  - eva-rogers
+  1526134530|Home:Pest Control|Terminix - Quarterly:
+  - terminix
+  - 5520-middleton-road
+  1526134962|Bills:Life Insurance|Craig:
+  - craig
+  - usaa
+  1526135151|Bills:Life Insurance|Craig:
+  - craig
+  - usaa
+  1526135928|Personal:Tithes|Compassion - Moms & Babies:
+  - compassion-international
+  1526136051|Personal:Tithes|UMCOR:
+  - umcor
+  1526136186|Personal:Tithes|Durham Rescue Mission:
+  - durham-rescue-mission
+  1526136362|Personal:Tithes|MUMC:
+  - mcumc
+  1526138687|Personal:Misc|Cate - Tax Refund Portion:
+  - cate
+  - tax-refund
+  1526160769|Transfer:Savings|Salary:
+  - salary
+  - craig
+  - cengage-group
+  1526338445|Personal:Eating Out|Moe's after church:
+  - moes-southwest-grill
+  1526338690|Transfer:Misc|To Nathan Checking (Hair cut + gas):
+  - nathan
+  1526338977|Bills:Life Insurance|Cate:
+  - cate
+  - usaa
+  1526515965|Home:Landscaping|Dirt, plants, nozzle, etc:
+  - dirt
+  - 5520-middleton-road
+  - lowes
+  1526602661|Auto:Fuel|Craig - Civic:
+  - 2017-honda-civic-sport
+  1526602813|Personal:Books|Rise and Fall of Ancient Egypt (Kindle):
+  - craig
+  - kindle
+  - amazon.com
+  1526679623|Personal:Recreation|Yakima Halfback 2 Car Trunk Bike Rack:
+  - yakima
+  - 2017-honda-civic-sport
+  - craig
+  1526680158|Pets:Food|Treats:
+  - tootsie
+  1526680179|Pets:Medical|Needles:
+  - tootsie
+  - needles
+  1526680205|Pets:Medicine|Insulin:
+  - tootsie
+  - vetsulin
+  1526857733|Personal:Groceries|Ice cream:
+  - 5520 middleton road
+  - food-lion
+  1526857773|Personal:Misc|Castile soap; OneBlade 2pk:
+  - haba
+  1526858027|Personal:Video Games|Xfer to Nate for Nu Ni Kuni II:
+  - nathan
+  '1526858168|Personal:Video Games|Shin Megami Tensi: Strange Jrny (3DS)':
+  - nintendo-3ds
+  - craig
+  1527036391|Personal:Eating Out|Thai China Buffet w/ Nate:
+  - thai-china-buffet
+  - nathan
+  1527177676|Subscriptions:Playstation Network|1 year:
+  - craig
+  1527177767|Personal:Video Games|Far Cry 5 (PS4):
+  - ps4
+  - craig
+  - far-cry
+  1527178134|Personal:Eating Out|Chubbys Tacos:
+  - chubbys-tacos
+  - craig
+  - cate
+  1527178223|Personal:Electronics|Audio Extractor:
+  - craig
+  1527276993|Personal:Eating Out|Arby's with Nate:
+  - arbys
+  1527368881|Income:Salary|Cengage:
+  - cengage-group
+  - craig
+  1527368902|Transfer:Savings|Salary:
+  - salary
+  - craig
+  - cengage-group
+  1527368966|Transfer:Allowance|Nate - Allowance, Trim Bushes; Shorts:
+  - nathan
+  1527369538|Personal:Electronics|Echo Spot - Black:
+  - amazon.com
+  - echo
+  1527369634|Personal:Misc|Cobra Cigar Cutter:
+  - craig
+  - amazon.com
+  1527537245|Personal:Groceries|Target:
+  - target
+  - 5520 middleton road
+  1527537348|Auto:Misc|Nate - G6 - Keyless Entry FOB:
+  - nathan
+  - 2009-pontiac-g6
+  1527537463|Personal:Misc|Nate - PVC for Hot Wheels Display:
+  - nathan
+  1527537545|Personal:Eating Out|Moe's after Church:
+  - moes-southwest-grill
+  1527537609|Auto:Misc|Digital tire gauge: []
+  1527537674|Personal:Eating Out|Arby's with Nate:
+  - arbys
+  - nathan
+  1527538008|Personal:Video Games|Stardew Valley PS4/Vita:
+  - stardew-valley
+  - ps4
+  - playstation-vita
+  1527553917|Auto:Insurance|USAA:
+  - usaa
+  1527554293|Income:Interest|Interest Income:
+  - pnc-bank
+  1527727543|Auto:Fuel|Craig:
+  - 2017-honda-civic-sport
+  1527727614|Home:Landscaping|Nate - Mow Lawn:
+  - nathan
+  - lawn-care
+  1527727704|Home:Maintenance|Arlo Security Lights 2pk kit:
+  - arlo
+  - 5520 middleton road
+  1527810403|Personal:Video Games|Far Cry Classic (PS3):
+  - craig
+  - ps3
+  - far-cry
+  1527810563|Auto:Fuel|Nathan - G6:
+  - 2009-pontiac-g6
+  1527810601|Personal:Eating Out|Randy's - Large Pep:
+  - randys-pizza
+  1527898617|Pets:Food|Treats; 1 case can:
+  - tootsie
+  1527898809|Personal:Books|Rise & Fall of Dinos:
+  - craig
+  - kindle
+  - amazon.com
+  1527898932|Personal:Charity|Stant Litore:
+  - stant-litore
+  - patreon
+  1527952984|Income:From Savings|Cover Low Balance:
+  - supplemental-funds
+  1528060380|Personal:HABA|Nate - Toothbrush, Shampoo, etc.:
+  - nathan
+  1528060422|Personal:Eating Out|Noodles & Co. with Nate:
+  - noodles-company
+  - nathan
+  1528060486|Personal:Eating Out|Moe's after Church:
+  - moes-southwest-grill
+  1528155409|Personal:Electronics|Sandisk 32GB USB Drive:
+  - craig
+  - usb-drive
+  - sandisk
+  - amazon.com
+  1528155436|Personal:Misc|100 Monkey figurines:
+  - craig
+  - craft-supplies
+  1528155714|RV:Loan|Normal Monthly Payment:
+  - 2017 coachmen catalina
+  1528333159|Personal:Groceries|Food Lion:
+  - 5520 middleton road
+  - food-lion
+  1528333769|Personal:Office Supplies|HP 61XL Ink Cark:
+  - 5520 middleton road
+  - hp-ink
+  1528410291|Personal:Eating Out|Jimmy's:
+  - jimmys-famous-hot-dogs
+  1528410494|Personal:Video Games|Innocent Life - PS2 (PS3):
+  - ps2
+  - harvest-moon
+  - craig
+  1528487985|Home:Improvements|Nest 3rd Gen Thermostat:
+  - nest
+  - lowes
+  - 5520 middleton road
+  1528488037|Transfer:Savings|Salary:
+  - salary
+  - craig
+  - cengage-group
+  1528488250|Home:Furnishings|Linenspa 10" Queen Matress:
+  - 5520 middleton road
+  - bedroom
+  1528488300|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  1528488618|Personal:Eating Out|Cook Out:
+  - cook-out
+  1528488886|Sixpence:Rollover|Balance Rolled Over from Previous Month: []
+  1528590046|Personal:Eating Out|Bo's & Lowes:
+  - bojangles
+  1528590124|Home:Improvements|Wire; Crimp tool; Dirt, etc:
+  - craig
+  - lowes
+  - 5520 middleton road
+  1528590169|Auto:Fuel|For Lawn Mower:
+  - lawn-mower
+  1528641323|Personal:Books|Revelation for Today; When Did God...(Leader):
+  - paperback
+  - craig
+  - donuts-devotions
+  1528641353|Personal:Electronics|SanDisk 64Gb USB Drive:
+  - amazon.com
+  - sandisk
+  1528641511|Personal:Books|When Did God Become a Christian:
+  - craig
+  - paperback
+  1528643613|Home:Pest Control|Termite Plan (Yearly):
+  - terminix
+  - termite-plan
+  1528643837|Bills:Internet|AT&T:
+  - at-t
+  - 5520 middleton road
+  1528643857|Bills:Phone|AT&T:
+  - at-t
+  - craig
+  - cate
+  - nathan
+  1528644350|Loans:Car|Civic - $100.00 Extra Principle:
+  - 2017-honda-civic-sport
+  1528645256|Bills:Electricity|6-15-2018:
+  - 5520-middleton-road
+  - duke-energy
+  1528645914|Pets:Medicine|NexGard 6pk:
+  - tootsie
+  - nexgard
+  1528837606|Personal:Books|Image Heaven (Kindle):
+  - craig
+  - kindle
+  - amazon.com
+  1528928443|Personal:Books|Square-ruled blank book:
+  - craig
+  1528928460|Personal:Electronics|Philips Hue bulb x 2:
+  - philips-hue
+  - craig
+  1529068692|Personal:Groceries|Smores stuff; Milk:
+  - 5520 middleton road
+  - food-lion
+  1529068711|Personal:Electronics|Nest Temp. Sensor:
+  - nest
+  - amazon.com
+  1529068734|Personal:Misc|Hot Wheels:
+  - hot-wheels
+  1529083145|Personal:Eating Out|Craig - Lunch:
+  - craig
+  - lunch
+  1529083214|Personal:Groceries|ABC - Small bottle Irish Whiskey:
+  - abc-store
+  1529173849|Personal:Eating Out|Wild Wing Cafe - SoDu Men's Night:
+  - craig
+  - wild-wing-cafe
+  1529173894|Personal:Eating Out|Bojangles:
+  - bojangles
+  '1529174000|Home:Maintenance|Lowes: Arlo Batteries - Wood Stakes':
+  - arlo
+  - batteries
+  - lowes
+  1529443944|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  1529444332|Personal:Groceries|Sam's - Beer + Cigarilos:
+  - sams-bottle-shop
+  - beer
+  - craig
+  - cigar
+  1529444403|Personal:Eating Out|Randy's - Large Pep:
+  - randys-pizza
+  1529623486|Personal:Eating Out|Burger King:
+  - burger-king
+  - craig
+  1529626042|Personal:Video Games|Far Cry 5 Season Pass:
+  - craig
+  - ps4
+  - far-cry
+  1529626075|Personal:Misc|Floor Bike Tire Pump: []
+  '1529707954|Transfer:Misc|To Nathan: Book + extra':
+  - nathan
+  1529708004|Pets:Food|1 case food:
+  - tootsie
+  1529708055|Personal:Eating Out|Jimmy's - 8pc Wings:
+  - jimmys-famous-hot-dogs
+  1529708106|Income:Salary|Cengage Learning:
+  - cengage-group
+  - craig
+  1529708118|Transfer:Savings|Salary:
+  - salary
+  - craig
+  - cengage-group
+  1529708314|Personal:Video Games|Nathan - Apple - ?????:
+  - nathan
+  - apple.com
+  - ios
+  1529708439|Personal:Tithes|MUMC:
+  - mcumc
+  1529807135|Personal:Eating Out|Zaxby's:
+  - zaxbys
+  1529807195|Auto:Misc|Car Wash:
+  - 2017-honda-civic-sport
+  - car-wash
+  1529877236|Personal:Eating Out|Cowfish w/ Clay & Family:
+  - cowfish
+  - clay-caroon
+  - christy-caroon
+  1529878260|Home:Mortgage|5520 Middleton:
+  - 5520-middleton-road
+  - chase
+  1529878488|Personal:Tithes|UMCOR:
+  - umcor
+  1529878602|Personal:Tithes|FBCENC:
+  - fbcenc
+  1529878726|Personal:Tithes|Durham Rescue Mission:
+  - durham-rescue-mission
+  1529969123|Personal:Eating Out|Craig, Cate & Nate:
+  - craig
+  - cate
+  - nathan
+  1529969233|Transfer:Misc|To Nathan for Gas:
+  - nathan
+  1530058429|Personal:Books|Burning Chrome (Kindle):
+  - craig
+  - kindle
+  - amazon.com
+  1530058502|Personal:Books|Cate - 2 Myrtle Clover mysteries:
+  - cate
+  - kindle
+  - amazon.com
+  1530058668|Personal:Electronics|Nathan - Nintendo Switch; Game; Case:
+  - nathan
+  - nswitch
+  1530058829|Personal:Electronics|Switch Screen Prots:
+  - nswitch
+  - craig
+  - nathan
+  1530402921|Personal:Eating Out|Taco Bell w/ Cate:
+  - taco-bell
+  - cate
+  1530402960|Personal:Eating Out|Jimmy's:
+  - jimmys-famous-hot-dogs
+  1530403015|Personal:Eating Out|Taco Bell w/ Nate:
+  - taco-bell
+  - nathan
+  1530403057|Personal:Eating Out|Taco Bell w/ Nate:
+  - taco-bell
+  - nathan
+  1530403326|Income:From Savings|Nate's Nintendo Switch:
+  - supplemental-funds
+  - nswitch
+  1530403855|Transfer:Allowance|Nathan Allowance:
+  - nathan
+  1530404571|Income:Interest|PNC Bank:
+  - pnc-bank
+  1530742496|Personal:Gifts|Mason C - Grad Gift (Cash):
+  - mason-caroon
+  - graduation
+  1530742524|Personal:Charity|Stant Litore:
+  - patreon
+  - stant-litore
+  1530742560|Personal:Groceries|Benydryl:
+  - haba
+  - cate
+  - food-lion
+  1530742616|Personal:Eating Out|Brantely's w/ Mom, Dad & Nate:
+  - village-restaurant
+  - nathan
+  - linda-caroon
+  - tom-caroon
+  1530742652|Personal:Eating Out|Oriental Deli w/ Nate:
+  - oriental-deli
+  - nathan
+  - craig
+  1530742847|Income:From Savings|Switch & Stuff for Craig:
+  - nswitch
+  - craig
+  1530743765|Personal:Video Games|Nintendo Switch:
+  - nswitch
+  - craig
+  '1530743804|Personal:Video Games|Mario Odyssey; HM: Light of Hope (Switch)':
+  - nswitch
+  - craig
+  - harvest-moon
+  - mario-bros
+  1530743833|Personal:Groceries|1850 Black Gold Coffee (Whole Bean): []
+  1530743856|Personal:Misc|Double 6 Black Dominoes:
+  - craig
+  1530743886|Personal:Electronics|Screen Protectors for Switch:
+  - nswitch
+  - craig
+  1530744268|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  1530744310|Personal:Eating Out|BoJo's On way home from ONC:
+  - bojangles
+  - onc
+  1530744772|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  1530744805|Sixpence:Rollover|Balance Rolled Over from Previous Month: []
+  1530907278|Income:Salary|Cengage Learning:
+  - craig
+  - cengage-group
+  1530907292|Transfer:Savings|Salary:
+  - salary
+  - craig
+  - cengage-group
+  1530907396|Personal:Video Games|RiME (Switch):
+  - nswitch
+  - craig
+  '1530907472|Personal:Video Games|Yonder: Cloud Catcher...(Switch)':
+  - nswitch
+  - craig
+  1530907591|Personal:Video Games|Switch Case:
+  - nswitch
+  - craig
+  1530907680|Personal:Video Games|Octopath Traveler (Switch):
+  - nswitch
+  - octopath-traveler
+  - craig
+  1530967288|Personal:Groceries|Beer & Milk & Donuts:
+  - beer
+  - 5520-middleton-road
+  - food-lion
+  1530967373|Personal:Eating Out|Pizza Hut:
+  - pizza-hut
+  1530968166|Personal:Tithes|MUMC:
+  - mcumc
+  1531065513|Personal:Eating Out|Dickey's BBQ:
+  - dickeys-bbq
+  1531065721|Personal:HABA|Vitamins, Razer:
+  - target
+  1531065758|Home:Appliances|Coffee grinder; Cold brew pitcher:
+  - 5520 middleton road
+  - kitchen
+  1531065777|Personal:Misc|Hot Wheel: []
+  1531086661|Personal:Eating Out|Noodles & Company:
+  - noodles-company
+  1531086743|Personal:Misc|Large Drawing Board:
+  - craig
+  1531087351|Auto:Registration|2017 Honda Civic:
+  - 2017-honda-civic-sport
+  1531087556|Personal:Tithes|Durham Rescue Mission:
+  - durham-rescue-mission
+  1531087899|Bills:Internet|AT&T:
+  - at-t
+  - craig
+  - cate
+  - nathan
+  1531087920|Bills:Phone|AT&T (Slightly Higher):
+  - at-t
+  - craig
+  - cate
+  - nathan
+  1531088506|Loans:Car|2017 Honda Civic ($100 Extra):
+  - 2017-honda-civic-sport
+  1531088796|Personal:Entertainment|Rent "Spies Like Us":
+  - amazon.com
+  - movie-rental
+  1531088893|Personal:Video Games|2 x 128Gb microSDXC for Switches; Game Case:
+  - nswitch
+  - craig
+  - nathan
+  1531257723|Auto:Fuel|Craig:
+  - 2017-honda-civic-sport
+  1531257913|Pets:Food|1 case food; 1 bag treats:
+  - tootsie
+  1531257928|Pets:Medical|100ct Needles:
+  - tootsie
+  - needles
+  1531258901|Transfer:Misc|To Nathan Checking - Haircut:
+  - nathan
+  1531489104|Pets:Medical|Exam; HW Test; DHP-CPV; Fecal Test:
+  - tootsie
+  1531489371|Pets:Medical|Exam, Fecal, HW Test, DHP-CPV:
+  - tootsie
+  - yearly-exam
+  1531491186|Personal:Video Games|Stardew Valley (Switch):
+  - stardew-valley
+  - nswitch
+  - craig
+  1531684061|Personal:Eating Out|Moe's:
+  - moes-southwest-grill
+  1531684223|Personal:Eating Out|Jimmy's:
+  - jimmys-famous-hot-dogs
+  1531684341|Personal:Groceries|ABC Store - Small bottle Tequila:
+  - abc-store
+  1532035320|Personal:Books|Beyond the Stars Anthology (Kindle):
+  - craig
+  - kindle
+  - amazon.com
+  1532035443|Pets:Medicine|Heart Worm Pills - 12pk:
+  - tootsie
+  - interceptor-plus
+  1532035818|Transfer:Misc|To Nathan Checking:
+  - nathan
+  1532121687|Income:Salary|Cengage Learning (First Pay after 2% Increase):
+  - cengage-group
+  - craig
+  1532121713|Transfer:Savings|Salary:
+  - salary
+  - craig
+  - cengage-group
+  1532121792|Auto:Misc|Parking - Lunch @ Kabab & Curry:
+  - parking
+  - kabab-curry
+  - craig
+  1532121891|Personal:Eating Out|Kabab & Curry (Old Platform Team):
+  - kabab-curry
+  - lunch
+  1532122380|Personal:Video Games|GOG - Battletech:
+  - gog.com
+  - battletech
+  - craig
+  1532122545|Personal:Video Games|NES Classic Mini:
+  - nes
+  - nintendo
+  - craig
+  1532211216|Personal:Tithes|MUMC:
+  - mcumc
+  1532391427|Auto:Repair|Yaris - 4 Tires; 150K Mile Service:
+  - 2007-toyota-yaris
+  1532391506|Personal:Eating Out|Fujisan w/ Cate & Nate:
+  - craig
+  - cate
+  - nathan
+  - fujisan-japanese-steakhouse
+  1532391761|Transfer:Misc|Nathan - Gas:
+  - nathan
+  1532391939|Personal:Video Games|NES Controller cord ext:
+  - nintendo
+  - nes
+  - craig
+  1532391970|Personal:Misc|Notebook w/Square paper: []
+  1532643072|Personal:Video Games|GOG - Intl POS Fee:
+  - gog.com
+  - intl-pos-fee
+  - craig
+  1532643116|Income:Reimbursement|Transfer from Nate Saving (Reimb for Nintendo Switch):
+  - nswitch
+  - nathan
+  '1532643208|Auto:Misc|Parking aloft - CloudTechOps Offsite - Day #1':
+  - aloft
+  - parking
+  - cengage-group
+  '1532643279|Auto:Misc|Parking - aloft - CloudTechOps Offsite - Day #2':
+  - parking
+  - aloft
+  - cengage-group
+  1532643555|Personal:Clothes|Black Crocs:
+  - craig
+  - crocs
+  1532643595|Personal:Video Games|Yellow JoyCon Strap x 2:
+  - nswitch
+  - craig
+  1532643625|Personal:Misc|Mahjong Betting Sticks:
+  - mahjong
+  - craig
+  1532644091|Home:Mortgage|5520:
+  - 5520 middleton road
+  - chase
+  1532644463|Bills:Life Insurance|Nathan:
+  - nathan
+  - usaa
+  1532644915|Auto:Fuel|CRaig:
+  - 2017-honda-civic-sport
+  '1532741742|Auto:Misc|Parking - aloft - CloudTechOps Offsite - Day #3':
+  - parking
+  - aloft
+  - cengage-group
+  1532741814|Personal:Eating Out|Jimmy's w/ Cate:
+  - jimmys-famous-hot-dogs
+  - cate
+  - craig
+  1532912227|Personal:Eating Out|Dimsum: []
+  1532912288|Personal:Eating Out|Which Wich after church:
+  - which-wich
+  1532912500|Personal:Video Games|SNES Classic:
+  - snes
+  - nintendo
+  - craig
+  1532912543|Personal:Eating Out|Taco Bell:
+  - taco-bell
+  1533072878|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  1533166856|Pets:Food|Small bag of dry food:
+  - tootsie
+  1533166871|Pets:Medicine|Vetsulin:
+  - tootsie
+  - vetsulin
+  1533168266|Sixpence:Rollover|Balance Rolled Over from Previous Month: []
+  1533309163|Income:Salary|Cengage:
+  - cengage-group
+  - craig
+  1533309189|Transfer:Savings|Salary:
+  - salary
+  - craig
+  - cengage-group
+  1533309278|Personal:Charity|Patreon - Stant Litore:
+  - patreon
+  - stant-litore
+  1533309659|Transfer:Allowance|Nathan:
+  - nathan
+  1533310096|College:Misc|$100 to AppState Express Account:
+  - appalachian-state-university
+  - express-account
+  1533506523|Personal:Eating Out|Jimmy's with Nate:
+  - jimmys-famous-hot-dogs
+  - craig
+  - nathan
+  1533506579|Pets:Food|1 case canned:
+  - tootsie
+  1533506644|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  1533508196|Bills:Water/sewer|5520:
+  - 5520 middleton road
+  - durham-county
+  1533508452|Bills:Life Insurance|Craig:
+  - craig
+  - usaa
+  1533509261|College:Misc|Care Pkg Plan:
+  - nathan
+  - appalachian-state-university
+  - care-package-plan
+  1533510240|Personal:Clothes|Front pocket wallet for Craig:
+  - craig
+  - wallet
+  - amazon.com
+  1533684534|Personal:Eating Out|Arby's w/Nate:
+  - arbys
+  - nathan
+  1533684574|Home:Maintenance|Diag Fee for Stove Burner (not fixed):
+  - 5520 middleton road
+  - sears
+  - stove
+  1533684632|Personal:Eating Out|Chick-fil-a w/ Nate:
+  - chick-fil-a
+  - nathan
+  - craig
+  1533685470|Personal:HABA|Nate:
+  - nathan
+  1533685494|Personal:Tithes|School Supplies Drive (MUMC):
+  - mcumc
+  - school-supplies
+  1533685528|Home:Furnishings|Pillow for Craig:
+  - 5520 middleton road
+  - craig
+  - bedroom
+  1533685569|College:Misc|Pillow x 2, Foam Pad:
+  - nathan
+  1533685597|College:Books & Materials|Notebooks & Pens:
+  - nathan
+  1533685638|College:Misc|Bell Bike Helmet for Nate:
+  - nathan
+  1533686398|Income:Reimbursement|Cengage - CloudTechOps Offsite Parking:
+  - cengage-group
+  1533686512|Home:Mortgage|5520:
+  - 5520 middleton road
+  - chase
+  1533686572|Personal:Video Games|??? for Nate:
+  - nathan
+  1533767392|Personal:Clothes|Craig - 4 RIPT T-Shirts:
+  - craig
+  - ript
+  '1533945831|Transfer:Misc|Nate: Auto Maint & Mow Grass':
+  - nathan
+  1533945916|Personal:Eating Out|Lunch - China Queen:
+  - lunch
+  - china-queen
+  - craig
+  1533945953|Personal:Eating Out|Dinner - Jimmy's HD:
+  - jimmys-famous-hot-dogs
+  - dinner
+  1533946047|Personal:Eating Out|Randy's - Large Pep:
+  - randys-pizza
+  1533946143|Personal:Entertainment|Rent Predator:
+  - amazon.com
+  - movie-rental
+  1533993798|Home:Pest Control|Terminix - Quarterly:
+  - terminix
+  - 5520-middleton-road
+  1533994327|Loans:Car|Extra $100:
+  - 2017-honda-civic-sport
+  1533994507|Personal:Tithes|FBCENC:
+  - fbcenc
+  1533994728|Personal:Tithes|DRMission:
+  - durham-rescue-mission
+  1533994838|Personal:Tithes|MUMC:
+  - mcumc
+  1534107436|Personal:Eating Out|BoJo's w/ Cate:
+  - bojangles
+  - cate
+  - craig
+  1534107488|Personal:Eating Out|Moe's after Church:
+  - moes-southwest-grill
+  1534107551|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  1534282829|Personal:Video Games|JoyCon Grip - Craig:
+  - nswitch
+  - craig
+  1534282879|Personal:Gifts|BDay for Nate (JoyCon Charger, Grip, etc):
+  - nathan
+  - birthday
+  1534376225|Personal:Eating Out|Jimmy's:
+  - jimmys-famous-hot-dogs
+  1534542905|Transfer:Misc|To Nathan Checking (Gas, Haircut, AAA Auto):
+  - nathan
+  1534625184|Income:Salary|Cengage:
+  - cengage-group
+  - craig
+  1534625423|Transfer:Savings|Salary:
+  - salary
+  - craig
+  - cengage-group
+  1534625481|Personal:Eating Out|Bo's & Lowes:
+  - bojangles
+  1534625565|Home:Maintenance|Greenworks Cordless Weedeater:
+  - lowes
+  - 5520-middleton-road
+  '1534626471|Bills:Life Insurance|Craig #1':
+  - craig
+  - usaa
+  1534809465|Transfer:Misc|Nathan:
+  - nathan
+  1534809512|Personal:Eating Out|BoJo's in Boone:
+  - bojangles
+  1534809549|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  1534809678|Bills:Life Insurance|Cate:
+  - cate
+  - usaa
+  1534810422|Personal:Electronics|2TB HDD:
+  - craig
+  - hard-drive
+  1534810442|Personal:Groceries|1850 Coffee (Whole Bean) x 2:
+  - 5520-middleton-road
+  '1534810481|Personal:Entertainment|Alien: Covenant (Blu-ray)':
+  - craig
+  - blu-ray
+  - aliens
+  1534892860|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  1534978988|Personal:Groceries|Food Lion:
+  - food-lion
+  - 5520-middleton-road
+  1535200720|Personal:Eating Out|Randy's Pizza:
+  - randys-pizza
+  1535200838|College:Books & Materials|Nate - English Book:
+  - nathan
+  1535200918|College:Books & Materials|Nathan - Spanish Online Code:
+  - nathan
+  1535201773|College:Books & Materials|Delivery Fee:
+  - nathan
+  1535202253|Income:From Savings|Cover College Expenses:
+  - supplemental-funds
+  - appalachian-state-university
+  - nathan
+  1535293275|Personal:Eating Out|Noodles & Co.:
+  - noodles-company
+  1535293555|Home:Maintenance|Target:
+  - target
+  - 5520-middleton-road
+  1535409236|Personal:Entertainment|Rent Alien vs. Predator:
+  - amazon.com
+  - movie-rental
+  1535548182|Pets:Food|Treats; 1 case canned:
+  - tootsie
+  1535548204|Pets:Medical|Needles:
+  - tootsie
+  - needles
+  1535548537|Income:Interest|PNC Bank:
+  - pnc-bank
+  1535670036|Personal:Video Games|Neon Yellow JoyCons:
+  - nswitch
+  - amazon.com
+  - craig
+  1535670075|Personal:Office Supplies|Zebra Mech Pencils:
+  - craig
+  - amazon.com
+  - zebra
+  1535741980|Income:Salary|Cengage:
+  - cengage-group
+  - craig
+  1535741998|Transfer:Savings|Salary:
+  - salary
+  - craig
+  - cengage-group
+  1535742032|Personal:Eating Out|Jimmy's:
+  - jimmys-famous-hot-dogs
+  1535742059|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  1535742571|Transfer:Allowance|Nathan:
+  - nathan
+  '1535814022|Personal:Entertainment|Rent: Predator 2 (Amazon)':
+  - amazon.com
+  - movie-rental
+  1535814051|Sixpence:Rollover|Balance Rolled Over from Previous Month: []
+  1535919198|Home:Furnishings|AC Moore - Frames:
+  - ac-moore
+  - 5520 middleton road
+  1535919268|Personal:Eating Out|Which Wich:
+  - which-wich
+  1535919319|Personal:Groceries|Food Lion:
+  - food-lion
+  - 5520-middleton-road
+  1535919361|Personal:Eating Out|Moe's after Church:
+  - moes-southwest-grill
+  1536013209|Personal:Charity|Patreon - Stant Litore:
+  - patreon
+  - stant-litore
+  1536013584|Auto:Misc|Car wash:
+  - 2017-honda-civic-sport
+  - car-wash
+  1536013650|Home:Furnishings|Mat Board; Sharpies: []
+  1536013901|Transfer:Misc|To Nathan - Gas:
+  - nathan
+  1536269819|Personal:Groceries|Food Lion:
+  - food-lion
+  - 5520 middleton road
+  1536269922|Personal:HABA|Anti-snore mouthpiece:
+  - craig
+  1536269998|Personal:Books|Meaning of Marriage (Tim Keller; Kindle):
+  - kindle
+  - craig
+  - amazon.com
+  '1536270082|Personal:HABA|Anti-snoring Nose Vents ':
+  - craig
+  1536411263|Personal:Office Supplies|Ship RB Drum Pedal to Nate:
+  - usps
+  - nathan
+  1536411316|Personal:Eating Out|Sansui w/ Cate:
+  - sansui
+  - cate
+  1536525152|Personal:Eating Out|Moe's after Church:
+  - moes-southwest-grill
+  1536525605|Personal:Entertainment|Rent Game Night (Movie):
+  - amazon.com
+  - movie-rental
+  1536526586|Bills:Internet|AT&T:
+  - at-t
+  1536526604|Bills:Phone|AT&T:
+  - at-t
+  - craig
+  - cate
+  - nathan
+  1536527465|Bills:Water/sewer|Normal + Annual Storm Water fee:
+  - durham-county
+  - 5520-middleton-road
+  - storm-water-fee
+  1536527901|Loans:Car|Extra $100.00:
+  - 2017-honda-civic-sport
+  1536788854|Personal:Eating Out|Moe's w/Cate:
+  - moes-southwest-grill
+  - cate
+  1536788945|Personal:Video Games|Titan Quest (Switch):
+  - nswitch
+  - craig
+  1536789033|Personal:Video Games|Nine Parchments (Switch):
+  - nswitch
+  - craig
+  1536789088|Personal:Video Games|Wasteland 2 (Switch):
+  - nswitch
+  - craig
+  - wasteland
+  1536789306|Medical:Optometrist|Craig - Eye Exam, Frames & Lenses:
+  - craig
+  1536789362|Medical:Optometrist|Cate - Exam, Frames & Lenses:
+  - cate
+  1537045307|Personal:Books|More Than You Know (Kindle) - Cate:
+  - cate
+  - amazon.com
+  - kindle
+  1537045682|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  1537045848|Income:Salary|Cengage:
+  - craig
+  - cengage-group
+  1537045867|Transfer:Savings|Salary:
+  - salary
+  - cengage-group
+  - craig
+  1537046314|Transfer:Misc|Nathan - Gas:
+  - nathan
+  1537113580|Home:Furnishings|Linenspa 8" MFoam/Hybrid Mattress (Twin):
+  - 5520-middleton-road
+  - bedroom
+  1537113755|Personal:Clothes|Chelsea Slim Wallet:
+  - craig
+  1537113784|Personal:Electronics|2 SanDisk USB Drives (64GB & 128GB):
+  - craig
+  - usb-drive
+  - sandisk
+  - amazon.com
+  1537392935|Personal:Eating Out|Jimmy's FHD:
+  - jimmys-famous-hot-dogs
+  1537393167|Personal:HABA|Cate - Iron; Evening Primrose; York Patty:
+  - cate
+  1537393280|Personal:Books|Cate - Mrs Jeffries Takes Stock (Kindle):
+  - cate
+  - kindle
+  - amazon.com
+  1537628264|Personal:Books|Cate - Cherry Pie or Die (Kindle):
+  - cate
+  - kindle
+  - amazon.com
+  1537628354|Personal:Tithes|MUMC:
+  - mcumc
+  1537734318|Personal:Eating Out|Chick-fil-a:
+  - chick-fil-a
+  1537734420|Personal:Eating Out|Dunkin' Donuts:
+  - dunkin-donuts
+  1537734481|Personal:Eating Out|Pei Wei:
+  - pei-wei
+  1537734719|Personal:Groceries|Milk, etc:
+  - 5520-middleton-road
+  1537734739|Personal:HABA|Deo - Cate:
+  - cate
+  1537734758|Home:Furnishings|3 Pillows:
+  - 5520-middleton-road
+  - bedroom
+  1537734789|Personal:Misc|Lunch bag, water bottle for Cate:
+  - cate
+  1537925191|Pets:Food|1 case canned:
+  - tootsie
+  1537925299|Home:Furnishings|Linenspa Twin Mattress:
+  - 5520 middleton road
+  - bedroom
+  1537925378|Personal:Books|Cate - Murder at the Vicarage (Kindle):
+  - cate
+  - kindle
+  - amazon.com
+  1538225196|Transfer:Misc|To Nathan Checking - HABA:
+  - nathan
+  1538225458|Income:Salary|Cengage:
+  - cengage-group
+  - craig
+  1538225475|Transfer:Savings|Salary:
+  - salary
+  - craig
+  - cengage-group
+  1538225571|Income:From Savings|Replacment Windows 40% Downpayment:
+  - supplemental-funds
+  - lei-home-enhancements
+  1538225606|Home:Improvements|LEI H.E. - Windows 40% Downpayment:
+  - lei-home-enhancements
+  - 5520 middleton road
+  1538225795|Personal:Eating Out|Craig - Jimmy's HD:
+  - jimmys-famous-hot-dogs
+  - craig
+  1538225834|Personal:Eating Out|Sansu - Takeout:
+  - sansui
+  1538225931|Personal:Video Games|Mario Party (Switch) Pre-order:
+  - nswitch
+  - mario-bros
+  - craig
+  1538227092|Home:Mortgage|5520:
+  - 5520 middleton road
+  - chase
+  1538227128|Auto:Insurance|Last Payment for 6mth period:
+  - usaa
+  1538227737|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  1538227949|Income:Interest|PNC:
+  - pnc-bank
+  1538228045|Home:Maintenance|Burner for Stove:
+  - 5520 middleton road
+  - kitchen
+  - stove
+  1538229790|Personal:Tithes|MUMC - NC Storm Response:
+  - mcumc
+  - special-offering
+  1538346794|Personal:Eating Out|Moes - After Church - Craig:
+  - moes-southwest-grill
+  1538430423|Transfer:Allowance|Nathan:
+  - nathan
+  1538520425|Pets:Food|Treats:
+  - tootsie
+  1538520440|Pets:Medicine|Vetsulin:
+  - tootsie
+  - vetsulin
+  1538520481|Personal:Eating Out|Cookout:
+  - cook-out
+  1538521495|Personal:Charity|Patreon - Stant Litore:
+  - patreon
+  - stant-litore
+  '1538521739|Personal:Video Games|FF XV: Pocket Edition (Switch)':
+  - nswitch
+  - craig
+  - final-fantasy
+  1538521798|Personal:Video Games|I am Setsuna (Switch):
+  - nswitch
+  - craig
+  1538522106|College:Misc|2018 Carbon Neutral Commuter:
+  - nathan
+  1538522272|Sixpence:Rollover|Balance Rolled Over from Previous Month: []
+  1538869843|Personal:Eating Out|Chick-fil-a:
+  - chick-fil-a
+  1538869883|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  1538870105|Personal:Books|Cate - Body in the Library (Kindle):
+  - cate
+  - kindle
+  - amazon.com
+  1538870410|Home:Appliances|Instant Pot:
+  - 5520-middleton-road
+  1538870507|Personal:Electronics|128Gb MicroSD Card:
+  - craig
+  - amazon.com
+  1539125949|Bills:Internet|AT&T Fiber:
+  - at-t
+  - 5520 middleton road
+  1539125964|Bills:Phone|AT&T:
+  - at-t
+  - craig
+  - cate
+  - nathan
+  1539126174|Bills:Electricity|5520:
+  - 5520-middleton-road
+  - duke-energy
+  1539126346|Bills:Water/sewer|5520:
+  - 5520-middleton-road
+  - durham-county
+  1539126612|Bills:Life Insurance|Nathan - Due 11/01/19:
+  - nathan
+  1539126923|Loans:Car|Civic + $100 extra principle:
+  - 2017-honda-civic-sport
+  1539379634|Personal:Groceries|Tum Yum Soup stuff:
+  - 5520 middleton road
+  - li-mings-global-mart
+  1539379692|Transfer:Misc|To Nathan - Gas, Fair, Hair:
+  - nathan
+  1539379820|Subscriptions:Nintendo Online|1 year subscription:
+  - craig
+  - nswitch
+  1539380057|Income:Salary|Cengage - Change. 1% added to 401k:
+  - cengage-group
+  - craig
+  1539380074|Transfer:Savings|Salary:
+  - salary
+  - craig
+  - cengage-group
+  1539380253|Personal:Tithes|MUMC:
+  - mcumc
+  1539533104|Personal:Eating Out|Dimsum: []
+  1539533426|College:Misc|Microwave (0.7 cu ft):
+  - nathan
+  1539533448|Personal:HABA|Vitamins: []
+  1539533469|College:Misc|Broom:
+  - nathan
+  1539533689|Personal:Groceries|Food Lion:
+  - 5520 middleton road
+  - food-lion
+  1539804956|Pets:Food|1 case canned:
+  - tootsie
+  1539804968|Pets:Medical|100ct Needles:
+  - tootsie
+  - needles
+  1539805059|Personal:Eating Out|Jimmy's FHD:
+  - jimmys-famous-hot-dogs
+  1539805131|Personal:Entertainment|Cash for State Fair:
+  - nc-state-fair
+  - cash
+  1539805170|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  1539805212|Personal:Groceries|Food Lion:
+  - 5520 middleton road
+  - food-lion
+  1539805345|Personal:Software|Juiced.GS - ORCA/C, etc.:
+  - juiced.gs
+  - orca-c
+  - craig
+  '1539805734|Personal:Video Games|Ys VIII: Lac..of DANA (Switch)':
+  - nswitch
+  - ys
+  - craig
+  1539805796|Personal:Books|Programming Robots with ROS (Physical):
+  - craig
+  - amazon.com
+  - paperback
+  1539805906|Personal:Books|Cate - Pajaro Bay Mysteries set:
+  - cate
+  - kindle
+  - amazon.com
+  1539806510|Auto:Fuel|Nathan:
+  - nathan
+  1539897548|Transfer:Misc|Nathan - AMO Club dues:
+  - nathan
+  1540047230|Personal:Eating Out|Randy's Pizza:
+  - randys-pizza
+  1540047320|Personal:Entertainment|Buy "Murder on the Orient Express":
+  - amazon.com
+  - movie-purchase
+  1540048173|Personal:Charity|Wikimedia Foundation, Inc:
+  - wikimedia-foundation
+  1540048454|Personal:Video Games|GOG - Starbound:
+  - gog.com
+  - craig
+  1540175107|Personal:Eating Out|Moe's after Church:
+  - moes-southwest-grill
+  1540590334|Transfer:Allowance|Nathan:
+  - nathan
+  1540590350|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  1540590393|Personal:Eating Out|Chick-fil-a:
+  - chick-fil-a
+  1540590435|Personal:Groceries|Food Lion:
+  - food-lion
+  - 5520 middleton road
+  1540590532|Personal:Books|The Four Chinese Classics (Kindle):
+  - craig
+  - kindle
+  - amazon.com
+  1540590646|Personal:Electronics|Drone (parts, radio, googles):
+  - quadcopters
+  - craig
+  1540591492|Personal:Eating Out|Smallcakes (2 cupcakes):
+  - smallcakes
+  - craig
+  - cate
+  1540591618|Personal:Video Games|GOG - POS Fee:
+  - gog.com
+  - intl-pos-fee
+  1540591946|Personal:Video Games|Code x Malice; 7'scarlet (PSVita):
+  - playstation-vita
+  - craig
+  1540592222|Income:Salary|Cengage:
+  - cengage-group
+  - craig
+  1540592237|Transfer:Savings|Salary:
+  - salary
+  - cengage-group
+  - craig
+  1540657290|Personal:Eating Out|Jimmys:
+  - jimmys-famous-hot-dogs
+  1540657445|Personal:Tithes|Compassion Intl:
+  - compassion-international
+  1540657608|Personal:Tithes|UMCOR:
+  - umcor
+  1540657736|Personal:Tithes|MCUMC:
+  - mcumc
+  1540657892|Personal:Tithes|FBCENC:
+  - fbcenc
+  1540657992|Personal:Tithes|Durham Rescue Mission:
+  - durham-rescue-mission
+  1540658312|Home:Mortgage|Chase:
+  - 5520 middleton road
+  - chase
+  1540658591|Bills:Gas|5520:
+  - 5520-middleton-road
+  - dominion-energy
+  1540671022|Personal:Office Supplies|100 Stamps:
+  - usps
+  - stamps
+  1540671051|Personal:Eating Out|Arby's:
+  - arbys
+  1540671158|Home:Furnishings|Philips Hue 80" Light Strip:
+  - philips-hue
+  - 5520 middleton road
+  - kitchen
+  1540671377|Home:Furnishings|5" Twin Box Spring / Foundation:
+  - 5520 middleton road
+  - bedroom
+  1540671404|Personal:Clothes|Craig - Aviator hat:
+  - craig
+  - amazon.com
+  1540936175|Bills:Phone|iPhone XR Upgrade for Nathan:
+  - iphone
+  - upgrade
+  - nathan
+  1540936239|Personal:Eating Out|Moe's after church:
+  - moes-southwest-grill
+  1541018661|Personal:Eating Out|Cookout - Lunch:
+  - cook-out
+  - lunch
+  1541018697|Personal:Groceries|Food, Dude!:
+  - 5520 middleton road
+  - food-lion
+  1541019598|Income:Interest|PNC Bank:
+  - pnc-bank
+  1541019931|Bank:Fees|Banggood Intl Fees:
+  - banggood
+  - intl-pos-fee
+  1541253565|Personal:Charity|Patreon - Stant Litore:
+  - patreon
+  - stant-litore
+  1541253976|Personal:Eating Out|Randy's Pizza:
+  - randys-pizza
+  1541254039|Personal:Groceries|Sam's Beer:
+  - sams-bottle-shop
+  - beer
+  1541254097|Personal:Video Games|Nathan - Pokemon Go Coins:
+  - nathan
+  - pokemon
+  - ios
+  1541254943|Income:From Savings|iPhone XR Payment:
+  - supplemental-funds
+  - iphone
+  1541368032|Personal:Eating Out|Moe's:
+  - moes-southwest-grill
+  1541368115|Personal:Video Games|World of FF Maxima (Switch):
+  - final-fantasy
+  - nswitch
+  - craig
+  1541368312|Transfer:Misc|To Nathan Checking - Gas:
+  - nathan
+  1541718167|Personal:Eating Out|Melting Pot w/ Mom & Dad:
+  - melting-pot
+  - linda-caroon
+  - tom-caroon
+  1541718210|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  '1541718299|Subscriptions:Playstation Network|Xfer to Nathan Checking ':
+  - nathan
+  1541718865|Personal:Books|Cate - Mischief in Mudbug (Kindle):
+  - cate
+  - kindle
+  - amazon.com
+  1541718973|Personal:Electronics|Drone battery and charger:
+  - quadcopters
+  - batteries
+  - craig
+  1541727168|Pets:Food|1 case canned:
+  - tootsie
+  1541874252|Personal:Eating Out|Brigs:
+  - brigs
+  1541874558|Bills:Internet|AT&T:
+  - at-t
+  - 5520 middleton road
+  1541874578|Bills:Phone|AT&T:
+  - at-t
+  - craig
+  - cate
+  - nathan
+  1541874889|Personal:Eating Out|Jimmy's FHD:
+  - jimmys-famous-hot-dogs
+  1541875085|Bills:Electricity|5520 Middleton Rd:
+  - 5520 middleton road
+  - duke-energy
+  1541875431|Loans:Car|Civic + $100 extra principle:
+  - 2017-honda-civic-sport
+  1541875554|Transfer:Savings|Salary:
+  - salary
+  - craig
+  - cengage-group
+  1541876503|Bills:Life Insurance|Craig:
+  - craig
+  - usaa
+  1541876517|Bills:Life Insurance|Craig:
+  - craig
+  - usaa
+  1541876652|Bills:Life Insurance|Cate:
+  - cate
+  - usaa
+  1541876910|Personal:Tithes|MCUMC:
+  - mcumc
+  1541877393|Medical:Medicine|Cate's Meds:
+  - cate
+  1541877713|Personal:Misc|International POS Fee for ????:
+  - intl-pos-fee
+  1541970810|Personal:Books|Showdown in Mudbug (Kindle):
+  - cate
+  - kindle
+  - amazon.com
+  1541971093|Home:Furnishings|Zinus 5" Mattress Foundation (#2):
+  - 5520-middleton-road
+  1541971173|Personal:Misc|Micron drawing pen set:
+  - craig
+  1541971246|Personal:Video Games|State of Mind (Switch):
+  - nswitch
+  - craig
+  1541971322|Personal:Video Games|Archangle (PS4/PSVR):
+  - ps4
+  - craig
+  - psvr
+  1542155521|Personal:Video Games|Fallout 76 (PS4):
+  - ps4
+  - fallout
+  - craig
+  1542155698|Personal:Books|Resurrection in Mudbug (Cate, Kindle):
+  - cate
+  - kindle
+  - amazon.com
+  1542156008|Personal:Misc|Micron Color Drawing Pen Set:
+  - craig
+  1542156049|Personal:Tithes|Helping Hands Christmas gifts:
+  - special-offering
+  - mcumc
+  1542156649|Transfer:Misc|Nathan Checking - Gas:
+  - nathan
+  1542474568|Personal:Books|Chaos in Mudbug (Cate - Kindle):
+  - cate
+  - kindle
+  - amazon.com
+  1542474618|Personal:Books|Missing in Mudbug (Cate - Kindle):
+  - cate
+  - kindle
+  - amazon.com
+  1542580264|Personal:Misc|Colored Pens & 2 Coloring Books:
+  - craig
+  1542580559|Personal:Clothes|Cate - Socks:
+  - cate
+  1542580583|Personal:Misc|Puzzle:
+  - craig
+  1542580613|Personal:HABA|Castile soap; 300ct Claratin; Qtips:
+  - target
+  1542580683|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  1542580722|Personal:Eating Out|Moe's:
+  - moes-southwest-grill
+  1542580812|Personal:Books|John Dies t at the End (Kindle):
+  - craig
+  - kindle
+  - amazon.com
+  1542581529|Bills:Water/sewer|5520:
+  - 5520-middleton-road
+  - durham-county
+  1542582463|Personal:Software|Apple - ??? - Nate?:
+  - apple.com
+  - nathan
+  - ios
+  1542582650|Bank:Fees|International POS Fee (????):
+  - intl-pos-fee
+  - craig
+  1543097816|Personal:Groceries|Piggly Wiggly - ONC:
+  - piggly-wiggly
+  - onc
+  1543097836|Transfer:Misc|To Nathan Checking - Gas:
+  - nathan
+  1543098012|Personal:Electronics|Lowes - Tools, etc for Drone:
+  - lowes
+  - quadcopters
+  - craig
+  1543098090|Personal:Eating Out|Bojangles (Lowe's and Bo's):
+  - bojangles
+  1543098123|Personal:Eating Out|BoJos - Cheddar Bo for Cate:
+  - bojangles
+  1543098267|Personal:Eating Out|BoJos - Leaving ONC:
+  - bojangles
+  1543098393|Personal:Clothes|Craig - RIPT T-Shirt - Blooper:
+  - craig
+  - ript
+  1543098493|Personal:Books|Guide to American Mah Jonng (Kindle):
+  - craig
+  - mahjong
+  - kindle
+  - amazon.com
+  1543098631|Personal:Books|Lethal Bayou Beauty (Kindle,Cate):
+  - cate
+  - kindle
+  - amazon.com
+  1543098706|Personal:Books|Nightflyers & Other Stories (Kindle, Craig):
+  - craig
+  - kindle
+  - amazon.com
+  1543100014|Home:Pest Control|Terminix - Quarterly:
+  - terminix
+  1543100397|Income:Salary|Cengage Learning:
+  - cengage-group
+  - craig
+  1543100410|Transfer:Savings|Salary:
+  - salary
+  - craig
+  - cengage-group
+  1543451452|Personal:Entertainment|NMJL Hands & Rules Card:
+  - craig
+  - mahjong
+  1543451531|Personal:Books|Cate - Swamp Team 3 (Kindle):
+  - cate
+  - kindle
+  - amazon.com
+  1543451582|Personal:Books|Cate - Swamp Sniper (Kindle):
+  - cate
+  - kindle
+  - amazon.com
+  1543452088|Personal:Electronics|XT60 Charge Cable 2 pk:
+  - craig
+  - amazon.com
+  - quadcopters
+  1543452117|Personal:Electronics|Samsung 32GB Micro SD x 2:
+  - samsung
+  - craig
+  1543452164|Christmas:Gifts|Mason - Raspberry Pi 3B+ Kit:
+  - mason-caroon
+  - raspberry-pi
+  1543452198|Christmas:Gifts|Mason - Python Crash Course Book:
+  - mason-caroon
+  - python
+  - books
+  1543452457|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  1543452991|Personal:Tithes|DRM - Christmas:
+  - durham-rescue-mission
+  - christmas
+  1543453383|Bills:Electricity|5520:
+  - 5520 middleton road
+  - duke-energy
+  1543454114|Home:Mortgage|5520:
+  - 5520 middleton road
+  - chase
+  1543454301|Personal:Tithes|UMCOR:
+  - umcor
+  1543535696|Personal:Electronics|Tax on iPhone XR 128GB for Craig:
+  - craig
+  - iphone
+  - taxes
+  1543535845|Personal:Misc|iPhone XR Cases (2); Atomic Fireballs; Christmas Bags:
+  - iphone
+  - christmas
+  1543674675|Personal:Books|SciFi/Fantasy Mag; Puzzle Mags:
+  - craig
+  - barnes-noble
+  1543674719|Christmas:Gifts|Nathan - H. Bosch Book:
+  - nathan
+  1543798489|Personal:Clothes|Craig - Fortnight Brewery T-Shirt:
+  - craig
+  - fortnight-brewery
+  1543798529|Personal:Eating Out|Fortnight Brewery - Beer:
+  - fortnight-brewery
+  - beer
+  1543798582|Personal:Eating Out|Tijuana Flats:
+  - tijuana-flats
+  1543798707|Personal:Misc|Christmas Ornament Bulbs:
+  - christmas
+  1543799013|Income:Interest|PNC Bank:
+  - pnc-bank
+  1543799474|Christmas:Gifts|Cate - Shitake Log:
+  - cate
+  1543799562|Personal:Books|Cate - Gator Bait (Kindle):
+  - cate
+  - kindle
+  - amazon.com
+  1543799619|Subscriptions:Spotify|5520: []
+  1543799663|Personal:Charity|Stant Litore:
+  - stant-litore
+  - patreon
+  1543800327|Transfer:Allowance|Nathan:
+  - nathan
+  1543876166|Auto:Misc|Car WAsh:
+  - 2017-honda-civic-sport
+  - car-wash
+  1543876475|Personal:Electronics|4pc Hex Screwdriver Set:
+  - amazon.com
+  - craig
+  1543876568|Christmas:Gifts|Mom - Jellyfish Air Plants:
+  - linda-caroon
+  1543876723|Christmas:Gifts|4x DNA Kits:
+  - ancestry.com
+  - craig
+  - cate
+  - nathan
+  - tom-caroon
+  1543876856|Christmas:Gifts|72pc Christmas Gift Bags: []
+  1543876934|Personal:Misc|12pc Air Plants:
+  - craig
+  1543964565|Personal:Video Games|Mudrunner (Switch):
+  - nswitch
+  - mudrunner
+  - craig
+  1543964633|Christmas:Gifts|Nathan - Boots:
+  - nathan
+  1543964947|Pets:Food|1 case canned; 1 bags treats:
+  - tootsie
+  1543964967|Pets:Medicine|Vetsulin:
+  - tootsie
+  - vetsulin
+  1543964985|Pets:Medical|100ct Needles:
+  - tootsie
+  - needles
+  1544056715|Personal:Eating Out|Jimmy's FHD:
+  - jimmys-famous-hot-dogs
+  1544056933|Income:From Savings|To Cover Christmas / Groceries:
+  - supplemental-funds
+  - christmas
+  1544204655|Christmas:Gifts|Cole - Tackle Bag:
+  - cole-caroon
+  1544204721|Personal:Books|Cate - Soldiers of Fortune (Kindle):
+  - cate
+  - kindle
+  - amazon.com
+  1544204794|Personal:Electronics|FrSky Battery Pack:
+  - frsky
+  - batteries
+  - craig
+  1544204963|Income:Salary|Cenage:
+  - cengage-group
+  - craig
+  1544204978|Transfer:Savings|Salary:
+  - salary
+  - craig
+  - cengage-group
+  1544205355|Personal:Software|AnyList 1yr subscription:
+  - ios
+  - anylist
+  - subscription
+  1544205508|Bank:Fees|POS Fee - Blundstone Boots (Australia):
+  - intl-pos-fee
+  1544205600|Bank:Fees|POS Fee - Nintendo?:
+  - nintendo
+  - intl-pos-fee
+  1544205681|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  1544206312|Bills:Electricity|5520:
+  - 5520 middleton road
+  - duke-energy
+  1544206348|Bills:Electricity|5520:
+  - 5520 middleton road
+  - duke-energy
+  1544206601|Bills:Electricity|5520:
+  - 5520 middleton road
+  - durham-county
+  1544206780|Sixpence:Rollover|Balance Rolled Over from Previous Month: []
+  1544207022|Sixpence:Rollover|Balance Rolled Over from Previous Month: []
+  1544308581|Personal:Eating Out|Tijuana Flats:
+  - tijuana-flats
+  1544308848|Personal:Video Games|Diablo 3 (Switch):
+  - nswitch
+  - diablo
+  - craig
+  1544308930|Personal:Books|Cate - Hurricane Force (Kindle):
+  - cate
+  - kindle
+  - amazon.com
+  1544309012|Personal:Electronics|Echo x 2:
+  - amazon.com
+  - echo
+  1544399277|Personal:Books|Cate - Fortune Hunter (Kindle):
+  - cate
+  - kindle
+  - amazon.com
+  1544399859|Bills:Phone|Normal + $30 upgrade fee for Nate:
+  - at-t
+  - upgrade-fee
+  - nathan
+  - craig
+  - cate
+  1544400503|Loans:Car|Civic + $100 extra:
+  - 2017-honda-civic-sport
+  1544401084|Pets:Medicine|Nexgard 6 pk:
+  - tootsie
+  - nexgard
+  1544540037|Personal:Electronics|Craig - Inspiron 15 5000 2-in-1 Laptop:
+  - craig
+  - dell
+  - inspiron
+  1544540699|Personal:Books|Cate - Later Gator (Kindle):
+  - cate
+  - kindle
+  - amazon.com
+  1544540917|Bank:Fees|Intl POS Fee - Nintendo:
+  - nintendo
+  - intl-pos-fee
+  1544660419|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  1544660455|Personal:Eating Out|Jimmy's FHD:
+  - jimmys-famous-hot-dogs
+  1544660490|Personal:Eating Out|Thai China:
+  - thai-china-buffet
+  1544660683|Personal:Video Games|Switch Pro Controller (after trade-ins):
+  - nswitch
+  - craig
+  1544661114|Transfer:Misc|To Nathan Checking (Gas++):
+  - nathan
+  1544662143|Bills:Gas|5520:
+  - 5520 middleton road
+  - dominion-energy
+  1544662499|Bills:Water/sewer|5520:
+  - 5520 middleton road
+  - durham-county
+  1544662828|Bills:Gas|5520:
+  - 5520-middleton-road
+  - dominion-energy
+  1544662866|Bills:Gas|5520:
+  - 5520 middleton road
+  - dominion-energy
+  1544662977|Bills:Gas|5520:
+  - 5520 middleton road
+  - dominion-energy
+  1544800377|Personal:Books|Craig - On the Incarnation (Kindle):
+  - craig
+  - kindle
+  - amazon.com
+  1544800476|Personal:Books|Cate - Hook, Line & Blinker (Kindle):
+  - cate
+  - kindle
+  - amazon.com
+  1544802469|Income:From Savings|MCUMC Piano Fund:
+  - mcumc
+  - special-offering
+  1544802484|Personal:Tithes|MCUMC Piano Fund:
+  - mcumc
+  - special-offering
+  1544994112|Personal:Eating Out|Randy's Pizza:
+  - randys-pizza
+  1544994155|Personal:Eating Out|Craig - Moe's:
+  - moes-southwest-grill
+  - craig
+  1544994315|Auto:Insurance|Not sure why is so low:
+  - usaa
+  1544994492|Transfer:Misc|To Nathan Checking (Hair cut ++):
+  - nathan
+  1545086476|Personal:Video Games|Playstation Classic:
+  - craig
+  - playstation
+  1545086717|Christmas:Gifts|Stocking Stuffers:
+  - stocking-stuffers
+  1545086746|Personal:HABA|Eye drops; Shampoo:
+  - craig
+  - target
+  1545086768|Personal:Office Supplies|Labels: []
+  1545086789|Personal:Misc|Hot Wheels for Nate:
+  - nathan
+  - hot-wheels
+  1545086860|Personal:Books|Cate - Change of Fortune (Kindle):
+  - cate
+  - kindle
+  - amazon.com
+  1545086967|Personal:Electronics|Lipo, Lipo Bag x 2; Straps:
+  - batteries
+  - quadcopters
+  - craig
+  1545087162|Income:From Savings|'Cause I spend to much:
+  - supplemental-funds
+  1545267831|Personal:Software|FPVFreeRider Drone Simulator:
+  - quadcopters
+  - craig
+  1545419225|Income:Salary|Cengage:
+  - cengage-group
+  - craig
+  1545419240|Transfer:Savings|Salary:
+  - salary
+  - craig
+  - cengage-group
+  1545419277|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  1545431035|Personal:Eating Out|Bob Evans:
+  - bob-evans
+  1545431113|Personal:Misc|2 Sling Shots; 2 Pk Ammo; Pk of Targets:
+  - dicks-sporting-goods
+  - craig
+  - cate
+  1545431503|Home:Mortgage|5520:
+  - 5520-middleton-road
+  - chase
+  1545526149|Personal:Electronics|Samsung Micros SD 128GB x 2:
+  - samsung
+  - craig
+  - amazon.com
+  1545526219|Personal:Electronics|20mm clear shrink tubing:
+  - craig
+  - amazon.com
+  1545526332|Personal:Entertainment|Rent "Predators" on Prime:
+  - amazon.com
+  - movie-rental
+  1545526384|Personal:Books|Cate - Reel of Fortune (Kindle):
+  - cate
+  - kindle
+  - amazon.com
+  1545526562|Christmas:Gifts|2 Dark Chocolate Oranges:
+  - stocking-stuffers
+  1545526664|Personal:Electronics|3-pin JST set; XT60 connector set:
+  - craig
+  - quadcopters
+  1545526906|Christmas:Gifts|Cougar, Haley & Raven (Cash):
+  - cougar-caroon
+  - haley-caroon
+  - raven-caroon
+  - cash
+  1545527131|Personal:Tithes|MCUMC:
+  - mcumc
+  1545679857|Personal:Eating Out|Moe's:
+  - moes-southwest-grill
+  1545679915|Personal:Groceries|Christmas Lunch/Dinner:
+  - christmas
+  - 5520 middleton road
+  1545680045|Personal:Video Games|Broken Age; Lumines Remastered (Switch):
+  - nswitch
+  - craig
+  1545680118|Personal:Video Games|Lift-off (PC):
+  - craig
+  - ms-windows
+  1545870904|Personal:Eating Out|Red Robin:
+  - red-robin
+  1545871437|Bank:Fees|Int't POS Fee - Nintendo:
+  - nintendo
+  - intl-pos-fee
+  1545871695|Personal:Video Games|Skyrim (Nintendo):
+  - nswitch
+  - skyrim
+  - craig
+  1546371649|Income:Reimbursement|Deva - for Games Magazine Subscription:
+  - eva-rogers
+  - games-world-of-puzzles
+  1546371779|Pets:Food|1 case food:
+  - tootsie
+  1546371844|Personal:Eating Out|Taco Bell - On Way to ONC:
+  - taco-bell
+  - onc
+  1546371900|Personal:Groceries|ONC - Piggly Wiggly:
+  - onc
+  - piggly-wiggly
+  1546371931|Personal:Tithes|Pig - 2 Food Donations Bags:
+  - piggly-wiggly
+  - food-donation
+  1546372005|Personal:Video Games|GOG - CrossCode (PC):
+  - gog.com
+  - crosscode
+  - craig
+  1546372046|Personal:Groceries|ONC - Milk:
+  - onc
+  - piggly-wiggly
+  1546372089|Personal:Books|Cate - Swamp Spook (Kindle):
+  - cate
+  - kindle
+  - amazon.com
+  1546372254|Personal:Misc|American Mahjong Set:
+  - craig
+  - mahjong
+  1546372290|Personal:Electronics|5-pin JST; Electrical Tape:
+  - craig
+  1546372344|Personal:Eating Out|Sonic - Havelock:
+  - sonic
+  1546372379|Transfer:Allowance|Nathan:
+  - nathan
+  1546372437|Auto:Fuel|2016 Veloster:
+  - 2016-hyundai-veloster
+  1546372508|Personal:Misc|Handy Mart - Snack:
+  - handy-mart
+  1546373434|Bank:Fees|Intl POS Fee - Nintendo:
+  - nintendo
+  - intl-pos-fee
+  1546373484|Income:Interest|PNC Bank:
+  - pnc-bank
+  1546373540|Subscriptions:Hulu|5520:
+  - tv-service
+  1546373706|Bank:Fees|Intl POS Fee - GOG:
+  - gog.com
+  - intl-pos-fee
+  1546373801|Auto:Fuel|Veloster:
+  - 2016-hyundai-veloster
+  1546373905|Sixpence:Rollover|Balance Rolled Over from Previous Month: []
+  1546468570|Personal:Charity|Patreon - Stant Litore:
+  - patreon
+  - stant-litore
+  1546468743|Personal:Electronics|Liquid Electrical Tape (1oz):
+  - craig
+  1546468851|Personal:Electronics|FrSky R-XSR replacement Antenna x 5:
+  - frsky
+  - quadcopters
+  1546469020|Personal:Electronics|Antenna Tubes; 18AWG wire:
+  - craig
+  1546469043|Personal:Video Games|256GB Micro SDXC:
+  - craig
+  - nswitch
+  1546640914|Income:Salary|Cengage:
+  - cengage-group
+  - craig
+  1546640926|Transfer:Savings|Salary:
+  - salary
+  - craig
+  - cengage-group
+  1546641153|Personal:Misc|Nanoblocks; Skull counters:
+  - craig
+  1546641419|Personal:HABA|Nate + Listerine:
+  - nathan
+  1546641456|Pets:Misc|Poo Bags:
+  - tootsie
+  - amazon.com
+  - poo-bags
+  1546641506|College:Books & Materials|notebooks; index cards, pens, etc:
+  - nathan
+  1546642580|Personal:Electronics|12pc JST-GH 1.25mm connectors:
+  - craig
+  - amazon.com
+  1546642670|Personal:Entertainment|Cate - Rent "Three Identical Strangers":
+  - amazon.com
+  - movie-rental
+  - cate
+  1546642894|Bills:Electricity|5520:
+  - 5520 middleton road
+  - duke-energy
+  1546643592|Bills:Internet|AT&T Fiber:
+  - at-t
+  - 5520-middleton-road
+  1546643704|Bills:Phone|Inc $30 Upgrade Fee; $65 Pd with ATT Card:
+  - at-t
+  - upgrade-fee
+  - nathan
+  - craig
+  - cate
+  1546805021|Personal:Eating Out|Chick-fil-a:
+  - chick-fil-a
+  1546805109|Auto:Repair|Nate - Wiper blade refills:
+  - nathan
+  1546805152|Personal:Eating Out|Moes after church:
+  - moes-southwest-grill
+  1546805566|Auto:Repair|G6 - Oil & Tires (Nate Pd. This is re-imburese):
+  - 2009-pontiac-g6
+  - nathan
+  1546967084|Medical:Optometrist|Nathan - Exam & 1 Yr of Contacts:
+  - nathan
+  1546967125|Personal:Eating Out|Moe's:
+  - moes-southwest-grill
+  1546967187|Personal:Office Supplies|UPS Store - Notarize Lease Guarantor Form:
+  - ups-store
+  - notary
+  1546967264|Personal:Books|Cate - Knitting is Murder (Kindle):
+  - cate
+  - kindle
+  - amazon.com
+  1546967640|Personal:Office Supplies|Zebra Mechanical Pencils x 3; Velcro Strips:
+  - zebra
+  - craig
+  1546967718|Personal:Office Supplies|Cutting mat; Zebra Mech. Pencils x 2:
+  - craig
+  - zebra
+  - craft-supplies
+  1547226723|Personal:Entertainment|Games Magazine Subscription:
+  - games-world-of-puzzles
+  - craig
+  1547227471|Personal:Eating Out|Fujisan:
+  - fujisan-japanese-steakhouse
+  1547227554|Personal:Books|Games magazine:
+  - games-world-of-puzzles
+  - craig
+  1547227723|Personal:Misc|AMZ - 32GB MicroSD Mistake:
+  - craig
+  1547227843|Personal:Video Games|New Super Mario Bros (Switch):
+  - nswitch
+  - craig
+  - mario-bros
+  1547228183|Income:Reimbursement|Amazon - ?????:
+  - amazon.com
+  1547228306|College:Housing|Apartment application fee:
+  - nathan
+  1547228384|Personal:Video Games|Nate - Apple - ????:
+  - nathan
+  - apple.com
+  - ios
+  1547228535|Income:Reimbursement|Amazon - 2 Echos - Said I never recevied them; I did:
+  - amazon.com
+  - echo
+  1547228634|College:Books & Materials|Books - Spring 2019:
+  - nathan
+  1547228687|College:Books & Materials|Books - Spring 2019:
+  - nathan
+  1547258596|Personal:Eating Out|Tom Yum Soup x 2:
+  - craig
+  - cate
+  1547258634|Personal:Groceries|Donuts:
+  - 5520 middleton road
+  - food-lion
+  1547518646|Transfer:Misc|To Nathan Checking - Gas:
+  - nathan
+  1547518726|Personal:Eating Out|Arby's:
+  - arbys
+  1547518769|Personal:Office Supplies|Ship Contacts to Nate:
+  - usps
+  - nathan
+  1547519056|Bills:Water/sewer|5520:
+  - 5520 middleton road
+  - durham-county
+  1547519414|Loans:Car|Civic + $100 extra:
+  - 2017-honda-civic-sport
+  1547519713|Personal:Books|Old Man & the Sea (Kindle):
+  - cate
+  - kindle
+  - amazon.com
+  1547519777|Personal:Books|Cate - The Christie Curse (Kindle):
+  - cate
+  - kindle
+  - amazon.com
+  1547519841|Home:Maintenance|Kidde Smoke/Fire/CO2 Alarm:
+  - amazon.com
+  - 5520-middleton-road
+  - kidde
+  1547764070|Personal:Video Games|Tales of Vesperia (Switch):
+  - nswitch
+  - craig
+  1547764214|Personal:Eating Out|Akashi:
+  - akashi
+  1547764265|Personal:Groceries|Glass Jug - Beer:
+  - glass-jug
+  - beer
+  - craig
+  1547764308|Personal:Eating Out|Bfast @ BoJos:
+  - bojangles
+  - breakfast
+  - craig
+  1547764515|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  1547764733|Personal:Books|Cate - ????? (Kindle):
+  - cate
+  - kindle
+  - amazon.com
+  1547909788|Personal:Groceries|Milk & Donuts:
+  - 5520-middleton-road
+  - food-lion
+  1547909921|Personal:Books|Cate - Sayers Swindle (Kindle):
+  - cate
+  - kindle
+  - amazon.com
+  1547910121|Transfer:Misc|To Nathan Checking - HABA:
+  - nathan
+  1547910254|Income:Salary|Cengage:
+  - cengage-group
+  - craig
+  1547910272|Transfer:Savings|Salary:
+  - salary
+  - craig
+  - cengage-group
+  1547910381|Personal:Tithes|MUMC:
+  - mcumc
+  1547910525|Bank:Fees|Intl POS Fee - Nintendo:
+  - nintendo
+  - intl-pos-fee
+  1547910565|Personal:Eating Out|Taco Bell:
+  - taco-bell
+  1547947322|Pets:Food|1 case canned; 1 bag treats:
+  - tootsie
+  1547947338|Pets:Medical|100ct syringes:
+  - tootsie
+  - needles
+  1548197264|Personal:Office Supplies|Send SS Card to Nate:
+  - nathan
+  - usps
+  1548197321|Personal:Eating Out|Moe's:
+  - moes-southwest-grill
+  1548197404|Personal:Electronics|Banggood - FPV Phone Adapter:
+  - banggood
+  - quadcopters
+  - craig
+  1548197479|Personal:Electronics|NewBeeDrone - AcroBee Kit:
+  - new-bee-drone
+  - acrobee
+  - quadcopters
+  - craig
+  1548197593|Transfer:Misc|Nathan Checking - Health eBook Code:
+  - nathan
+  1548197720|Travel:Lodging|EI Realty - Deposit for Hark the Sound - 1 Wk:
+  - emerald-isle
+  - hark-the-sound
+  - deposit
+  1548199575|Home:Improvements|LEI Windows - Balance:
+  - lei-home-enhancements
+  - 5520 middleton road
+  1548199640|Income:From Savings|For LEI Windows Balance:
+  - supplemental-funds
+  - lei-home-enhancements
+  1548369362|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  1548524894|Personal:Groceries|Coconut coffee:
+  - amazon.com
+  - coffee
+  - cate
+  1548524915|Personal:Gifts|Hokusai Art Book for Nate:
+  - nathan
+  - art-books
+  '1548525172|Transfer:Misc|To Nathan Checking: Meds; Urgent Car for Hives':
+  - nathan
+  1548525281|Auto:Fuel|Veloster:
+  - 2016-hyundai-veloster
+  1548549108|College:Misc|19 Study Away - Art Servon (NY Trip):
+  - nathan
+  - field-trip
+  1548721377|Personal:Eating Out|Arby's:
+  - arbys
+  1548721480|Christmas:Gifts|Nate - Kingdom Hearts 3 (PS4):
+  - nathan
+  1548721705|Personal:Eating Out|Chick-fil-a:
+  - chick-fil-a
+  1548721838|Personal:Eating Out|Starbucks:
+  - starbucks
+  - coffee
+  1548722001|Personal:Eating Out|Randy's Pizza:
+  - randys-pizza
+  1548722055|Personal:Electronics|Intl'l POS Fee - Banggood:
+  - banggood
+  - intl-pos-fee
+  - craig
+  1548944523|Income:From Savings|From Main Savings:
+  - supplemental-funds
+  1548944613|Personal:Electronics|AcroBee - Props & Batteries:
+  - acrobee
+  - new-bee-drone
+  - quadcopters
+  - batteries
+  1548944775|Personal:Clothes|Craig - Two Red Dwarf T-Shirts:
+  - craig
+  - bbc
+  - red-dwarf
+  1548944853|Subscriptions:Spotify|5520: []
+  1548945023|Bills:Gas|5520:
+  - 5520-middleton-road
+  - dominion-energy
+  1548945241|Bills:Life Insurance|Nathan:
+  - nathan
+  - usaa
+  1548945848|Home:Mortgage|5520:
+  - 5520-middleton-road
+  - chase
+  1549124252|Income:Salary|Cengage:
+  - cengage-group
+  - craig
+  1549124267|Transfer:Savings|Salary:
+  - salary
+  - craig
+  - cengage-group
+  1549124338|Personal:Eating Out|Dulce Cafe:
+  - dulce-cafe
+  1549124795|Personal:Electronics|Quad Frame:
+  - quadcopters
+  - craig
+  1549124831|Personal:Misc|Small Wet/Dry Vacuum:
+  - amazon.com
+  '1549124989|Transfer:Allowance|Nathan: Allowance - $15 iPhone':
+  - nathan
+  - iphone
+  1549125212|College:Housing|BHC Rentals - Admin Fee:
+  - nathan
+  1549125774|Subscriptions:Netflix|5520:
+  - 5520 middleton road
+  - tv-service
+  1549125825|Subscriptions:Hulu|5520:
+  - 5520-middleton-road
+  - tv-service
+  1549125901|Income:Interest|PNC Bank:
+  - pnc-bank
+  1549126023|Bank:Fees|Intl POS Fee - ?????:
+  - intl-pos-fee
+  1549126125|Sixpence:Rollover|Balance Rolled Over from Previous Month: []
+  1549127056|RV:Loan|Normal Payment:
+  - 2017 coachmen catalina
+  1549234015|Personal:Eating Out|Jimmy's FHD:
+  - jimmys-famous-hot-dogs
+  1549234060|Personal:Groceries|Ice cream + Donuts:
+  - 5520 middleton road
+  - food-lion
+  1549234101|Personal:Groceries|Food Lion:
+  - 5520 middleton road
+  - food-lion
+  1549234184|Personal:Electronics|Aloft Hobbies:
+  - aloft-hobbies
+  - craig
+  - quadcopters
+  1549234305|Personal:Charity|Stant Litore:
+  - patreon
+  - stant-litore
+  1549491883|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  1549491973|Personal:Video Games|Yo Kai Watch 3 (3DS):
+  - nintendo-3ds
+  - craig
+  - yo-kai-watch
+  1549492390|Income:From Savings|From Main Savings:
+  - supplemental-funds
+  1549492614|Bills:Internet|AT&T:
+  - at-t
+  - 5520-middleton-road
+  1549492663|Bills:Phone|AT&T + iPhone XR 2/30 Payments:
+  - at-t
+  - craig
+  - cate
+  - nathan
+  - iphone
+  '1549492887|Bills:Life Insurance|Craig #2':
+  - craig
+  - usaa
+  1549493051|Bills:Electricity|5520:
+  - 5520 middleton road
+  - duke-energy
+  1549497831|Personal:Misc|Nate - Slim Hip Sack for NY Trip:
+  - nathan
+  1549672403|Personal:Eating Out|Arby's:
+  - arbys
+  1549672487|Medical:Doctor|Cate - Vertigo & Nausea:
+  - cate
+  - duke-health
+  1549672517|Personal:Eating Out|Dulce Cafe:
+  - dulce-cafe
+  1549672608|Medical:Medicine|Cate - Vertigo & Naseau meds:
+  - cate
+  - vertigo
+  - walgreens
+  '1549672714|College:Books & Materials|Nathan - Basquiat: Quick Killing...':
+  - nathan
+  1549673327|Income:From Savings|From Main Savings:
+  - supplemental-funds
+  1549673437|Transfer:Misc|To Nathan Checking - NY Trip suit case, etc:
+  - nathan
+  1549934106|Subscriptions:Amazon Prime|5520:
+  - 5520 middleton road
+  1549934344|Personal:Groceries|Target:
+  - target
+  - 5520 middleton road
+  1549934497|Pets:Food|1 Case Canned:
+  - tootsie
+  1549934513|Pets:Medicine|Vetsulin:
+  - tootsie
+  - vetsulin
+  1549935389|Personal:Electronics|2 HDMI; Monitor stand / org:
+  - craig
+  '1550244061|Personal:Video Games|Far Cry 5: New Dawn (PS4)':
+  - ps4
+  - craig
+  - far-cry
+  1550244318|Income:Salary|Cengage:
+  - cengage-group
+  - craig
+  1550244711|Loans:Car|Civic + $100:
+  - 2017-honda-civic-sport
+  1550245116|Auto:Insurance|Paid Online:
+  - usaa
+  '1550245318|Bills:Life Insurance|Craig: Pd Online - 1888757483':
+  - usaa
+  - craig
+  1550245517|Bills:Life Insurance|Cate:
+  - cate
+  - usaa
+  1550245754|Bills:Gas|5520:
+  - 5520 middleton road
+  - dominion-energy
+  1550245967|Bills:Water/sewer|5520:
+  - 5520 middleton road
+  - durham-county
+  1550246138|Personal:Tithes|FBCENC:
+  - fbcenc
+  1550246373|Personal:Tithes|Durham Rescue Mission:
+  - durham-rescue-mission
+  1550246889|Personal:Tithes|MCUMC:
+  - mcumc
+  1550247073|Personal:Misc|DMV - Renew Licence + REAL ID:
+  - dmv
+  - craig
+  - real-id
+  - drivers-license
+  1550325810|Personal:Groceries|ABC - Tequila:
+  - abc-store
+  1550325846|Personal:Eating Out|Jimmy's FHD:
+  - jimmys-famous-hot-dogs
+  1550441853|Personal:Groceries|Sam's - Beer:
+  - sams-bottle-shop
+  - beer
+  - craig
+  1550441907|Personal:Eating Out|Randy's - Lg Pep:
+  - randys-pizza
+  '1550442117|Personal:Books|B&N: 2 puzzle mags':
+  - barnes-noble
+  1550708409|Home:Maintenance|Ladder; Sign; Air filters:
+  - 5520 middleton road
+  - lowes
+  1550708471|Personal:Video Games|Steins;Gate Elite (Switch):
+  - craig
+  - nswitch
+  1550708898|Personal:Books|Fodor's England:
+  - cate
+  - travel
+  '1550708931|Personal:Electronics|Quad Parts for Quad #3':
+  - quadcopters
+  - craig
+  1550885957|Transfer:Misc|To Nathan Checking - Gas & Art Supplies:
+  - nathan
+  1550939635|Home:Pest Control|Terminix - Quarterly:
+  - terminix
+  1550939920|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  1551049980|Personal:Electronics|4pc 1105 quad motors:
+  - quadcopters
+  - craig
+  1551220827|Home:Mortgage|5520:
+  - 5520 middleton road
+  - chase
+  1551222898|Personal:Electronics|Props; Guards; Hex bolt set:
+  - quadcopters
+  - craig
+  1551375669|Personal:Taxes|NC State Tax Payment:
+  - nc-state-tax
+  - income-taxes
+  1551376627|Personal:Office Supplies|TurboTax Premier 2018:
+  - turbotax.com
+  1551456146|Income:Salary|Cengage:
+  - cengage-group
+  - craig
+  1551456164|Transfer:Savings|Salary:
+  - salary
+  - cengage-group
+  - craig
+  1551456364|Transfer:Allowance|To Nathan Checking - Allowance, Insp, Extra:
+  - nathan
+  1551456550|Subscriptions:Spotify|5520: []
+  1551456892|Subscriptions:Netflix|5520:
+  - 5520 middleton road
+  - tv-service
+  1551456954|Income:Interest|Checking:
+  - pnc-bank
+  1551457135|Auto:Registration|G6:
+  - 2009-pontiac-g6
+  1551457156|Auto:Misc|G6 - Online Fee:
+  - 2009-pontiac-g6
+  - fees
+  - dmv
+  1551457210|Subscriptions:Hulu|5520:
+  - 5520 middleton road
+  - tv-service
+  1551457455|Sixpence:Rollover|Balance Rolled Over from Previous Month: []
+  1551457915|Personal:Charity|Patreon - Stant Litore:
+  - patreon
+  - stant-litore
+  1551458786|Income:From Savings|From Main Savings - EI Realty Balance:
+  - supplemental-funds
+  - emerald-isle
+  1551459053|Travel:Lodging|EI Realty - Hard the Sound - 1 week (Balance):
+  - emerald-isle
+  - hark-the-sound
+  1551543716|Personal:Groceries|Coconut coffee:
+  - amazon.com
+  - cate
+  1551543743|Home:Furnishings|Magnetic Fridge Frame x 2:
+  - 5520-middleton-road
+  1551543874|Home:Furnishings|Explore America Pin-board map:
+  - cate
+  1551544025|Personal:Tithes|MCUMC:
+  - mcumc
+  1551829867|Personal:Eating Out|Moe's:
+  - moes-southwest-grill
+  1551829925|Personal:Eating Out|Chuy's:
+  - chuys
+  1551830527|Personal:Electronics|3S LiPo:
+  - batteries
+  - quadcopters
+  - craig
+  1551830549|Personal:Electronics|FXT Viper FPV Headset:
+  - quadcopters
+  - fpv-headset
+  1551916626|Pets:Food|1 case canned; 2 treats:
+  - tootsie
+  1551916641|Pets:Medical|Needles:
+  - tootsie
+  - needles
+  1551916731|Income:Reimbursement|Tyson - treats; needles refund:
+  - tyson-animal-hospital
+  - tootsie
+  1552252430|Auto:Inspection|Cate - Veloster:
+  - 2016-hyundai-veloster
+  1552252540|Auto:Taxes|Cate:
+  - durham-county
+  - 2016-hyundai-veloster
+  1552252662|Auto:Registration|Cate:
+  - durham-county
+  - 2016-hyundai-veloster
+  1552252729|Personal:Eating Out|Moes after church:
+  - moes-southwest-grill
+  1552252783|Personal:Video Games|GOG - Diablo I:
+  - gog.com
+  - diablo
+  - craig
+  1552253350|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  1552254689|Transfer:Misc|Nathan Checking - Gas:
+  - nathan
+  1552341172|Personal:Eating Out|Chick fil a:
+  - chick-fil-a
+  1552341207|Personal:Eating Out|Randy's - Large Pepperoni:
+  - randys-pizza
+  1552425734|Bills:Electricity|5520:
+  - 5520 middleton road
+  - duke-energy
+  1552426075|Loans:Car|Civic + $100.00:
+  - 2017-honda-civic-sport
+  1552426333|Bills:Internet|AT&T:
+  - at-t
+  - 5520 middleton road
+  1552426356|Bills:Phone|AT&T (+Craig iPhone XR Payment):
+  - at-t
+  - craig
+  - cate
+  - nathan
+  - iphone
+  1552658291|Income:Salary|Cengage:
+  - craig
+  - cengage-group
+  1552658306|Transfer:Savings|Salary:
+  - salary
+  - craig
+  - cengage-group
+  1552658379|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  1552658423|Personal:Eating Out|Arby's w/ Cate:
+  - arbys
+  - cate
+  1552658457|Personal:Eating Out|Arby's - Dessert:
+  - arbys
+  1552658937|Bills:Water/sewer|5520:
+  - 5520-middleton-road
+  - durham-county
+  1552659130|Auto:Insurance|USAA:
+  - usaa
+  1552659339|Bills:Gas|5520:
+  - 5520 middleton road
+  - dominion-energy
+  1552659617|Personal:Tithes|MCUMC:
+  - mcumc
+  1552666524|Transfer:Allowance|Cate:
+  - cate
+  1552666562|Auto:Registration|Veloster:
+  - 2016-hyundai-veloster
+  - durham-county
+  1552666849|Transfer:Allowance|Cate:
+  - cate
+  1552849315|Personal:Groceries|Food Lion:
+  - food-lion
+  - 5520 middleton road
+  1552849363|Personal:Eating Out|Outback:
+  - outback-steakhouse
+  1552849449|Personal:Misc|Grandaddy's - Gigantic Dictionary:
+  - granddaddys-antiques
+  - craig
+  1552849493|Personal:Eating Out|Which Which after church:
+  - which-wich
+  1552851445|Income:From Savings|From Savings - For Art Table:
+  - supplemental-funds
+  1552851538|Home:Furnishings|Lowes - Gladiator Table:
+  - lowes
+  - 5520 middleton road
+  - art-room
+  1553013896|Home:Improvements|Philips Hue White 4pk:
+  - philips-hue
+  - 5520 middleton road
+  1553013986|Home:Improvements|VESA monitor mount:
+  - craig
+  - art-room
+  1553020675|Pets:Misc|Leash for Tootz:
+  - tootsie
+  1553020849|Home:Maintenance|Vacuum Bags:
+  - 5520 middleton road
+  1553020867|Personal:Electronics|Fire TV Cube:
+  - amazon.com
+  - fire-tv-cube
+  1553126376|Personal:Eating Out|Bad Daddy's:
+  - bad-daddys
+  1553126417|Auto:Fuel|Veloster:
+  - 2016-hyundai-veloster
+  1553126456|Personal:Eating Out|Which Wich:
+  - which-wich
+  1553211208|Personal:Eating Out|BoJos:
+  - bojangles
+  1553211298|Home:Landscaping|Soil; Willow Tree:
+  - dirt
+  - tree
+  - 5520 middleton road
+  - lowes
+  1553376829|Personal:Groceries|Food Lion:
+  - food-lion
+  - 5520 middleton road
+  1553723773|Personal:Eating Out|Cook out:
+  - cook-out
+  1553789664|Personal:Eating Out|Bos & Lowes:
+  - bojangles
+  1553789741|Home:Maintenance|Arlo Batteries; Bi-fold door hinges:
+  - arlo
+  - lowes
+  - batteries
+  1553789863|Personal:Electronics|Nvidia Jetson Nano:
+  - nvidia
+  - jetson-nano
+  - craig
+  1553790084|Income:From Savings|From Main Savings:
+  - supplemental-funds
+  1553794674|Personal:Eating Out|Taco Bell:
+  - taco-bell
+  1553816946|Personal:Video Games|GOG - Warcraft I & II Bundle:
+  - gog.com
+  - warcraft
+  1553950191|Income:Salary|Cengage:
+  - cengage-group
+  - craig
+  1553950245|Transfer:Savings|Salary:
+  - salary
+  - craig
+  - cengage-group
+  1553950425|Home:Mortgage|5520:
+  - 5520 middleton road
+  - chase
+  1553950624|Home:Mortgage|Escrow Shortage:
+  - escrow-shortage
+  - 5520 middleton road
+  - chase
+  1553950812|Transfer:Allowance|Nathan - iPhone payment:
+  - nathan
+  1553951001|Transfer:Allowance|Cate:
+  - cate
+  1553951232|Subscriptions:Netflix|5520:
+  - 5520-middleton-road
+  - tv-service
+  1553951273|Auto:Fuel|Craig:
+  - 2017-honda-civic-sport
+  1553951311|Subscriptions:Hulu|5520:
+  - 5520 middleton road
+  - tv-service
+  1554047428|Auto:Fuel|Cate:
+  - 2016-hyundai-veloster
+  1554047493|Personal:Eating Out|Mayflower Seafood:
+  - mayflower-seafood
+  1554047556|Personal:Groceries|Mrs Hanes Cookies - 3 Lb Bags:
+  - 5520-middleton-road
+  1554047619|Personal:Entertainment|Korner's Folly Tour x 2:
+  - craig
+  - cate
+  - korners-folly
+  1554047750|Personal:Eating Out|Cracker Barrel:
+  - cracker-barrel
+  1554047816|Subscriptions:Spotify|5520: []
+  1554047872|Personal:Video Games|FF VII (Nintendo):
+  - final-fantasy
+  - craig
+  - nswitch
+  1554157439|Sixpence:Rollover|Balance Rolled Over from Previous Month: []
+  1554157482|Personal:Eating Out|Chick-fil-a:
+  - chick-fil-a
+  1554157611|Personal:Office Supplies|Compass, Tape:
+  - craig
+  1554157646|Personal:HABA|Shampoo; Dr. Bonner, Cotton Balls, Flonase, etc:
+  - 5520 middleton road
+  - target
+  1554157709|Pets:Food|2 bags of treats:
+  - tootsie
+  1554157749|Personal:Office Supplies|Ship Cookies to Nate:
+  - nathan
+  1554157961|Personal:Charity|Patreon - Stant LItore:
+  - patreon
+  - stant-litore
+  1554158120|Home:Maintenance|Kidde smoke/co2 alarm:
+  - 5520-middleton-road
+  - amazon.com
+  - kidde
+  1554330813|Personal:Office Supplies|Compass; File Folder Dividers:
+  - craig
+  1554330943|Personal:Eating Out|Sushioki:
+  - sushioki
+  1554331661|Bills:Electricity|5520:
+  - 5520 middleton road
+  - duke-energy
+  1554416159|Personal:Clothes|Craig - Boots - Nordstrom Rack:
+  - craig
+  - nordstrom-rack
+  1554416189|Personal:Eating Out|Jimmy's FHD:
+  - jimmys-famous-hot-dogs
+  1554416238|Pets:Food|1 case canned:
+  - tootsie
+  1554417419|Loans:Car|Civic:
+  - 2017-honda-civic-sport
+  1554417926|Income:From Savings|Covering Low Balance:
+  - supplemental-funds
+  1554418040|Bills:Internet|AT&T:
+  - at-t
+  - 5520 middleton road
+  1554418062|Bills:Phone|AT&T:
+  - at-t
+  - craig
+  - cate
+  - nathan
+  1554418437|Bank:Fees|Intl POS Fee - Nintendo:
+  - nintendo
+  - intl-pos-fee
+  - craig
+  1554418471|Bank:Fees|Intl POS Fee - GOG:
+  - gog.com
+  - intl-pos-fee
+  - craig
+  1555194408|Personal:Eating Out|Chick-fil-a:
+  - chick-fil-a
+  1555194434|Auto:Fuel|Cate - Veloster:
+  - 2016-hyundai-veloster
+  1555194452|Personal:Eating Out|Arby's:
+  - arbys
+  1555194498|Transfer:Misc|To Nathan Checking:
+  - nathan
+  1555194531|Personal:Eating Out|EI - Stir It Up Coffee Shop:
+  - emerald-isle
+  - stir-it-up-coffee
+  - coffee
+  1555194562|Personal:Groceries|EI  - Publix:
+  - emerald-isle
+  - publix
+  1555194584|Personal:Eating Out|EI - Stir It Up Coffee:
+  - emerald-isle
+  - stir-it-up-coffee
+  1555194617|Personal:Groceries|EI - Food Lion:
+  - emerald-isle
+  - food-lion
+  1555194643|Personal:Eating Out|EI - Michaelangos Pizza:
+  - emerald-isle
+  - michaelangelos-pizza
+  1555194682|Personal:Entertainment|EI - NC Aquarium - Admission:
+  - emerald-isle
+  - nc-aquarium
+  1555194724|Personal:Misc|EI - NC Aquarium - Gift Shop:
+  - emerald-isle
+  - nc-aquarium
+  1555194752|Personal:Eating Out|EI - Surf's Up Grill & Bar:
+  - emerald-isle
+  - surfs-up-grill-bar
+  1555194774|Personal:Eating Out|EI - DQ:
+  - emerald-isle
+  - dairy-queen
+  1555194791|Personal:Groceries|EI - Food Lion:
+  - emerald-isle
+  - food-lion
+  1555194824|Personal:Eating Out|EI - Crab Shack:
+  - emerald-isle
+  - crab-shack
+  1555194842|Personal:Groceries|EI - Food Lion:
+  - emerald-isle
+  - food-lion
+  1555194863|Auto:Fuel|Cate - Veloster:
+  - 2016-hyundai-veloster
+  1555195072|Income:From Savings|From Main Savings:
+  - supplemental-funds
+  1555195095|Income:From Savings|From Main Savings:
+  - supplemental-funds
+  1555195235|Income:Salary|Cengage:
+  - cengage-group
+  - craig
+  1555195249|Transfer:Savings|Salary:
+  - salary
+  - cengage-group
+  - craig
+  1555196076|Personal:Groceries|5520:
+  - 5520 middleton road
+  - food-lion
+  1555371935|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  1555371996|Personal:Groceries|Food Lion:
+  - food-lion
+  - 5520-middleton-road
+  1555372141|Home:Maintenance|Tomatoes, chalk brd paint, etc:
+  - 5520-middleton-road
+  - lowes
+  1555372235|Personal:Electronics|FrSky X-XSR:
+  - frsky
+  - quadcopters
+  - craig
+  1555372338|Personal:Electronics|QuadHands:
+  - craig
+  - amazon.com
+  1555372493|Personal:Video Games|Truberbrook, Portia, Our World is Ended:
+  - craig
+  - nswitch
+  1555372569|Personal:Video Games|Truberbrook; Portia, Our Wld is Ended (Balance):
+  - nswitch
+  - craig
+  1555624243|Personal:Eating Out|MMushroom:
+  - mellow-mushroom
+  1555624320|Personal:Electronics|3S Lipo x 2:
+  - batteries
+  - craig
+  - quadcopters
+  1555624686|Transfer:Misc|Nate - Gas:
+  - nathan
+  1555624866|Bank:Fees|Intl POS Fee - Nintendo:
+  - nintendo
+  - intl-pos-fee
+  1555624899|Bank:Fees|Intl POS Fee - Nintendo:
+  - nintendo
+  - intl-pos-fee
+  1555772389|Personal:Groceries|Food Lion:
+  - food-lion
+  - 5520 middleton road
+  1555772535|Personal:HABA|Epsom Salt:
+  - epsom-salt
+  - cate
+  1555772553|Pets:Misc|Poo Bags:
+  - amazon.com
+  - poo-bags
+  - tootsie
+  1555772580|Home:Furnishings|Trash can, pizza cutter, tongs:
+  - 5520 middleton road
+  - kitchen
+  1555773517|Personal:Electronics|Battery Straps 5 pk:
+  - craig
+  1555773567|Personal:Electronics|4pk ESC shell case:
+  - craig
+  1555773664|Personal:Eating Out|Thai China Buffet:
+  - thai-china-buffet
+  1556055225|Pets:Food|1 case food:
+  - tootsie
+  1556055256|Pets:Medicine|1 btl vetsulin:
+  - tootsie
+  - vetsulin
+  1556055624|Transfer:Misc|Nathan - InDesign; Grocs:
+  - nathan
+  1556056421|Bills:Gas|5520:
+  - 5520-middleton-road
+  - dominion-energy
+  1556056810|Bills:Life Insurance|Nathan:
+  - nathan
+  - usaa
+  1556058192|Bills:Water/sewer|5520:
+  - 5520 middleton road
+  - durham-county
+  1556230465|Transfer:Misc|Zelle - Cate Caroon - Towels:
+  - zelle
+  - cate
+  1556230590|Personal:Eating Out|Sake Bomb:
+  - sake-bomb
+  1556230639|Home:Furnishings|at home - Glass Egg:
+  - at-home
+  - 5520 middleton road
+  - craft-supplies
+  1556230781|Personal:Electronics|Quad camera; Vtx; Antenna; angle connector:
+  - quadcopters
+  - craig
+  1556314183|Income:Salary|Cengage:
+  - cengage-group
+  - craig
+  1556314199|Transfer:Savings|Salary:
+  - salary
+  - craig
+  - cengage-group
+  1556314331|Transfer:Allowance|Nathan:
+  - nathan
+  1556377078|Personal:Tithes|MCUMC:
+  - mcumc
+  1556377465|Transfer:Allowance|Cate + $25 for Scenter:
+  - cate
+  1556377726|Home:Mortgage|5520:
+  - 5520 middleton road
+  - chase
+  1556378171|Income:Reimbursement|Refund from Amazon.com:
+  - amazon.com
+  1556378339|Subscriptions:Netflix|5520:
+  - 5520 middleton road
+  - tv-service
+  1556378394|Income:Interest|PNC - Interest:
+  - pnc-bank
+  1556631613|Personal:Entertainment|Doyles - Pool & Beer:
+  - doyles
+  - beer
+  - pool
+  1556631658|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  1556631708|Personal:Eating Out|Chick-fil-a:
+  - chick-fil-a
+  1556631799|Medical:Medicine|Wal-Flex, etc.:
+  - walgreens
+  1556661599|Personal:Eating Out|Snack: []
+  1556832404|Personal:Eating Out|Jimmy's:
+  - jimmys-famous-hot-dogs
+  1556832484|Subscriptions:Spotify|5520: []
+  1556832526|Personal:Charity|Patreon - Stant Litore:
+  - patreon
+  - stant-litore
+  '1556832610|Subscriptions:Audible|1 yr gold ': []
+  1556832810|Subscriptions:Hulu|5520:
+  - 5520 middleton road
+  - tv-service
+  1556833002|Personal:Groceries|Glass Jug - Beer & Mead:
+  - glass-jug
+  - beer
+  - 5520 middleton road
+  1556833079|Sixpence:Rollover|Balance Rolled Over from Previous Month: []
+  1556981058|Personal:Eating Out|BoJo:
+  - bojangles
+  1556981117|Home:Maintenance|Chalkboard paint; plant:
+  - lowes
+  - 5520-middleton-road
+  1556981165|Auto:Misc|Car Wash:
+  - 2017-honda-civic-sport
+  - car-wash
+  '1556981260|Personal:Books|HBundle: O''Reilly Python Collection':
+  - humble-bundle
+  - python
+  - craig
+  - kindle
+  1557088400|Personal:Eating Out|Randys:
+  - randys-pizza
+  1557088508|Personal:Eating Out|Jimmys:
+  - jimmys-famous-hot-dogs
+  1557088548|Personal:Groceries|Donuts for Church:
+  - donuts-devotions
+  1557089906|Pets:Medical|100ct needles:
+  - tootsie
+  - needles
+  1557089997|Home:Maintenance|Paint Sample x 3:
+  - 5520-middleton-road
+  - lowes
+  1557090947|Travel:Lodging|Celo Inn Depost for 2 nights:
+  - celo-inn
+  1557091012|Income:From Savings|Xfer from Main Savings for Civic payment:
+  - supplemental-funds
+  1557091048|Loans:Car|Civic + $9k extra:
+  - 2017-honda-civic-sport
+  1557268701|Transfer:Misc|To Nathan Checkiing:
+  - nathan
+  1557268752|Personal:Groceries|Yikes!:
+  - 5520 middleton road
+  - food-lion
+  1557268897|College:Misc|Refill AppState Express Account:
+  - appalachian-state-university
+  - express-account
+  1557269100|Personal:Electronics|Florescent tape:
+  - craig
+  1557269121|Personal:Misc|Creative Journal:
+  - craig
+  1557269376|Personal:Eating Out|Dulce - Dessert & Coffee:
+  - dulce-cafe
+  - craig
+  - cate
+  1557534899|Auto:Fuel|Nate - G6:
+  - 2009-pontiac-g6
+  1557534972|Personal:Eating Out|Boone - Pedalin' Pig:
+  - pedalin-pig
+  - craig
+  - nathan
+  1557535034|Medical:Medicine|Cate - Prednesone:
+  - cate
+  - prednisone
+  - walgreens
+  1557535095|Medical:Doctor|Cate - Urgent Care - Hive/Allergic:
+  - cate
+  - urgent-care
+  1557535161|Auto:Fuel|Craig - Civic:
+  - 2017-honda-civic-sport
+  1557588410|Transfer:Misc|To Nathan Checking - Hair Cut ++:
+  - nathan
+  1557588457|Income:Salary|Cengage:
+  - cengage-group
+  - craig
+  1557588468|Transfer:Savings|Salary:
+  - salary
+  - craig
+  - cengage-group
+  1557588775|Personal:Tithes|MCUMC:
+  - mcumc
+  1557589062|Bills:Water/sewer|5520:
+  - 5520 middleton road
+  - durham-county
+  1557589243|Bills:Life Insurance|Cate:
+  - cate
+  - usaa
+  1557589570|Bills:Life Insurance|Craig:
+  - craig
+  - usaa
+  1557589820|Bills:Life Insurance|Craig:
+  - craig
+  - usaa
+  1557590074|Bills:Electricity|5520:
+  - 5520-middleton-road
+  - duke-energy
+  1557590256|Bills:Internet|AT&T - 5520:
+  - at-t
+  - 5520-middleton-road
+  1557590271|Bills:Phone|AT&T:
+  - at-t
+  - craig
+  - cate
+  - nathan
+  1557700669|Personal:Groceries|Donuts:
+  - 5520-middleton-road
+  1557700719|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  1557700779|Home:Maintenance|1 Gal. Paint; Screws:
+  - lowes
+  - 5520-middleton-road
+  1557700815|Personal:Eating Out|Moe's:
+  - moes-southwest-grill
+  1557700874|Personal:Eating Out|Pizza Hut - 2 large; wings:
+  - pizza-hut
+  1557701297|Personal:Electronics|FrSky X-XSR; Rubber pads:
+  - frsky
+  - craig
+  - quadcopters
+  1557701785|Personal:Office Supplies|Ink; Pencils: []
+  1557701814|Personal:HABA|Excedrin; Vitamins; Deo:
+  - target
+  1557701834|Home:Maintenance|LED Flood Light 3pk:
+  - 5520 middleton road
+  1557701860|Personal:Electronics|Boogie Board; Power strip; Ext cord: []
+  1557701885|Personal:Gifts|Mum's Day - Flowers, Cards, Chocolate:
+  - mothers-day
+  1557875673|Auto:Fuel|Nate - G6:
+  - 2009-pontiac-g6
+  1557875712|Personal:Eating Out|Cook Out for Nate:
+  - cook-out
+  - nathan
+  1557875758|Medical:Doctor|Cate - Urgent Care - Weakness:
+  - cate
+  - urgent-care
+  1557875804|Personal:Groceries|5520:
+  - 5520 middleton road
+  - food-lion
+  1557964617|Personal:Electronics|Quad Parts + Misc:
+  - quadcopters
+  - craig
+  1557964813|Personal:Groceries|ABC - Kaluah:
+  - abc-store
+  1558130411|Home:Maintenance|rollers, outlet plates, etc:
+  - 5520-middleton-road
+  - lowes
+  1558130600|Personal:Eating Out|PJ Pizza x 2:
+  - pj-pizza
+  1558130759|Transfer:Misc|Nate - Mow lawn & trim bushes:
+  - nathan
+  1558309585|Personal:Eating Out|Pei Wei - After Church:
+  - pei-wei
+  1558728132|Transfer:Misc|Zelle To Cate Caroon:
+  - zelle
+  - cate
+  1558728344|Home:Maintenance|Lowes - Misc:
+  - lowes
+  - 5520-middleton-road
+  1558728444|Personal:Eating Out|Craig - BK - Lunch:
+  - burger-king
+  - lunch
+  - craig
+  1558728512|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  1558728554|Personal:Eating Out|Bo's & Lowes:
+  - bojangles
+  1558728668|Pets:Food|Tootsie - 1 case food; 2 bg treats:
+  - tootsie
+  1558728768|Subscriptions:Playstation Network|1 year:
+  - craig
+  1558729113|Home:Pest Control|Quarterly:
+  - terminix
+  1558729282|Personal:Tithes|MCUMC:
+  - mcumc
+  1558729511|Income:Salary|Cengage:
+  - cengage-group
+  - craig
+  1558729526|Transfer:Savings|Salary:
+  - salary
+  - craig
+  - cengage-group
+  1558729693|Personal:Books|B&N:
+  - barnes-noble
+  1558729770|Personal:Groceries|Jean's Berry Patch -- Berries & Peaches:
+  - jeans-berry-patch
+  1558729831|Auto:Fuel|Cate - Veloster:
+  - 2016-hyundai-veloster
+  1558981688|Personal:Eating Out|Starbucks:
+  - starbucks
+  - coffee
+  1558982321|Bills:Gas|Dominion Energy:
+  - 5520-middleton-road
+  - dominion-energy
+  1558982573|Home:Mortgage|5520:
+  - chase
+  - 5520-middleton-road
+  1559251602|Personal:Eating Out|Jimmy's x 3:
+  - jimmys-famous-hot-dogs
+  1559251824|Transfer:Allowance|Nathan:
+  - nathan
+  1559251869|Transfer:Misc|Nathan - Gas; Work Gloves:
+  - nathan
+  1559252101|Subscriptions:Netflix|5520 - Price Went Up this month:
+  - 5520 middleton road
+  - tv-service
+  1559252130|Subscriptions:Hulu|5520:
+  - 5520 middleton road
+  - tv-service
+  1559252215|Income:Interest|PNC:
+  - pnc-bank
+  1559511150|Auto:Fuel|Civic - Way back from Celo:
+  - 2017-honda-civic-sport
+  1559511210|Personal:Misc|Snacks for Cate:
+  - cate
+  1559511261|Subscriptions:Spotify|5520: []
+  1559511303|Personal:Charity|Patreon - Stant Litore:
+  - patreon
+  - stant-litore
+  1559511443|Personal:Eating Out|Celo - Arby's:
+  - celo-inn
+  - arbys
+  1559511484|Personal:Misc|Celo - Drinks:
+  - celo-inn
+  1559511536|Auto:Fuel|Celo - Civic:
+  - 2017-honda-civic-sport
+  - celo-inn
+  1559511571|Personal:Eating Out|Celo - Garden Deli:
+  - garden-deli
+  - celo-inn
+  1559511598|Personal:Eating Out|Celo - Coffee:
+  - celo-inn
+  - coffee
+  1559511643|Personal:Charity|Celo - 3 Potholders - HforHumanity:
+  - habitat-for-humanity
+  1559511686|Personal:Entertainment|Celo - Emerald Village - 3lb Bucket:
+  - celo-inn
+  - emerald-village
+  1559511723|Personal:Eating Out|Celo - Lt Switzerland Cafe:
+  - celo-inn
+  - little-switzerland-cafe
+  1559511792|Personal:Eating Out|Celo - Tropical Grill:
+  - celo-inn
+  - tropical-grill
+  1559512075|Pets:Misc|Tootz - Board x 2 nights; Nail Trim:
+  - tootsie
+  - nail-trim
+  - boarding
+  1559512105|Pets:Medical|Rabies; Fecal Exam; Bordetella:
+  - tootsie
+  1559512366|Travel:Lodging|Celo - 2 rooms; 2 nights; bfast for 3 x 2 days:
+  - celo-inn
+  1559512963|Income:From Savings|From Savings:
+  - supplemental-funds
+  1559513714|Personal:Eating Out|Jimmys:
+  - jimmys-famous-hot-dogs
+  1559513818|Sixpence:Rollover|Balance Rolled Over from Previous Month: []
+  1559859011|Personal:Eating Out|Dulce - Coffee + Dessert:
+  - dulce-cafe
+  - coffee
+  1559859158|Personal:Video Games|Persona Q2 (3DS):
+  - nintendo-3ds
+  - persona
+  - craig
+  1559859903|Personal:Office Supplies|Pens; Eraser refill: []
+  1559859926|Personal:Electronics|Repair Mat:
+  - craig
+  1559860065|Personal:Books|Nate - Fontana art book:
+  - nathan
+  1559860091|Personal:Video Games|Tales of Zesteria (PS4):
+  - ps4
+  - craig
+  - amazon.com
+  1559942526|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  1559942682|Income:Salary|Cengage:
+  - cengage-group
+  - craig
+  1559942697|Transfer:Savings|Salary:
+  - salary
+  - craig
+  - cengage-group
+  1559942852|Transfer:Misc|To Nathan Checking - Duke TIP stuffs:
+  - nathan
+  - duke-tip
+  1559943040|Transfer:Allowance|Cate:
+  - cate
+  1559943059|Personal:Groceries|Xfer to Cate to re-imburse:
+  - 5520 middleton road
+  - food-lion
+  1560011456|Personal:Eating Out|Jimmy's:
+  - jimmys-famous-hot-dogs
+  1560011519|Home:Landscaping|Lowes - 5 solar lights:
+  - lowes
+  - 5520 middleton road
+  1560011693|Home:Landscaping|1 solar light:
+  - 5520 middleton road
+  1560011746|Home:Maintenance|grill brush, felt pads:
+  - lowes
+  - 5520 middleton road
+  1560094779|Personal:Eating Out|Randy's:
+  - randys-pizza
+  1560095055|Personal:Video Games|PS4 controller:
+  - ps4
+  - craig
+  1560095068|Personal:Electronics|small cutting mat:
+  - craig
+  - amazon.com
+  1560208407|Bills:Internet|AT&T:
+  - at-t
+  - 5520-middleton-road
+  1560208436|Bills:Phone|AT&T - $35 extra b/c call to England:
+  - at-t
+  - craig
+  - cate
+  - nathan
+  - oversees-call
+  1560209048|Loans:Car|$100 extra:
+  - 2017-honda-civic-sport
+  '1560209340|Medical:Doctor|Cate - ER #1?':
+  - cate
+  - emergency-room
+  1560209649|Home:Pest Control|Termite Plan renewal:
+  - terminix
+  - termite-plan
+  1560210391|Pets:Medicine|1800PetMeds - NextGard:
+  - tootsie
+  - nexgard
+  - petmeds.com
+  1560298235|Personal:Misc|Small, green spray bottle: []
+  1560298298|Home:Landscaping|Dirt; Stones; Plant:
+  - dirt
+  - stones
+  - 5520 middleton road
+  - lowes
+  1560605089|Personal:Eating Out|Sake Bomb:
+  - sake-bomb
+  1560605205|Home:Maintenance|Lowes - Buns; Bisquits; Lights; Pads:
+  - lowes
+  - 5520-middleton-road
+  1560605301|Personal:Eating Out|Arby's:
+  - arbys
+  1560605746|Home:Landscaping|2 solar lights:
+  - 5520 middleton road
+  1560605834|Personal:Eating Out|Randy's Pizza:
+  - randys-pizza
+  1560952139|Personal:Clothes|Cate - Socks:
+  - cate
+  1560952169|Personal:HABA|Dr. Bonner soap x 2; deo, etc:
+  - target
+  1560952193|Home:Furnishings|Door Mat:
+  - 5520-middleton-road
+  1560952573|Auto:Misc|Parking:
+  - parking
+  1560952864|Personal:Video Games|Added to Nintendo account + Hob:
+  - nswitch
+  - craig
+  1560953150|Personal:Eating Out|Craig - Arby's:
+  - craig
+  - arbys
+  1560953235|Bank:Fees|Nintendo - INTL POS Fee:
+  - nintendo
+  - intl-pos-fee
+  1560964562|Pets:Food|1 case canned; 1 bag treats:
+  - tootsie
+  1560964584|Pets:Medicine|1 bottle Vetsulin:
+  - tootsie
+  - vetsulin
+  1560964626|Personal:Eating Out|Craig - Arby's:
+  - craig
+  - arbys
+  1561158563|Personal:Eating Out|Torero's:
+  - toreros
+  1561158642|Home:Furnishings|2 Sets Queen sheets; Pillow:
+  - 5520 middleton road
+  - bedroom
+  1561158721|Home:Landscaping|Plants from Farmer's Market:
+  - farmers-market
+  - 5520 middleton road
+  1561158836|Transfer:Misc|Nathan - Gas:
+  - nathan
+  1561159016|Personal:Electronics|Apple IIGS Ethernet Card:
+  - craig
+  - apple-iigs
+  1561159148|Home:Landscaping|Solar Hanging Lantern set (2):
+  - 5520 middleton road
+  1561159225|Income:Salary|Cengage:
+  - cengage-group
+  - craig
+  1561159238|Transfer:Savings|Salary:
+  - salary
+  - craig
+  - cengage-group
+  1561159338|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  1561223203|Personal:Groceries|Blueberry & Blackberry pickin:
+  - blueberry-farm
+  - 5520-middleton-road
+  1561223297|Personal:Eating Out|Sweet Arielle @ FM:
+  - sweet-arielle
+  - farmers-market
+  1561223442|Personal:Tithes|MCUMC:
+  - mcumc
+  1561322710|Personal:Eating Out|Target - Starbucks coffee:
+  - starbucks
+  - coffee
+  1561322806|Home:Misc|Target - Canning Jars:
+  - target
+  - canning
+  - 5520-middleton-road
+  1561322849|Personal:Eating Out|Noodles & Co.:
+  - noodles-company
+  1561323250|Home:Mortgage|5520:
+  - 5520-middleton-road
+  - chase
+  1561323521|Bills:Gas|Stopped meter catch-up charges:
+  - 5520 middleton road
+  - dominion-energy
+  - stopped-meter
+  1561323860|Bills:Water/sewer|Unusually high for some reason:
+  - 5520 middleton road
+  - durham-county
+  1561938108|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  1561938169|Personal:Eating Out|ONC Deli & Subs - Lunch:
+  - oriental-deli
+  - lunch
+  1561938209|Personal:Eating Out|Village Rest. w/ Mom & Dad:
+  - village-restaurant
+  - linda-caroon
+  - tom-caroon
+  1561938259|Personal:Misc|Dollar General (Snacks, Pic Frame):
+  - dollar-general
+  1561938304|Personal:Misc|Cash for Croaker Fest:
+  - cash
+  - croaker-festival
+  1561938327|Bank:Fees|ATM Fee (First Citizens):
+  - first-citizens-bank
+  - atm-fee
+  1561938378|Personal:Eating Out|Beer x 2 (Village Brewery):
+  - village-brewery
+  - craig
+  - beer
+  1561938622|Subscriptions:Netflix|5520:
+  - 5520 middleton road
+  - tv-service
+  1561938736|Personal:Electronics|ESP32;8266;Feather M4, Ether. Ext cable:
+  - craig
+  - adafruit
+  1561938808|Auto:Fuel|Veloster?:
+  - 2016-hyundai-veloster
+  1561938865|Subscriptions:Hulu|5520:
+  - tv-service
+  1562016429|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  1562016494|Income:From Savings|Covering Stuff:
+  - supplemental-funds
+  1562016998|Personal:Electronics|AcroBee Lite BNF Yellow ++:
+  - acrobee
+  - quadcopters
+  - craig
+  - new-bee-drone
+  1562017115|Personal:Electronics|iPhone SE Refurb (Cate):
+  - cate
+  - iphone
+  1562017158|Personal:Charity|Patreon - Stant Litore:
+  - patreon
+  - stant-litore
+  1562017198|Subscriptions:Spotify|5520: []
+  1562017221|Sixpence:Rollover|Balance Rolled Over from Previous Month: []
+  1562106785|Personal:Eating Out|Zaxby's:
+  - zaxbys
+  1562106823|Auto:Misc|Civic - Basic Wash:
+  - 2017-honda-civic-sport
+  - car-wash
+  1562106952|Income:Reimbursement|Refund - New Bee Drone - AcroBee Out-of-stock :(:
+  - acrobee
+  - new-bee-drone
+  - quadcopters
+  - craig
+  1562179094|Personal:Electronics|NDB - Hummingbird BNF; 2 Batteries:
+  - new-bee-drone
+  - batteries
+  - craig
+  - quadcopters
+  1562179119|Income:Reimbursement|NBD - Shipping Credit:
+  - new-bee-drone
+  - craig
+  - ''
+  1562248524|Income:Salary|Cengage - $5 Less for some reason:
+  - cengage-group
+  - craig
+  1562248550|Transfer:Savings|Salary:
+  - salary
+  - cengage-group
+  - craig
+  1562249222|Personal:Groceries|Milk, ice cream, donuts:
+  - 5520 middleton road
+  - food-lion
+  1562249504|Transfer:Allowance|Nathan:
+  - nathan
+  1562249530|Transfer:Misc|Nathan - Hair cut:
+  - nathan
+  1562249886|Transfer:Allowance|Cate:
+  - cate
+  1562249900|Personal:Groceries|Cate - Petty Cash:
+  - 5520 middleton road
+  1562249917|Auto:Fuel|Cate - Petty Cash:
+  - 2016-hyundai-veloster
+  1562250216|Personal:Tithes|MCUMC:
+  - mcumc
+  1562371758|Personal:Electronics|Adafruit - PyGamer, etc:
+  - adafruit
+  - craig
+  1562371891|Pets:Medical|100ct Needles:
+  - tootsie
+  - needles
+  1562372192|Personal:Eating Out|KFC:
+  - kentucky-fried-chicken
+  1562372283|Personal:Eating Out|Cook Out - Craig:
+  - cook-out
+  - craig
+  1562449122|Home:Landscaping|Soil, stones, fertilizer:
+  - soil
+  - stones
+  - lowes
+  1562449186|Personal:Eating Out|Bean Traders:
+  - bean-traders
+  1562449228|Personal:Eating Out|Sweet Arielle - B'fast:
+  - sweet-arielle
+  - breakfast
+  1562515632|Personal:Eating Out|Chuy's:
+  - chuys
+  1562715996|Personal:Electronics|NDB - AcroBee Mockingbird; Frame pack, etc.:
+  - new-bee-drone
+  - acrobee
+  - quadcopters
+  1562716133|Personal:Electronics|AdaFruit - PyPortal; Button cap pack:
+  - adafruit
+  - craig
+  1562716267|Personal:Books|Craig - Earth by David Brin:
+  - craig
+  - kindle
+  - amazon.com
+  1562854416|Bills:Internet|AT&T:
+  - at-t
+  - 5520 middleton road
+  '1562855204|Medical:Doctor|Cate ER #2?':
+  - cate
+  - emergency-room
+  1562855413|Bills:Electricity|5520:
+  - 5520-middleton-road
+  - duke-energy
+  1562856505|Income:From Savings|Towards Civic Payment:
+  - supplemental-funds
+  1562856646|Loans:Car|Civic + Extra:
+  - 2017-honda-civic-sport
+  1562866057|Pets:Food|1 case canned; 2 bag treats:
+  - tootsie
+  1562866148|Personal:Eating Out|Jimmy's - Lunch:
+  - jimmys-famous-hot-dogs
+  - lunch
+  1562866699|Personal:Electronics|5" Quad Frame for BlkHawk:
+  - quadcopters
+  - craig
+  1562956644|Pets:Medicine|Heartworm pills (12pk):
+  - tootsie
+  - interceptor-plus
+  1563022111|Auto:Inspection|Civic:
+  - 2017-honda-civic-sport
+  1563022146|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  1563022206|Personal:Eating Out|Empanadas:
+  - empanadas
+  1563022333|Pets:Medical|Tootz - Exam; Eye Stain (Eye Scratch):
+  - tootsie
+  1563022349|Pets:Medicine|Tootz - Eye Cream:
+  - tootsie
+  1563022493|Personal:Groceries|Perkins - Peaches:
+  - perkins
+  - 5520 middleton road
+  1563022524|Personal:Groceries|Perkins - Pears - Cate:
+  - perkins
+  - 5520 middleton road
+  1563023196|Auto:Registration|Civic:
+  - 2017-honda-civic-sport
+  1563023212|Auto:Misc|DMV Online Conv Fee:
+  - dmv
+  - fees
+  1563130502|Home:Maintenance|Gas for Lawnmower: []
+  1563130729|Income:From Savings|Covering Cate:
+  - supplemental-funds
+  1563130929|Transfer:Misc|Cate - Misc Bills:
+  - cate
+  1563492641|Personal:Electronics|AdaFruit - PyPortal & PyGamer case; misc:
+  - adafruit
+  - craig
+  1563576732|Income:Salary|Cengage:
+  - cengage-group
+  - craig
+  1563576744|Transfer:Savings|Salary:
+  - salary
+  - craig
+  - cengage-group
+  1563576791|Personal:Eating Out|Pizza Hut:
+  - pizza-hut
+  1563639969|Bills:Gas|5520:
+  - 5520 middleton road
+  - dominion-energy
+  1563640143|Bills:Life Insurance|Nathan:
+  - nathan
+  - usaa
+  1563640401|Bills:Water/sewer|5520:
+  - 5520-middleton-road
+  - durham-county
+  1563640840|Home:Mortgage|Chase - 5520:
+  - chase
+  - 5520 middleton road
+  1563641720|Personal:Tithes|MCUMC:
+  - mcumc
+  1563745402|Personal:Eating Out|Moe's - After Church:
+  - moes-southwest-grill
+  1563745526|Personal:Electronics|Adafruti - Pyportal replacement screen, etc:
+  - adafruit
+  - craig
+  1563745590|Personal:Books|Craig - Waiting for Godot (Kindle):
+  - craig
+  - kindle
+  - amazon.com
+  1563918343|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  1563918465|Home:Landscaping|4 cubic yards dirt:
+  - dirt
+  - 5520-middleton-road
+  1564183554|Income:Reimbursement|Nate - iPhone Payment:
+  - nathan
+  - iphone
+  1564183572|Personal:Eating Out|Akashi:
+  - akashi
+  1564183672|Home:Furnishings|4x small loaf pans, pizza stone, etc:
+  - 5520-middleton-road
+  - kitchen
+  1564183727|Personal:Eating Out|Craig - Subway - Lunch:
+  - craig
+  - lunch
+  - subway
+  1564183927|Personal:Entertainment|BritBox - 3-month trial:
+  - britbox
+  - 5520 middleton road
+  - tv-service
+  - trial
+  1564353783|Personal:Eating Out|Moe's after Church:
+  - moes-southwest-grill
+  1564354382|Income:From Savings|Nate - August Rent:
+  - supplemental-funds
+  - nathan
+  1564609468|Personal:Eating Out|BK:
+  - burger-king
+  - craig
+  - lunch
+  1564609508|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  1564609602|Transfer:Misc|Zelle - Cate - RV Insurance:
+  - zelle
+  - cate
+  - 2017-coachmen-catalina
+  1564609833|Subscriptions:Netflix|5520:
+  - 5520-middleton-road
+  - tv-service
+  1564609911|Income:Interest|PNC Interest:
+  - pnc-bank
+  1564610086|Subscriptions:Hulu|5520:
+  - 5520 middleton road
+  - tv-service
+  1564953219|Personal:Eating Out|ONC Deli & Subs:
+  - oriental-deli
+  1564953262|Transfer:Allowance|Nathan:
+  - nathan
+  1564953394|Transfer:Allowance|Nathan - Grocs:
+  - nathan
+  1564953428|Home:Furnishings|Nathan - Stuff for School / Apartment:
+  - nathan
+  1564953531|College:Housing|Nathan:
+  - nathan
+  1564953552|College:Housing|Nathan:
+  - nathan
+  1564953587|Personal:Eating Out|ONC Deli after Church:
+  - oriental-deli
+  - lunch
+  1564953617|Transfer:Allowance|Cate:
+  - cate
+  1564953682|Personal:Groceries|Cate Petty Cash:
+  - 5520 middleton road
+  1564953703|Auto:Fuel|Cate Petty Cash:
+  - 2016-hyundai-veloster
+  1564953848|Income:Salary|Cengage:
+  - cengage-group
+  - craig
+  1564953876|Transfer:Savings|Salary:
+  - salary
+  - craig
+  - cengage-group
+  1564953998|Medical:Medicine|Cate Rx, Vitamins, etc:
+  - cate
+  - paxil
+  1564954023|Medical:Medicine|Cate Effixor:
+  - cate
+  - effixor
+  1564954093|Medical:Medicine|Cate - Alka Cold + Vita C:
+  - cate
+  - cold
+  1564954204|Personal:Groceries|Cate - Lion Coconut Coffee:
+  - amazon.com
+  1564954335|Personal:Electronics|AcroBee - Replacement Camera, etc.:
+  - new-bee-drone
+  - acrobee
+  - quadcopters
+  - craig
+  1564954553|Personal:Video Games|Grim Dawn - Forgotten Gods DLC:
+  - craig
+  1564954590|Personal:Charity|Patreon - Stant Litore:
+  - patreon
+  - stant-litore
+  1564955005|Personal:Eating Out|BoJos:
+  - bojangles
+  1565041774|Personal:HABA|Nate & 5520:
+  - nathan
+  1565041797|Personal:Clothes|Nate - Underwear:
+  - nathan
+  1565041820|Home:Misc|Poo bags, AA batteries, cleaning supplies:
+  - 5520-middleton-road
+  - amazon.com
+  1565041886|Personal:Eating Out|Cook out:
+  - cook-out
+  1565041926|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  1565042100|Auto:Repair|G6 - Oil, Tire Rotate, 90k tune up:
+  - 2009-pontiac-g6
+  '1565042216|Personal:Video Games|Fire Emblem: 3 Houses':
+  - craig
+  - nswitch
+  - fire-emblem
+  1565132876|Personal:Eating Out|BoJos:
+  - bojangles
+  1565132954|Home:Maintenance|Lowe's - Lauan Board:
+  - lowes
+  - 5520 middleton road
+  1565133286|College:Books & Materials|Fall 2019 - Books:
+  - nathan
+  1565133879|Bank:Fees|GOG - Intl POS Fee:
+  - gog.com
+  - intl-pos-fee
+  1565134003|College:Books & Materials|Fall 2019:
+  - nathan
+  1565134024|Sixpence:Rollover|Balance Rolled Over from Previous Month: []
+  1565277085|Auto:Repair|Veloster - Oil, Tire rotate, filters:
+  - 2016-hyundai-veloster
+  1565277156|RV:Storage|Jeff House:
+  - jeff-house
+  - cate
+  1565277207|Personal:Books|B&N - Puzzle book & mag:
+  - barnes-noble
+  - craig
+  1565277249|Personal:Eating Out|Fujisan:
+  - fujisan-japanese-steakhouse
+  1565277413|Bank:Fees|Nintendo - Intl POS Fee:
+  - nintendo
+  - intl-pos-fee
+  1565297930|College:Misc|U-Haul:
+  - u-haul
+  - nathan
+  1565354557|Personal:Eating Out|Papa John's:
+  - papa-johns
+  1565531165|Auto:Fuel|Nathan:
+  - nathan
+  1565531197|Auto:Fuel|U-Haul Truck - Durham:
+  - u-haul
+  1565531239|Personal:Eating Out|Chick-fil-a - Move in Food:
+  - chick-fil-a
+  1565531294|Travel:Lodging|Flintlock - $67 cabin + 1.25 ice cream:
+  - flintlock-campground
+  1565531434|Income:Reimbursement|Flintlock - Bad Smell - Couldn't Stay - Full Refund:
+  - flintlock-campground
+  1565531518|Personal:Eating Out|Subway:
+  - subway
+  1565531770|Personal:Groceries|For Nate - Move In day:
+  - nathan
+  1565531805|Home:Furnishings|Nate - Toilet brush/plunger; 5520 - Air mattress:
+  - nathan
+  - bathroom
+  1565532013|Auto:Fuel|U-Haul truck - Boone:
+  - u-haul
+  1565532056|Auto:Fuel|Nate - GG:
+  - nathan
+  - 2009-pontiac-g6
+  1565532434|Home:Misc|Musilin:
+  - craig
+  - 5520 middleton road
+  1565554153|Personal:Groceries|5520:
+  - 5520 middleton road
+  - food-lion
+  1565554359|Income:From Savings|Xfer From Savings:
+  - supplemental-funds
+  1565554794|Bills:Life Insurance|Craig:
+  - craig
+  - usaa
+  1565555006|Bills:Internet|5520:
+  - 5520 middleton road
+  - at-t
+  1565555031|Bills:Phone|AT&T:
+  - at-t
+  - craig
+  - cate
+  - nathan
+  1565555198|Bills:Electricity|5520:
+  - 5520 middleton road
+  - duke-energy
+  1565646673|Pets:Medical|Tootz - Heartworm Test:
+  - tootsie
+  1565646776|Pets:Food|1 case canned (+tax):
+  - tootsie
+  1565740577|Personal:Gifts|Nate BDay Card & Stickers:
+  - nathan
+  - birthday
+  1566071759|Personal:Eating Out|BoJos:
+  - bojangles
+  1566071789|Income:Salary|Cengage:
+  - cengage-group
+  - craig
+  1566071815|Transfer:Savings|Salary:
+  - salary
+  - craig
+  - cengage-group
+  1566071863|Personal:Eating Out|Geer St. Garden:
+  - geer-st-garden
+  1566071919|Personal:Misc|Dollar Tree:
+  - dollar-tree
+  1566072166|Home:Landscaping|Garden lights; sprinkler:
+  - 5520 middleton road
+  - lowes
+  1566072215|Home:Maintenance|Hose repair; Great Stuff, etc:
+  - 5520 middleton road
+  - lowes
+  1566072281|Personal:Video Games|Grandia HD + Extra:
+  - nswitch
+  - craig
+  - grandia
+  1566072524|Transfer:Misc|Nate - Gase & Hair cut:
+  - nathan
+  1566072763|Personal:Eating Out|Bojo:
+  - bojangles
+  1566074570|Bills:Life Insurance|Cate:
+  - cate
+  - usaa
+  1566074719|Bills:Life Insurance|Craig:
+  - craig
+  - usaa
+  1566074893|Bills:Water/sewer|5520:
+  - 5520-middleton-road
+  - durham-county
+  1566075051|Personal:Tithes|FBCENC:
+  - fbcenc
+  1566075154|Personal:Tithes|Durham Rescue Mission:
+  - durham-rescue-mission
+  1566075279|Personal:Tithes|UMCOR:
+  - umcor
+  1566075377|Personal:Tithes|MCUMC:
+  - mcumc
+  1566075796|Pets:Medical|100ct Needles:
+  - tootsie
+  - needles
+  1566142392|Personal:Office Supplies|100 Forever Stamps:
+  - usps
+  - stamps
+  1566142701|Personal:Office Supplies|General supplies (stamps, pens, paper, etc):
+  - 5520-middleton-road
+  - delete-me
+  1566142940|Personal:Groceries|Food Lion:
+  - 5520 middleton road
+  - food-lion
+  1566252249|Income:Reimbursement|Carmax - Civic payoff overpayment:
+  - carmax
+  - 2017-honda-civic-sport
+  1566252300|Personal:Groceries|5520:
+  - 5520 middleton road
+  - food-lion
+  1566252877|Personal:Misc|Craig - Cricket Bat & Ball:
+  - craig
+  - cricket
+  1566256439|Transfer:Misc|To Nathan Checking - Spanish Book:
+  - nathan
+  1566336287|Personal:Misc|Bird seed:
+  - cate
+  - bird-seed
+  1566336524|Home:Landscaping|1.5 tons of stones:
+  - 5520 middleton road
+  - stones
+  1566337012|Personal:Entertainment|Croquet Set:
+  - croquet
+  1566337075|Personal:Gifts|Various Garden Lights for Cate BDay:
+  - cate
+  - birthday
+  1566337521|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  1566337607|Bank:Fees|Intl POS Fee - Nintendo:
+  - intl-pos-fee
+  - nintendo
+  1566510866|RV:Insurance|Average over 12 Months. Only Pay Oct-Mar.:
+  - cate
+  - 2017-coachmen-catalina
+  1566511664|Personal:Eating Out|China Queen:
+  - china-queen
+  - craig
+  - lunch
+  1566511788|Personal:Books|Cate - Miss Fischer Cocaine Blues (Kindle):
+  - cate
+  - kindle
+  - amazon.com
+  1566591751|Personal:Eating Out|Craig - Lunch - Subway:
+  - subway
+  - lunch
+  - craig
+  1566591827|Personal:Eating Out|Cate - Lunch - BoJos:
+  - cate
+  - lunch
+  - bojangles
+  1566591873|Personal:Groceries|Cate Bday Stuff ++:
+  - cate
+  - birthday
+  - food-lion
+  1566592027|Income:Reimbursement|Nate - Payoff iPhone:
+  - nathan
+  - iphone
+  1566683195|Personal:Groceries|Something sweet for Cate:
+  - cate
+  - 5520 middleton road
+  - food-lion
+  1566856077|Home:Pest Control|Terminix Quarterly:
+  - terminix
+  - 5520 middleton road
+  1566856602|RV:Insurance|2017 Coachmen Catalina:
+  - 2017-coachmen-catalina
+  - usaa
+  1566857230|RV:Storage|Jeff House:
+  - jeff-house
+  - cate
+  1566942292|Pets:Food|Treats; Can & Bag food:
+  - tootsie
+  1566942310|Pets:Medicine|Vetsulin:
+  - tootsie
+  - vetsulin
+  1566943323|Personal:Books|Flying Too High - Cate - Kindle:
+  - cate
+  - kindle
+  - amazon.com
+  1566943381|Personal:Books|Speedy Death - Cate (Kindle):
+  - cate
+  - kindle
+  - amazon.com
+  1566943464|Personal:Tithes|Books for DD - Opening to God x 2:
+  - mcumc
+  - donuts-devotions
+  1566943992|Home:Mortgage|5520:
+  - 5520 middleton road
+  - chase
+  1566944317|Subscriptions:Netflix|5520:
+  - 5520-middleton-road
+  - tv-service
+  1566945191|Personal:Misc|Amazon - Unknown:
+  - amazon.com
+  1567198403|Personal:Eating Out|Craig - Lunch - Ruckus Pizza:
+  - craig
+  - lunch
+  - ruckus-pizza
+  1567198526|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  1567198617|Auto:Fuel|Veloster:
+  - 2016-hyundai-veloster
+  1567198669|Personal:Eating Out|Pulcinella's:
+  - pulcinellas
+  1567198733|Income:Salary|Cengage:
+  - cengage-group
+  - craig
+  1567198747|Transfer:Savings|Salary:
+  - salary
+  - craig
+  - cengage-group
+  1567198895|Personal:Books|Cate - Bats & Bones (Kindle):
+  - cate
+  - kindle
+  - amazon.com
+  1567199013|Subscriptions:Hulu|5520:
+  - 5520 middleton road
+  - tv-service
+  1567259646|Subscriptions:Spotify|5520: []
+  1567259835|College:Housing|Nathan:
+  - nathan
+  1567260194|Transfer:Allowance|Cate:
+  - cate
+  1567260307|Transfer:Allowance|Nathan:
+  - nathan
+  1567260324|Transfer:Allowance|Nathan - Grocs:
+  - nathan
+  1567269287|Home:Landscaping|4 azaleas; 1 yuka:
+  - 5520 middleton road
+  - lowes
+  1567269349|Personal:Eating Out|BoJos:
+  - bojangles
+  1567379065|Sixpence:Rollover|Balance Rolled Over from Previous Month: []
+  1567379103|Personal:Groceries|Donuts:
+  - 5520 middleton road
+  - food-lion
+  1567379142|Personal:Charity|Stant LItore:
+  - patreon
+  - stant-litore
+  1567545742|RV:Loan|Normal Payment:
+  - 2017-coachmen-catalina
+  1567639113|Personal:Groceries|5520:
+  - 5520-middleton-road
+  - food-lion
+  1567639208|Personal:Video Games|Nintendo - Torchlight 2; Root Letter; FF VIII + Extra:
+  - nswitch
+  - torchlight
+  - craig
+  - final-fantasy
+  1567639287|Personal:Electronics|Amazon Echo Auto:
+  - amazon.com
+  - echo-auto
+  - craig
+  - ''
+  1567889518|Personal:Eating Out|Randy's Pizza:
+  - randys-pizza
+  1567889572|Personal:Eating Out|Jimmy's:
+  - jimmys-famous-hot-dogs
+  1567889614|Personal:Groceries|Muffin mix:
+  - 5520-middleton-road
+  1567889895|Bank:Fees|Nintendo - Intl POS Fee:
+  - nintendo
+  - intl-pos-fee
+  1568155662|Income:From Savings|Covering Stuff:
+  - supplemental-funds
+  1568155762|Personal:Eating Out|Randy's w/ Mom & Dad:
+  - randys-pizza
+  - linda-caroon
+  - tom-caroon
+  1568155810|Personal:Groceries|ABC Store:
+  - abc-store
+  - 5520-middleton-road
+  1568156139|Bills:Internet|AT&T:
+  - at-t
+  - 5520 middleton road
+  '1568156159|Bills:Phone|AT&T ':
+  - at-t
+  - craig
+  - cate
+  - nathan
+  1568156392|Bills:Electricity|5520:
+  - 5520 middleton road
+  - duke-energy
+  1568466429|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  1568466572|Personal:Eating Out|Craig - Lunch - BK:
+  - craig
+  - lunch
+  - burger-king
+  1568466617|Personal:Eating Out|BoJos:
+  - bojangles
+  1568466756|Home:Maintenance|Gel Lube:
+  - 5520 middleton road
+  1568466777|Home:Landscaping|manure; chainsaw:
+  - 5520-middleton-road
+  - lowes
+  1568466921|Income:Salary|Cengage:
+  - cengage-group
+  - craig
+  1568466935|Transfer:Savings|Salary:
+  - salary
+  - cengage-group
+  - craig
+  1568579783|Personal:Groceries|FL - Donuts:
+  - food-lion
+  1568579837|Personal:Eating Out|Tijuana Flats:
+  - tijuana-flats
+  1568580068|Personal:HABA|Target - TP; Soap; Vitamins, etc:
+  - target
+  1568580085|Personal:Groceries|Target:
+  - target
+  - 5520 middleton road
+  1568581711|Personal:Electronics|Adafruit - DHT; ESP8266 Kit; FW DotStar & Proto etc:
+  - adafruit
+  - craig
+  1568755097|Personal:Books|Cate - Frenchman's Creek (Kindle):
+  - cate
+  - kindle
+  - amazon.com
+  1568755200|Personal:Clothes|Craig - Vans MTE Black/Choco:
+  - craig
+  - vans
+  1569012739|Home:Landscaping|Solar Fountain:
+  - 5520-middleton-road
+  1569012758|Personal:Clothes|Messenger bag:
+  - craig
+  1569086365|Personal:Recreation|4 kayaks x 1 hour:
+  - kayak-rental
+  - craig
+  - cate
+  - nathan
+  1569086416|Personal:Eating Out|Donna's Grill - B'fast:
+  - donnas-grill
+  1569086466|Home:Landscaping|2 azeleas:
+  - 5520 middleton road
+  - lowes
+  1569086510|Home:Landscaping|3 anemones:
+  - 5520 middleton road
+  - lowes
+  1569086751|Personal:Video Games|Puzzle Quest; Ni No Kuni (Switch) + extra:
+  - nswitch
+  - craig
+  1569331879|Auto:Insurance|USAA:
+  - usaa
+  1569332093|Bills:Gas|5520:
+  - 5520 middleton road
+  - dominion-energy
+  1569332689|Bills:Water/sewer|5520:
+  - 5520 middleton road
+  - durham-county
+  1569332710|Bills:Water/sewer|Annual Storm Water Fee:
+  - 5520 middleton road
+  - durham-county
+  - storm-water-fee
+  1569332931|Personal:Groceries|Donuts for D&D:
+  - donuts-devotions
+  - food-lion
+  1569332984|Personal:Eating Out|Moe's after church:
+  - moes-southwest-grill
+  1569333057|Transfer:Allowance|Zelle to Cate for Trip to Atlantic with Eva:
+  - zelle
+  1569333453|Auto:Fuel|Veloster:
+  - 2016-hyundai-veloster
+  1569333521|Home:Landscaping|Soil:
+  - dirt
+  - lowes
+  - 5520 middleton road
+  1569333584|Personal:Video Games|Intl POS Fee:
+  - intl-pos-fee
+  1569335436|RV:Insurance|Policy Renewal - Due 10-31-2019:
+  - usaa
+  - 2017-coachmen-catalina
+  - cate
+  1569444391|Personal:Eating Out|Craig - Jimmy's - Lunch:
+  - craig
+  - lunch
+  - jimmys-famous-hot-dogs
+  1569444486|Pets:Food|Tootz - 1 case can; 1 bg treats:
+  - tootsie
+  1569444802|Home:Mortgage|Chae - 5520:
+  - chase
+  - 5520-middleton-road
+  1569445222|RV:Storage|Jeff House:
+  - jeff-house
+  - cate
+  1569445488|Personal:Books|Cate - Jamaica Inn (Kindle):
+  - cate
+  - kindle
+  - amazon.com
+  1569445581|Personal:Entertainment|Brit Box:
+  - tv-service
+  - 5520-middleton-road
+  1569679165|Personal:Eating Out|BK:
+  - burger-king
+  - craig
+  1569679460|Income:Salary|Cengage:
+  - cengage-group
+  - craig
+  1569679476|Transfer:Savings|Salary:
+  - salary
+  - craig
+  - cengage-group
+  1569679708|RV:Loan|USAA:
+  - usaa
+  - 2017 coachmen catalina
+  1569679878|Transfer:Allowance|Nathan:
+  - nathan
+  1569679907|Transfer:Allowance|Nathan - Grocs:
+  - nathan
+  1569679954|College:Housing|Nathan:
+  - nathan
+  1569680141|Personal:Tithes|MCUMC:
+  - mcumc
+  1569680304|Subscriptions:Netflix|5520:
+  - 5520 middleton road
+  - tv-service
+  1569680365|Income:Interest|PNC Bank - Interest:
+  - pnc-bank
+  1569766641|Personal:Clothes|Craig - Old Navy - 3pr Shorts:
+  - craig
+  - old-navy
+  1569766740|Personal:Video Games|FF X/X-2 HD (Switch) + extra:
+  - final-fantasy
+  - nswitch
+  - craig
+  1569767054|Home:Landscaping|Cate - Duke Gardens Sale:
+  - cate
+  - duke-gardens
+  - 5520 middleton road
+  1569767221|Transfer:Allowance|Cate:
+  - cate
+  1569879227|Personal:Eating Out|Red Lobster:
+  - red-lobster
+  1569879296|Home:Landscaping|2 bg potting soil:
+  - 5520 middleton road
+  - lowes
+  1569879339|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  1570140848|Subscriptions:Spotify|5520: []
+  1570140895|Personal:Charity|Patreon:
+  - patreon
+  - stant-litore
+  1570140972|Personal:Entertainment|Amazon - Rent Jamaica Inn:
+  - amazon.com
+  - movie-rental
+  1570141265|Subscriptions:Hulu|5520:
+  - 5520 middleton road
+  - tv-service
+  1570141460|Personal:Video Games|Nintnedo - INTL POS Fee:
+  - nintendo
+  - intl-pos-fee
+  - craig
+  1570141584|Sixpence:Rollover|Balance Rolled Over from Previous Month: []
+  1570199917|Income:From Savings|Covering Stuff:
+  - supplemental-funds
+  1570393805|Personal:Eating Out|Thai China:
+  - thai-china-buffet
+  1570393854|Personal:Eating Out|Jimmy's:
+  - jimmys-famous-hot-dogs
+  1570393973|Personal:Groceries|Krispy Kreme - 1 Dozen:
+  - krispy-kreme
+  1570661189|Personal:Software|SizeUp for MacOS:
+  - macos
+  - craig
+  1570661275|Personal:Clothes|Craig - Old Navy - 3 shorts; 3 shirts:
+  - craig
+  - old-navy
+  1570661351|Pets:Medical|100ct Needles:
+  - tootsie
+  - needles
+  1570661479|Personal:Groceries|Amazon - Republic of Tea x 2:
+  - amazon.com
+  - republic-of-tea
+  - craig
+  - 5520 middleton road
+  1570661543|Personal:Groceries|Amazon - Coconut Coffee:
+  - amazon.com
+  - cate
+  1570742335|Personal:Video Games|Nintendo Online (Diff):
+  - nintendo
+  - nintendo-online
+  - craig
+  1570742388|Auto:Fuel|Civic:
+  - 2017-honda-civic-sport
+  1570742575|Bills:Electricity|Duke Energy:
+  - 5520 middleton road
+  - duke-energy
+  1570742824|Bills:Internet|AT&T:
+  - at-t
+  - 5520 middleton road
+  1570742844|Bills:Phone|AT&T:
+  - at-t
+  - craig
+  - cate
+  - nathan
+  1570743028|Bills:Water/sewer|5520:
+  - 5520 middleton road
+  1570743207|Bills:Life Insurance|Nathan:
+  - nathan
+  - usaa
+  1570743482|Personal:Tithes|Durham Rescue Mission:
+  - durham-rescue-mission
+  1570743588|Personal:Tithes|FBCENC:
+  - fbcenc
+  1570743710|Personal:Tithes|MCUMC:
+  - mcumc
+  1570829475|Income:Salary|Cengage:
+  - cengage-group
+  - craig
+  1570829490|Transfer:Savings|Salary:
+  - salary
+  - cengage-group
+  - craig
+  1570829526|Personal:Eating Out|Craig - BK:
+  - burger-king
+  - craig
+  1570829606|Personal:Books|Cate - Complete Father Brown (Kindle):
+  - cate
+  - kindle
+  - amazon.com
+  1570829709|Personal:Electronics|NDB - Acrobee Lite BNF; 5pk Gates, etc:
+  - new-bee-drone
+  - acrobee
+  - quadcopters
+  1570887003|Personal:Video Games|Nintendo - FFXII; Northgard; Extra:
+  - final-fantasy
+  - nswitch
+  - craig
+  1571085733|Personal:Groceries|D&D donuts & stuff:
+  - donuts-devotions
+  1571085793|Personal:Eating Out|Which Wich:
+  - which-wich
+  1571085840|Personal:Eating Out|Cook Out:
+  - cook-out
+  1571085889|Personal:Eating Out|Chick-fil-a:
+  - chick-fil-a
+  1571085941|Pets:Food|1 case canned:
+  - tootsie
+  '1571086194|Personal:Clothes|Craig - Old Navy ':
+  - old-navy
+  - craig
+  1571086294|Bank:Fees|Nintendo - POS Fee:
+  - nintendo
+  - intl-pos-fee
+  1571086333|Personal:Eating Out|Randy's Pizza:
+  - randys-pizza
+  1571086459|Bank:Fees|Nintendo - POS Fee:
+  - nintendo
+  - intl-pos-fee
+  - craig
+  1571348773|Transfer:Misc|Nathan - Gas + Haircut:
+  - nathan
+  1571348820|Personal:Eating Out|BoJos:
+  - bojangles
+  1571348941|Home:Maintenance|Christmas lights & Star; Filters , ...:
+  - christmas
+  - lowes
+  1571349049|Personal:Books|Dracula (Audible):
+  - audible.com
+  - craig
+  1571349173|Personal:Books|Earth (Audible):
+  - audible.com
+  - craig
+  1571505943|Personal:Groceries|Beer & Milk:
+  - 5520 middleton road
+  - beer
+  - food-lion
+  1571505990|Personal:Eating Out|Pizza Hut:
+  - pizza-hut
+  1571506088|Personal:Electronics|Amazon - Arlo Camera - Replace Backporch:
+  - amazon.com
+  - arlo
+  1571506161|Personal:Eating Out|Bean Traders - 2 coffee:
+  - bean-traders
+  - coffee
+  1571506277|Personal:Groceries|Melina's Fresh Pasta:
+  - farmers-market
+  - melinas-fresh-pasta
+  - 5520-middleton-road
+  1571506350|Personal:Groceries|9th St Bakery:
+  - ninth-street-bakery
+  - 5520-middleton-road
+  1571506438|Personal:Misc|Cate - Cut Flowers:
+  - cate
+  - flowers
+  1571506535|Personal:Groceries|Peppers:
+  - 5520 middleton road
+  - food-lion
+  1571506644|Personal:Electronics|Craig - Echo Buds headphones:
+  - craig
+  - echo-buds
+  - amazon.com
+  1571608667|Personal:Books|Garden Book & Mag; Puzzle Mag:
+  - craig
+  - cate
+  1571608815|Home:Landscaping|SFMkt - 4 plants:
+  - farmers-market
+  - 5520 middleton road
+  1571609172|Bank:Fees|Nintendo Intl POS Fee:
+  - nintendo
+  - intl-pos-fee
+  1571610455|RV:Registration|2017 Coachman Catalina:
+  - 2017-coachmen-catalina
+  1571610528|RV:Taxes|2017 Coachmen Catalina:
+  - 2017-coachmen-catalina
+  - cate
+  1571698226|Auto:Fuel|Cate - Veloster:
+  - 2016-hyundai-veloster
+  1571698283|Personal:Entertainment|NC State Fair x 2:
+  - nc-state-fair
+  1571698323|Personal:Groceries|Food Lion:
+  - 5520 middleton road
+  - food-lion
+  1571698435|Personal:Eating Out|B'Fast:
+  - breakfast
+  1571698493|Personal:Entertainment|Cash for NC State Fair:
+  - cash
+  - nc-state-fair
+  - craig
+  - cate
+  1571797280|College:Misc|Refill Express Account:
+  - appalachian-state-university
+  - nathan
+  - express-account
+  1571797338|Auto:Fuel|Craig - Civic:
+  - 2017-honda-civic-sport
+  1572099673|Income:Salary|Cengage:
+  - cengage-group
+  - craig
+  1572099701|Transfer:Savings|Salary:
+  - salary
+  - cengage-group
+  - craig
+  1572099756|Personal:Eating Out|BoJos:
+  - bojangles
+  1572099849|Personal:Groceries|Frosting + Flowers:
+  - 5520 middleton road
+  - food-lion
+  1572099929|Home:Landscaping|dirt; pots; plant; etc.:
+  - lowes
+  - 5520-middleton-road
+  1572186061|Personal:Groceries|FL - Roast Chicken, ...:
+  - food-lion
+  - 5520 middleton road
+  1572186108|Personal:Groceries|Halloween Candy:
+  - halloween
+  - 5520 middleton road
+  1572186198|Home:Landscaping|Dirt; Plant caddy & saucer:
+  - dirt
+  - 5520 middleton road
+  1572186237|Personal:Eating Out|Jimmy's FHD:
+  - jimmys-famous-hot-dogs
+  1572186445|Subscriptions:Britbox|Add-on to Amazon Prime:
+  - amazon.com
+  - tv-service
+  1572186565|Subscriptions:Britbox|First full-price month:
+  - 5520 middleton road
+  - tv-service
+  1572187649|Home:Mortgage|5520:
+  - 5520 middleton road
+  - chase
+  1572188056|Bills:Gas|5520:
+  - 5520-middleton-road
+  - dominion-energy
+  1572188397|Personal:Subscriptions:Misc|Games World of Puzzles (Renewal):
+  - games-world-of-puzzles
+  - craig
+  1572188668|RV:Storage|Jeff House:
+  - jeff-house
+  - cate
+  - 2017-coachmen-catalina
+  '1572271827|Transfer:Allowance|Nathan ':
+  - nathan
+  1572271921|Home:Maintenance|Searc - HVAC - Furnace Checkup:
+  - sears
+  - hvac
+  - 5520 middleton road
+  1572277310|Transfer:Allowance|Cate - Home Goods (less allowance):
+  - cate
+  1572277352|Transfer:Allowance|Cate - (minus Home Goods stuff):
+  - cate
+  1572471823|Medical:Doctor|Craig - Arm Spot Biopsy:
+  - craig
+  - biopsy
+  - duke-health
+  1572472344|Income:From Savings|Biopsy; Nate Rent, etc.:
+  - supplemental-funds
+  1572472836|College:Housing|Nate - Boone HCR:
+  - nathan
+  1572472959|Subscriptions:Netflix|5520:
+  - 5520 middleton road
+  - tv-service
+  1572473058|Subscriptions:Hulu|5520:
+  - 5520-middleton-road
+  - tv-service
+  1572473107|Income:Interest|PNC:
+  - pnc-bank
+  1572710659|Personal:Eating Out|Akashi:
+  - akashi
+  1572710705|Personal:Groceries|Food Lion:
+  - food-lion
+  - 5520-middleton-road
+  1572710829|Personal:Misc|Wrist Exerciser:
+  - craig
+  1572710873|Personal:Charity|Patreon - Stant Litore:
+  - patreon
+  - stant-litore
+  1572711228|RV:Loan|Coachmen Catalina:
+  - 2017 coachmen catalina
+  1573002015|Personal:Groceries|Orchard - Persimmons:
+  - persimmons
+  - 5520-middleton-road
+  1573002318|Personal:Groceries|Blueberry Green Tea:
+  - amazon.com
+  - 5520 middleton road
+  1573002375|Personal:Misc|Chess Puzzle Piece (Queen); Wrist Gyro:
+  - craig
+  1573002406|Personal:Books|Art Book - Kandinski:
+  - nathan
+  1573002504|Personal:Eating Out|Cup-a-Joe:
+  - cup-a-joe
+  1573002573|Personal:Groceries|Beer & Pizza Fixin's:
+  - 5520 middleton road
+  - pizza
+  - beer
+  - food-lion
+  1573002719|Pets:Food|1 case can; 2 bg treats:
+  - tootsie
+  1573002744|Pets:Medicine|Vetsulin:
+  - tootsie
+  - vetsulin
+  1573003070|Subscriptions:Spotify|5520: []
+  1573003189|Sixpence:Rollover|Balance Rolled Over from Previous Month: []
+  '1573138912|Personal:Video Games|NFS: Heat (PS4)':
+  - ps4
+  - need-for-speed
+  - craig
+  1573139023|Personal:Video Games|Death Stranding (PS4):
+  - ps4
+  - craig
+  - death-stranding
+  1573139246|Auto:Fuel|Craig - Civic:
+  - 2017-honda-civic-sport
+  1573151150|Personal:Eating Out|Jimmy's:
+  - jimmys-famous-hot-dogs
+  1573316095|Income:Salary|Cengage:
+  - cengage-group
+  - craig
+  1573316128|Transfer:Savings|Salary:
+  - salary
+  - cengage-group
+  - craig
+  1573316198|Personal:Groceries|Firewood & Cookies:
+  - 5520 middleton road
+  - food-lion
+  1573316257|Personal:Charity|Wikipedia Donation:
+  - wikimedia-foundation
+  1573316342|Personal:Video Games|Nintendo - Prof Layton:
+  - nswitch
+  - professor-layton
+  - craig
+  1573316593|Transfer:Misc|Zelle to Cate - Plants:
+  - zelle
+  - cate
+  1573317201|Personal:Tithes|FBCENC:
+  - fbcenc
+  1573317357|Personal:Tithes|UMCOR:
+  - umcor
+  1573317511|Personal:Tithes|Durham Rescue Mission:
+  - durham-rescue-mission
+  1573317718|Personal:Charity|Wounded Warrior Project:
+  - wounded-warrior-project
+  1573317879|Bills:Gas|5520:
+  - 5520-middleton-road
+  - dominion-energy
+  1573318214|Bills:Internet|AT&T:
+  - at-t
+  - craig
+  - cate
+  - nathan
+  1573318232|Bills:Phone|AT&T:
+  - at-t
+  - craig
+  - cate
+  - nathan
+  1573318413|Bills:Electricity|5520:
+  - 5520 middleton road
+  - duke-energy
+  '1573318600|Bills:Life Insurance|Craig #1':
+  - craig
+  - usaa
+  '1573318803|Bills:Life Insurance|Craig #2':
+  - craig
+  - usaa
+  1573318934|Bills:Life Insurance|Cate:
+  - cate
+  - usaa
+  1573319781|RV:Registration|2017 Coachmen Catalina:
+  - 2017 coachmen catalina
+  - durham-county
+  1573319816|RV:Taxes|2017 Coachmen Catalina:
+  - 2017 coachmen catalina
+  1573319962|Personal:Tithes|MCUMC:
+  - mcumc
+  1573405208|Personal:Eating Out|Chuy's:
+  - chuys
+  1573405288|Home:Furnishings|Hobby Lobby - Ribbon:
+  - hobby-lobby
+  1573405712|Personal:Groceries|Target - Donuts & Cream:
+  - target
+  - 5520 middleton road
+  1573405741|Personal:HABA|Target - Various:
+  - target
+  - 5520 middleton road
+  1573405768|Personal:Electronics|Mouse; Lightning Cable, etc.:
+  - craig
+  - amazon.com
+  1573684788|College:Misc|Nate - Refill Express Account:
+  - nathan
+  - appalachian-state-university
+  - express-account
+  1573685255|Auto:Fuel|Craig - Civic:
+  - 2017-honda-civic-sport
+  1573686121|Personal:Eating Out|Randy's Pizza:
+  - randys-pizza
+  1573686258|Personal:Video Games|Intl POS Fee:
+  - intl-pos-fee
+  1573838064|Personal:Video Games|Pokemon Shield; Jedi Fallen Order:
+  - pokemon
+  - star-wars
+  - craig
+  - nintendo
+  - nswitch
+  '1573924505|Home:Maintenance|Toilet: Fill Valve & Hose':
+  - lowes
+  - 5520-middleton-road
+  - bathroom
+  1573924556|Home:Maintenance|2" toilet flapper:
+  - 5520 middleton road
+  - bathroom
+  - toilet
+  1573924602|Personal:Eating Out|Craig - BoJos Breakfast:
+  - craig
+  - bojangles
+  - breakfast
+  1574029231|Home:Misc|Bird Seed:
+  - 5520 middleton road
+  - bird-seed
+  - cate
+  1574029294|Personal:Eating Out|Which Wich:
+  - which-wich
+  1574029379|Personal:Eating Out|Thai China Buffet:
+  - thai-china-buffet
+  1574029422|Personal:Groceries|Food Lion:
+  - 5520 middleton road
+  - food-lion
+  1574029499|Personal:HABA|Cate - Hair Color:
+  - cate
+  '1574029829|Personal:Entertainment|Amazon: Rent Vertigo':
+  - amazon.com
+  - movie-rental
+  1574204017|Medical:Optometrist|Nate - lens.com - 6m of Contacts:
+  - lens.com
+  - nathan
+  1574208731|Home:Misc|Lowes:
+  - lowes
+  - 5520 middleton road
+  1574348823|Personal:Eating Out|Tum Yum: []
+  1574348860|Personal:Groceries|Beer:
+  - 5520 middleton road
+  - beer
+  1574349799|Pets:Medical|Tootsie - Needles:
+  - tootsie
+  - needles
+  1574349822|Pets:Medicine|6pk Flea & Tick:
+  - tootsie
+  - nexgard
+  1574365795|Personal:Eating Out|BoJo - Lunch:
+  - bojangles
+  1574365860|Home:Landscaping|Tulip bulbs; Dirt:
+  - 5520-middleton-road
+  - lowes
+  1574365903|Personal:Groceries|eggs; etc:
+  - 5520 middleton road
+  - food-lion
+  1574631602|Income:Salary|Cengage:
+  - cengage-group
+  - craig
+  1574631620|Transfer:Savings|Salary:
+  - salary
+  - craig
+  - cengage-group
+  1574631686|Personal:Eating Out|ONC Deli:
+  - oriental-deli
+  1574631738|Auto:Fuel|Cate - Veloster:
+  - 2016-hyundai-veloster
+  1574633450|Christmas:Gifts|Christmas - Angel Tree - MCUMC:
+  - mcumc
+  - angel-tree
+  1574633513|Personal:Groceries|Cardamon Tea:
+  - 5520-middleton-road
+  1574633764|Home:Mortgage|Chase - 5520:
+  - chase
+  - 5520-middleton-road
+  1574634124|RV:Insurance|2017 Coachmen Catalina:
+  - 2017-coachmen-catalina
+  1574634358|Bills:Water/sewer|5520 (highter than usual):
+  - 5520 middleton road
+  - durham-county
+  1574634659|Home:Pest Control|Terminix Quarterly:
+  - terminix
+  1574634712|Auto:Insurance|USAA:
+  - usaa
+  1574634934|RV:Storage|Jeff House:
+  - jeff-house
+  - cate
+  1574635308|College:Housing|Nate:
+  - nathan
+  1574886443|Auto:Fuel|2017 Honda Civic:
+  - 2017-honda-civic-sport
+  1574886491|Personal:Groceries|Thanksgiving & Nate:
+  - thanksgiving
+  - 5520 middleton road
+  1574886817|Christmas:Gifts|Nate - Bad Brains Hat:
+  - nathan
+  1574886914|Christmas:Gifts|Cate - Seedstarting System:
+  - cate
+  1574887076|Subscriptions:Britbox|5520:
+  - 5520-middleton-road
+  - tv-service
+  1574887139|Personal:Eating Out|The Bean - Coffee:
+  - the-bean
+  - coffee
+  1574887182|Personal:Eating Out|The Bean - Coffee:
+  - the-bean
+  - coffee
+  1574887229|Subscriptions:Netflix|5520:
+  - 5520 middleton road
+  - tv-service
+  1575149125|Transfer:Allowance|Cate:
+  - cate
+  1575149157|Transfer:Allowance|Nathan:
+  - nathan
+  1575149263|Personal:Eating Out|Moe's, Nate:
+  - moes-southwest-grill
+  - nathan
+  1575149448|Subscriptions:Hulu|5520: []
+  1575150765|Personal:Software|AnyList:
+  - ios
+  - anylist
+  - craig
+  1575233477|Subscriptions:Spotify|5520: []
+  1575327001|Home:Furnishings|Cate - Christmas Ornaments:
+  - christmas
+  - 5520-middleton-road
+  1611093698|Medical:Optometrist|Exams, Lenses, Frames, Contacts, etc:
+  - craig
+  - cate
+  1617741717|Pets:Food|Bag of Dry; Maybe Treats:
+  - piper
+  1617829028|Pets:Medical|Yearly Exam, Tests & Vaccinations:
+  - piper
+  1640901460|Auto:Insurance|Nathan:
+  - usaa
+  - 2017-hyundai-accent
+  1641137293|Home:Maintenance|General Maintenance:
+  - 5520-middleton-road
+  - delete-me
+  1641138426|Pets:Medicine|Interceptor (Heartworms):
+  - piper
+  - interceptor-plus
+  1641138486|Pets:Medicine|NexGard (Flea & Tick):
+  - piper
+  - nexgard
+  1645136859|Subscriptions:Paramount+|1 year subscription:
+  - tv-service
+  1673799083|Subscriptions:Nintendo Online|Nintendo Online:
+  - craig
+  1673801400|Pets:Medicine|Misc Expences:
+  - piper
+  - delete-me
+  '1678391279|Subscriptions:Britbox|Yearly Thru BritBox ':
+  - tv-service
+  1684692076|Bills:Life Insurance|Policy Inherited from Dad:
+  - tom-caroon
+  - craig
+  - farm-bureau
+  1705875516|Subscriptions:Icloud|iCloud+ 50GB:
+  - apple.com
+  - craig
+  - cate
+  - nathan
+timezone: US/Eastern

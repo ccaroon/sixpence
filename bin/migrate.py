@@ -199,8 +199,10 @@ class DbMigrator:
         file_name = os.path.basename(self.__old_db_path)
         self.__new_db_path = f"{self.__working_dir}/{file_name.capitalize()}.json"
 
+        cwd = os.path.dirname(__file__)
+
         self.__config = Config.initialize(
-            f"{self.__working_dir}/migration.yml", transient=["session"])
+            f"{cwd}/migration.yml", transient=["session"])
         self.__config.set("session:env", "prod")
         self.__config.set("session:docs_dir", self.__working_dir)
         self.__icon_search = IconSearch()
