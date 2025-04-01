@@ -11,8 +11,7 @@ os_map = {
     "Darwin": {
         "target": "macos",
         "exe": "Sixpence.app",
-        # TODO: ???
-        "install_path": None
+        "install_path": "/Applications"
     },
 }
 
@@ -50,7 +49,8 @@ def install(ctx):
     if os_name == "Linux":
         ctx.run(f"cp -a build/{target} {install_path}", echo=True)
     elif os_name == "Darwin":
-        print(f"=> Darwin install NOT IMPLEMENTED YET")
+        exe = os_map.get(os_name).get("exe")
+        ctx.run(f"cp -a build/{target}/{exe} {install_path}", echo=True)
     else:
         print(f"=> Error: Don't know to install for {os_name}.")
 
