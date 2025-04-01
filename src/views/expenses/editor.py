@@ -28,6 +28,8 @@ class ExpenseEditor:
         )
         self.__page.overlay.append(self.__control)
 
+        self.__tag_aliases = self.__page.session.get("config").get("tag_aliases",{})
+
 
     def __find_category(self, keyword):
         category = keyword
@@ -209,8 +211,15 @@ class ExpenseEditor:
 
     def __on_tags_blur(self, evt):
         tag_str = evt.control.value
-        tag_names = tag_str.split(",")
-        tag_names = [Tag.normalize(tg) for tg in tag_names]
+        input_tags = tag_str.split(",")
+
+        tag_names = []
+        for tg in input_tags:
+            tg = Tag.normalize(tg)
+            if tg in self.__tag_aliases:
+                tg = Tag.normalize(self.__tag_aliases.get(tg))
+
+            tag_names.append(tg)
 
         unknown_tags = []
         for tg_name in tag_names:

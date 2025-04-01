@@ -24,6 +24,8 @@ class BudgetEditor:
 
         self.__history_prompt = HistoryPrompt(page)
 
+        self.__tag_aliases = self.__page.session.get("config").get("tag_aliases",{})
+
 
     def __update_color(self, amount):
         # Change the color of the container based on whether it's
@@ -46,8 +48,15 @@ class BudgetEditor:
 
     def __on_tags_blur(self, evt):
         tag_str = evt.control.value
-        tag_names = tag_str.split(",")
-        tag_names = [Tag.normalize(tg) for tg in tag_names]
+        input_tags = tag_str.split(",")
+
+        tag_names = []
+        for tg in input_tags:
+            tg = Tag.normalize(tg)
+            if tg in self.__tag_aliases:
+                tg = Tag.normalize(self.__tag_aliases.get(tg))
+
+            tag_names.append(tg)
 
         unknown_tags = []
         for tg_name in tag_names:
