@@ -55,7 +55,9 @@ def install(ctx):
         print(f"=> Error: Don't know to install for {os_name}.")
 
 
-@task
+@task(
+    aliases=["build-clean"]
+)
 def clean_build(ctx):
     """ Clean Up Stuff """
     ctx.run("rm -rf build/")
