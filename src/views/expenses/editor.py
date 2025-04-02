@@ -59,7 +59,18 @@ class ExpenseEditor:
 
     def __on_amount_blur(self, evt):
         if tools.is_numeric(str(evt.control.value)):
+            cat_name = self.__category_ctrl.value
+            budget_items = self.__budget_by_cat.get(cat_name)
+
             amount = float(evt.control.value) if evt.control.value else 0.0
+
+            # If Budget item is Expense, ensure that the amount is negative
+            if (budget_items and
+                budget_items[0].type == Budget.TYPE_EXPENSE and
+                amount > 0.0):
+                amount *= -1
+                evt.control.value = amount
+
             self.__update_color(amount)
 
 

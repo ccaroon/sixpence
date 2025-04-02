@@ -246,14 +246,19 @@ class ExpensesView(BaseView):
         self.__set_month(next_month)
 
 
+    def __on_recalc_rollover(self, evt):
+        Expense.update_rollover(self.__start_date, force_update=True)
+        self._update()
+
+
     # TODO: factor out to a new class
     def _layout_navbar(self):
         self.__menu = ft.PopupMenuButton(
             icon=ft.Icons.MENU,
             items=[
-                ft.PopupMenuItem(icon=ft.Icons.FORMAT_LIST_BULLETED,
-                    text="Placeholder Item", checked=True,
-                    on_click=lambda evt: None)
+                ft.PopupMenuItem(icon=ft.Icons.CURRENCY_EXCHANGE,
+                    text="Recalculate Rollover", checked=False,
+                    on_click=self.__on_recalc_rollover)
             ]
         )
 
