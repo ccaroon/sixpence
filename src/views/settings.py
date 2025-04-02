@@ -1,9 +1,9 @@
+import dateutil
+
 import flet as ft
 
 import utils.constants as const
 from views.base import Base as BaseView
-
-# TODO: add `app:timezone`
 
 class Settings(BaseView):
     def __init__(self, page):
@@ -57,38 +57,42 @@ class Settings(BaseView):
         )
 
 
-    def __handle_on_save(self, evt):
+    def __on_save_click(self, evt):
             self.__cfg.save()
             self.__snack_msg("Settings Saved")
 
 
+    def __on_keep_change(self, evt):
+        new_value = round(evt.control.value)
+        self.__cfg.set("backup:keep", new_value)
+
+        self.__keep_text.value = new_value
+        self.__keep_text.update()
+
+
+    def __on_choose_path(self, evt):
+        self.__cfg.set("backup:path", evt.path)
+
+        self.__backup_path_text.value = evt.path
+        self.__backup_path_text.update()
+
+
     def __backup_controls(self):
-        keep_text = ft.Text(
+        self.__keep_text = ft.Text(
             f"{self.__cfg.get('backup:keep')}",
             theme_style=ft.TextThemeStyle.TITLE_LARGE,
             text_align=ft.TextAlign.CENTER,
             expand=1
         )
 
-        def on_slider_change(evt):
-            new_value = round(evt.control.value)
-            self.__cfg.set("backup:keep", new_value)
-            keep_text.value = new_value
-            keep_text.update()
-
-        def on_choose_path(evt):
-            self.__cfg.set("backup:path", evt.path)
-            backup_path_text.value = evt.path
-            backup_path_text.update()
-
-        backup_path_text = ft.Text(
+        self.__backup_path_text = ft.Text(
             f"{self.__cfg.get('backup:path')}",
             theme_style=ft.TextThemeStyle.TITLE_LARGE,
             text_align=ft.TextAlign.CENTER,
             expand=10
         )
         file_picker = ft.FilePicker(
-            on_result=on_choose_path
+            on_result=self.__on_choose_path
         )
         self._page.overlay.append(file_picker)
 
@@ -110,13 +114,13 @@ class Settings(BaseView):
                                 ],
                                 expand=1
                             ),
-                            keep_text,
+                            self.__keep_text,
                             ft.Slider(
                                 label="Keep {value} Backup Files",
                                 min=1, max=30,
                                 divisions=30,
                                 value=self.__cfg.get("backup:keep"),
-                                on_change_end=on_slider_change,
+                                on_change_end=self.__on_keep_change,
                                 expand=10
                             )
                         ]
@@ -136,7 +140,7 @@ class Settings(BaseView):
                                 ],
                                 expand=1
                             ),
-                            backup_path_text,
+                            self.__backup_path_text,
                             ft.ElevatedButton(
                                 "Choose Path",
                                 on_click=lambda _: file_picker.get_directory_path(),
@@ -149,7 +153,7 @@ class Settings(BaseView):
                             ft.ElevatedButton(
                                 "Save",
                                 icon=ft.Icons.SAVE,
-                                on_click=self.__handle_on_save
+                                on_click=self.__on_save_click
                             )
                         ],
                         alignment=ft.MainAxisAlignment.CENTER
@@ -158,15 +162,27 @@ class Settings(BaseView):
             )
         )
 
+
+    def __on_mode_change(self, evt):
+        new_mode = list(evt.control.selected)[0]
+        self.__cfg.set("app:mode", new_mode)
+        self._page.theme_mode = new_mode
+        self._page.update()
+
+
+    def __on_timezone_blur(self, evt):
+        new_tz = evt.control.value
+
+        if dateutil.tz.gettz(new_tz):
+            self.__cfg.set("app:timezone", new_tz)
+            evt.control.error_text = None
+        else:
+            evt.control.error_text = "Invalid Time Zone"
+
+        evt.control.update()
+
+
     def __app_controls(self):
-
-        def on_mode_change(evt):
-            new_mode = list(evt.control.selected)[0]
-            self.__cfg.set("app:mode", new_mode)
-            self._page.theme_mode = new_mode
-            self._page.update()
-
-
         return ft.Container(
             ft.Column(
                 [
@@ -186,7 +202,7 @@ class Settings(BaseView):
                                 expand=1
                             ),
                             ft.SegmentedButton(
-                                on_change=on_mode_change,
+                                on_change=self.__on_mode_change,
                                 selected=[self.__cfg.get("app:mode")],
                                 segments=[
                                     ft.Segment(
@@ -210,10 +226,32 @@ class Settings(BaseView):
                     ),
                     ft.Row(
                         [
+                            ft.Column(
+                                [
+                                    ft.Text(
+                                        "Time Zone",
+                                        weight=ft.FontWeight.BOLD,
+                                        theme_style=ft.TextThemeStyle.TITLE_LARGE
+                                    ),
+                                    ft.Text(
+                                        "IANA Defined Time Zone",
+                                    ),
+                                ],
+                                expand=1
+                            ),
+                            ft.TextField(
+                                label="Time Zone",
+                                value=self.__cfg.get("app:timezone"),
+                                on_blur=self.__on_timezone_blur
+                            )
+                        ]
+                    ),
+                    ft.Row(
+                        [
                             ft.ElevatedButton(
                                 "Save",
                                 icon=ft.Icons.SAVE,
-                                on_click=self.__handle_on_save
+                                on_click=self.__on_save_click
                             )
                         ],
                         alignment=ft.MainAxisAlignment.CENTER
@@ -232,9 +270,9 @@ class Settings(BaseView):
 
 
     def handle_keyboard_event(self, event):
-        if event.ctrl:
+        if event.ctrl or event.meta:
             if event.key == "S":
-                self.__handle_on_save(None)
+                self.__on_save_click(None)
 
 
 
