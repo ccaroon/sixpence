@@ -1,8 +1,6 @@
 from models.base import Base
 from models.taggable import Taggable
 
-from utils.date_helper import DateHelper
-
 class Expense(Taggable, Base):
     TYPE_INCOME = 0
     TYPE_EXPENSE = 1

@@ -1,7 +1,6 @@
 import flet as ft
 import screeninfo
 
-import locale
 import os
 import pprint
 
@@ -10,6 +9,7 @@ from app.config import Config
 from controls.nav_rail import NavRail
 from controls.router import Router
 
+from utils.locale import Locale
 from utils.archive import Archive
 
 from views.about import About
@@ -24,7 +24,8 @@ class Sixpence:
     SCREEN_SCALE_HEIGHT = .80 #.90
 
     def __init__(self, page):
-        locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
+        # TODO: don't hard-code locale
+        Locale.init("en_US.UTF-8")
 
         self.__app_name = "sixpence"
         self.__page = page

@@ -1,11 +1,10 @@
 import flet as ft
 
 import arrow
-import locale
 import pprint
 
 import utils.tools
-from utils. date_helper import DateHelper
+from utils.locale import Locale
 import utils.constants as const
 
 from models.budget import Budget
@@ -16,7 +15,7 @@ from views.expenses.editor import ExpenseEditor
 class ExpensesView(BaseView):
 
     def __init__(self, page):
-        now = DateHelper.now()
+        now = Locale.now()
         self.__start_date = now.floor("month")
         self.__end_date = now.ceil("month")
 
@@ -60,7 +59,7 @@ class ExpensesView(BaseView):
                 tag_color = exp_color_alt
                 exp_total += item.amount
 
-            display_amt = f"{locale.currency(item.amount, grouping=True)}"
+            display_amt = f"{Locale.currency(item.amount)}"
 
             tags = []
             for tag_name in item.tag_list():
@@ -115,14 +114,10 @@ class ExpensesView(BaseView):
 
             self.__list_view.controls.append(tile)
 
-        self.__income_total.label.value = locale.currency(
-            inc_total, grouping=True)
-        self.__expense_total.label.value = locale.currency(
-            exp_total, grouping=True)
+        self.__income_total.label.value = Locale.currency(inc_total)
+        self.__expense_total.label.value = Locale.currency(exp_total)
         net_balance = inc_total + exp_total
-        self.__net_balance.label.value = locale.currency(
-            net_balance, grouping=True
-        )
+        self.__net_balance.label.value = Locale.currency(net_balance)
         self.__net_balance.bgcolor = const.COLOR_INCOME if net_balance >= 0 else const.COLOR_EXPENSE
 
         self._page.update()
@@ -183,7 +178,7 @@ class ExpensesView(BaseView):
 
     def __on_new(self, evt):
         expense = Expense(
-            date=DateHelper.now()
+            date=Locale.now()
         )
         self.__editor.edit(expense, self.__budget)
 
@@ -204,7 +199,7 @@ class ExpensesView(BaseView):
             [
                 ft.Text("Are you sure you want to delete this Expense?"),
                 ft.Text(
-                    f"{item.date.format("MMM DD, YYYY")} | {item.category} | {locale.currency(item.amount, grouping=True)}?",
+                    f"{item.date.format("MMM DD, YYYY")} | {item.category} | {Locale.currency(item.amount)}?",
                     weight=ft.FontWeight.BOLD
                 )
             ],
@@ -228,7 +223,7 @@ class ExpensesView(BaseView):
 
 
     def __on_current_month(self, evt):
-        self.__set_month(DateHelper.now())
+        self.__set_month(Locale.now())
 
 
     def __on_date_change(self, evt):

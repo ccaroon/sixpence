@@ -1,12 +1,12 @@
 import flet as ft
 
-import locale
 import pprint
 
 import utils.tools
 import utils.constants as const
 
 from models.budget import Budget as BudgetItem
+from utils.locale import Locale
 from views.base import Base as BaseView
 from views.budget.editor import BudgetEditor
 from views.budget.history.view import HistoryView
@@ -50,9 +50,9 @@ class BudgetView(BaseView):
                 tag_color = exp_color_alt
                 exp_total += (item.amount / item.frequency)
 
-            display_amt = f"{locale.currency(item.amount, grouping=True)}"
+            display_amt = f"{Locale.currency(item.amount)}"
             if item.frequency > 1:
-                display_amt += f" ({locale.currency(item.amount / item.frequency, grouping=True)})"
+                display_amt += f" ({Locale.currency(item.amount / item.frequency)})"
 
             has_history = len(item.history) > 0
 
@@ -126,14 +126,10 @@ class BudgetView(BaseView):
 
             self.__list_view.controls.append(tile)
 
-        self.__income_total.label.value = locale.currency(
-            inc_total, grouping=True)
-        self.__expense_total.label.value = locale.currency(
-            exp_total, grouping=True)
+        self.__income_total.label.value = Locale.currency(inc_total)
+        self.__expense_total.label.value = Locale.currency(exp_total)
         net_balance = inc_total + exp_total
-        self.__net_balance.label.value = locale.currency(
-            net_balance, grouping=True
-        )
+        self.__net_balance.label.value = Locale.currency(net_balance)
         self.__net_balance.bgcolor = const.COLOR_INCOME if net_balance >= 0 else const.COLOR_EXPENSE
 
         self._page.update()

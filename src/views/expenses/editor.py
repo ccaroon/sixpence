@@ -5,7 +5,7 @@ import pprint
 from models.tag import Tag
 from models.budget import Budget
 
-from utils.date_helper import DateHelper
+from utils.locale import Locale
 from utils.icon_search import IconSearch
 import utils.tools as tools
 import utils.constants as const
@@ -107,7 +107,7 @@ class ExpenseEditor:
 
     def __populate_model(self):
         # date
-        self.__item.date = DateHelper.as_arrow(self.__date_picker.value)
+        self.__item.date = Locale.as_arrow(self.__date_picker.value)
 
         # category
         self.__item.category = self.__category_ctrl.value
@@ -163,7 +163,7 @@ class ExpenseEditor:
 
 
     def __on_choose_date(self, evt):
-        chosen_date = DateHelper.as_arrow(evt.control.value)
+        chosen_date = Locale.as_arrow(evt.control.value)
         self.__date_ctrl.text = chosen_date.format("MM-DD-YYYY")
         self.__date_ctrl.update()
 
@@ -256,7 +256,6 @@ class ExpenseEditor:
             on_change=self.__on_choose_date
         )
         self.__date_ctrl = ft.OutlinedButton(
-            # DateHelper.now().format("MM-DD-YYYY"),
             icon=ft.Icons.CALENDAR_MONTH,
             icon_color="black",
             style=ft.ButtonStyle(
@@ -370,9 +369,9 @@ class ExpenseEditor:
         if evt.key in ("Arrow Up", "Arrow Down"):
             date = self.__date_picker.value
             if date:
-                date = DateHelper.as_arrow(date)
+                date = Locale.as_arrow(date)
             else:
-                date = DateHelper.now()
+                date = Locale.now()
 
             new_date = None
             if evt.key == "Arrow Down":

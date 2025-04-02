@@ -1,9 +1,10 @@
 import flet as ft
 
 import arrow
-import locale
 
 from models.budget import Budget
+
+from utils.locale import Locale
 import utils.constants as const
 import utils.tools as tools
 
@@ -83,7 +84,7 @@ class HistoryView(ft.AlertDialog):
                             weight=ft.FontWeight.BOLD,
                             expand=2),
                         ft.Text(
-                            locale.currency(amount, grouping=True),
+                            Locale.currency(amount),
                             color="black",
                             # weight=ft.FontWeight.BOLD,
                             expand=1),
@@ -91,7 +92,7 @@ class HistoryView(ft.AlertDialog):
                             color="black",
                             expand=3),
                         ft.Text(
-                            locale.currency(next_amt, grouping=True),
+                            Locale.currency(next_amt),
                             color="black",
                             # weight=ft.FontWeight.BOLD,
                             expand=1),
@@ -108,7 +109,7 @@ class HistoryView(ft.AlertDialog):
     def display(self, budget_item):
         self.__item = budget_item
 
-        self.__title_fld.value = f"{self.__item.category} | {locale.currency(self.__item.amount)}/{self.__item.frequency_desc()}"
+        self.__title_fld.value = f"{self.__item.category} | {Locale.currency(self.__item.amount)}/{self.__item.frequency_desc()}"
         self.__update_history()
 
         self.__page.open(self)
