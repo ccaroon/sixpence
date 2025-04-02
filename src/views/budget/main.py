@@ -66,6 +66,39 @@ class BudgetView(BaseView):
                     )
                 )
 
+            actions = []
+            if item.deleted_at:
+                actions.extend([
+                    ft.IconButton(ft.Icons.RESTORE_FROM_TRASH,
+                        data=item,
+                        icon_color=ft.Colors.GREY_800,
+                        on_click=self.__on_undelete,
+                    )
+                ])
+            else:
+                actions.extend([
+                    # NOTE: if icon_color is set, then disabled_color has
+                    #       no effect
+                    #       Instead, have to adjust icon_color according
+                    #       to if the button is disabled
+                    ft.IconButton(ft.Icons.HISTORY,
+                        data=item,
+                        icon_color=ft.Colors.GREY_800 if has_history else ft.Colors.GREY_500,
+                        disabled=not has_history,
+                        on_click=self.__on_history
+                    ),
+                    ft.IconButton(ft.Icons.EDIT,
+                        data=item,
+                        icon_color=ft.Colors.GREY_800,
+                        on_click=self.__on_edit
+                    ),
+                    ft.IconButton(ft.Icons.DELETE,
+                        data=item,
+                        icon_color=ft.Colors.GREY_800,
+                        on_click=self.__on_delete,
+                    )
+                ])
+
             tile = ft.ListTile(
                 leading=ft.Icon(item.icon, color="black"),
                 title=ft.Row(
@@ -83,28 +116,8 @@ class BudgetView(BaseView):
                         # TODO: Support Tags instead of Notes
                         ft.Row(tags, expand=4),
                         ft.VerticalDivider(),
-                        # NOTE: if icon_color is set, then disabled_color has
-                        #       no effect
-                        #       Instead, have to adjust icon_color accoriding
-                        #       to if the button is disabled
-                        ft.IconButton(ft.Icons.HISTORY,
-                            data=item,
-                            icon_color=ft.Colors.GREY_800 if has_history else ft.Colors.GREY_500,
-                            disabled=not has_history,
-                            on_click=self.__on_history
-                        ),
-                        ft.IconButton(ft.Icons.EDIT,
-                            data=item,
-                            icon_color=ft.Colors.GREY_500 if item.deleted_at else ft.Colors.GREY_800,
-                            on_click=self.__on_edit,
-                            disabled=item.deleted_at is not None,
-                        ),
-                        ft.IconButton(ft.Icons.DELETE,
-                            data=item,
-                            icon_color=ft.Colors.GREY_500 if item.deleted_at else ft.Colors.GREY_800,
-                            on_click=self.__on_delete,
-                            disabled=item.deleted_at is not None
-                        )
+                        # TODO: actions go here
+                        *actions
                     ],
                 ),
                 subtitle=ft.Text(f"{item.frequency_desc()} / {const.MONTH_NAMES[item.first_due]}", color="black"),
@@ -204,10 +217,14 @@ class BudgetView(BaseView):
 
 
     def __on_delete(self, evt):
-        # TODO: implement Archive capability
-        # ...i.e. mark as deleted
         budget_item = evt.control.data
         budget_item.delete(safe=True)
+        self._update()
+
+
+    def __on_undelete(self, evt):
+        budget_item = evt.control.data
+        budget_item.undelete()
         self._update()
 
 

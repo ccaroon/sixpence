@@ -99,7 +99,7 @@ class ExpensesView(BaseView):
                             on_click=self.__on_edit,
                             disabled=item.deleted_at is not None,
                         ),
-                        ft.IconButton(ft.Icons.DELETE,
+                        ft.IconButton(ft.Icons.DELETE_FOREVER,
                             data=item,
                             icon_color=ft.Colors.GREY_500 if item.deleted_at else ft.Colors.GREY_800,
                             on_click=self.__on_delete_confirm,
