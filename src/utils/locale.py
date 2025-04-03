@@ -5,11 +5,38 @@ from app.config import Config
 
 class Locale:
     @classmethod
-    def init(cls, identifier):
+    def init(cls, locale_id=None):
         """
-        Initialze the locale to the give locale identifier
+        Initialze the locale to the given `locale_id` for all categories.
+
+        Args:
+            locale_id (str|tuple|None): Locale identifier.
+
+        Examples:
+            # None - Use current local for all categories
+            >>> Locale.init()
+            None
+
+            # String
+            >>> Locale.init("en_US.UTF-8")
+            None
+
+            # Tuple - normalized case
+            >>> Locale.init(("en_US", "UTF-8"))
+            None
+
+            # Tuple - all lowercase
+            >>> Locale.init(("en_us", "utf-8"))
+            None
+
+            # Tuple - lowercase / no dash
+            >>> Locale.init(("en_us", "utf8"))
+            None
         """
-        locale.setlocale(locale.LC_ALL, identifier)
+        if not locale_id:
+            locale_id = locale.getlocale()
+
+        locale.setlocale(locale.LC_ALL, locale_id)
 
 
     @classmethod
@@ -43,7 +70,7 @@ class Locale:
         Convert the given `date_time` for the configured time zone
 
         Args:
-            date_time (any): (int | float | string) to convert
+            date_time (int|float|string):  Value to convert
 
         Returns:
             Arrow: An Arrow object for the `date_time` value in the configured time zone.

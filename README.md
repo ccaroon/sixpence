@@ -4,7 +4,9 @@
 
 This is version 2 of Sixpence. It abandons [Electron][electron] for [Flutter][flutter] using [flet][Flet].
 
-Sixpence is a cross-platform application and can be built to run on Linux, Windows or MacOS.
+Sixpence is a cross-platform application and can be built to run on Linux, MS Windows or MacOS.
+
+However, it's only been tested on Linux & MaxOS. It will likely have issues on MS Windows.
 
 Sixpence exists because I couldn't find another application to manage my budget
 the way **I** wanted to manage my budget. I built it for myself, my use case.

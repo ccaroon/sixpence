@@ -6,6 +6,7 @@ import pprint
 
 from app.config import Config
 
+from controls.notification_bar import NotificationBar
 from controls.nav_rail import NavRail
 from controls.router import Router
 
@@ -24,12 +25,10 @@ class Sixpence:
     SCREEN_SCALE_HEIGHT = .80 #.90
 
     def __init__(self, page):
-        # TODO: don't hard-code locale
-        Locale.init("en_US.UTF-8")
-
         self.__app_name = "sixpence"
         self.__page = page
 
+        Locale.init()
         self.__init_window()
         self.__init_settings()
 
@@ -47,16 +46,7 @@ class Sixpence:
         self.__about_view = About(self.__page)
         self.__page.overlay.append(self.__about_view)
 
-        self.__snack_icon = ft.Icon(color=ft.Colors.ON_SECONDARY_CONTAINER)
-        self.__snack_txt = ft.Text("", color=ft.Colors.ON_SECONDARY_CONTAINER)
-        self.__snackbar = ft.SnackBar(
-            ft.Row([
-                self.__snack_icon,
-                self.__snack_txt,
-            ]),
-            bgcolor=ft.Colors.SECONDARY_CONTAINER
-        )
-        self.__page.overlay.append(self.__snackbar)
+        self.__notify_bar = NotificationBar(self.__page)
 
         self.__appbar = NavRail(self.__page)
         self.__router = Router(
@@ -70,13 +60,6 @@ class Sixpence:
                 "/settings": Settings(self.__page)
             }
         )
-
-
-    def __snack_msg(self, message, icon=ft.Icons.INFO_OUTLINE):
-        self.__snack_icon.name = icon
-        self.__snack_txt.value = message
-        self.__page.open(self.__snackbar)
-
 
     def __init_window(self):
         monitors = screeninfo.get_monitors()
@@ -195,8 +178,10 @@ class Sixpence:
             self.__about_view.display()
         elif (event.ctrl or event.meta) and event.key == "B":
             self.__backup_data()
-            self.__snack_msg("Backup Complete", ft.Icons.BACKUP)
+            self.__notify_bar.notify(ft.Icons.BACKUP, "Backup Complete")
+        # --------------------------------------------------------------------
         # -- Quit
+        # --------------------------------------------------------------------
         # NOTE: Quitting the app seems to be hard-coded into flet/flutter
         # Catching this keyboard event works, but there not time to execute
         # anything before the app is forcefully destroyed.
@@ -205,6 +190,7 @@ class Sixpence:
         # elif (event.ctrl or event.meta) and event.key == "Q":
             # self.__backup_data()
             # self.__page.window.destroy() <-- not even necessary
+        # --------------------------------------------------------------------
         # If not handled, passed to router to distribute to correct View
         else:
             self.__router.handle_keyboard_event(event)

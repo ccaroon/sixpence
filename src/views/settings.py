@@ -2,36 +2,16 @@ import dateutil
 
 import flet as ft
 
+from controls.notification_bar import NotificationBar
 import utils.constants as const
 from views.base import Base as BaseView
 
 class Settings(BaseView):
     def __init__(self, page):
         self.__cfg = page.session.get("config")
+        self.__notify_bar = NotificationBar(page)
 
         super().__init__(page)
-
-        self.__layout_snackbar()
-
-
-    def __layout_snackbar(self):
-        # Specific Icon and Text set in __snack_msg()
-        self.__snack_icon = ft.Icon(color=ft.Colors.ON_SECONDARY_CONTAINER)
-        self.__snack_txt = ft.Text("", color=ft.Colors.ON_SECONDARY_CONTAINER)
-        self.__snackbar = ft.SnackBar(
-            ft.Row([
-                self.__snack_icon,
-                self.__snack_txt,
-            ]),
-            bgcolor=ft.Colors.SECONDARY_CONTAINER
-        )
-        self._page.overlay.append(self.__snackbar)
-
-
-    def __snack_msg(self, message, icon=ft.Icons.INFO_OUTLINE):
-        self.__snack_icon.name = icon
-        self.__snack_txt.value = message
-        self._page.open(self.__snackbar)
 
 
     def _layout(self):
@@ -59,7 +39,7 @@ class Settings(BaseView):
 
     def __on_save_click(self, evt):
             self.__cfg.save()
-            self.__snack_msg("Settings Saved")
+            self.__notify_bar.info("Settings Saved")
 
 
     def __on_keep_change(self, evt):
