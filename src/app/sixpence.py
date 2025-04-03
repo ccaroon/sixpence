@@ -16,7 +16,7 @@ from utils.archive import Archive
 from views.about import About
 from views.home import Home
 from views.budget.main import BudgetView
-from views.expenses.main import ExpensesView
+from views.expenses.main import ExpenseView
 from views.reports import Reports
 from views.settings import Settings
 
@@ -55,7 +55,7 @@ class Sixpence:
             route_map={
                 "/home": Home(self.__page),
                 "/budget": BudgetView(self.__page),
-                "/expenses": ExpensesView(self.__page),
+                "/expenses": ExpenseView(self.__page),
                 "/reports": Reports(self.__page),
                 "/settings": Settings(self.__page)
             }
