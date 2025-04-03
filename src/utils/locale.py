@@ -35,6 +35,10 @@ class Locale:
         """
         if not locale_id:
             locale_id = locale.getlocale()
+            # TODO: find a better way to handle this instead of defaulting
+            #       to english/US/UTF-8
+            if locale_id[0] is None or locale_id[1] is None:
+                locale_id = ('en_US', 'UTF-8')
 
         locale.setlocale(locale.LC_ALL, locale_id)
 

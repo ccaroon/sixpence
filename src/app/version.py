@@ -1,2 +1,3 @@
 # -devYYYYMMDDHHSS
 VERSION = "2.0.0-dev202504031425"
+CODE_NAME = "Pristine Penny"

@@ -24,6 +24,11 @@ class About(ft.AlertDialog):
                         weight=ft.FontWeight.BOLD,
                         theme_style=ft.TextThemeStyle.DISPLAY_SMALL
                     ),
+                    ft.Text(
+                        app.version.CODE_NAME,
+                        weight=ft.FontWeight.BOLD,
+                        theme_style=ft.TextThemeStyle.HEADLINE_SMALL
+                    ),
                     ft.Divider(),
                     ft.Text(f"Python v{platform.python_version()} on {platform.system()} ({platform.processor()})",
                         theme_style=ft.TextThemeStyle.BODY_LARGE
