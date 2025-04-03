@@ -1,3 +1,4 @@
+import arrow
 import platform
 
 from invoke import task
@@ -47,6 +48,8 @@ def install(ctx):
     install_path = os_map.get(os_name).get("install_path")
 
     if os_name == "Linux":
+        date_stamp = arrow.now().format("YYYYMMDD_HHmmss")
+        ctx.run(f"mv {install_path} {install_path}-{date_stamp}", echo=True)
         ctx.run(f"cp -a build/{target} {install_path}", echo=True)
     elif os_name == "Darwin":
         exe = os_map.get(os_name).get("exe")
