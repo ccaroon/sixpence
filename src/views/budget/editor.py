@@ -3,6 +3,7 @@ import flet as ft
 from controls.icon_select import IconSelect
 from views.budget.history.prompt import HistoryPrompt
 
+from models.budget import Budget
 from models.tag import Tag
 import utils.tools as tools
 import utils.constants as const
@@ -44,6 +45,12 @@ class BudgetEditor:
         if tools.is_numeric(str(evt.control.value)):
             amount = float(evt.control.value) if evt.control.value else 0.0
             self.__update_color(amount)
+
+
+    def __on_category_blur(self, evt):
+        self.__category_ctrl.value = Budget.normalize_category(evt.control.value)
+        self.__icon_ctrl.update_options(evt)
+        self.__category_ctrl.update()
 
 
     def __on_tags_blur(self, evt):
@@ -177,8 +184,7 @@ class BudgetEditor:
         self.__category_ctrl = ft.TextField(
             label="Category",
             prefix_icon=ft.Icons.CATEGORY,
-            on_submit=self.__icon_ctrl.update_options,
-            on_blur=self.__icon_ctrl.update_options
+            on_blur=self.__on_category_blur
         )
         # amount
         self.__amount_ctrl = ft.TextField(
