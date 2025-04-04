@@ -1,5 +1,7 @@
 import flet as ft
 
+import pprint
+
 from models.expense import Expense
 
 import utils.constants as const
@@ -61,6 +63,16 @@ class ExpenseNavBar(ft.AppBar):
             on_click=lambda evt: None
         )
 
+        self.__view_control = ft.SegmentedButton(
+            on_change=self.__on_view_change,
+            selected={"progress"},
+            segments=[
+                ft.Segment(icon=ft.Icon(ft.Icons.BAR_CHART, color=ft.Colors.ON_PRIMARY_CONTAINER), value="progress"),
+                ft.Segment(icon=ft.Icon(ft.Icons.CALENDAR_MONTH, color=ft.Colors.ON_PRIMARY_CONTAINER), value="calendar"),
+                ft.Segment(icon=ft.Icon(ft.Icons.FORMAT_LIST_BULLETED, color=ft.Colors.ON_PRIMARY_CONTAINER), value="itemized")
+            ]
+        )
+
         super().__init__(
             leading=self.__menu,
             title=ft.Text("Expenses"),
@@ -96,16 +108,7 @@ class ExpenseNavBar(ft.AppBar):
                 ft.VerticalDivider(
                     color=ft.Colors.ON_PRIMARY_CONTAINER,
                     leading_indent=5, trailing_indent=5),
-                # TODO: different view: Budget Progress | Calender | Itemized
-                ft.SegmentedButton(
-                    on_change=lambda evt: None,
-                    selected={"itemized"},
-                    segments=[
-                        ft.Segment(icon=ft.Icon(ft.Icons.BAR_CHART, color=ft.Colors.ON_PRIMARY_CONTAINER), value="progress"),
-                        ft.Segment(icon=ft.Icon(ft.Icons.CALENDAR_MONTH, color=ft.Colors.ON_PRIMARY_CONTAINER), value="calendar"),
-                        ft.Segment(icon=ft.Icon(ft.Icons.FORMAT_LIST_BULLETED, color=ft.Colors.ON_PRIMARY_CONTAINER), value="itemized")
-                    ]
-                ),
+                self.__view_control,
                 ft.VerticalDivider(
                     color=ft.Colors.ON_PRIMARY_CONTAINER,
                     leading_indent=5, trailing_indent=5),
@@ -149,9 +152,22 @@ class ExpenseNavBar(ft.AppBar):
         self.__net_balance.bgcolor = const.COLOR_INCOME if value >= 0.0 else const.COLOR_EXPENSE
 
 
+    def change_view(self, view_name):
+        """ ONLY updates the checkmark on the view control """
+        # Setting selected does not seem to trigger on_change() :(
+        self.__view_control.selected = {view_name}
+        self.__view_control.update()
+
+
     def __on_recalc_rollover(self, evt):
         Expense.update_rollover(self.__parent.current_date, force_update=True)
         self.__refresh()
+
+
+    def __on_view_change(self, evt):
+        new_view = list(evt.control.selected)[0]
+        self.__search_control.value = None
+        self.__refresh(reset_filters=True, view=new_view)
 
 
     def __on_search_clear(self, evt):

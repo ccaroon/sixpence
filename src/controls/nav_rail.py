@@ -3,7 +3,6 @@ import flet as ft
 import utils.constants as const
 
 class NavRail(ft.NavigationRail):
-
     def __init__(self, page):
         super().__init__(
             selected_index=0,
@@ -14,27 +13,32 @@ class NavRail(ft.NavigationRail):
                 ft.NavigationRailDestination(
                     icon=ft.Icons.HOME_OUTLINED,
                     selected_icon=ft.Icons.HOME,
-                    label="Home"
+                    label="Home",
+                    data="/home"
                 ),
                 ft.NavigationRailDestination(
                     icon=ft.Icons.FORMAT_LIST_BULLETED_OUTLINED,
                     selected_icon=ft.Icons.FORMAT_LIST_BULLETED,
-                    label="Budget"
+                    label="Budget",
+                    data="/budget"
                 ),
                 ft.NavigationRailDestination(
                     icon=ft.Icons.ATTACH_MONEY_OUTLINED,
                     selected_icon=ft.Icons.ATTACH_MONEY,
                     label="Expenses",
+                    data="/expenses"
                 ),
                 ft.NavigationRailDestination(
                     icon=ft.Icons.INSERT_CHART_OUTLINED,
                     selected_icon=ft.Icons.INSERT_CHART,
                     label="Reports",
+                    data="/reports"
                 ),
                 ft.NavigationRailDestination(
                     icon=ft.Icons.SETTINGS_OUTLINED,
                     selected_icon=ft.Icons.SETTINGS,
                     label="Settings",
+                    data="/settings"
                 ),
             ],
             on_change=self.__handle_on_change
@@ -52,10 +56,21 @@ class NavRail(ft.NavigationRail):
             )
 
 
+    def navigate_to(self, route):
+        index = None
+        for idx, dest in enumerate(self.destinations):
+            if dest.data == route:
+                index = idx
+                break
+
+        if index:
+            self.selected_index = index
+            self.__page.go(route)
+
+
     def __handle_on_change(self, event):
         index = event.control.selected_index
         dest = event.control.destinations[index]
 
-        if dest.label != "DEVELOPER MODE":
-            route = f"/{dest.label.lower()}"
-            self.__page.go(route)
+        if dest.data:
+            self.__page.go(dest.data)

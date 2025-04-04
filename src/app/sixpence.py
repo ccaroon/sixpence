@@ -60,6 +60,8 @@ class Sixpence:
                 "/settings": Settings(self.__page)
             }
         )
+        self.__appbar.navigate_to("/expenses")
+
 
     def __init_window(self):
         monitors = screeninfo.get_monitors()

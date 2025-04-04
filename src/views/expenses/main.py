@@ -1,5 +1,7 @@
 import flet as ft
 
+import pprint
+
 from models.budget import Budget
 from models.expense import Expense
 
@@ -13,17 +15,22 @@ from views.expenses.navbar import ExpenseNavBar
 
 class ExpenseView(BaseView):
 
+    VIEW_PROGRESS = "progress"
+    VIEW_CALENDAR = "calendar"
+    VIEW_ITEMIZED = "itemized"
+
     def __init__(self, page):
         now = Locale.now()
         self.__curr_date = now.floor("month")
+        self.__curr_view = self.VIEW_PROGRESS
 
         Expense.update_rollover(now)
 
         self.__filters = self.__default_search_filters()
-        super().__init__(page)
-
         self.__budget = Budget.for_month(self.__curr_date.month)
-        self.__editor = ExpenseEditor(self._page, on_save=self._update)
+        self.__editor = ExpenseEditor(page, on_save=self._update)
+
+        super().__init__(page)
 
 
     @property
@@ -31,28 +38,197 @@ class ExpenseView(BaseView):
         return self.__curr_date
 
 
-    def _update(self, reset_filters=False, **kwargs):
-        self.__list_view.controls.clear()
-
-        if reset_filters:
-            self.__filters = self.__default_search_filters()
-
-        # kwargs is assumed to be search filters
-        # Value of 'None' == delete from filters
-        for fld, value in kwargs.items():
-            if value is None:
-                del self.__filters[fld]
-            else:
-                self.__filters[fld] = value
-
-        # pprint.pprint(f"Filters: [{self.__filters}]")
-        expenses = Expense.find(
-            op="and",
-            sort_by="type,date",
-            **self.__filters
+    def __on_tile_click(self, evt):
+        self._navbar.change_view(self.VIEW_ITEMIZED)
+        self._update(
+            reset_filters=True,
+            view=self.VIEW_ITEMIZED,
+            category=evt.control.data
         )
-        inc_total = 0.0
-        exp_total = 0.0
+
+
+    def __view_calendar(self, expenses):
+        placeholder = ft.ListTile(ft.Text("CALENDAR VIEW NOT IMPLEMENTED"))
+        self.__list_view.controls.append(placeholder)
+
+
+    def __view_progress(self, expenses):
+        self.__list_view.spacing = 4
+
+        # BUDGETED ITEMS
+        # Collate budget items by category & sum amounts
+        budget = {}
+        for item in self.__budget:
+            if item.category not in budget:
+                budget[item.category] = {
+                    "type": item.type,
+                    "icon": item.icon,
+                    "category": item.category,
+                    "amount": item.amount,
+                    "spent": 0.0
+                }
+            else:
+                budget[item.category]["amount"] += item.amount
+
+        # Update amount spent for each category
+        # Collate unbudgeted items
+        unbudgeted = {
+            "items": {},
+            "inc_total": 0.0,
+            "exp_total": 0.0
+        }
+        for exp in expenses:
+            if exp.category == Expense.ROLLOVER_CATEGORY:
+                continue
+
+            if exp.category in budget:
+                budget[exp.category]["spent"] += exp.amount
+            else:
+                if exp.category not in unbudgeted["items"]:
+                    unbudgeted["items"][exp.category] = {
+                        "type": exp.type,
+                        "icon": exp.icon,
+                        "category": exp.category,
+                        "spent": exp.amount,
+                        "count": 1
+                    }
+                else:
+                    unbudgeted["items"][exp.category]["spent"] += exp.amount
+                    unbudgeted["items"][exp.category]["count"] += 1
+
+                if exp.type == Expense.TYPE_INCOME:
+                    unbudgeted["inc_total"] += exp.amount
+                elif exp.type == Expense.TYPE_EXPENSE:
+                    unbudgeted["exp_total"] += exp.amount
+
+        # Convert into list sorted by type, then category
+        budget = sorted(
+            budget.values(),
+            key=lambda item: (item["type"], item["category"])
+        )
+
+        for item in budget:
+            bgcolor = ft.Colors.WHITE if item["spent"] == 0.0 else ft.Colors.GREY_200
+            progress_percent = round(item["spent"]/item["amount"], 2)
+            percent_display = round(abs(progress_percent) * 100.00)
+
+            progress_color = const.COLOR_INCOME
+            if progress_percent > .9 and progress_percent < 1.0:
+                progress_color = ft.Colors.YELLOW
+            if progress_percent > 1.0:
+                progress_color = const.COLOR_EXPENSE
+
+            tile = ft.ListTile(
+                leading=ft.Icon(item["icon"], color="black"),
+                title=ft.Row(
+                    [
+                        ft.Text(item["category"],
+                            color="black",
+                            theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
+                            weight=ft.FontWeight.BOLD,
+                            expand=3),
+                        ft.Text(
+                            f"{Locale.currency(item['spent'])} / {Locale.currency(item['amount'])}",
+                            color="black",
+                            weight=ft.FontWeight.BOLD,
+                            expand=2),
+                        ft.ProgressBar(
+                            height=25,
+                            color=progress_color,
+                            bgcolor=ft.Colors.GREY_100,
+                            value=progress_percent,
+                            expand=5,
+                        ),
+                        ft.Text(
+                            f"{percent_display}%",
+                            color="black",
+                            weight=ft.FontWeight.BOLD,
+                            expand=1),
+                    ],
+                ),
+                bgcolor=bgcolor,
+                data=item["category"],
+                on_click=self.__on_tile_click
+            )
+
+            self.__list_view.controls.append(tile)
+
+        # UN-BUDGETED ITEMS
+        # Convert into list sorted by type, then category
+        unbudgeted["items"] = sorted(
+            unbudgeted["items"].values(),
+            key=lambda item: (item["type"], item["category"])
+        )
+
+        # Tile for main list
+        unbudgeted_tile = ft.ExpansionTile(
+            leading=ft.Icon(ft.Icons.HELP_CENTER),
+            title=ft.Row(
+                [
+                    ft.Text("Unbudgeted",
+                        color="black",
+                        theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
+                        weight=ft.FontWeight.BOLD,
+                        expand=3
+                    ),
+                    ft.Text(Locale.currency(unbudgeted["inc_total"]),
+                        color=const.COLOR_INCOME,
+                        theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
+                        weight=ft.FontWeight.BOLD,
+                        expand=2
+                    ),
+                    ft.Text(Locale.currency(unbudgeted["exp_total"]),
+                        color=const.COLOR_EXPENSE,
+                        theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
+                        weight=ft.FontWeight.BOLD,
+                        expand=6
+                    ),
+                ]
+            ),
+            icon_color=ft.Colors.LIGHT_GREEN_ACCENT_400,
+            collapsed_icon_color=ft.Colors.RED,
+            bgcolor=ft.Colors.GREY_300,
+            collapsed_bgcolor=ft.Colors.GREY_300,
+            maintain_state=True,
+        )
+        self.__list_view.controls.append(unbudgeted_tile)
+
+        # Add tiles to expansion tile
+        for idx, item in enumerate(unbudgeted["items"]):
+            inc_color = utils.tools.cycle(const.INCOME_COLORS, idx)
+            exp_color = utils.tools.cycle(const.EXPENSE_COLORS, idx)
+            bgcolor = exp_color if item["type"] == Expense.TYPE_EXPENSE else inc_color
+
+            tile = ft.ListTile(
+                leading=ft.Icon(item["icon"], color="black"),
+                title=ft.Row(
+                    [
+                        ft.Text(item["category"],
+                            color="black",
+                            theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
+                            weight=ft.FontWeight.BOLD,
+                            expand=3),
+                        ft.Text(
+                            f"{Locale.currency(item['spent'])}",
+                            color="black",
+                            weight=ft.FontWeight.BOLD,
+                            expand=2),
+                        ft.Text(
+                            item["count"],
+                            color="black",
+                            weight=ft.FontWeight.BOLD,
+                            expand=6),
+                    ],
+                ),
+                bgcolor=bgcolor,
+                data=item["category"],
+                on_click=self.__on_tile_click
+            )
+            unbudgeted_tile.controls.append(tile)
+
+
+    def __view_itemized(self, expenses):
+        self.__list_view.spacing = 0
 
         for idx, item in enumerate(expenses):
             inc_color = utils.tools.cycle(const.INCOME_COLORS, idx)
@@ -65,11 +241,9 @@ class ExpenseView(BaseView):
             if item.type == Expense.TYPE_INCOME:
                 bgcolor = inc_color
                 tag_color = inc_color_alt
-                inc_total += item.amount
             else:
                 bgcolor = exp_color
                 tag_color = exp_color_alt
-                exp_total += item.amount
 
             display_amt = f"{Locale.currency(item.amount)}"
 
@@ -126,10 +300,56 @@ class ExpenseView(BaseView):
 
             self.__list_view.controls.append(tile)
 
+
+    def _update(self, **kwargs):
+        reset_filters = kwargs.pop("reset_filters", False)
+
+        if view := kwargs.pop("view", None):
+            self.__curr_view = view
+
+        self.__list_view.controls.clear()
+
+        if reset_filters:
+            self.__filters = self.__default_search_filters()
+
+        # From here, kwargs is assumed to be search filters. Other options
+        # have been removed.
+        # Value of 'None' == delete from filters
+        for fld, value in kwargs.items():
+            if value is None:
+                del self.__filters[fld]
+            else:
+                self.__filters[fld] = value
+
+        # pprint.pprint(f"Filters: [{self.__filters}]")
+        expenses = Expense.find(
+            op="and",
+            sort_by="type,date",
+            **self.__filters
+        )
+
+        inc_total = 0.0
+        exp_total = 0.0
+        for exp in expenses:
+            if exp.type == Expense.TYPE_INCOME:
+                inc_total += exp.amount
+            elif exp.type == Expense.TYPE_EXPENSE:
+                exp_total += exp.amount
+
         self._navbar.income_total = inc_total
         self._navbar.expense_total = exp_total
         net_balance = inc_total + exp_total
         self._navbar.net_balance = net_balance
+
+        match self.__curr_view:
+            case self.VIEW_ITEMIZED:
+                self.__view_itemized(expenses)
+            case self.VIEW_CALENDAR:
+                self.__view_calendar(expenses)
+            case self.VIEW_PROGRESS:
+                self.__view_progress(expenses)
+            case _:
+                pass
 
         self._page.update()
 
