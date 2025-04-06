@@ -27,7 +27,6 @@ class ExpenseView(BaseView):
         Expense.update_rollover(now)
 
         self.__filters = self.__default_search_filters()
-        self.__budget = Budget.for_month(self.__curr_date.month)
         self.__editor = ExpenseEditor(page, on_save=self._update)
 
         super().__init__(page)
@@ -52,8 +51,11 @@ class ExpenseView(BaseView):
         self.__list_view.controls.append(placeholder)
 
 
-    def __view_progress(self, expenses):
+    def __view_progress(self, expenses, **kwargs):
         self.__list_view.spacing = 4
+
+        only_overbudget = kwargs.get("over_budget", False)
+        only_zero_spent = kwargs.get("zero_spent", False)
 
         # BUDGETED ITEMS
         # Collate budget items by category & sum amounts
@@ -108,6 +110,12 @@ class ExpenseView(BaseView):
         )
 
         for item in budget:
+            # Additional Filtering
+            if only_zero_spent and abs(item["spent"]) > 0.0:
+                continue
+            elif only_overbudget and abs(item["spent"]) <= abs(item["amount"]):
+                continue
+
             bgcolor = ft.Colors.WHITE if item["spent"] == 0.0 else ft.Colors.GREY_200
             progress_percent = round(item["spent"]/item["amount"], 2)
             percent_display = round(abs(progress_percent) * 100.00)
@@ -304,6 +312,8 @@ class ExpenseView(BaseView):
     def _update(self, **kwargs):
         reset_filters = kwargs.pop("reset_filters", False)
 
+        view_opts = kwargs.pop("view_opts", {})
+
         if view := kwargs.pop("view", None):
             self.__curr_view = view
 
@@ -322,6 +332,15 @@ class ExpenseView(BaseView):
                 self.__filters[fld] = value
 
         # pprint.pprint(f"Filters: [{self.__filters}]")
+
+        bdg_filters = {}
+        if "category" in self.__filters:
+            bdg_filters["category"] = self.__filters["category"]
+        self.__budget = Budget.for_month(
+            self.__curr_date.month,
+            **bdg_filters
+        )
+
         expenses = Expense.find(
             op="and",
             sort_by="type,date",
@@ -347,7 +366,7 @@ class ExpenseView(BaseView):
             case self.VIEW_CALENDAR:
                 self.__view_calendar(expenses)
             case self.VIEW_PROGRESS:
-                self.__view_progress(expenses)
+                self.__view_progress(expenses, **view_opts)
             case _:
                 pass
 

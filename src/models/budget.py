@@ -171,17 +171,20 @@ class Budget(Taggable, Base):
 
 
     @classmethod
-    def for_month(cls, month_num:int):
+    def for_month(cls, month_num:int, **kwargs):
         """
         All non-deleted budgeted items that are due in the given month
 
-        Params:
+        Args:
             month_num (int): A month number: 1 to 12
+
+        KWArgs:
+            args to further filter the result set
 
         Returns:
             list[Budget]: List of Budget items.
         """
-        items = cls.find(deleted_at="null")
+        items = cls.find(op="and", deleted_at="null", **kwargs)
         wanted_items = []
         for itm in items:
             if month_num in itm.due_months():

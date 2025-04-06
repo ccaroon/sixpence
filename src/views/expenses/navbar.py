@@ -20,11 +20,25 @@ class ExpenseNavBar(ft.AppBar):
         self.__menu = ft.PopupMenuButton(
             icon=ft.Icons.MENU,
             items=[
+                ft.PopupMenuItem(icon=ft.Icons.CALENDAR_MONTH,
+                    text="All Items", checked=True,
+                    data={},
+                    on_click=self.__on_menu_choice),
+                ft.PopupMenuItem(icon=ft.Icons.PRIORITY_HIGH,
+                    text="Over Budget Items", checked=False,
+                    data={"over_budget": True},
+                    on_click=self.__on_menu_choice),
+                ft.PopupMenuItem(icon=ft.Icons.MONEY_OFF,
+                    text="Zero Spent Items", checked=False,
+                    data={"zero_spent": True},
+                    on_click=self.__on_menu_choice),
+                ft.Divider(),
                 ft.PopupMenuItem(icon=ft.Icons.CURRENCY_EXCHANGE,
                     text="Recalculate Rollover", checked=False,
                     on_click=self.__on_recalc_rollover)
             ]
         )
+        self.__active_menu_item = self.__menu.items[0]
 
         self.__date_picker = ft.ElevatedButton(
             self.__parent.current_date.format("MMM YYYY"),
@@ -159,9 +173,17 @@ class ExpenseNavBar(ft.AppBar):
         self.__view_control.update()
 
 
+    def __on_menu_choice(self, evt):
+        self.__active_menu_item.checked = False
+        evt.control.checked = True
+
+        self.__active_menu_item = evt.control
+        self.__refresh(view_opts=evt.control.data)
+
+
     def __on_recalc_rollover(self, evt):
         Expense.update_rollover(self.__parent.current_date, force_update=True)
-        self.__refresh()
+        self.__refresh(view_opts=self.__active_menu_item.data)
 
 
     def __on_view_change(self, evt):
@@ -172,7 +194,10 @@ class ExpenseNavBar(ft.AppBar):
 
     def __on_search_clear(self, evt):
         self.__search_control.value = None
-        self.__refresh(reset_filters=True)
+        self.__refresh(
+            reset_filters=True,
+            view_opts=self.__active_menu_item.data
+        )
 
 
     def __on_search_submit(self, evt):
