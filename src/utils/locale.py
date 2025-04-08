@@ -5,42 +5,30 @@ from app.config import Config
 
 class Locale:
     @classmethod
-    def init(cls, locale_id=None):
+    def init(cls, lcid=''):
         """
-        Initialze the locale to the given `locale_id` for all categories.
+        Initialze the locale to the given `lcid` for all categories.
 
         Args:
-            locale_id (str|tuple|None): Locale identifier.
+            lcid (str|None): Language Code ID. See https://www.crmportalconnector.com/developer-network/documentation/developing-for-tpc/language-code-table
 
         Examples:
-            # None - Use current local for all categories
+            # None - Use current locale for all categories
             >>> Locale.init()
             None
 
-            # String
-            >>> Locale.init("en_US.UTF-8")
-            None
-
-            # Tuple - normalized case
-            >>> Locale.init(("en_US", "UTF-8"))
-            None
-
-            # Tuple - all lowercase
-            >>> Locale.init(("en_us", "utf-8"))
-            None
-
-            # Tuple - lowercase / no dash
-            >>> Locale.init(("en_us", "utf8"))
+            # String - Use specific locale
+            >>> Locale.init("en_US")
             None
         """
-        if not locale_id:
-            locale_id = locale.getlocale()
-            # TODO: find a better way to handle this instead of defaulting
-            #       to english/US/UTF-8
-            if locale_id[0] is None or locale_id[1] is None:
-                locale_id = ('en_US', 'UTF-8')
+        if not lcid:
+            locale.setlocale(locale.LC_ALL, '')
+        else:
+            normal_lcid = locale.normalize(lcid)
+            locale.setlocale(locale.LC_ALL, normal_lcid)
 
-        locale.setlocale(locale.LC_ALL, locale_id)
+        # for key, value in locale.localeconv().items():
+        #     print("%s: %s" % (key, value))
 
 
     @classmethod

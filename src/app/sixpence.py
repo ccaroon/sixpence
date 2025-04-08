@@ -28,9 +28,13 @@ class Sixpence:
         self.__app_name = "sixpence"
         self.__page = page
 
-        Locale.init()
         self.__init_window()
         self.__init_settings()
+
+        # No available until AFTER init_settings
+        config = page.session.get("config")
+
+        Locale.init(config.get("app:locale", ""))
 
         self.__page.title = self.__app_name.capitalize()
         self.__page.on_keyboard_event = self.__handle_on_keyboard
@@ -41,7 +45,7 @@ class Sixpence:
             color_scheme_seed=ft.Colors.GREEN_400,
         )
 
-        self.__page.theme_mode = self.__page.session.get("config").get("app:mode", "system")
+        self.__page.theme_mode = config.get("app:mode", "system")
 
         self.__about_view = About(self.__page)
         self.__page.overlay.append(self.__about_view)
@@ -60,7 +64,7 @@ class Sixpence:
                 "/settings": Settings(self.__page)
             }
         )
-        self.__appbar.navigate_to("/expenses")
+        self.__appbar.navigate_to(config.get("app:startup_view", "/home"))
 
 
     def __init_window(self):

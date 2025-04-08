@@ -10,7 +10,9 @@ class Config:
         "backup:path": None,
         "backup:keep": 5,
         "app:mode": "system",
-        "app:timezone": 'US/Eastern'
+        "app:timezone": 'US/Eastern',
+        "app:locale": "en_US",
+        "app:startup_view": "/home"
     }
 
     __instance = None

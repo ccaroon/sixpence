@@ -1,5 +1,7 @@
 import dateutil
 
+import pprint
+
 import flet as ft
 
 from controls.notification_bar import NotificationBar
@@ -162,6 +164,21 @@ class Settings(BaseView):
         evt.control.update()
 
 
+    def __on_locale_blur(self, evt):
+        old_locale = self.__cfg.get("app:locale")
+        new_locale = evt.control.value
+
+        if new_locale != old_locale:
+            self.__cfg.set("app:locale", new_locale)
+            evt.control.helper_text = "Takes affect on restart"
+            evt.control.update()
+
+
+    def __on_startup_view_change(self, evt):
+        new_view = evt.control.value
+        self.__cfg.set("app:startup_view", new_view)
+
+
     def __app_controls(self):
         return ft.Container(
             ft.Column(
@@ -209,6 +226,34 @@ class Settings(BaseView):
                             ft.Column(
                                 [
                                     ft.Text(
+                                        "Startup View",
+                                        weight=ft.FontWeight.BOLD,
+                                        theme_style=ft.TextThemeStyle.TITLE_LARGE
+                                    ),
+                                    ft.Text(
+                                        "View to open on App Startup",
+                                    ),
+                                ],
+                                expand=1
+                            ),
+                            ft.Dropdown(
+                                label="Startup View",
+                                options=[
+                                    ft.DropdownOption(key="/home", text="Home"),
+                                    ft.DropdownOption(key="/budget", text="Budget"),
+                                    ft.DropdownOption(key="/expenses", text="Expenses"),
+                                    ft.DropdownOption(key="/reports", text="Reports"),
+                                ],
+                                value=self.__cfg.get("app:startup_view"),
+                                on_change=self.__on_startup_view_change
+                            )
+                        ]
+                    ),
+                    ft.Row(
+                        [
+                            ft.Column(
+                                [
+                                    ft.Text(
                                         "Time Zone",
                                         weight=ft.FontWeight.BOLD,
                                         theme_style=ft.TextThemeStyle.TITLE_LARGE
@@ -223,6 +268,28 @@ class Settings(BaseView):
                                 label="Time Zone",
                                 value=self.__cfg.get("app:timezone"),
                                 on_blur=self.__on_timezone_blur
+                            )
+                        ]
+                    ),
+                    ft.Row(
+                        [
+                            ft.Column(
+                                [
+                                    ft.Text(
+                                        "Locale",
+                                        weight=ft.FontWeight.BOLD,
+                                        theme_style=ft.TextThemeStyle.TITLE_LARGE
+                                    ),
+                                    ft.Text(
+                                        "Language Code Identifier (en_US|es_CL|fr_FR)",
+                                    ),
+                                ],
+                                expand=1
+                            ),
+                            ft.TextField(
+                                label="Locale",
+                                value=self.__cfg.get("app:locale"),
+                                on_blur=self.__on_locale_blur
                             )
                         ]
                     ),
