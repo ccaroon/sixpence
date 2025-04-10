@@ -24,7 +24,8 @@ class ReportNavBar(ft.AppBar):
             actions=self.__default_actions.copy()
         )
 
-    def __reset_actions(self):
+
+    def reset_actions(self):
         self.actions = self.__default_actions.copy()
 
 

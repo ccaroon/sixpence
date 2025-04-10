@@ -1,14 +1,14 @@
 import flet as ft
 
-
 import utils.tools
 import utils.constants as const
 from utils.locale import Locale
 from models.expense import Expense
 
 class YearlyAvgReport(ft.Container):
-    def __init__(self):
+    def __init__(self, page):
         self.__curr_date = Locale.now()
+        self.__page = page
         super().__init__()
 
         self.__list_view = ft.ListView()
@@ -53,7 +53,7 @@ class YearlyAvgReport(ft.Container):
                 data[exp.category] = {
                     "type": exp.type,
                     "icon": exp.icon,
-                    "category": f"{exp.category} ({self.__curr_date.year})",
+                    "category": exp.category,
                     "total": exp.amount
                 }
             else:
@@ -97,30 +97,45 @@ class YearlyAvgReport(ft.Container):
 
             self.__list_view.controls.append(tile)
 
-
-    # def __on_change_year(self, evt):
-    #     delta = evt.control.data
-    #     self.__curr_date = self.__curr_date.shift(years=delta)
-    #     self.__year_display.label.value = self.__curr_date.year
-    #     self._update()
+        self.__page.update()
 
 
-    # def update_navbar(self):
-    #     self.__year_display = ft.Chip(ft.Text(self.__curr_date.year), on_click=lambda evt: None)
+    def __on_year_display_click(self, evt):
+        self.__curr_date = Locale.now()
+        self.__year_display.label.value = self.__curr_date.year
+        self.__year_display.update()
 
-    #     self._navbar.actions.extend([
-    #         ft.VerticalDivider(),
-    #         ft.IconButton(
-    #             icon=ft.Icons.ARROW_LEFT,
-    #             icon_color=ft.Colors.ON_PRIMARY_CONTAINER,
-    #             data=-1,
-    #             on_click=self.__on_change_year
-    #         ),
-    #         self.__year_display,
-    #         ft.IconButton(
-    #             icon=ft.Icons.ARROW_RIGHT,
-    #             icon_color=ft.Colors.ON_PRIMARY_CONTAINER,
-    #             data=1,
-    #             on_click=self.__on_change_year
-    #         ),
-    #     ])
+        self.refresh()
+
+
+    def __on_change_year(self, evt):
+        delta = evt.control.data
+        self.__curr_date = self.__curr_date.shift(years=delta)
+        self.__year_display.label.value = self.__curr_date.year
+        self.__year_display.update()
+
+        self.refresh()
+
+
+    def actions(self):
+        self.__year_display = ft.Chip(
+            ft.Text(self.__curr_date.year),
+            on_click=self.__on_year_display_click
+        )
+
+        return [
+            ft.VerticalDivider(),
+            ft.IconButton(
+                icon=ft.Icons.ARROW_LEFT,
+                icon_color=ft.Colors.ON_PRIMARY_CONTAINER,
+                data=-1,
+                on_click=self.__on_change_year
+            ),
+            self.__year_display,
+            ft.IconButton(
+                icon=ft.Icons.ARROW_RIGHT,
+                icon_color=ft.Colors.ON_PRIMARY_CONTAINER,
+                data=1,
+                on_click=self.__on_change_year
+            ),
+        ]

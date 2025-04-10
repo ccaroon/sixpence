@@ -14,7 +14,7 @@ class ReportView(BaseView):
         )
         self.content = self.__reports
 
-        for report in (YearlyAvgReport(),):
+        for report in (YearlyAvgReport(self._page),):
             self.__reports.controls.append(
                 ft.Card(
                     ft.ListTile(
@@ -30,15 +30,25 @@ class ReportView(BaseView):
 
     def __on_report_click(self, evt):
         report = evt.control.data
-        # report["view"].update_navbar()
+
+        # Update title & add report specific actions
         self._navbar.set_title(report.name)
+        self._navbar.actions.extend(report.actions())
+        self._navbar.update()
+
+        # Display
         report.refresh()
         self.content = report
         self.update()
 
 
     def __on_report_home(self, evt):
+        # Reset NavBar
         self._navbar.set_title("All")
+        self._navbar.reset_actions()
+        self._navbar.update()
+
+        # Reset content to report list
         self.content = self.__reports
         self.update()
 
