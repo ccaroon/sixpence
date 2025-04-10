@@ -13,11 +13,11 @@ from controls.router import Router
 from utils.locale import Locale
 from utils.archive import Archive
 
-from views.about import About
+from app.about import About
 from views.home import Home
 from views.budget.main import BudgetView
 from views.expenses.main import ExpenseView
-from views.reports import Reports
+from views.reports.main import ReportView
 from views.settings import Settings
 
 class Sixpence:
@@ -60,7 +60,7 @@ class Sixpence:
                 "/home": Home(self.__page),
                 "/budget": BudgetView(self.__page),
                 "/expenses": ExpenseView(self.__page),
-                "/reports": Reports(self.__page),
+                "/reports": ReportView(self.__page),
                 "/settings": Settings(self.__page)
             }
         )
