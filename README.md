@@ -48,17 +48,22 @@ Create a Virtual Environment using `venv` or `pyenv` or whatever and activate it
 # Install Requirements
 bash> pip install -r requirements-dev.txt
 
+# Unit Tests & Coverage
+bash> invoke check.unit-tests
+
+bash> invoke check.coverage
+
 # Run in Dev Mode
 bash> invoke dev.run
 
 # Build Executable
-bash> invoke build.app
+bash> invoke app.build
 
 # Run Built App
-bash> invoke build.run
+bash> invoke app.run
 
 # Clean Build
-bash> invoke build.clean
+bash> invoke app.build-clean
 
 # Other Commands
 bash> invoke -l
