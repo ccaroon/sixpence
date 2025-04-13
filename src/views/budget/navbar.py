@@ -193,8 +193,8 @@ class BudgetNavBar(ft.AppBar):
             # date=2025-03-30:2025-04-12
             if field == "date":
                 (start, end) = query.split(":", 2)
-                start_date = Locale.as_arrow(start).floor("hour")
-                end_date = Locale.as_arrow(end).shift(days=1).floor("hour")
+                start_date = Locale.as_arrow(start).floor("day")
+                end_date = Locale.as_arrow(end).ceil("day")
                 query = f"btw:{start_date.int_timestamp}:{end_date.int_timestamp}"
 
             filters[field] = query
