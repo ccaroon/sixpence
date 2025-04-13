@@ -1,5 +1,7 @@
 import flet as ft
 
+import re
+
 import utils.constants as const
 from utils.locale import Locale
 import utils.tools
@@ -177,21 +179,34 @@ class BudgetNavBar(ft.AppBar):
     def __on_search_submit(self, evt):
         value = evt.data
 
+        filters = {}
+
+        # <field_name>=<query_string>
+        # Ex: category=Pets | amount=gte:100 | type=0
+        matches = re.match(r"(\w+)=", value)
+        if matches:
+            field = matches.group(1)
+            (_, query) = value.split("=", 2)
+
+            # TODO: handle tag aliases for "tags" searches
+
+            # date=2025-03-30:2025-04-12
+            if field == "date":
+                (start, end) = query.split(":", 2)
+                start_date = Locale.as_arrow(start)
+                end_date = Locale.as_arrow(end)
+                query = f"btw:{start_date.int_timestamp}:{end_date.int_timestamp}"
+
+            filters[field] = query
         # Looks like numeric/dollar amount i.e. a float sans '$'
         # Use the given value as a minium, i.e. search for all
         # budget items of that amount and more
-        filters = {}
-        if utils.tools.is_numeric(value):
+        elif utils.tools.is_numeric(value):
             op = "gte" if float(value) >= 0 else "lte"
             filters["amount"] = f"{op}:{value}"
+        # Default to searching in `category`
         else:
-            # tags:my stuff
-            if value.startswith("tags:"):
-                (_, tag_name) = value.split(":",2)
-                filters["tags"] = tag_name
-            # Search in the category for the given string
-            else:
-                filters["category"] = value
+            filters["category"] = value
 
         self.__refresh(
             reset_filters=True,
