@@ -30,14 +30,9 @@ class YearlyAvgReport(ft.Container):
         return "List of each Income/Expense Category with the Monthly Average and Total Spent for the Year."
 
 
-    def refresh(self):
-        self.__list_view.controls.clear()
-
-        now = Locale.now()
-
+    def __load_data(self):
         start_date = self.__curr_date.floor("year")
         end_date = self.__curr_date.ceil("year")
-        months = 12 if start_date.year < now.year else now.month
 
         expenses = Expense.find(
             date=f"btw:{start_date.int_timestamp}:{end_date.int_timestamp}"
@@ -65,6 +60,17 @@ class YearlyAvgReport(ft.Container):
             key=lambda item: (item["type"], item["category"])
         )
 
+        return data
+
+
+    def refresh(self):
+        self.__list_view.controls.clear()
+
+        now = Locale.now()
+        start_date = self.__curr_date.floor("year")
+        months = 12 if start_date.year < now.year else now.month
+
+        data = self.__load_data()
         for idx, item in enumerate(data):
             inc_color = utils.tools.cycle(const.INCOME_COLORS, idx)
             exp_color = utils.tools.cycle(const.EXPENSE_COLORS, idx)
@@ -117,13 +123,55 @@ class YearlyAvgReport(ft.Container):
         self.refresh()
 
 
+    def __on_choose_export_path(self, evt):
+        export_path = evt.path
+        data = self.__load_data()
+
+        now = Locale.now()
+        start_date = self.__curr_date.floor("year")
+        curr_year = start_date.format('YYYY')
+        months = 12 if start_date.year < now.year else now.month
+
+        header = f"""# Sixpence Report
+## Yearly Average for Year {curr_year}
+| Category   | Monthly Average | Total|
+| ---------- | --------------- | ---- |
+"""
+
+        report_file = f"{export_path}/sixpence-report_yearly-avg-{curr_year}.md"
+        with open(report_file, "w") as fptr:
+            fptr.write(header)
+            for item in data:
+                avg = Locale.currency(item["total"] / months)
+                total = Locale.currency(item["total"])
+                line = f"| {item['category']} | {avg} / month | {total}\n"
+                fptr.write(line)
+
+        self.__page.session.get("notification_bar").notify(
+            ft.Icons.SAVE_ALT,
+            f"Report Exported: {f"{export_path}/sixpence-report_yearly-avg-{curr_year}.md"}"
+        )
+
+
     def actions(self):
         self.__year_display = ft.Chip(
             ft.Text(self.__curr_date.year),
             on_click=self.__on_year_display_click
         )
 
+        file_picker = ft.FilePicker(
+            on_result=self.__on_choose_export_path
+        )
+        self.__page.overlay.append(file_picker)
+
         return [
+            ft.VerticalDivider(),
+            ft.IconButton(
+                icon=ft.Icons.SAVE_ALT,
+                icon_color=ft.Colors.ON_PRIMARY_CONTAINER,
+                on_click=lambda _: file_picker.get_directory_path(),
+                tooltip="Export"
+            ),
             ft.VerticalDivider(),
             ft.IconButton(
                 icon=ft.Icons.ARROW_LEFT,

@@ -8,7 +8,7 @@ class Home(BaseView):
             ft.Row(
                 [
                     ft.Column(
-                        [ft.Image(src="../assets/logo.png")]
+                        [ft.Image(src="logo.png")]
                     ),
                     ft.Column(
                         [

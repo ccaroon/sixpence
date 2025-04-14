@@ -51,6 +51,7 @@ class Sixpence:
         self.__page.overlay.append(self.__about_view)
 
         self.__notify_bar = NotificationBar(self.__page)
+        self.__page.session.set("notification_bar", self.__notify_bar)
 
         self.__appbar = NavRail(self.__page)
         self.__router = Router(

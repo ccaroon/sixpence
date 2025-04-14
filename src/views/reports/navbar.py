@@ -12,8 +12,9 @@ class ReportNavBar(ft.AppBar):
             ft.IconButton(
                 icon=ft.Icons.HOME,
                 icon_color=ft.Colors.ON_PRIMARY_CONTAINER,
-                on_click=self.__on_report_home
-            ),
+                on_click=self.__on_report_home,
+                tooltip="Report Home"
+            )
         ]
 
         super().__init__(
