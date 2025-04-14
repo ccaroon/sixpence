@@ -3,6 +3,7 @@ import flet as ft
 from views.base import Base as BaseView
 from views.reports.navbar import ReportNavBar
 
+from views.reports.report.spending import SpendingReport
 from views.reports.report.yearly_average import YearlyAvgReport
 
 class ReportView(BaseView):
@@ -14,7 +15,12 @@ class ReportView(BaseView):
         )
         self.content = self.__reports
 
-        for report in (YearlyAvgReport(self._page),):
+        reports = [
+            SpendingReport(self._page),
+            YearlyAvgReport(self._page)
+        ]
+
+        for report in reports:
             self.__reports.controls.append(
                 ft.Card(
                     ft.ListTile(
