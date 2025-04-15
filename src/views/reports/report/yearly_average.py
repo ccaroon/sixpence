@@ -11,6 +11,8 @@ class YearlyAvgReport(ft.Container):
         self.__page = page
         super().__init__()
 
+        self.__init_actions()
+
         self.__list_view = ft.ListView()
         self.content = self.__list_view
 
@@ -132,8 +134,12 @@ class YearlyAvgReport(ft.Container):
         curr_year = start_date.format('YYYY')
         months = 12 if start_date.year < now.year else now.month
 
-        header = f"""# Sixpence Report
-## Yearly Average for Year {curr_year}
+        header = f"""
+# Sixpence Report :: Yearly Averages
+* **Year**: {curr_year}
+
+--------------------------------------------------------------------------------
+
 | Category   | Monthly Average | Total|
 | ---------- | --------------- | ---- |
 """
@@ -152,8 +158,7 @@ class YearlyAvgReport(ft.Container):
             f"Report Exported: {report_file}"
         )
 
-
-    def actions(self):
+    def __init_actions(self):
         self.__year_display = ft.Chip(
             ft.Text(self.__curr_date.year),
             on_click=self.__on_year_display_click
@@ -164,7 +169,7 @@ class YearlyAvgReport(ft.Container):
         )
         self.__page.overlay.append(file_picker)
 
-        return [
+        self.__actions = [
             ft.VerticalDivider(),
             ft.IconButton(
                 icon=ft.Icons.SAVE_ALT,
@@ -187,3 +192,7 @@ class YearlyAvgReport(ft.Container):
                 on_click=self.__on_change_year
             ),
         ]
+
+
+    def actions(self):
+        return self.__actions

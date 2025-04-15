@@ -12,6 +12,10 @@ class SpendingReport(ft.Container):
 
         super().__init__()
 
+        self.__init_actions()
+        self.__init_header()
+        self.__init_footer()
+
         self.__list_view = ft.ListView()
         self.content = self.__list_view
 
@@ -29,6 +33,79 @@ class SpendingReport(ft.Container):
     @property
     def description(self):
         return "Display what you've been spending your money in a given period of time."
+
+
+    def __init_header(self):
+        self.__header = ft.ListTile(
+            leading=ft.Icon(ft.Icons.KEYBOARD_DOUBLE_ARROW_RIGHT),
+            trailing=ft.Icon(ft.Icons.KEYBOARD_DOUBLE_ARROW_LEFT),
+            title=ft.Row([
+                ft.Text("Category",
+                    color="black",
+                    theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
+                    weight=ft.FontWeight.BOLD,
+                    expand=4),
+                ft.Text(
+                    "Amount",
+                    color="black",
+                    weight=ft.FontWeight.BOLD,
+                    expand=2),
+                ft.Text(
+                    "Count",
+                    color="black",
+                    weight=ft.FontWeight.BOLD,
+                    expand=2),
+                ft.Text(
+                    "Average",
+                    color="black",
+                    weight=ft.FontWeight.BOLD,
+                    expand=2),
+            ]),
+            bgcolor=ft.Colors.GREY_300
+        )
+
+
+    def __init_footer(self):
+        self.__income_ctl = ft.Text(
+            "$0.00",
+            color="black",
+            theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
+            weight=ft.FontWeight.BOLD,
+            expand=2
+        )
+
+        self.__expenses_ctl = ft.Text(
+            "$0.00",
+            color="black",
+            theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
+            weight=ft.FontWeight.BOLD,
+            expand=2
+        )
+
+        self.__net_ctl = ft.Text(
+            "$0.00",
+            color="black",
+            theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
+            weight=ft.FontWeight.BOLD,
+            expand=2
+        )
+
+        self.__footer = ft.ListTile(
+            leading=ft.Icon(ft.Icons.KEYBOARD_DOUBLE_ARROW_RIGHT),
+            trailing=ft.Icon(ft.Icons.KEYBOARD_DOUBLE_ARROW_LEFT),
+            title=ft.Row([
+                ft.Text("Grand Totals",
+                    color="black",
+                    theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
+                    weight=ft.FontWeight.BOLD,
+                    expand=4),
+                self.__income_ctl,
+                self.__expenses_ctl,
+                self.__net_ctl
+
+            ]),
+            bgcolor=ft.Colors.GREY_300
+        )
 
 
     def __date_range(self):
@@ -56,11 +133,11 @@ class SpendingReport(ft.Container):
                     "type": exp.type,
                     "icon": exp.icon,
                     "category": exp.category,
-                    "total": exp.amount,
+                    "amount": exp.amount,
                     "count": 1
                 }
             else:
-                data[exp.category]["total"] += exp.amount
+                data[exp.category]["amount"] += exp.amount
                 data[exp.category]["count"] += 1
 
         # Convert into list sorted by type, then category
@@ -75,12 +152,22 @@ class SpendingReport(ft.Container):
     def refresh(self):
         self.__list_view.controls.clear()
 
+        # Header
+        self.__list_view.controls.append(self.__header)
+
+        income_amount = 0.0
+        expense_amount = 0.0
         data = self.__load_data()
         for idx, item in enumerate(data):
             inc_color = utils.tools.cycle(const.INCOME_COLORS, idx)
             exp_color = utils.tools.cycle(const.EXPENSE_COLORS, idx)
 
-            bgcolor = inc_color if item["type"] == Expense.TYPE_INCOME else exp_color
+            if item["type"] == Expense.TYPE_INCOME:
+                bgcolor = inc_color
+                income_amount += item["amount"]
+            else:
+                bgcolor = exp_color
+                expense_amount += item["amount"]
 
             tile = ft.ListTile(
                 leading=ft.Icon(item["icon"], color="black"),
@@ -92,7 +179,7 @@ class SpendingReport(ft.Container):
                             weight=ft.FontWeight.BOLD,
                             expand=4),
                         ft.Text(
-                            Locale.currency(item["total"]),
+                            Locale.currency(item["amount"]),
                             color="black",
                             weight=ft.FontWeight.BOLD,
                             expand=2),
@@ -102,7 +189,7 @@ class SpendingReport(ft.Container):
                             weight=ft.FontWeight.BOLD,
                             expand=2),
                         ft.Text(
-                            Locale.currency(item["total"] / item["count"]) + " avg",
+                            Locale.currency(item["amount"] / item["count"]),
                             color="black",
                             weight=ft.FontWeight.BOLD,
                             expand=2),
@@ -112,6 +199,12 @@ class SpendingReport(ft.Container):
             )
 
             self.__list_view.controls.append(tile)
+
+        # Footer
+        self.__income_ctl.value = "Income: " + Locale.currency(income_amount)
+        self.__expenses_ctl.value = "Expenses: "+ Locale.currency(expense_amount)
+        self.__net_ctl.value = "Net: " + Locale.currency(income_amount + expense_amount)
+        self.__list_view.controls.append(self.__footer)
 
         self.__page.update()
 
@@ -123,22 +216,49 @@ class SpendingReport(ft.Container):
         start_disp = start_date.format("MMM DD, YYYY")
         end_disp = end_date.format("MMM DD, YYYY")
 
+        inc_total = 0.0
+        exp_total = 0.0
+
         data = self.__load_data()
 
-        header = f"""# Sixpence Report
-## Spending for the Last {self.__period} Days ({start_disp} to {end_disp})
-| Category | Total | Count | Average |
-| -------- | ----- | ----- | ------- |
+        header = f"""
+# Sixpence Report :: Spending
+* **Period**: Last {self.__period} Days ({start_disp} to {end_disp})
+
+--------------------------------------------------------------------------------
+
+| Category | Amount | Count | Average |
+| -------- | ------ | ----- | ------- |
 """
 
-        report_file = f"{export_path}/sixpence-report-spending-{self.__period}.md"
+        report_file = f"{export_path}/sixpence-report_spending-{self.__period}.md"
         with open(report_file, "w") as fptr:
+            # header
             fptr.write(header)
+
+            # report data
             for item in data:
-                avg = Locale.currency(item["total"] / item["count"])
-                total = Locale.currency(item["total"])
-                line = f"| {item['category']} | {total} | {item['count']} | {avg} |\n"
+                if item["type"] == Expense.TYPE_INCOME:
+                    inc_total += item["amount"]
+                else:
+                    exp_total += item["amount"]
+
+                avg = Locale.currency(item["amount"] / item["count"])
+                amount = Locale.currency(item["amount"])
+                line = f"| {item['category']} | {amount} | {item['count']} | {avg} |\n"
                 fptr.write(line)
+
+            # footer
+            net_total = Locale.currency(inc_total + exp_total)
+            inc_total = Locale.currency(inc_total)
+            exp_total = Locale.currency(exp_total)
+            footer = f"""
+| Income | Expenses | Net |
+| ------ | -------- | --- |
+| {inc_total} | {exp_total} | {net_total} |
+"""
+            fptr.write(footer)
+
 
         self.__page.session.get("notification_bar").notify(
             ft.Icons.SAVE_ALT,
@@ -152,13 +272,13 @@ class SpendingReport(ft.Container):
         self.refresh()
 
 
-    def actions(self):
+    def __init_actions(self):
         file_picker = ft.FilePicker(
             on_result=self.__on_export
         )
         self.__page.overlay.append(file_picker)
 
-        return [
+        self.__actions = [
             ft.VerticalDivider(),
             ft.IconButton(
                 icon=ft.Icons.SAVE_ALT,
@@ -180,3 +300,6 @@ class SpendingReport(ft.Container):
 
             )
         ]
+
+    def actions(self):
+        return self.__actions
