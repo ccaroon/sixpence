@@ -14,7 +14,7 @@ product = "Sixpence"
 company = "Caroon Dot Org"
 copyright = "Copyright (C) 2025 by Craig N. Caroon"
 # NOTE: YYMMDD
-build_number = 250414
+build_number = 250416
 
 [tool.flet.app]
 path = "src"

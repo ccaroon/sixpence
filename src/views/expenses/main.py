@@ -109,12 +109,15 @@ class ExpenseView(BaseView):
             key=lambda item: (item["type"], item["category"])
         )
 
+        self.__export_data = []
         for item in budget:
             # Additional Filtering
             if only_zero_spent and abs(item["spent"]) > 0.0:
                 continue
             elif only_overbudget and abs(item["spent"]) <= abs(item["amount"]):
                 continue
+
+            self.__export_data.append(item)
 
             bgcolor = ft.Colors.WHITE if item["spent"] == 0.0 else ft.Colors.GREY_200
             progress_percent = round(item["spent"]/item["amount"], 2)
@@ -387,7 +390,8 @@ class ExpenseView(BaseView):
             callbacks={
                 "on_refresh": self._update,
                 "on_new": self.__on_new,
-                "on_change_month": self.__on_change_month
+                "on_change_month": self.__on_change_month,
+                "on_export": self.__on_export
             }
         )
 
@@ -417,6 +421,29 @@ class ExpenseView(BaseView):
         self._update(
             tags=evt.control.label.value
         )
+
+
+    def __on_export(self, evt):
+        if self.__curr_view == self.VIEW_PROGRESS:
+            header = """
+# Sixpence :: Expenses
+
+| Category | Amount |
+| -------- | ------ |
+"""
+            grand_total = 0.0
+            with open(evt.path, "w") as fptr:
+                fptr.write(header)
+                for item in self.__export_data:
+                    grand_total += item['amount']
+                    grand_total
+                    fptr.write(f"| {item['category']} | {Locale.currency(item['amount'])} |\n")
+
+                fptr.write(f"""
+| Grand Total |
+| ----------- |
+| {Locale.currency(grand_total)} |
+""")
 
 
     def __on_edit(self, evt):
