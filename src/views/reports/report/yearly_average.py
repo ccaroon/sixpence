@@ -5,13 +5,12 @@ import utils.constants as const
 from utils.locale import Locale
 from models.expense import Expense
 
-class YearlyAvgReport(ft.Container):
+from views.reports.report.base import ReportBase
+
+class YearlyAvgReport(ReportBase):
     def __init__(self, page):
         self.__curr_date = Locale.now()
-        self.__page = page
-        super().__init__()
-
-        self.__init_actions()
+        super().__init__(page)
 
         self.__list_view = ft.ListView()
         self.content = self.__list_view
@@ -105,7 +104,7 @@ class YearlyAvgReport(ft.Container):
 
             self.__list_view.controls.append(tile)
 
-        self.__page.update()
+        self._page.update()
 
 
     def __on_year_display_click(self, evt):
@@ -113,7 +112,7 @@ class YearlyAvgReport(ft.Container):
         self.__year_display.label.value = self.__curr_date.year
         self.__year_display.update()
 
-        self.refresh()
+        self.render()
 
 
     def __on_change_year(self, evt):
@@ -122,10 +121,10 @@ class YearlyAvgReport(ft.Container):
         self.__year_display.label.value = self.__curr_date.year
         self.__year_display.update()
 
-        self.refresh()
+        self.render()
 
 
-    def __on_export(self, evt):
+    def _on_export(self, evt):
         export_path = evt.path
         data = self.__load_data()
 
@@ -153,31 +152,20 @@ class YearlyAvgReport(ft.Container):
                 line = f"| {item['category']} | {avg} / month | {total}\n"
                 fptr.write(line)
 
-        self.__page.session.get("notification_bar").notify(
+        self._page.session.get("notification_bar").notify(
             ft.Icons.SAVE_ALT,
             f"Report Exported: {report_file}"
         )
 
-    def __init_actions(self):
+    def _init_actions(self):
+        super()._init_actions()
+
         self.__year_display = ft.Chip(
             ft.Text(self.__curr_date.year),
             on_click=self.__on_year_display_click
         )
 
-        file_picker = ft.FilePicker(
-            on_result=self.__on_export
-        )
-        self.__page.overlay.append(file_picker)
-
-        self.__actions = [
-            ft.VerticalDivider(),
-            ft.IconButton(
-                icon=ft.Icons.SAVE_ALT,
-                icon_color=ft.Colors.ON_PRIMARY_CONTAINER,
-                on_click=lambda _: file_picker.get_directory_path(),
-                tooltip="Export"
-            ),
-            ft.VerticalDivider(),
+        self._actions.extend([
             ft.IconButton(
                 icon=ft.Icons.ARROW_LEFT,
                 icon_color=ft.Colors.ON_PRIMARY_CONTAINER,
@@ -191,8 +179,4 @@ class YearlyAvgReport(ft.Container):
                 data=1,
                 on_click=self.__on_change_year
             ),
-        ]
-
-
-    def actions(self):
-        return self.__actions
+        ])

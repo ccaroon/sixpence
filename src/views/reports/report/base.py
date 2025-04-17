@@ -27,6 +27,7 @@ class ReportBase(ABC, ft.Container):
     def description(self):
         """ Description of the Report """
 
+
     @abstractmethod
     def render(self):
         """ Render the Report """

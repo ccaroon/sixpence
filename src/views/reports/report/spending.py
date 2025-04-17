@@ -5,14 +5,14 @@ import utils.constants as const
 from utils.locale import Locale
 from models.expense import Expense
 
-class SpendingReport(ft.Container):
+from views.reports.report.base import ReportBase
+
+class SpendingReport(ReportBase):
     def __init__(self, page):
+        super().__init__(page)
+
         self.__period = 7
-        self.__page = page
 
-        super().__init__()
-
-        self.__init_actions()
         self.__init_header()
         self.__init_footer()
 
@@ -32,7 +32,7 @@ class SpendingReport(ft.Container):
 
     @property
     def description(self):
-        return "What you've been spending your money on a given period of time."
+        return "What you've been spending your money on in a given period of time."
 
 
     def __init_header(self):
@@ -206,10 +206,10 @@ class SpendingReport(ft.Container):
         self.__net_ctl.value = "Net: " + Locale.currency(income_amount + expense_amount)
         self.__list_view.controls.append(self.__footer)
 
-        self.__page.update()
+        self._page.update()
 
 
-    def __on_export(self, evt):
+    def _on_export(self, evt):
         export_path = evt.path
         (start_date, end_date) = self.__date_range()
 
@@ -260,7 +260,7 @@ class SpendingReport(ft.Container):
             fptr.write(footer)
 
 
-        self.__page.session.get("notification_bar").notify(
+        self._page.session.get("notification_bar").notify(
             ft.Icons.SAVE_ALT,
             f"Report Exported: {report_file}"
         )
@@ -269,24 +269,13 @@ class SpendingReport(ft.Container):
     def __on_time_period_change(self, evt):
         self.__period = int(list(evt.control.selected)[0])
 
-        self.refresh()
+        self.render()
 
 
-    def __init_actions(self):
-        file_picker = ft.FilePicker(
-            on_result=self.__on_export
-        )
-        self.__page.overlay.append(file_picker)
+    def _init_actions(self):
+        super()._init_actions()
 
-        self.__actions = [
-            ft.VerticalDivider(),
-            ft.IconButton(
-                icon=ft.Icons.SAVE_ALT,
-                icon_color=ft.Colors.ON_PRIMARY_CONTAINER,
-                on_click=lambda _: file_picker.get_directory_path(),
-                tooltip="Export"
-            ),
-            ft.VerticalDivider(),
+        self._actions.extend([
             ft.SegmentedButton(
                 selected={7},
                 segments=[
@@ -297,9 +286,5 @@ class SpendingReport(ft.Container):
                     ft.Segment(label=ft.Text("90d"), value=90)
                 ],
                 on_change=self.__on_time_period_change
-
             )
-        ]
-
-    def actions(self):
-        return self.__actions
+        ])
