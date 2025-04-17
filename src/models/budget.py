@@ -171,6 +171,33 @@ class Budget(Taggable, Base):
 
 
     @classmethod
+    def collate_by_category(self, budget):
+        """
+        Given a list of Budget items collate them by their category.
+
+        Args:
+            budget (list): List of Budget itens
+
+        Return:
+            dict: Mapping of Budget items by their category.
+        """
+        budget_map = {}
+        for item in budget:
+            if item.category not in budget_map:
+                budget_map[item.category] = {
+                    "type": item.type,
+                    "icon": item.icon,
+                    "category": item.category,
+                    "amount": item.amount,
+                    "spent": 0.0
+                }
+            else:
+                budget_map[item.category]["amount"] += item.amount
+
+        return budget_map
+
+
+    @classmethod
     def for_month(cls, month_num:int, **kwargs):
         """
         All non-deleted budgeted items that are due in the given month

@@ -29,7 +29,7 @@ class YearlyAvgReport(ft.Container):
 
     @property
     def description(self):
-        return "List of each Income/Expense Category with the Monthly Average and Total Spent for the Year."
+        return "Income & Expense Totals for the Year with the Monthly Averages."
 
 
     def __load_data(self):
@@ -65,7 +65,7 @@ class YearlyAvgReport(ft.Container):
         return data
 
 
-    def refresh(self):
+    def render(self):
         self.__list_view.controls.clear()
 
         now = Locale.now()

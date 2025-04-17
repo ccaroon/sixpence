@@ -17,7 +17,6 @@ class ExpenseNavBar(ft.AppBar):
         self.__refresh = callbacks.get("on_refresh")
         self.__on_new = callbacks.get("on_new")
         self.__on_change_month = callbacks.get("on_change_month")
-        self.__on_export = callbacks.get("on_export")
 
         self.__menu = ft.PopupMenuButton(
             icon=ft.Icons.MENU,
@@ -89,11 +88,6 @@ class ExpenseNavBar(ft.AppBar):
             ]
         )
 
-        export_file_picker = ft.FilePicker(
-            on_result=self.__on_export
-        )
-        self.__page.overlay.append(export_file_picker)
-
         super().__init__(
             leading=self.__menu,
             title=ft.Text("Expenses"),
@@ -130,15 +124,6 @@ class ExpenseNavBar(ft.AppBar):
                     color=ft.Colors.ON_PRIMARY_CONTAINER,
                     leading_indent=5, trailing_indent=5),
                 self.__view_control,
-                ft.VerticalDivider(
-                    color=ft.Colors.ON_PRIMARY_CONTAINER,
-                    leading_indent=5, trailing_indent=5),
-                ft.IconButton(
-                    icon=ft.Icons.SAVE_ALT,
-                    icon_color=ft.Colors.ON_PRIMARY_CONTAINER,
-                    on_click=lambda _: export_file_picker.save_file(file_name="sixpence-expenses.md"),
-                    tooltip="Export"
-                ),
                 ft.VerticalDivider(
                     color=ft.Colors.ON_PRIMARY_CONTAINER,
                     leading_indent=5, trailing_indent=5),

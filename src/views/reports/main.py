@@ -5,6 +5,7 @@ from views.reports.navbar import ReportNavBar
 
 from views.reports.report.spending import SpendingReport
 from views.reports.report.yearly_average import YearlyAvgReport
+from views.reports.report.upcoming import UpcomingReport
 
 class ReportView(BaseView):
     def _layout(self):
@@ -17,6 +18,7 @@ class ReportView(BaseView):
 
         reports = [
             SpendingReport(self._page),
+            UpcomingReport(self._page),
             YearlyAvgReport(self._page)
         ]
 
@@ -39,11 +41,11 @@ class ReportView(BaseView):
 
         # Update title & add report specific actions
         self._navbar.set_title(report.name)
-        self._navbar.actions.extend(report.actions())
+        self._navbar.actions.extend(report.actions)
         self._navbar.update()
 
         # Display
-        report.refresh()
+        report.render()
         self.content = report
         self.update()
 

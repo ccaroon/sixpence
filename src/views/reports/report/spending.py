@@ -32,7 +32,7 @@ class SpendingReport(ft.Container):
 
     @property
     def description(self):
-        return "Display what you've been spending your money in a given period of time."
+        return "What you've been spending your money on a given period of time."
 
 
     def __init_header(self):
@@ -149,7 +149,7 @@ class SpendingReport(ft.Container):
         return data
 
 
-    def refresh(self):
+    def render(self):
         self.__list_view.controls.clear()
 
         # Header

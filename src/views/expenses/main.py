@@ -51,18 +51,17 @@ class ExpenseView(BaseView):
         self.__list_view.controls.append(placeholder)
 
 
-    def __view_progress(self, expenses, **kwargs):
-        self.__list_view.spacing = 4
-
+    def __collate_progress_data(self, expenses, **kwargs):
         only_overbudget = kwargs.get("over_budget", False)
         only_zero_spent = kwargs.get("zero_spent", False)
 
         # BUDGETED ITEMS
         # Collate budget items by category & sum amounts
-        budget = {}
+        # TODO: replace with call to Budget.collate_by_category()
+        budgeted = {}
         for item in self.__budget:
-            if item.category not in budget:
-                budget[item.category] = {
+            if item.category not in budgeted:
+                budgeted[item.category] = {
                     "type": item.type,
                     "icon": item.icon,
                     "category": item.category,
@@ -70,9 +69,9 @@ class ExpenseView(BaseView):
                     "spent": 0.0
                 }
             else:
-                budget[item.category]["amount"] += item.amount
+                budgeted[item.category]["amount"] += item.amount
 
-        # Update amount spent for each category
+        # UNBUDGETED ITEMS
         # Collate unbudgeted items
         unbudgeted = {
             "items": {},
@@ -83,8 +82,8 @@ class ExpenseView(BaseView):
             if exp.category == Expense.ROLLOVER_CATEGORY:
                 continue
 
-            if exp.category in budget:
-                budget[exp.category]["spent"] += exp.amount
+            if exp.category in budgeted:
+                budgeted[exp.category]["spent"] += exp.amount
             else:
                 if exp.category not in unbudgeted["items"]:
                     unbudgeted["items"][exp.category] = {
@@ -103,22 +102,32 @@ class ExpenseView(BaseView):
                 elif exp.type == Expense.TYPE_EXPENSE:
                     unbudgeted["exp_total"] += exp.amount
 
+
         # Convert into list sorted by type, then category
-        budget = sorted(
-            budget.values(),
+        budgeted = sorted(
+            budgeted.values(),
             key=lambda item: (item["type"], item["category"])
         )
 
-        self.__export_data = []
-        for item in budget:
-            # Additional Filtering
-            if only_zero_spent and abs(item["spent"]) > 0.0:
-                continue
-            elif only_overbudget and abs(item["spent"]) <= abs(item["amount"]):
-                continue
+        # Additional budgeted items filtering
+        if only_zero_spent:
+            budgeted = filter(lambda item: abs(item["spent"]) == 0.0, budgeted)
+        elif only_overbudget:
+            budgeted = filter(lambda item: abs(item["spent"]) > abs(item["amount"]), budgeted)
 
-            self.__export_data.append(item)
+        # Convert into list sorted by type, then category
+        unbudgeted["items"] = sorted(
+            unbudgeted["items"].values(),
+            key=lambda item: (item["type"], item["category"])
+        )
 
+        return (budgeted, unbudgeted)
+
+
+    def __view_progress(self, budgeted, unbudgeted):
+        self.__list_view.spacing = 4
+
+        for item in budgeted:
             bgcolor = ft.Colors.WHITE if item["spent"] == 0.0 else ft.Colors.GREY_200
             progress_percent = round(item["spent"]/item["amount"], 2)
             percent_display = round(abs(progress_percent) * 100.00)
@@ -164,13 +173,7 @@ class ExpenseView(BaseView):
 
             self.__list_view.controls.append(tile)
 
-        # UN-BUDGETED ITEMS
-        # Convert into list sorted by type, then category
-        unbudgeted["items"] = sorted(
-            unbudgeted["items"].values(),
-            key=lambda item: (item["type"], item["category"])
-        )
-
+        # UNBUDGETED ITEMS
         # Tile for main list
         unbudgeted_tile = ft.ExpansionTile(
             leading=ft.Icon(ft.Icons.HELP_CENTER),
@@ -369,7 +372,9 @@ class ExpenseView(BaseView):
             case self.VIEW_CALENDAR:
                 self.__view_calendar(expenses)
             case self.VIEW_PROGRESS:
-                self.__view_progress(expenses, **view_opts)
+                budgeted, unbudgeted = self.__collate_progress_data(
+                    expenses, **view_opts)
+                self.__view_progress(budgeted, unbudgeted)
             case _:
                 pass
 
@@ -390,8 +395,7 @@ class ExpenseView(BaseView):
             callbacks={
                 "on_refresh": self._update,
                 "on_new": self.__on_new,
-                "on_change_month": self.__on_change_month,
-                "on_export": self.__on_export
+                "on_change_month": self.__on_change_month
             }
         )
 
@@ -421,29 +425,6 @@ class ExpenseView(BaseView):
         self._update(
             tags=evt.control.label.value
         )
-
-
-    def __on_export(self, evt):
-        if self.__curr_view == self.VIEW_PROGRESS:
-            header = """
-# Sixpence :: Expenses
-
-| Category | Amount |
-| -------- | ------ |
-"""
-            grand_total = 0.0
-            with open(evt.path, "w") as fptr:
-                fptr.write(header)
-                for item in self.__export_data:
-                    grand_total += item['amount']
-                    grand_total
-                    fptr.write(f"| {item['category']} | {Locale.currency(item['amount'])} |\n")
-
-                fptr.write(f"""
-| Grand Total |
-| ----------- |
-| {Locale.currency(grand_total)} |
-""")
 
 
     def __on_edit(self, evt):
