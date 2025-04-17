@@ -5,7 +5,7 @@ import pprint
 import utils.tools
 import utils.constants as const
 
-from models.budget import Budget as BudgetItem
+from models.budget import Budget
 from utils.locale import Locale
 from views.base import Base as BaseView
 from views.budget.editor import BudgetEditor
@@ -39,7 +39,7 @@ class BudgetView(BaseView):
 
         # print(f"Filters: [{self.__filters}]")
 
-        budget_items = BudgetItem.find(
+        budget_items = Budget.find(
             op="and",
             sort_by="type,category",
             **self.__filters
@@ -55,7 +55,7 @@ class BudgetView(BaseView):
 
             bgcolor = None
             tag_color = None
-            if item.type == BudgetItem.TYPE_INCOME:
+            if item.type == Budget.TYPE_INCOME:
                 bgcolor = inc_color
                 tag_color = inc_color_alt
                 inc_total += (item.amount / item.frequency)
@@ -180,7 +180,7 @@ class BudgetView(BaseView):
 
 
     def __on_new(self, evt):
-        budget_item = BudgetItem()
+        budget_item = Budget()
         self.__editor.edit(budget_item)
 
 

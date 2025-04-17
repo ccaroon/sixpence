@@ -57,19 +57,7 @@ class ExpenseView(BaseView):
 
         # BUDGETED ITEMS
         # Collate budget items by category & sum amounts
-        # TODO: replace with call to Budget.collate_by_category()
-        budgeted = {}
-        for item in self.__budget:
-            if item.category not in budgeted:
-                budgeted[item.category] = {
-                    "type": item.type,
-                    "icon": item.icon,
-                    "category": item.category,
-                    "amount": item.amount,
-                    "spent": 0.0
-                }
-            else:
-                budgeted[item.category]["amount"] += item.amount
+        budgeted = Budget.collate_by_category(self.__budget)
 
         # UNBUDGETED ITEMS
         # Collate unbudgeted items
