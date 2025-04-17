@@ -111,17 +111,11 @@ class UpcomingReport(ReportBase):
 
         # collect/munge/collate data
         for exp in expenses:
-            if exp.category.startswith("Sixpence:"):
-                continue
-
-            if exp.type == Expense.TYPE_INCOME:
-                budget_map[exp.category]["amount"] -= exp.amount
-            elif exp.type == Expense.TYPE_EXPENSE:
-                if exp.category in budget_map:
-                    # budget_map[exp.category]["spent"] += exp.amount
+            if exp.category in budget_map:
+                if exp.type == Expense.TYPE_INCOME:
+                    budget_map[exp.category]["amount"] -= exp.amount
+                elif exp.type == Expense.TYPE_EXPENSE:
                     del budget_map[exp.category]
-
-        # budget_map = filter(lambda item: item["spent"] == 0.0, budget_map)
 
         # Convert into list sorted by type, then category
         data = sorted(
