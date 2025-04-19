@@ -79,6 +79,13 @@ class UpcomingReport(ReportBase):
             weight=ft.FontWeight.BOLD,
             expand=2
         )
+        self.__balance_ctl = ft.Text(
+            "$0.00",
+            color="black",
+            theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
+            weight=ft.FontWeight.BOLD,
+            expand=2
+        )
 
         self.__footer = ft.ListTile(
             leading=ft.Icon(ft.Icons.KEYBOARD_DOUBLE_ARROW_RIGHT),
@@ -89,6 +96,7 @@ class UpcomingReport(ReportBase):
                     theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
                     weight=ft.FontWeight.BOLD,
                     expand=2),
+                self.__balance_ctl,
                 self.__income_ctl,
                 self.__expense_ctl
 
@@ -110,18 +118,29 @@ class UpcomingReport(ReportBase):
         )
 
         # collect/munge/collate data
+        balance = 0.0
         for exp in expenses:
+            balance += exp.amount
             if exp.category in budget_map:
                 if exp.type == Expense.TYPE_INCOME:
                     budget_map[exp.category]["amount"] -= exp.amount
                 elif exp.type == Expense.TYPE_EXPENSE:
                     del budget_map[exp.category]
 
+        balance_type = Expense.TYPE_INCOME if balance >= 0.0 else Expense.TYPE_EXPENSE
+        budget_map["_Meta:Balance"] = {
+            "type": balance_type,
+            "icon": ft.Icons.ACCOUNT_BALANCE,
+            "category": "_Meta:Balance",
+            "amount": balance
+        }
+
         # Convert into list sorted by type, then category
         data = sorted(
             budget_map.values(),
             key=lambda item: (item["type"], item["category"])
         )
+
 
         return data
 
@@ -134,8 +153,13 @@ class UpcomingReport(ReportBase):
 
         income_total = 0.0
         expense_total = 0.0
+        balance = 0.0
         data = self.__load_data()
         for idx, item in enumerate(data):
+            if item["category"].startswith("_Meta:Balance"):
+                balance = item["amount"]
+                continue
+
             inc_color = utils.tools.cycle(const.INCOME_COLORS, idx)
             exp_color = utils.tools.cycle(const.EXPENSE_COLORS, idx)
 
@@ -168,6 +192,7 @@ class UpcomingReport(ReportBase):
             self.__list_view.controls.append(tile)
 
         # Footer
+        self.__balance_ctl.value = "Balance: " + Locale.currency(balance)
         self.__income_ctl.value = "Income: " + Locale.currency(income_total)
         self.__expense_ctl.value = "Expenses: " + Locale.currency(expense_total)
         self.__list_view.controls.append(self.__footer)
@@ -193,9 +218,14 @@ class UpcomingReport(ReportBase):
 | -------- | ------ |
 """
 
+        balance = 0.0
         with open(report_file, "w") as fptr:
             fptr.write(header)
             for item in data:
+                if item["category"].startswith("_Meta:Balance"):
+                    balance = item["amount"]
+                    continue
+
                 if item["type"] == Expense.TYPE_EXPENSE:
                     expense_total += item["amount"]
                 else:
@@ -204,9 +234,9 @@ class UpcomingReport(ReportBase):
                 fptr.write(f"| {item['category']} | {Locale.currency(item['amount'])} |\n")
 
             footer = f"""
-| Totals | Income | Expenses |
-| ------ | ------ | -------- |
-|        | {Locale.currency(income_total)}     | {Locale.currency(expense_total)}       |
+| Totals | Balance | Income | Expenses |
+| ------ | ------- | ------ | -------- |
+|        | {Locale.currency(balance)} | {Locale.currency(income_total)} | {Locale.currency(expense_total)} |
 """
             fptr.write(footer)
 
