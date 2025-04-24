@@ -39,10 +39,19 @@ class UpcomingReport(ReportBase):
         return "Upcoming income & expenses for the current month."
 
 
-    def __update_date_display(self):
+    def __compute_period(self):
         now = Locale.now()
-        start_date = now.floor("day").format("MMM DD")
-        end_date = now.shift(weeks=self.__period).ceil('day').format("MMM DD")
+        start = now.floor("day")
+        end = now.shift(weeks=self.__period).ceil('day')
+
+        return (start,end)
+
+
+    def __update_date_display(self):
+        start, end = self.__compute_period()
+
+        start_date = start.format("MMM DD")
+        end_date = end.format("MMM DD")
         self._date_display.label.value = f"{start_date} - {end_date}"
 
 
@@ -140,6 +149,10 @@ class UpcomingReport(ReportBase):
     def __load_data(self):
         now = Locale.now()
 
+        # Start/End dates of define period
+        # I.e. Start/End dates of last N weeks
+        (period_start, period_end) = self.__compute_period()
+
         # Load this month's budget
         budget = Budget.for_month(now.month)
         budget_map = Budget.collate_by_category(budget)
@@ -154,7 +167,7 @@ class UpcomingReport(ReportBase):
 
         # Load expenses from the period of LAST month
         # I.e. the last N weeks of LAST month
-        start_date = now.shift(months=-1).floor("day")
+        start_date = period_start.shift(months=-1)
         end_date = start_date.shift(weeks=self.__period).ceil("day")
         period_expenses = Expense.find(
             date=f"btw:{start_date.int_timestamp}:{end_date.int_timestamp}"
@@ -167,23 +180,28 @@ class UpcomingReport(ReportBase):
         # month, so it is likey due in the coming period also
         data = []
         for category, item in budget_map.items():
+            expected_amt = 0.0
             if category in period_exp_map:
-                spent_amount = 0.0
-                if category in curr_exp_map:
-                    curr_items = curr_exp_map[category]
-                    spent_amount = sum([item.amount for item in curr_items])
+                expected_items = period_exp_map[category]
+                expected_amt = sum([item.amount for item in expected_items])
+
+                # spent_amount = 0.0
+                # if category in curr_exp_map:
+                #     curr_items = curr_exp_map[category]
+                #     spent_amount = sum([item.amount for item in curr_items])
 
                 data.append({
                     "type": item["type"],
                     "icon": item["icon"],
                     "category": item["category"],
-                    "spent_amt": spent_amount,
+                    # "spent_amt": spent_amount,
                     "budget_amt": item["amount"],
-                    "expected_amt": item["amount"] - spent_amount
+                    # "expected_amt": item["amount"] - spent_amount
+                    "expected_amt": expected_amt
                 })
 
-        # Filter out items where budget amount (or more) has been spent
-        data = filter(lambda item: abs(item["spent_amt"]) < abs(item["budget_amt"]), data)
+        # # Filter out items where budget amount (or more) has been spent
+        # data = filter(lambda item: abs(item["spent_amt"]) < abs(item["budget_amt"]), data)
 
         # Convert into list sorted by type, then category
         data = sorted(
@@ -192,46 +210,6 @@ class UpcomingReport(ReportBase):
         )
 
         return data
-
-
-
-    # def __Xload_dataX(self):
-    #     now = Locale.now()
-    #     start_date = now.floor("month")
-    #     end_date = now.ceil("month")
-
-    #     budget = Budget.for_month(now.month)
-    #     budget_map = Budget.collate_by_category(budget)
-
-    #     expenses = Expense.find(
-    #         date=f"btw:{start_date.int_timestamp}:{end_date.int_timestamp}"
-    #     )
-
-    #     # collect/munge/collate data
-    #     balance = 0.0
-    #     for exp in expenses:
-    #         balance += exp.amount
-    #         if exp.category in budget_map:
-    #             if exp.type == Expense.TYPE_INCOME:
-    #                 budget_map[exp.category]["amount"] -= exp.amount
-    #             elif exp.type == Expense.TYPE_EXPENSE:
-    #                 del budget_map[exp.category]
-
-    #     balance_type = Expense.TYPE_INCOME if balance >= 0.0 else Expense.TYPE_EXPENSE
-    #     budget_map["_Meta:Balance"] = {
-    #         "type": balance_type,
-    #         "icon": ft.Icons.ACCOUNT_BALANCE,
-    #         "category": "_Meta:Balance",
-    #         "amount": balance
-    #     }
-
-    #     # Convert into list sorted by type, then category
-    #     data = sorted(
-    #         budget_map.values(),
-    #         key=lambda item: (item["type"], item["category"])
-    #     )
-
-    #     return data
 
 
     def render(self):
@@ -249,10 +227,10 @@ class UpcomingReport(ReportBase):
 
             if item["type"] == Expense.TYPE_INCOME:
                 bgcolor = inc_color
-                income_total += item["spent_amt"]
+                income_total += item["expected_amt"]
             else:
                 bgcolor = exp_color
-                expense_total += item["spent_amt"]
+                expense_total += item["expected_amt"]
 
             tile = ft.ListTile(
                 leading=ft.Icon(item["icon"], color="black"),
@@ -306,9 +284,9 @@ class UpcomingReport(ReportBase):
             fptr.write(header)
             for item in data:
                 if item["type"] == Expense.TYPE_EXPENSE:
-                    expense_total += item["spent_amt"]
+                    expense_total += item["expected_amt"]
                 else:
-                    income_total += item["spent_amt"]
+                    income_total += item["expected_amt"]
 
                 fptr.write(f"| {item['category']} | {Locale.currency(item['expected_amt'])} |\n")
 
