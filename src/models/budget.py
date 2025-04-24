@@ -171,7 +171,7 @@ class Budget(Taggable, Base):
 
 
     @classmethod
-    def collate_by_category(self, budget):
+    def collate_by_category(self, budget:list):
         """
         Given a list of Budget items collate them by their category.
 
@@ -200,7 +200,7 @@ class Budget(Taggable, Base):
     @classmethod
     def for_month(cls, month_num:int, **kwargs):
         """
-        All non-deleted budgeted items that are due in the given month
+        All non-deleted budgeted items that are **due** in the given month
 
         Args:
             month_num (int): A month number: 1 to 12
@@ -218,13 +218,3 @@ class Budget(Taggable, Base):
                 wanted_items.append(itm)
 
         return wanted_items
-
-
-
-
-
-
-
-
-
-#

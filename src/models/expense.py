@@ -117,3 +117,24 @@ class Expense(Taggable, Base):
         self.amount = data.get("amount", self.amount)
 
         self.tags = data.get("tags", self.tags)
+
+
+    @classmethod
+    def collate_by_category(self, expenses:list):
+        """
+        Given a list of Expense items collate them by their category.
+
+        Args:
+            expenses (list): List of Budget itens
+
+        Return:
+            dict: Mapping of Expense items by their category.
+        """
+        expense_map = {}
+        for exp in expenses:
+            if exp.category in expense_map:
+                expense_map[exp.category].append(exp)
+            else:
+                expense_map[exp.category] = [exp]
+
+        return expense_map
