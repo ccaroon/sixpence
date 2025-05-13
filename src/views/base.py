@@ -3,11 +3,12 @@ import flet as ft
 from abc import abstractmethod
 
 class Base(ft.Container):
-    def __init__(self, page):
+    def __init__(self, page, presenter=None):
         super().__init__(expand=True)
 
-        self._page = page
         self._navbar = None
+        self._page = page
+        self._presenter = presenter
 
         self._layout_navbar()
         self._layout()

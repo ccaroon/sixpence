@@ -1,19 +1,17 @@
-import dateutil
-
-import pprint
-
 import flet as ft
 
 from controls.notification_bar import NotificationBar
+from presenters.settings import Settings as SettingsPresenter
 import utils.constants as const
 from views.base import Base as BaseView
 
 class Settings(BaseView):
     def __init__(self, page):
         self.__cfg = page.session.get("config")
-        self.__notify_bar = NotificationBar(page)
 
-        super().__init__(page)
+        super().__init__(page, SettingsPresenter(self, self.__cfg))
+
+        self.notification_bar = NotificationBar(page)
 
 
     def _layout(self):
@@ -39,42 +37,22 @@ class Settings(BaseView):
         )
 
 
-    def __on_save_click(self, evt):
-            self.__cfg.save()
-            self.__notify_bar.info("Settings Saved")
-
-
-    def __on_keep_change(self, evt):
-        new_value = round(evt.control.value)
-        self.__cfg.set("backup:keep", new_value)
-
-        self.__keep_text.value = new_value
-        self.__keep_text.update()
-
-
-    def __on_choose_path(self, evt):
-        self.__cfg.set("backup:path", evt.path)
-
-        self.__backup_path_text.value = evt.path
-        self.__backup_path_text.update()
-
-
     def __backup_controls(self):
-        self.__keep_text = ft.Text(
+        self.keep_text = ft.Text(
             f"{self.__cfg.get('backup:keep')}",
             theme_style=ft.TextThemeStyle.TITLE_LARGE,
             text_align=ft.TextAlign.CENTER,
             expand=1
         )
 
-        self.__backup_path_text = ft.Text(
+        self.backup_path_text = ft.Text(
             f"{self.__cfg.get('backup:path')}",
             theme_style=ft.TextThemeStyle.TITLE_LARGE,
             text_align=ft.TextAlign.CENTER,
             expand=10
         )
         file_picker = ft.FilePicker(
-            on_result=self.__on_choose_path
+            on_result=self._presenter.handle_choose_path
         )
         self._page.overlay.append(file_picker)
 
@@ -96,13 +74,13 @@ class Settings(BaseView):
                                 ],
                                 expand=1
                             ),
-                            self.__keep_text,
+                            self.keep_text,
                             ft.Slider(
                                 label="Keep {value} Backup Files",
                                 min=1, max=30,
                                 divisions=30,
                                 value=self.__cfg.get("backup:keep"),
-                                on_change_end=self.__on_keep_change,
+                                on_change_end=self._presenter.handle_keep_change,
                                 expand=10
                             )
                         ]
@@ -122,7 +100,7 @@ class Settings(BaseView):
                                 ],
                                 expand=1
                             ),
-                            self.__backup_path_text,
+                            self.backup_path_text,
                             ft.ElevatedButton(
                                 "Choose Path",
                                 on_click=lambda _: file_picker.get_directory_path(),
@@ -135,7 +113,7 @@ class Settings(BaseView):
                             ft.ElevatedButton(
                                 "Save",
                                 icon=ft.Icons.SAVE,
-                                on_click=self.__on_save_click
+                                on_click=self._presenter.handle_save_click
                             )
                         ],
                         alignment=ft.MainAxisAlignment.CENTER
@@ -143,40 +121,6 @@ class Settings(BaseView):
                 ]
             )
         )
-
-
-    def __on_mode_change(self, evt):
-        new_mode = list(evt.control.selected)[0]
-        self.__cfg.set("app:mode", new_mode)
-        self._page.theme_mode = new_mode
-        self._page.update()
-
-
-    def __on_timezone_blur(self, evt):
-        new_tz = evt.control.value
-
-        if dateutil.tz.gettz(new_tz):
-            self.__cfg.set("app:timezone", new_tz)
-            evt.control.error_text = None
-        else:
-            evt.control.error_text = "Invalid Time Zone"
-
-        evt.control.update()
-
-
-    def __on_locale_blur(self, evt):
-        old_locale = self.__cfg.get("app:locale")
-        new_locale = evt.control.value
-
-        if new_locale != old_locale:
-            self.__cfg.set("app:locale", new_locale)
-            evt.control.helper_text = "Takes affect on restart"
-            evt.control.update()
-
-
-    def __on_startup_view_change(self, evt):
-        new_view = evt.control.value
-        self.__cfg.set("app:startup_view", new_view)
 
 
     def __app_controls(self):
@@ -199,7 +143,7 @@ class Settings(BaseView):
                                 expand=1
                             ),
                             ft.SegmentedButton(
-                                on_change=self.__on_mode_change,
+                                on_change=self._presenter.handle_mode_change,
                                 selected=[self.__cfg.get("app:mode")],
                                 segments=[
                                     ft.Segment(
@@ -245,7 +189,7 @@ class Settings(BaseView):
                                     ft.DropdownOption(key="/reports", text="Reports"),
                                 ],
                                 value=self.__cfg.get("app:startup_view"),
-                                on_change=self.__on_startup_view_change
+                                on_change=self._presenter.handle_startup_view_change
                             )
                         ]
                     ),
@@ -267,7 +211,7 @@ class Settings(BaseView):
                             ft.TextField(
                                 label="Time Zone",
                                 value=self.__cfg.get("app:timezone"),
-                                on_blur=self.__on_timezone_blur
+                                on_blur=self._presenter.handle_timezone_blur
                             )
                         ]
                     ),
@@ -289,7 +233,7 @@ class Settings(BaseView):
                             ft.TextField(
                                 label="Locale",
                                 value=self.__cfg.get("app:locale"),
-                                on_blur=self.__on_locale_blur
+                                on_blur=self._presenter.handle_locale_blur
                             )
                         ]
                     ),
@@ -298,7 +242,7 @@ class Settings(BaseView):
                             ft.ElevatedButton(
                                 "Save",
                                 icon=ft.Icons.SAVE,
-                                on_click=self.__on_save_click
+                                on_click=self._presenter.handle_save_click
                             )
                         ],
                         alignment=ft.MainAxisAlignment.CENTER
@@ -319,10 +263,4 @@ class Settings(BaseView):
     def handle_keyboard_event(self, event):
         if event.ctrl or event.meta:
             if event.key == "S":
-                self.__on_save_click(None)
-
-
-
-
-
-#
+                self._presenter.handle_save_click(None)
