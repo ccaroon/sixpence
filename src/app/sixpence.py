@@ -15,7 +15,7 @@ from utils.archive import Archive
 
 from app.about import About
 from views.home import Home
-from views.budget.main import BudgetView
+from views.budget.main import Budget as BudgetView
 from views.expenses.main import ExpenseView
 from views.reports.main import ReportView
 from views.settings import Settings
