@@ -1,7 +1,6 @@
 import flet as ft
 
 import re
-import pprint
 
 from models.expense import Expense
 
