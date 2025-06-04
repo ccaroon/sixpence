@@ -9,7 +9,7 @@ from views.expenses.navbar import ExpenseNavBar
 class Expense(BaseView):
     def __init__(self, page):
         super().__init__(page, ExpensesPresenter(self))
-        self.editor = ExpenseEditor(page, on_save=self._presenter.refresh)
+        self.editor = ExpenseEditor(page, self._presenter)
 
 
     @property

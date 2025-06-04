@@ -13,9 +13,10 @@ import utils.constants as const
 class ExpenseEditor:
     DEFAULT_ICON = ft.Icons.QUESTION_MARK
 
-    def __init__(self, page, **kwargs):
+    def __init__(self, page, presenter):
         self.__page = page
-        self.__handle_on_save = kwargs.get("on_save")
+        self.__presenter = presenter
+        self.__handle_on_save = presenter.refresh
 
         self.__icon_search = IconSearch()
         self.__item = None
@@ -32,10 +33,17 @@ class ExpenseEditor:
 
 
     def __find_category(self, keyword):
+        """
+        Find full category name based on keyword.
+
+        Ex:
+            eating -> Personal:Eating Out
+            groc   -> Personal:Groceries
+        """
         category = keyword
         kw_cmp = keyword.lower()
 
-        for cat_name in self.__budget_by_cat.keys():
+        for cat_name in self.__categories.keys():
             cn_cmp = cat_name.lower()
             if kw_cmp in cn_cmp:
                 category = cat_name
@@ -187,12 +195,21 @@ class ExpenseEditor:
             for bi in budget_items:
                 bdg_tags.update(bi.tag_list())
         else:
-            # I.e. Category not found
             icons = self.__icon_search.by_category(cat_name)
             icon = icons[0] if icons else self.DEFAULT_ICON
             sfx_icon = ft.Icons.QUESTION_MARK
-            border_color = ft.Colors.AMBER
-            msg = "Unbudgeted"
+            border_color = None
+            msg = None
+            if cat_name in self.__categories:
+                # Category is NOT budgeted for the current month, but
+                # IS a valid category for the overall Budget
+                border_color = ft.Colors.AMBER
+                month = self.__presenter.current_date.format("MMM YYYY")
+                msg = f"Unbudgeted for {month}"
+            else:
+                # Category is NOT valid at all
+                border_color = ft.Colors.RED
+                msg = "Unknown Category"
 
         # Update Category Control
         self.__category_ctrl.value = cat_name
@@ -341,16 +358,18 @@ class ExpenseEditor:
         return main_container
 
 
-    def edit(self, item, budget):
+    def edit(self, item, budget, categories):
         """
         Prep and open the Editor for the given item
 
         Args:
             item (Expense): An Expense entry to edit
             budget (list): Budget items for the currently view month
+            categories (dict): Category -> Icon mapping of all Budget Categories
         """
         # Set the Expense item being edited
         self.__item = item
+        self.__categories = categories
 
         # Create category -> budget items mapping
         self.__budget_by_cat = {}

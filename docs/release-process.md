@@ -1,14 +1,35 @@
 # Release Process
 
-0. In working branch
-1. Update CHANGELOG.md entry
-   - Version
-   - Release Date
-   - Entry Contents
-2. `git commit -a`
-3. Squash commits, if desired.
-4. GitHub: Create PR from working branch --> `master`
-5. GitHub: Merge PR to `master`
-6. `git checkout master`
-7. `git up origin`
-8. ...TODO...
+1. Create Release Branch
+   - `git checkout master`
+   - `git up origin`
+   - `git checkout -b release/M.N`
+   - Update `CHANGELOG.md`
+   - Update `src/app/version.py`
+   - Update `pyproject.toml` -> `build_number`
+   - `git commit -a`
+   - `git push origin release/M.N`
+2. Build App
+   - `inv check.clean check.unit-tests`
+   - `inv app.build-clean`
+   - `inv app.build`
+3. Test
+   - `inv app.run`
+   - Manually test
+4. Tag The Version
+   - `git tag -a vM.N.P`
+   - `git push origin --tags`
+5. Install
+   - `inv app.install`
+6. Package
+   - ...TODO...
+7. Prep for Next Release
+   - `git checkout master`
+   - `git merge release/M.N`
+   - Review changes
+   - Stub in new `CHANGELOG.md` entry
+      - "## vM.N.P - CODE-NAME (MMM DD, YYYY)"
+   - Update `version.py` -> `VERSION` and `CODE_NAME` (Use DEV format)
+   - Update `pyproject.toml` -> `build_number`
+   - `git commit -a`
+   - `git push origin master`

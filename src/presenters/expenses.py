@@ -45,14 +45,14 @@ class Expenses:
 
     def handle_edit(self, evt):
         expense = evt.control.data
-        self.__view.editor.edit(expense, self.__budget)
+        self.__view.editor.edit(expense, self.__budget, self.__categories)
 
 
     def handle_new(self, evt):
         expense = Expense(
             date=Locale.now()
         )
-        self.__view.editor.edit(expense, self.__budget)
+        self.__view.editor.edit(expense, self.__budget, self.__categories)
 
 
     def handle_delete(self, evt):
@@ -118,6 +118,8 @@ class Expenses:
         bdg_filters = {}
         if "category" in self.__filters:
             bdg_filters["category"] = self.__filters["category"]
+
+        self.__categories = Budget.categories()
         self.__budget = Budget.for_month(
             self.__curr_date.month,
             **bdg_filters

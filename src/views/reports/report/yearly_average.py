@@ -12,6 +12,9 @@ class YearlyAvgReport(ReportBase):
         self.__curr_date = Locale.now()
         super().__init__(page)
 
+        self.__init_header()
+        self.__init_footer()
+
         self.__list_view = ft.ListView()
         self.content = self.__list_view
 
@@ -35,8 +38,14 @@ class YearlyAvgReport(ReportBase):
         start_date = self.__curr_date.floor("year")
         end_date = self.__curr_date.ceil("year")
 
+        filters = {}
+        if self.__search_control.value:
+            filters["category"] = self.__search_control.value
+
         expenses = Expense.find(
-            date=f"btw:{start_date.int_timestamp}:{end_date.int_timestamp}"
+            op="and",
+            date=f"btw:{start_date.int_timestamp}:{end_date.int_timestamp}",
+            **filters
         )
 
         data = {}
@@ -64,19 +73,98 @@ class YearlyAvgReport(ReportBase):
         return data
 
 
+    def __init_header(self):
+        self.__header = ft.ListTile(
+            leading=ft.Icon(ft.Icons.KEYBOARD_DOUBLE_ARROW_RIGHT),
+            trailing=ft.Icon(ft.Icons.KEYBOARD_DOUBLE_ARROW_LEFT),
+            title=ft.Row([
+                ft.Text("Category",
+                    color="black",
+                    theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
+                    weight=ft.FontWeight.BOLD,
+                    expand=4),
+                ft.Text(
+                    "Monthly Average",
+                    color="black",
+                    weight=ft.FontWeight.BOLD,
+                    expand=2),
+                ft.Text(
+                    "Total",
+                    color="black",
+                    weight=ft.FontWeight.BOLD,
+                    expand=2),
+            ]),
+            bgcolor=ft.Colors.GREY_300
+        )
+
+
+    def __init_footer(self):
+        self.__income_ctl = ft.Text(
+            "$0.00",
+            color="black",
+            theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
+            weight=ft.FontWeight.BOLD,
+            expand=2
+        )
+
+        self.__expenses_ctl = ft.Text(
+            "$0.00",
+            color="black",
+            theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
+            weight=ft.FontWeight.BOLD,
+            expand=2
+        )
+
+        self.__diff_ctl = ft.Text(
+            "$0.00",
+            color="black",
+            theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
+            weight=ft.FontWeight.BOLD,
+            expand=2
+        )
+
+        self.__footer = ft.ListTile(
+            leading=ft.Icon(ft.Icons.KEYBOARD_DOUBLE_ARROW_RIGHT),
+            trailing=ft.Icon(ft.Icons.KEYBOARD_DOUBLE_ARROW_LEFT),
+            title=ft.Row([
+                ft.Text("Grand Totals",
+                    color="black",
+                    theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
+                    weight=ft.FontWeight.BOLD,
+                    expand=4),
+                self.__income_ctl,
+                self.__expenses_ctl,
+                self.__diff_ctl
+
+            ]),
+            bgcolor=ft.Colors.GREY_300
+        )
+
+
     def render(self):
         self.__list_view.controls.clear()
+
+        # Header
+        self.__list_view.controls.append(self.__header)
 
         now = Locale.now()
         start_date = self.__curr_date.floor("year")
         months = 12 if start_date.year < now.year else now.month
+
+        income_amount = 0.0
+        expense_amount = 0.0
 
         data = self.__load_data()
         for idx, item in enumerate(data):
             inc_color = utils.tools.cycle(const.INCOME_COLORS, idx)
             exp_color = utils.tools.cycle(const.EXPENSE_COLORS, idx)
 
-            bgcolor = inc_color if item["type"] == Expense.TYPE_INCOME else exp_color
+            if item["type"] == Expense.TYPE_INCOME:
+                bgcolor = inc_color
+                income_amount += item["total"]
+            else:
+                bgcolor = exp_color
+                expense_amount += item["total"]
 
             tile = ft.ListTile(
                 leading=ft.Icon(item["icon"], color="black"),
@@ -104,6 +192,12 @@ class YearlyAvgReport(ReportBase):
 
             self.__list_view.controls.append(tile)
 
+        # Footer
+        self.__income_ctl.value = "Income: " + Locale.currency(income_amount)
+        self.__expenses_ctl.value = "Expenses: "+ Locale.currency(expense_amount)
+        self.__diff_ctl.value = "Difference: " + Locale.currency(income_amount + expense_amount)
+        self.__list_view.controls.append(self.__footer)
+
         self._page.update()
 
 
@@ -122,6 +216,11 @@ class YearlyAvgReport(ReportBase):
         self.__year_display.update()
 
         self.render()
+
+
+    def __on_search_submit(self, evt):
+        self.render()
+        self.__search_control.focus()
 
 
     def _on_export(self, evt):
@@ -144,13 +243,32 @@ class YearlyAvgReport(ReportBase):
 """
 
         report_file = f"{export_path}/sixpence-report_yearly-avg-{curr_year}.md"
+        inc_total = 0.0
+        exp_total = 0.0
         with open(report_file, "w") as fptr:
             fptr.write(header)
             for item in data:
                 avg = Locale.currency(item["total"] / months)
                 total = Locale.currency(item["total"])
                 line = f"| {item['category']} | {avg} / month | {total}\n"
+
+                if item["type"] == Expense.TYPE_INCOME:
+                    inc_total += item["total"]
+                else:
+                    exp_total += item["total"]
+
                 fptr.write(line)
+
+            # footer
+            diff_total = Locale.currency(inc_total + exp_total)
+            inc_total = Locale.currency(inc_total)
+            exp_total = Locale.currency(exp_total)
+            footer = f"""
+| Income | Expenses | Difference |
+| ------ | -------- | --- |
+| {inc_total} | {exp_total} | {diff_total} |
+"""
+            fptr.write(footer)
 
         self._page.session.get("notification_bar").notify(
             ft.Icons.SAVE_ALT,
@@ -165,7 +283,13 @@ class YearlyAvgReport(ReportBase):
             on_click=self.__on_year_display_click
         )
 
+        self.__search_control = ft.TextField(
+            label="Category",
+            prefix_icon=ft.Icons.SEARCH,
+            on_submit=self.__on_search_submit)
+
         self._actions.extend([
+            self.__search_control,
             ft.IconButton(
                 icon=ft.Icons.ARROW_LEFT,
                 icon_color=ft.Colors.ON_PRIMARY_CONTAINER,
