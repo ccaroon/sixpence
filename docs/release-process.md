@@ -27,6 +27,7 @@
    - `git checkout master`
    - `git merge release/M.N`
    - Review changes
+   - Update `code-names.md`
    - Stub in new `CHANGELOG.md` entry
       - "## vM.N.P - CODE-NAME (MMM DD, YYYY)"
    - Update `version.py` -> `VERSION` and `CODE_NAME` (Use DEV format)

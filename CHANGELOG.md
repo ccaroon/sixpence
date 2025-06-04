@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## v2.1.0 - Delightful Dosh (?????)
+...
+
 ## v2.0.0 - Pristine Penny (June 04, 2025)
 Complete rewrite using Flet/Flutter
 
