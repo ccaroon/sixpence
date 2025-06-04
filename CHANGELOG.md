@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## UNRELEASED: v2.0.0 - Pristine Penny (????? ??, 2025)
+## v2.0.0 - Pristine Penny (June 04, 2025)
 Complete rewrite using Flet/Flutter
 
 
