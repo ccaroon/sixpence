@@ -51,6 +51,9 @@ def install(ctx):
         date_stamp = arrow.now().format("YYYYMMDD_HHmmss")
         ctx.run(f"mv {install_path} {install_path}-{date_stamp}", echo=True)
         ctx.run(f"cp -a build/{target} {install_path}", echo=True)
+        ctx.run(f"cp etc/sixpence.desktop ~/.local/share/applications")
+        ctx.run(f"cp src/assets/icon.png ~/.local/share/icons")
+        ctx.run("update-desktop-database ~/.local/share/icons/ ~/.local/share/applications/")
     elif os_name == "Darwin":
         exe = os_map.get(os_name).get("exe")
         ctx.run(f"cp -a build/{target}/{exe} {install_path}", echo=True)

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Sixpence
+Comment=Budget Manager
+Exec=/home/ccaroon/local/sixpence/sixpence
+Icon=/home/ccaroon/.local/share/icons/sixpence.png
+Terminal=false
+Type=Application
+Categories=Finance
