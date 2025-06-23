@@ -3,6 +3,7 @@ import flet as ft
 import utils.tools
 import utils.constants as const
 from utils.locale import Locale
+from models.budget import Budget
 from models.expense import Expense
 
 from views.reports.report.base import ReportBase
@@ -38,6 +39,8 @@ class YearlyAvgReport(ReportBase):
         start_date = self.__curr_date.floor("year")
         end_date = self.__curr_date.ceil("year")
 
+        budget = Budget.group(Budget.find(deleted_at="null"))
+
         filters = {}
         if self.__search_control.value:
             filters["category"] = self.__search_control.value
@@ -59,7 +62,8 @@ class YearlyAvgReport(ReportBase):
                     "type": exp.type,
                     "icon": exp.icon,
                     "category": exp.category,
-                    "total": exp.amount
+                    "total": exp.amount,
+                    "budget_group": budget.get(exp.category)
                 }
             else:
                 data[exp.category]["total"] += exp.amount
@@ -82,7 +86,7 @@ class YearlyAvgReport(ReportBase):
                     color="black",
                     theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
                     weight=ft.FontWeight.BOLD,
-                    expand=4),
+                    expand=3),
                 ft.Text(
                     "Monthly Average",
                     color="black",
@@ -92,7 +96,7 @@ class YearlyAvgReport(ReportBase):
                     "Total",
                     color="black",
                     weight=ft.FontWeight.BOLD,
-                    expand=2),
+                    expand=2)
             ]),
             bgcolor=ft.Colors.GREY_300
         )
@@ -157,7 +161,9 @@ class YearlyAvgReport(ReportBase):
         data = self.__load_data()
         for idx, item in enumerate(data):
             inc_color = utils.tools.cycle(const.INCOME_COLORS, idx)
+            inc_color_alt = utils.tools.cycle(const.INCOME_COLORS, idx+1)
             exp_color = utils.tools.cycle(const.EXPENSE_COLORS, idx)
+            exp_color_alt = utils.tools.cycle(const.EXPENSE_COLORS, idx+1)
 
             if item["type"] == Expense.TYPE_INCOME:
                 bgcolor = inc_color
@@ -166,15 +172,55 @@ class YearlyAvgReport(ReportBase):
                 bgcolor = exp_color
                 expense_amount += item["total"]
 
+            # add|remove|check_circle
+            # add_box | upload
+            trailing = None
+            trailing_color = None
+            budget_group = item["budget_group"]
+            if budget_group:
+                icon = ft.Icons.CHECK_CIRCLE
+                trailing_color = inc_color_alt
+                tooltip = "On Track"
+
+                monthly_avg = abs(round(item["total"] / months, 2))
+                # TODO:
+                # - needs to take into account the freq of each item in the grp
+                # - should be a monthly average not just a total
+                budget_amt = abs(budget_group.amount)
+                if monthly_avg != budget_amt:
+                    icon = ft.Icons.ARROW_CIRCLE_UP
+
+                    if monthly_avg > budget_amt:
+                        trailing_color = exp_color_alt
+
+                    tooltip = f"Update Budget ({monthly_avg} != {budget_group.amount})"
+
+                # TODO: on_click
+                # - how to deal with category with multiple items
+                # - which item in group gets updated?
+                trailing = ft.IconButton(
+                    icon=icon,
+                    icon_color=trailing_color,
+                    tooltip=tooltip
+                    # TODO: on_click
+                )
+            else:
+                trailing = ft.IconButton(
+                    icon=ft.Icons.ADD_BOX,
+                    tooltip="Add To Budget"
+                    # TODO: on_click
+                )
+
             tile = ft.ListTile(
                 leading=ft.Icon(item["icon"], color="black"),
+                trailing=trailing,
                 title=ft.Row(
                     [
                         ft.Text(item["category"],
                             color="black",
                             theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
                             weight=ft.FontWeight.BOLD,
-                            expand=4),
+                            expand=3),
                         ft.Text(
                             f"{Locale.currency(item["total"] / months)} / month",
                             color="black",
@@ -184,7 +230,7 @@ class YearlyAvgReport(ReportBase):
                             Locale.currency(item["total"]),
                             color="black",
                             weight=ft.FontWeight.BOLD,
-                            expand=2),
+                            expand=2)
                     ]
                 ),
                 bgcolor=bgcolor

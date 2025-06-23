@@ -1,6 +1,7 @@
 import re
 
 from models.base import Base
+from models.budget_group import BudgetGroup
 from models.taggable import Taggable
 
 class Budget(Taggable, Base):
@@ -170,6 +171,7 @@ class Budget(Taggable, Base):
         return due_months
 
 
+    # TODO: Get rid of this in favor of Budget.group()
     @classmethod
     def collate_by_category(self, budget:list):
         """
@@ -193,6 +195,30 @@ class Budget(Taggable, Base):
                 }
             else:
                 budget_map[item.category]["amount"] += item.amount
+
+        return budget_map
+
+
+    @classmethod
+    def group(self, budget:list):
+        """
+        Given a list of Budget items group them by their category.
+
+        Args:
+            budget (list): List of Budget itens
+
+        Return:
+            dict: Mapping of Budget items by their category to BudgetGroups.
+        """
+        budget_map = {}
+        for item in budget:
+            if item.category not in budget_map:
+                budget_group = BudgetGroup(item.category)
+                budget_group.add(item)
+                budget_map[item.category] = budget_group
+            else:
+                budget_group = budget_map[item.category]
+                budget_group.add(item)
 
         return budget_map
 
