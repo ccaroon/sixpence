@@ -60,6 +60,12 @@ class Budget(Taggable, Base):
         return data
 
 
+    @property
+    def monthly_avg(self):
+        """ The average amount spent on this Budget Item per Month """
+        return round(self.amount / self.frequency, 2)
+
+
     def frequency_desc(self):
         """
         Items frequency as a descriptive strint

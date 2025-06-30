@@ -182,18 +182,19 @@ class YearlyAvgReport(ReportBase):
                 trailing_color = inc_color_alt
                 tooltip = "On Track"
 
-                monthly_avg = abs(round(item["total"] / months, 2))
+                spent_avg = abs(round(item["total"] / months, 2))
                 # TODO:
                 # - needs to take into account the freq of each item in the grp
                 # - should be a monthly average not just a total
-                budget_amt = abs(budget_group.amount)
-                if monthly_avg != budget_amt:
+                # budget_amt = abs(budget_group.amount)
+                budget_avg = abs(budget_group.monthly_avg)
+                if spent_avg != budget_avg:
                     icon = ft.Icons.ARROW_CIRCLE_UP
 
-                    if monthly_avg > budget_amt:
+                    if spent_avg > budget_avg:
                         trailing_color = exp_color_alt
 
-                    tooltip = f"Update Budget ({monthly_avg} != {budget_group.amount})"
+                    tooltip = f"Update Budget ({spent_avg} != {budget_group.amount})"
 
                 # TODO: on_click
                 # - how to deal with category with multiple items

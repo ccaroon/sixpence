@@ -49,6 +49,16 @@ class BudgetGroup:
         return self.__spent
 
 
+    @property
+    def monthly_avg(self):
+        """ The monthly average of all items in the Group """
+        avg = 0.0
+        for item in self.__items:
+            avg += item.monthly_avg
+
+        return avg
+
+
     def spend(self, amount):
         """ Update the amount spent towards the Group """
         self.__spent += amount
@@ -58,3 +68,15 @@ class BudgetGroup:
         """ Add a Budgeted Item to the Group """
         self.__items.append(item)
         self.__spent += spent
+
+
+
+
+
+
+
+
+
+
+
+#

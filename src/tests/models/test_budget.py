@@ -47,6 +47,46 @@ class BudgetTest(unittest.TestCase):
         self.assertEqual(item.first_due, fields["first_due"])
         self.assertEqual(item.frequency, fields["frequency"])
 
+
+    def test_monthly_avg(self):
+        test_data = {
+            "monthly": {
+                "fields": {
+                    "icon": "gas-station",
+                    "category": "Auto:Fuel",
+                    "amount": -60.00,
+                    "first_due": 1,
+                    "frequency": 1
+                },
+                "expected": -60.00
+            },
+            "quarterly": {
+                "fields": {
+                    "icon": "bug",
+                    "category": "Home:Pest Control",
+                    "amount": -75.00,
+                    "first_due": 1,
+                    "frequency": 3
+                },
+                "expected": -25.00
+            },
+            "yearly": {
+                "fields": {
+                    "icon": "delivery-truck",
+                    "category": "Subscriptions:Amazon Prime",
+                    "amount": -149.00,
+                    "first_due": 1,
+                    "frequency": 12
+                },
+                "expected": -12.42
+            }
+        }
+
+        for label, data in test_data.items():
+            item = Budget(**data["fields"])
+            self.assertEqual(item.monthly_avg, data["expected"])
+
+
     def test_due_months(self):
         fields = {
             "icon": "alien",
