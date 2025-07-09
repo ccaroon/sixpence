@@ -10,7 +10,7 @@ from views.reports.report.base import ReportBase
 
 class YearlyAvgReport(ReportBase):
     def __init__(self, page):
-        self.__curr_date = Locale.now()
+        self.__report_date = Locale.now()
         super().__init__(page)
 
         self.__init_header()
@@ -35,10 +35,7 @@ class YearlyAvgReport(ReportBase):
         return "Income & Expense Totals for the Year with the Monthly Averages."
 
 
-    def __load_data(self):
-        start_date = self.__curr_date.floor("year")
-        end_date = self.__curr_date.ceil("year")
-
+    def __load_data(self, start_date, end_date):
         budget = Budget.group(Budget.find(deleted_at="null"))
 
         filters = {}
@@ -86,14 +83,19 @@ class YearlyAvgReport(ReportBase):
                     color="black",
                     theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
                     weight=ft.FontWeight.BOLD,
-                    expand=3),
+                    expand=2),
+                ft.Text(
+                    "Total",
+                    color="black",
+                    weight=ft.FontWeight.BOLD,
+                    expand=1),
                 ft.Text(
                     "Monthly Average",
                     color="black",
                     weight=ft.FontWeight.BOLD,
-                    expand=2),
+                    expand=1),
                 ft.Text(
-                    "Total",
+                    "Progress",
                     color="black",
                     weight=ft.FontWeight.BOLD,
                     expand=2)
@@ -152,13 +154,22 @@ class YearlyAvgReport(ReportBase):
         self.__list_view.controls.append(self.__header)
 
         now = Locale.now()
-        start_date = self.__curr_date.floor("year")
-        months = 12 if start_date.year < now.year else now.month
+        start_date = None
+        end_date = None
+        months = None
+        if self.__report_date.year < now.year:
+            start_date = self.__report_date.floor("year")
+            end_date = self.__report_date.ceil("year")
+            months = 12
+        else:
+            start_date = self.__report_date.floor("year")
+            end_date = now.shift(months=-1).ceil("month")
+            months = now.month - 1
 
         income_amount = 0.0
         expense_amount = 0.0
 
-        data = self.__load_data()
+        data = self.__load_data(start_date, end_date)
         for idx, item in enumerate(data):
             inc_color = utils.tools.cycle(const.INCOME_COLORS, idx)
             inc_color_alt = utils.tools.cycle(const.INCOME_COLORS, idx+1)
@@ -172,66 +183,78 @@ class YearlyAvgReport(ReportBase):
                 bgcolor = exp_color
                 expense_amount += item["total"]
 
-            # add|remove|check_circle
-            # add_box | upload
             trailing = None
             trailing_color = None
             budget_group = item["budget_group"]
+            bg_amount = 0.0
             if budget_group:
-                icon = ft.Icons.CHECK_CIRCLE
-                trailing_color = inc_color_alt
-                tooltip = "On Track"
+                bg_amount = budget_group.amount_yearly
 
-                spent_avg = abs(round(item["total"] / months, 2))
-                # TODO:
-                # - needs to take into account the freq of each item in the grp
-                # - should be a monthly average not just a total
-                # budget_amt = abs(budget_group.amount)
-                budget_avg = abs(budget_group.monthly_avg)
-                if spent_avg != budget_avg:
-                    icon = ft.Icons.ARROW_CIRCLE_UP
+                progress_value = item["total"] / bg_amount
+                progress_color = ft.Colors.GREEN_ACCENT_200 #const.COLOR_INCOME
+                if progress_value > .9 and progress_value < 1.0:
+                    progress_color = ft.Colors.YELLOW_ACCENT_200
+                if progress_value > 1.0:
+                    progress_color = ft.Colors.RED_ACCENT_200 #const.COLOR_EXPENSE
 
-                    if spent_avg > budget_avg:
-                        trailing_color = exp_color_alt
+                progress_control = ft.ProgressBar(
+                    height=25,
+                    value=progress_value,
+                    tooltip=f"{Locale.currency(item["total"])} / {Locale.currency(bg_amount)}",
+                    color=progress_color,
+                    expand=2
+                )
 
-                    tooltip = f"Update Budget ({spent_avg} != {budget_group.amount})"
+                # How much should have been spent by now (curr_month)
+                predicted_spent = abs(budget_group.predict_spending(months))
+                total_ytd = abs(item["total"])
+                if total_ytd == predicted_spent:
+                    icon = ft.Icons.CHECK_BOX
+                    trailing_color = ft.Colors.GREEN_ACCENT_200 #inc_color_alt
+                    tooltip = "On Track"
+                elif total_ytd > predicted_spent:
+                    icon = ft.Icons.TRENDING_UP
+                    trailing_color = ft.Colors.RED_ACCENT_200 #exp_color_alt
+                    tooltip = "Over Budget"
+                elif total_ytd < predicted_spent:
+                    icon = ft.Icons.TRENDING_DOWN
+                    trailing_color = ft.Colors.GREEN_ACCENT_200#inc_color_alt
+                    tooltip = "Under Budget"
 
-                # TODO: on_click
-                # - how to deal with category with multiple items
-                # - which item in group gets updated?
-                trailing = ft.IconButton(
-                    icon=icon,
-                    icon_color=trailing_color,
+                trailing = ft.Icon(
+                    icon,
+                    color=trailing_color,
                     tooltip=tooltip
-                    # TODO: on_click
                 )
             else:
-                trailing = ft.IconButton(
-                    icon=ft.Icons.ADD_BOX,
-                    tooltip="Add To Budget"
-                    # TODO: on_click
-                )
+                progress_control = ft.Text(
+                    "-",
+                    color="black",
+                    weight=ft.FontWeight.BOLD,
+                    expand=2)
+                trailing = ft.Icon(ft.Icons.TRENDING_FLAT, tooltip="Unbudgeted")
 
             tile = ft.ListTile(
                 leading=ft.Icon(item["icon"], color="black"),
                 trailing=trailing,
                 title=ft.Row(
                     [
-                        ft.Text(item["category"],
+                        ft.Text(f"{item["category"]}",
                             color="black",
                             theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
-                            weight=ft.FontWeight.BOLD,
-                            expand=3),
-                        ft.Text(
-                            f"{Locale.currency(item["total"] / months)} / month",
-                            color="black",
                             weight=ft.FontWeight.BOLD,
                             expand=2),
                         ft.Text(
                             Locale.currency(item["total"]),
                             color="black",
                             weight=ft.FontWeight.BOLD,
-                            expand=2)
+                            expand=1),
+                        ft.Text(
+                            f"{Locale.currency(item["total"] / months)} / month",
+                            color="black",
+                            weight=ft.FontWeight.BOLD,
+                            expand=1),
+                        progress_control,
                     ]
                 ),
                 bgcolor=bgcolor
@@ -249,8 +272,8 @@ class YearlyAvgReport(ReportBase):
 
 
     def __on_year_display_click(self, evt):
-        self.__curr_date = Locale.now()
-        self.__year_display.label.value = self.__curr_date.year
+        self.__report_date = Locale.now()
+        self.__year_display.label.value = self.__report_date.year
         self.__year_display.update()
 
         self.render()
@@ -258,8 +281,8 @@ class YearlyAvgReport(ReportBase):
 
     def __on_change_year(self, evt):
         delta = evt.control.data
-        self.__curr_date = self.__curr_date.shift(years=delta)
-        self.__year_display.label.value = self.__curr_date.year
+        self.__report_date = self.__report_date.shift(years=delta)
+        self.__year_display.label.value = self.__report_date.year
         self.__year_display.update()
 
         self.render()
@@ -275,7 +298,7 @@ class YearlyAvgReport(ReportBase):
         data = self.__load_data()
 
         now = Locale.now()
-        start_date = self.__curr_date.floor("year")
+        start_date = self.__report_date.floor("year")
         curr_year = start_date.format('YYYY')
         months = 12 if start_date.year < now.year else now.month
 
@@ -326,7 +349,7 @@ class YearlyAvgReport(ReportBase):
         super()._init_actions()
 
         self.__year_display = ft.Chip(
-            ft.Text(self.__curr_date.year),
+            ft.Text(self.__report_date.year),
             on_click=self.__on_year_display_click
         )
 

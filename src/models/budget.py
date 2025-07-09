@@ -66,6 +66,20 @@ class Budget(Taggable, Base):
         return round(self.amount / self.frequency, 2)
 
 
+    def predict_spending(self, month):
+        """
+        Calculate the amount that should have been spent on this Budget item
+        by the given `month`
+        """
+        amount = 0.0
+        due_months = self.due_months()
+        for due_mnth in due_months:
+            if month >= due_mnth:
+                amount += self.amount
+
+        return round(amount, 2)
+
+
     def frequency_desc(self):
         """
         Items frequency as a descriptive strint

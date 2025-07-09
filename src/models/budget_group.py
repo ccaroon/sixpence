@@ -12,6 +12,12 @@ class BudgetGroup:
 
 
     @property
+    def count(self):
+        """ The number of Budget items in the Group """
+        return len(self.__items)
+
+
+    @property
     def type(self):
         """ The Group's Type: Income or Expense"""
         item_type = None
@@ -42,6 +48,18 @@ class BudgetGroup:
 
         return total
 
+    @property
+    def amount_yearly(self):
+        """
+        Amount Budgeted for the Category across all items in the Group
+        for the Year
+        """
+        total = 0.0
+        for item in self.__items:
+            total += item.amount * (12 / item.frequency)
+
+        return total
+
 
     @property
     def spent(self):
@@ -59,6 +77,18 @@ class BudgetGroup:
         return avg
 
 
+    def predict_spending(self, month):
+        """
+        Calculate the amount the should have been spent on the Group by the
+        given `month`
+        """
+        amount = 0.0
+        for item in self.__items:
+            amount += item.predict_spending(month)
+
+        return amount
+
+
     def spend(self, amount):
         """ Update the amount spent towards the Group """
         self.__spent += amount
@@ -68,15 +98,3 @@ class BudgetGroup:
         """ Add a Budgeted Item to the Group """
         self.__items.append(item)
         self.__spent += spent
-
-
-
-
-
-
-
-
-
-
-
-#
