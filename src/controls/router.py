@@ -51,9 +51,12 @@ class Router:
 
     # TODO: not tested
     def __handle_view_pop(self, event):
-        self.__page.views.pop()
-        top_view = self.__page.views[-1]
-        self.__page.go(top_view.route)
+        if self.__page.views:
+            self.__page.views.pop()
+
+        if self.__page.views:
+            top_view = self.__page.views[-1]
+            self.__page.go(top_view.route)
 
 
     def handle_keyboard_event(self, event):
