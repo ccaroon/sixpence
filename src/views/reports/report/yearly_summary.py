@@ -8,7 +8,7 @@ from models.expense import Expense
 
 from views.reports.report.base import ReportBase
 
-class YearlyAvgReport(ReportBase):
+class YearlySummaryReport(ReportBase):
 
     STATUS_UNBUDGETED = "Unbudgeted"
     STATUS_ON_TRACK = "On Track"
@@ -33,12 +33,12 @@ class YearlyAvgReport(ReportBase):
 
     @property
     def name(self):
-        return "Yearly Averages"
+        return "Yearly Summary"
 
 
     @property
     def description(self):
-        return "Income & Expense Totals for the Year with the Monthly Averages."
+        return "Summary of Income & Expenses YTD and for previous years."
 
 
     def __load_data(self, start_date, end_date):
@@ -320,8 +320,7 @@ class YearlyAvgReport(ReportBase):
         data = self.__collated_data()
 
         header = f"""
-# Sixpence Report :: Yearly Averages
-* **Year**: {curr_year}
+# Sixpence Report :: Yearly Summary for {curr_year}
 
 --------------------------------------------------------------------------------
 
@@ -329,7 +328,7 @@ class YearlyAvgReport(ReportBase):
 | ---------- | ----- | --------------- | -------- | ------ |
 """
 
-        report_file = f"{export_path}/sixpence-report_yearly-avg-{curr_year}.md"
+        report_file = f"{export_path}/sixpence-report_yearly-summary-{curr_year}.md"
         inc_total = 0.0
         exp_total = 0.0
         with open(report_file, "w") as fptr:
