@@ -3,13 +3,20 @@ import flet as ft
 import utils.tools
 import utils.constants as const
 from utils.locale import Locale
+from models.budget import Budget
 from models.expense import Expense
 
 from views.reports.report.base import ReportBase
 
-class YearlyAvgReport(ReportBase):
+class YearlySummaryReport(ReportBase):
+
+    STATUS_UNBUDGETED = "Unbudgeted"
+    STATUS_ON_TRACK = "On Track"
+    STATUS_OVER = "Over Budget"
+    STATUS_UNDER = "Under Budget"
+
     def __init__(self, page):
-        self.__curr_date = Locale.now()
+        self.__report_date = Locale.now()
         super().__init__(page)
 
         self.__init_header()
@@ -26,17 +33,16 @@ class YearlyAvgReport(ReportBase):
 
     @property
     def name(self):
-        return "Yearly Averages"
+        return "Yearly Summary"
 
 
     @property
     def description(self):
-        return "Income & Expense Totals for the Year with the Monthly Averages."
+        return "Summary of Income & Expenses YTD and for previous years."
 
 
-    def __load_data(self):
-        start_date = self.__curr_date.floor("year")
-        end_date = self.__curr_date.ceil("year")
+    def __load_data(self, start_date, end_date):
+        budget = Budget.group(Budget.find(deleted_at="null"))
 
         filters = {}
         if self.__search_control.value:
@@ -59,7 +65,8 @@ class YearlyAvgReport(ReportBase):
                     "type": exp.type,
                     "icon": exp.icon,
                     "category": exp.category,
-                    "total": exp.amount
+                    "total": exp.amount,
+                    "budget_group": budget.get(exp.category)
                 }
             else:
                 data[exp.category]["total"] += exp.amount
@@ -82,17 +89,22 @@ class YearlyAvgReport(ReportBase):
                     color="black",
                     theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
                     weight=ft.FontWeight.BOLD,
-                    expand=4),
-                ft.Text(
-                    "Monthly Average",
-                    color="black",
-                    weight=ft.FontWeight.BOLD,
                     expand=2),
                 ft.Text(
                     "Total",
                     color="black",
                     weight=ft.FontWeight.BOLD,
-                    expand=2),
+                    expand=1),
+                ft.Text(
+                    "Monthly Average",
+                    color="black",
+                    weight=ft.FontWeight.BOLD,
+                    expand=1),
+                ft.Text(
+                    "Progress",
+                    color="black",
+                    weight=ft.FontWeight.BOLD,
+                    expand=2)
             ]),
             bgcolor=ft.Colors.GREY_300
         )
@@ -140,6 +152,41 @@ class YearlyAvgReport(ReportBase):
             bgcolor=ft.Colors.GREY_300
         )
 
+    def __collated_data(self):
+        now = Locale.now()
+        start_date = None
+        end_date = None
+        months = None
+        if self.__report_date.year < now.year:
+            start_date = self.__report_date.floor("year")
+            end_date = self.__report_date.ceil("year")
+            months = 12
+        else:
+            start_date = self.__report_date.floor("year")
+            end_date = now.shift(months=-1).ceil("month")
+            months = now.month - 1
+
+        data = self.__load_data(start_date, end_date)
+        for item in data:
+            budget_group = item["budget_group"]
+            item["bg_yearly_amt"] = 0.0
+            item["status"] = self.STATUS_UNBUDGETED
+            item["monthly_avg"] = item["total"] / months
+            if budget_group:
+                item["bg_yearly_amt"] = budget_group.amount_yearly
+
+                # How much should have been spent by now (curr_month)
+                predicted_spent = abs(budget_group.predict_spending(months))
+                total_ytd = abs(item["total"])
+                if total_ytd == predicted_spent:
+                    item["status"] = self.STATUS_ON_TRACK
+                elif total_ytd > predicted_spent:
+                    item["status"] = self.STATUS_OVER
+                elif total_ytd < predicted_spent:
+                    item["status"] = self.STATUS_UNDER
+
+        return data
+
 
     def render(self):
         self.__list_view.controls.clear()
@@ -147,14 +194,11 @@ class YearlyAvgReport(ReportBase):
         # Header
         self.__list_view.controls.append(self.__header)
 
-        now = Locale.now()
-        start_date = self.__curr_date.floor("year")
-        months = 12 if start_date.year < now.year else now.month
+        data = self.__collated_data()
 
         income_amount = 0.0
         expense_amount = 0.0
 
-        data = self.__load_data()
         for idx, item in enumerate(data):
             inc_color = utils.tools.cycle(const.INCOME_COLORS, idx)
             exp_color = utils.tools.cycle(const.EXPENSE_COLORS, idx)
@@ -166,25 +210,72 @@ class YearlyAvgReport(ReportBase):
                 bgcolor = exp_color
                 expense_amount += item["total"]
 
+            trailing = None
+            trailing_color = None
+            budget_group = item["budget_group"]
+            bg_amount = item["bg_yearly_amt"]
+            tooltip = item["status"]
+            if budget_group:
+                progress_value = item["total"] / bg_amount
+                progress_color = ft.Colors.GREEN_ACCENT_200
+                if progress_value > .9 and progress_value < 1.0:
+                    progress_color = ft.Colors.YELLOW_ACCENT_200
+                if progress_value > 1.0:
+                    progress_color = ft.Colors.RED_ACCENT_200
+
+                progress_control = ft.ProgressBar(
+                    height=25,
+                    value=progress_value,
+                    tooltip=f"{Locale.currency(item["total"])} / {Locale.currency(bg_amount)}",
+                    color=progress_color,
+                    expand=2
+                )
+
+                # How much should have been spent by now (curr_month)
+                if item["status"] == self.STATUS_ON_TRACK:
+                    icon = ft.Icons.CHECK_BOX
+                    trailing_color = ft.Colors.GREEN_ACCENT_200
+                elif item["status"] == self.STATUS_OVER:
+                    icon = ft.Icons.TRENDING_UP
+                    trailing_color = ft.Colors.RED_ACCENT_200
+                elif item["status"] == self.STATUS_UNDER:
+                    icon = ft.Icons.TRENDING_DOWN
+                    trailing_color = ft.Colors.GREEN_ACCENT_200
+
+                trailing = ft.Icon(
+                    icon,
+                    color=trailing_color,
+                    tooltip=tooltip
+                )
+            else:
+                progress_control = ft.Text(
+                    "-",
+                    color="black",
+                    weight=ft.FontWeight.BOLD,
+                    expand=2)
+                trailing = ft.Icon(ft.Icons.TRENDING_FLAT, tooltip=tooltip)
+
             tile = ft.ListTile(
                 leading=ft.Icon(item["icon"], color="black"),
+                trailing=trailing,
                 title=ft.Row(
                     [
-                        ft.Text(item["category"],
+                        ft.Text(f"{item["category"]}",
                             color="black",
                             theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
-                            weight=ft.FontWeight.BOLD,
-                            expand=4),
-                        ft.Text(
-                            f"{Locale.currency(item["total"] / months)} / month",
-                            color="black",
                             weight=ft.FontWeight.BOLD,
                             expand=2),
                         ft.Text(
                             Locale.currency(item["total"]),
                             color="black",
                             weight=ft.FontWeight.BOLD,
-                            expand=2),
+                            expand=1),
+                        ft.Text(
+                            f"{Locale.currency(item["monthly_avg"])} / month",
+                            color="black",
+                            weight=ft.FontWeight.BOLD,
+                            expand=1),
+                        progress_control,
                     ]
                 ),
                 bgcolor=bgcolor
@@ -202,8 +293,8 @@ class YearlyAvgReport(ReportBase):
 
 
     def __on_year_display_click(self, evt):
-        self.__curr_date = Locale.now()
-        self.__year_display.label.value = self.__curr_date.year
+        self.__report_date = Locale.now()
+        self.__year_display.label.value = self.__report_date.year
         self.__year_display.update()
 
         self.render()
@@ -211,8 +302,8 @@ class YearlyAvgReport(ReportBase):
 
     def __on_change_year(self, evt):
         delta = evt.control.data
-        self.__curr_date = self.__curr_date.shift(years=delta)
-        self.__year_display.label.value = self.__curr_date.year
+        self.__report_date = self.__report_date.shift(years=delta)
+        self.__year_display.label.value = self.__report_date.year
         self.__year_display.update()
 
         self.render()
@@ -225,32 +316,33 @@ class YearlyAvgReport(ReportBase):
 
     def _on_export(self, evt):
         export_path = evt.path
-        data = self.__load_data()
-
-        now = Locale.now()
-        start_date = self.__curr_date.floor("year")
-        curr_year = start_date.format('YYYY')
-        months = 12 if start_date.year < now.year else now.month
+        curr_year = self.__report_date.format('YYYY')
+        data = self.__collated_data()
 
         header = f"""
-# Sixpence Report :: Yearly Averages
-* **Year**: {curr_year}
+# Sixpence Report :: Yearly Summary for {curr_year}
 
 --------------------------------------------------------------------------------
 
-| Category   | Monthly Average | Total|
-| ---------- | --------------- | ---- |
+| Category   | Total | Monthly Average | Progress | Status |
+| ---------- | ----- | --------------- | -------- | ------ |
 """
 
-        report_file = f"{export_path}/sixpence-report_yearly-avg-{curr_year}.md"
+        report_file = f"{export_path}/sixpence-report_yearly-summary-{curr_year}.md"
         inc_total = 0.0
         exp_total = 0.0
         with open(report_file, "w") as fptr:
             fptr.write(header)
             for item in data:
-                avg = Locale.currency(item["total"] / months)
+                budget_group = item["budget_group"]
+                bg_amount = item["bg_yearly_amt"]
+                progress = "-"
+                if budget_group:
+                    progress = f"{Locale.currency(item["total"])} / {Locale.currency(bg_amount)}"
+
+                avg = Locale.currency(item["monthly_avg"])
                 total = Locale.currency(item["total"])
-                line = f"| {item['category']} | {avg} / month | {total}\n"
+                line = f"| {item['category']} | {total} | {avg} / month | {progress} | {item['status']}|\n"
 
                 if item["type"] == Expense.TYPE_INCOME:
                     inc_total += item["total"]
@@ -279,7 +371,7 @@ class YearlyAvgReport(ReportBase):
         super()._init_actions()
 
         self.__year_display = ft.Chip(
-            ft.Text(self.__curr_date.year),
+            ft.Text(self.__report_date.year),
             on_click=self.__on_year_display_click
         )
 

@@ -6,7 +6,7 @@ from views.base import Base as BaseView
 from views.reports.navbar import ReportNavBar
 
 from views.reports.report.spending import SpendingReport
-from views.reports.report.yearly_average import YearlyAvgReport
+from views.reports.report.yearly_summary import YearlySummaryReport
 from views.reports.report.upcoming import UpcomingReport
 
 class Report(BaseView):
@@ -16,7 +16,7 @@ class Report(BaseView):
         reports = [
             SpendingReport(page),
             UpcomingReport(page),
-            YearlyAvgReport(page)
+            YearlySummaryReport(page)
         ]
 
         for report in reports:

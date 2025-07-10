@@ -1,7 +1,10 @@
 # CHANGELOG
 
 ## v2.1.0 - Delightful Dosh (?????)
-...
+* Updated Yearly Average Report
+  - Renamed to Yearly Summary Report
+  - Added progress bar towards yearly budgeted amount
+  - Added Trend indicator: On Track or Under or Over budget
 
 ## v2.0.0 - Pristine Penny (June 04, 2025)
 Complete rewrite using Flet/Flutter

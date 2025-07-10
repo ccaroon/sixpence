@@ -1,6 +1,6 @@
 [project]
 name = "sixpence"
-version = "2.0.0a"
+version = "2.1.0"
 description = "Simple Budget Manager"
 readme = "README.md"
 requires-python = ">=3.13,<4.0.0"
@@ -14,7 +14,7 @@ product = "Sixpence"
 company = "Caroon Dot Org"
 copyright = "Copyright (C) 2025 by Craig N. Caroon"
 # NOTE: YYMMDD
-build_number = 250604
+build_number = 250710
 
 [tool.flet.app]
 path = "src"

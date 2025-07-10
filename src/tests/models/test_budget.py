@@ -47,6 +47,46 @@ class BudgetTest(unittest.TestCase):
         self.assertEqual(item.first_due, fields["first_due"])
         self.assertEqual(item.frequency, fields["frequency"])
 
+
+    def test_monthly_avg(self):
+        test_data = {
+            "monthly": {
+                "fields": {
+                    "icon": "gas-station",
+                    "category": "Auto:Fuel",
+                    "amount": -60.00,
+                    "first_due": 1,
+                    "frequency": 1
+                },
+                "expected": -60.00
+            },
+            "quarterly": {
+                "fields": {
+                    "icon": "bug",
+                    "category": "Home:Pest Control",
+                    "amount": -75.00,
+                    "first_due": 1,
+                    "frequency": 3
+                },
+                "expected": -25.00
+            },
+            "yearly": {
+                "fields": {
+                    "icon": "delivery-truck",
+                    "category": "Subscriptions:Amazon Prime",
+                    "amount": -149.00,
+                    "first_due": 1,
+                    "frequency": 12
+                },
+                "expected": -12.42
+            }
+        }
+
+        for label, data in test_data.items():
+            item = Budget(**data["fields"])
+            self.assertEqual(item.monthly_avg, data["expected"])
+
+
     def test_due_months(self):
         fields = {
             "icon": "alien",
@@ -160,6 +200,31 @@ class BudgetTest(unittest.TestCase):
             self.assertEqual(len(items), test[1])
 
 
+    def test_predict_spending(self):
+        tests = (
+            {
+                "amt": 25.00, "freq": 1, "fdue": 1,
+                "expected": [25.0 * i for i in range(1,13)]
+            },
+            {
+                "amt": 75.00, "freq": 3, "fdue": 1,
+                "expected": [75,75,75,150,150,150,225,225,225,300,300,300]
+            },
+            {
+                "amt": 171.99, "freq": 12, "fdue": 7,
+                "expected": [0,0,0,0,0,0,171.99,171.99,171.99,171.99,171.99,171.99]
+            },
+        )
+
+        for test_case in tests:
+            amount = test_case["amt"]
+            fdue = test_case["fdue"]
+            item = Budget(
+                amount=amount, frequency=test_case["freq"], first_due=fdue)
+
+            for month in range(1, 13):
+                expected_amount = test_case["expected"][month-1]
+                self.assertEqual(item.predict_spending(month), expected_amount, f"Month ==> {month}")
 
 
 
