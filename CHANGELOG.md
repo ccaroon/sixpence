@@ -2,6 +2,7 @@
 
 ## v2.1.0 - Delightful Dosh (?????)
 * Updated Yearly Average Report
+  - Renamed to Yearly Summary Report
   - Added progress bar towards yearly budgeted amount
   - Added Trend indicator: On Track or Under or Over budget
 
