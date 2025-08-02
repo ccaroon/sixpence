@@ -11,10 +11,10 @@ class UtilTest(unittest.TestCase):
         amount = 17723.45654
 
         # en_US
-        Locale.init("en_US")
+        Locale.init("en_US.UTF-8")
         formatted_amt = Locale.currency(amount)
         self.assertEqual(formatted_amt, "$17,723.46")
 
-        Locale.init("en_UK")
+        Locale.init("en_UK.UTF-8")
         formatted_amt = Locale.currency(amount)
         self.assertEqual(formatted_amt, "£17,723.46")
