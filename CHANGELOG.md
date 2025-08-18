@@ -5,6 +5,9 @@
   - Renamed to Yearly Summary Report
   - Added progress bar towards yearly budgeted amount
   - Added Trend indicator: On Track or Under or Over budget
+* Upgraded to Flet 0.28.3
+  - Navigation was broken between 0.27.6 and 0.28.2. Flet ChangeLog indicates it was fixed in 0.28.3
+* Upgraded some of the `dev` packages
 
 ## v2.0.0 - Pristine Penny (June 04, 2025)
 Complete rewrite using Flet/Flutter
@@ -31,7 +34,7 @@ Complete rewrite using Flet/Flutter
 * Added button to Expenses toolbar to return to current month
 * Added Calendar View type to Expenses. See income & spending amounts per day.
 * Added Icon beside Expense menu to identify which (if any) filter mode is enabled.
-  - All catetories vs. Overbudget catetories vs. Zero Dollar categories
+  - All categories vs. Overbudget categories vs. Zero Dollar categories
 * Added `get` method to Icons class to get an icon by exact name
 
 ### Changes
