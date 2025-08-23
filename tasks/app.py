@@ -60,6 +60,18 @@ def install(ctx):
     else:
         print(f"=> Error: Don't know to install for {os_name}.")
 
+@task
+def package(ctx):
+    os_name = platform.system()
+    target = os_map.get(os_name).get("target")
+
+    if os_name == "Linux":
+        with ctx.cd("build"):
+            ctx.run(f"mv {target} sixpence", echo=True)
+            ctx.run(f"tar cvfz sixpence.tgz sixpence", echo=True)
+    else:
+        print("=> Error: Don't know how to create a package for {os_name}.")
+
 
 @task(
     aliases=["build-clean"]
