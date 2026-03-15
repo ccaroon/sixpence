@@ -23,12 +23,13 @@ path = "src/app/version.py"
 
 [tool.hatch.envs.hatch-test]
 default-args = ["src/tests"]
-extra-dependencies = [
-    # "coverage ~= 7.10",
-    "faker ~= 37.5",
-    # "invoke ~= 2.2.0",
-    # "nose2 ~= 0.15",
-]
+extra-dependencies = ["faker ~= 37.5"]
+
+[tool.hatch.envs.hatch-test.scripts]
+run = "pytest{env:HATCH_TEST_ARGS:} {args}"
+run-cov = "coverage run -m pytest{env:HATCH_TEST_ARGS:} {args}"
+cov-combine = "coverage combine"
+cov-report = "coverage report; coverage html"
 
 [tool.hatch.build.targets.sdist]
 include = ["src/"]
@@ -41,7 +42,7 @@ omit = ["src/tests/*"]
 
 [tool.coverage.report]
 fail_under = 90
-include = ["evergreen/*"]
+include = ["src/*"]
 
 [tool.flet]
 org = "org.caroon"
