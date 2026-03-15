@@ -1,3 +1,7 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
 name = "sixpence"
 version = "2.1.0"
@@ -5,8 +9,39 @@ description = "Simple Budget Manager"
 readme = "README.md"
 requires-python = ">=3.13,<4.0.0"
 authors = [{ name = "Craig N. Caroon", email = "craig@caroon.org" }]
-# NOTE: currently using requirements.txt
-# dependencies = []
+dependencies = [
+    "arrow ~= 1.3.0",
+    "flet[all] ~= 0.28.3",
+    "inflector ~= 3.1.1",
+    "PyYAML ~= 6.0.2",
+    "screeninfo ~= 0.8.1",
+    "tinydb ~= 4.8.2",
+]
+
+[tool.hatch.version]
+path = "src/app/version.py"
+
+[tool.hatch.envs.hatch-test]
+default-args = ["src/tests"]
+extra-dependencies = [
+    # "coverage ~= 7.10",
+    "faker ~= 37.5",
+    # "invoke ~= 2.2.0",
+    # "nose2 ~= 0.15",
+]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/"]
+
+[tool.coverage.run]
+omit = ["src/tests/*"]
+
+[tool.coverage.report]
+fail_under = 90
+include = ["evergreen/*"]
 
 [tool.flet]
 org = "org.caroon"
