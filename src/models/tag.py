@@ -3,26 +3,23 @@ from tinydb import where
 
 from models.base import Base
 
+
 class Tag(Base):
     def __init__(self, id=None, **kwargs):
         self.__name = None
 
         super().__init__(id=id, **kwargs)
 
-
     @property
     def name(self):
         return self.__name
-
 
     @name.setter
     def name(self, new_name):
         self.__name = self.normalize(new_name)
 
-
     def update(self, data):
-        self.name = data.get('name', self.name)
-
+        self.name = data.get("name", self.name)
 
     @classmethod
     def normalize(cls, name):
@@ -40,37 +37,27 @@ class Tag(Base):
 
         return norm_name
 
-
     @classmethod
     def exists(cls, name):
-        return cls._database().contains(where('name') == cls.normalize(name))
-
+        return cls._database().contains(where("name") == cls.normalize(name))
 
     def _serialize(self):
-        return {
-            'name': self.name
-        }
-
+        return {"name": self.name}
 
     def __lt__(self, other_tag):
         return self.name < other_tag.name
 
-
     def __gt__(self, other_tag):
         return self.name > other_tag.name
-
 
     def __eq__(self, other_tag):
         return self.name == other_tag.name
 
-
     def __str__(self):
         return self.name
 
-
     def __repr__(self):
         return self.name
-
 
     def __hash__(self):
         return hash(self.name)

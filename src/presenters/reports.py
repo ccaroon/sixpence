@@ -2,7 +2,6 @@ class Reports:
     def __init__(self, view):
         self.__view = view
 
-
     def handle_report_click(self, evt):
         report = evt.control.data
 
@@ -15,7 +14,6 @@ class Reports:
         report.render()
         self.__view.content = report
         self.__view.update()
-
 
     def handle_report_home(self, evt):
         # Reset NavBar

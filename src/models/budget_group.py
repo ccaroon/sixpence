@@ -4,22 +4,19 @@ class BudgetGroup:
         self.__spent = 0.0
         self.__items = []
 
-
     @property
     def category(self):
-        """ The Group's Category """
+        """The Group's Category"""
         return self.__category
-
 
     @property
     def count(self):
-        """ The number of Budget items in the Group """
+        """The number of Budget items in the Group"""
         return len(self.__items)
-
 
     @property
     def type(self):
-        """ The Group's Type: Income or Expense"""
+        """The Group's Type: Income or Expense"""
         item_type = None
         if self.__items:
             # ASSUMES that all the budget items are the same type
@@ -27,10 +24,9 @@ class BudgetGroup:
 
         return item_type
 
-
     @property
     def icon(self):
-        """ A representative icon for the Group """
+        """A representative icon for the Group"""
         icon = None
         if self.__items:
             # Just use the first item's icon as a representation for the group
@@ -38,10 +34,9 @@ class BudgetGroup:
 
         return icon
 
-
     @property
     def amount(self):
-        """ Amount Budgeted for the Category across all items in the Group """
+        """Amount Budgeted for the Category across all items in the Group"""
         total = 0.0
         for item in self.__items:
             total += item.amount
@@ -60,22 +55,19 @@ class BudgetGroup:
 
         return total
 
-
     @property
     def spent(self):
-        """ Amount spent towards the Group's total budgeted amount """
+        """Amount spent towards the Group's total budgeted amount"""
         return self.__spent
-
 
     @property
     def monthly_avg(self):
-        """ The monthly average of all items in the Group """
+        """The monthly average of all items in the Group"""
         avg = 0.0
         for item in self.__items:
             avg += item.monthly_avg
 
         return avg
-
 
     def predict_spending(self, month):
         """
@@ -88,13 +80,11 @@ class BudgetGroup:
 
         return amount
 
-
     def spend(self, amount):
-        """ Update the amount spent towards the Group """
+        """Update the amount spent towards the Group"""
         self.__spent += amount
 
-
     def add(self, item, spent=0.0):
-        """ Add a Budgeted Item to the Group """
+        """Add a Budgeted Item to the Group"""
         self.__items.append(item)
         self.__spent += spent

@@ -2,10 +2,23 @@ from flet import Icons as FletIcons
 
 import inflector
 
+
 class IconSearch:
     IGNORE_WORDS = [
-        "as", "do", "in", "of", "my", "then", "to", "a", "an", "and", "but",
-        "for", "or", "the",
+        "as",
+        "do",
+        "in",
+        "of",
+        "my",
+        "then",
+        "to",
+        "a",
+        "an",
+        "and",
+        "but",
+        "for",
+        "or",
+        "the",
     ]
 
     # KNOWN-ICON-KW -> PERSONAL-KW
@@ -58,11 +71,9 @@ class IconSearch:
         "water_drop": ["water", "water/sewer"],
     }
 
-
     def __init__(self, **kwargs):
         self.__icons = [icn.value for icn in list(FletIcons)]
         self.__inflect = inflector.Inflector()
-
 
     def smart_search(self, query, **kwargs):
         min_len = kwargs.get("min_len", 2)
@@ -78,11 +89,7 @@ class IconSearch:
                 plural = self.__inflect.pluralize(word)
                 mapped_kw = []
                 for icon_kw, personal_kws in self.KEYWORD_MAP.items():
-                    if (
-                        word in personal_kws or
-                        singular in personal_kws or
-                        plural in personal_kws
-                    ):
+                    if word in personal_kws or singular in personal_kws or plural in personal_kws:
                         mapped_kw.append(icon_kw)
 
                 if mapped_kw:
@@ -98,7 +105,6 @@ class IconSearch:
             found_icons.update(icons)
 
         return list(found_icons)
-
 
     def by_keyword(self, keyword, **kwargs):
         filter_variations = kwargs.get("filter_variations", True)
@@ -122,7 +128,6 @@ class IconSearch:
                 matches.append(icn_name)
 
         return matches
-
 
     def by_category(self, category):
         found_icons = []

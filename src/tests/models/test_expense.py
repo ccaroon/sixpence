@@ -5,6 +5,7 @@ import arrow
 
 from models.expense import Expense
 
+
 class ExpenseTest(unittest.TestCase):
     def __populate_db(self, count, date):
         """
@@ -19,16 +20,14 @@ class ExpenseTest(unittest.TestCase):
         base_date = date.ceil("month")
 
         for i in range(count):
-            amt_mod = random.choice((-1,1))
+            amt_mod = random.choice((-1, 1))
             entry = Expense(
-                date=base_date.shift(days=random.randint(0,27) * -1),
+                date=base_date.shift(days=random.randint(0, 27) * -1),
                 icon=f"icon-entry-{i}",
                 category=f"Test:Entry{i}",
-                amount=round(random.random() * 100.00 * amt_mod, 2)
-
+                amount=round(random.random() * 100.00 * amt_mod, 2),
             )
             entry.save()
-
 
     # date, icon, category, amount
     def test_constructor(self):
@@ -44,7 +43,6 @@ class ExpenseTest(unittest.TestCase):
         self.assertEqual(item.icon, fields["icon"])
         self.assertEqual(item.category, fields["category"])
         self.assertEqual(item.amount, fields["amount"])
-
 
     def test_update_rollover(self):
         count = 25
@@ -72,9 +70,6 @@ class ExpenseTest(unittest.TestCase):
         self.assertIsNotNone(entries)
         self.assertEqual(len(entries), 1)
         self.assertEqual(expected_balance, entries[0].amount)
-
-
-
 
 
 #

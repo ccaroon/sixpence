@@ -4,8 +4,8 @@ from models.base import Base
 from models.budget_group import BudgetGroup
 from models.taggable import Taggable
 
-class Budget(Taggable, Base):
 
+class Budget(Taggable, Base):
     TYPE_INCOME = 0
     TYPE_EXPENSE = 1
 
@@ -14,7 +14,7 @@ class Budget(Taggable, Base):
         2: "Bi-Monthly",
         3: "Quarterly",
         6: "Bi-Yearly",
-        12: "Yearly"
+        12: "Yearly",
     }
 
     def __init__(self, id=None, **kwargs):
@@ -32,19 +32,17 @@ class Budget(Taggable, Base):
 
         super().__init__(id=id, **kwargs)
 
-
     def __str__(self):
         return f"{self.id} | {self.category} | {self.amount}"
 
-
     def _serialize(self):
-        data =  {
+        data = {
             "type": self.TYPE_EXPENSE if self.amount < 0.0 else self.TYPE_INCOME,
-            "icon":self.icon,
+            "icon": self.icon,
             "category": self.category,
             "amount": self.amount,
             "first_due": self.first_due,
-            "frequency": self.frequency
+            "frequency": self.frequency,
         }
 
         # Fix "date" in history
@@ -59,12 +57,10 @@ class Budget(Taggable, Base):
 
         return data
 
-
     @property
     def monthly_avg(self):
-        """ The average amount spent on this Budget Item per Month """
+        """The average amount spent on this Budget Item per Month"""
         return round(self.amount / self.frequency, 2)
-
 
     def predict_spending(self, month):
         """
@@ -78,7 +74,6 @@ class Budget(Taggable, Base):
                 amount += self.amount
 
         return round(amount, 2)
-
 
     def frequency_desc(self):
         """
@@ -95,7 +90,6 @@ class Budget(Taggable, Base):
         """
         return self.FREQ_DESC.get(self.frequency, f"{self.frequency} months")
 
-
     def update(self, data):
         self.type = data.get("type", self.type)
         self.icon = data.get("icon", self.icon)
@@ -111,9 +105,8 @@ class Budget(Taggable, Base):
 
         self.tags = data.get("tags", self.tags)
 
-
     @classmethod
-    def normalize_category(cls, value:str):
+    def normalize_category(cls, value: str):
         """
         Normalize a category name
 
@@ -154,7 +147,6 @@ class Budget(Taggable, Base):
         category = ":".join(cat_parts)
         return category
 
-
     @classmethod
     def categories(cls):
         """
@@ -170,7 +162,6 @@ class Budget(Taggable, Base):
             categories[item.category] = item.icon
 
         return categories
-
 
     def due_months(self):
         """
@@ -190,10 +181,9 @@ class Budget(Taggable, Base):
 
         return due_months
 
-
     # TODO: Get rid of this in favor of Budget.group()
     @classmethod
-    def collate_by_category(self, budget:list):
+    def collate_by_category(self, budget: list):
         """
         Given a list of Budget items collate them by their category.
 
@@ -211,16 +201,15 @@ class Budget(Taggable, Base):
                     "icon": item.icon,
                     "category": item.category,
                     "amount": item.amount,
-                    "spent": 0.0
+                    "spent": 0.0,
                 }
             else:
                 budget_map[item.category]["amount"] += item.amount
 
         return budget_map
 
-
     @classmethod
-    def group(self, budget:list):
+    def group(self, budget: list):
         """
         Given a list of Budget items group them by their category.
 
@@ -242,9 +231,8 @@ class Budget(Taggable, Base):
 
         return budget_map
 
-
     @classmethod
-    def for_month(cls, month_num:int, **kwargs):
+    def for_month(cls, month_num: int, **kwargs):
         """
         All non-deleted budgeted items that are **due** in the given month
 

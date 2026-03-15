@@ -1,15 +1,16 @@
 import re
 import sys
 
+
 class DbHelper:
     __DEFAULT_SORT_VALUE = {
         int: sys.maxsize * -1,
-        str: '',
+        str: "",
         bool: False,
-        'none': None
+        "none": None,
     }
 
-    SEARCH_OPS = ("eq","ne","gt","gte","lt","lte","btw")
+    SEARCH_OPS = ("eq", "ne", "gt", "gte", "lt", "lte", "btw")
     __SEARCH_OPS_RE = re.compile(rf"^({':|'.join(SEARCH_OPS) + ':'})?(.*)$")
 
     @classmethod
@@ -22,7 +23,7 @@ class DbHelper:
     def __model_attr_type(cls, names, objs):
         types = []
         for attr in names:
-            attr_type = 'none'
+            attr_type = "none"
             for obj in objs:
                 if obj[attr] is not None:
                     attr_type = type(obj[attr])
@@ -32,20 +33,20 @@ class DbHelper:
 
         return types
 
-
     @classmethod
     def sort(cls, items, sort_desc):
         reverse = False
         sort_flds = sort_desc
-        if ':' in sort_desc:
-            (sort_flds, sort_dir) = sort_desc.split(':', 2)
-            reverse = True if sort_dir == 'desc' else False
+        if ":" in sort_desc:
+            (sort_flds, sort_dir) = sort_desc.split(":", 2)
+            reverse = True if sort_dir == "desc" else False
 
-        sort_attrs = sort_flds.split(',')
+        sort_attrs = sort_flds.split(",")
 
         types = cls.__model_attr_type(sort_attrs, items)
+
         def key_smith(o):
-            key_ring = [cls.__DEFAULT_SORT_VALUE[types[i]] if o[f] == None else o[f] for i,f in enumerate(sort_attrs)]
+            key_ring = [cls.__DEFAULT_SORT_VALUE[types[i]] if o[f] == None else o[f] for i, f in enumerate(sort_attrs)]
             return key_ring
 
         # In Place
@@ -54,7 +55,6 @@ class DbHelper:
 
         # As New List
         return sorted(items, key=key_smith, reverse=reverse)
-
 
     @classmethod
     def parse_query(cls, query_str):
@@ -84,7 +84,6 @@ class DbHelper:
 
         return (query_op, query_val)
 
-
     # Used to do numeric comparisons via the Tinydb.Query.test() method.
     # This is used b/c is solves the problem of being able to compare values
     # when a db field's value can be None (null).
@@ -96,19 +95,19 @@ class DbHelper:
     def cmp_numeric(doc_val, op, test_val):
         result = False
         if doc_val is not None:
-            values = test_val.split(':')
+            values = test_val.split(":")
             values = [float(val) for val in values]
-            if op == 'ne':
+            if op == "ne":
                 result = doc_val != values[0]
-            elif op == 'gt':
+            elif op == "gt":
                 result = doc_val > values[0]
-            elif op == 'gte':
+            elif op == "gte":
                 result = doc_val >= values[0]
-            elif op == 'lt':
+            elif op == "lt":
                 result = doc_val < values[0]
-            elif op == 'lte':
+            elif op == "lte":
                 result = doc_val <= values[0]
-            elif op == 'btw':
+            elif op == "btw":
                 result = values[0] <= doc_val <= values[1]
             else:
                 result = doc_val == values[0]

@@ -2,6 +2,7 @@ import flet as ft
 
 import utils.constants as const
 
+
 class ReportNavBar(ft.AppBar):
     def __init__(self, page, callbacks):
         self.__page = page
@@ -13,22 +14,22 @@ class ReportNavBar(ft.AppBar):
                 icon=ft.Icons.HOME,
                 icon_color=ft.Colors.ON_PRIMARY_CONTAINER,
                 on_click=self.__on_report_home,
-                tooltip="Report Home"
+                tooltip="Report Home",
             )
         ]
 
         super().__init__(
             leading=ft.Icon(
-                ft.Icons.INSERT_CHART_OUTLINED, size=const.ICON_MEDIUM),
+                ft.Icons.INSERT_CHART_OUTLINED,
+                size=const.ICON_MEDIUM,
+            ),
             title=ft.Text("Report - All"),
             bgcolor=ft.Colors.PRIMARY_CONTAINER,
-            actions=self.__default_actions.copy()
+            actions=self.__default_actions.copy(),
         )
-
 
     def reset_actions(self):
         self.actions = self.__default_actions.copy()
-
 
     def set_title(self, title):
         self.title.value = f"Reports - {title}"

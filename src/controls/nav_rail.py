@@ -2,6 +2,7 @@ import flet as ft
 
 import utils.constants as const
 
+
 class NavRail(ft.NavigationRail):
     def __init__(self, page):
         super().__init__(
@@ -14,34 +15,34 @@ class NavRail(ft.NavigationRail):
                     icon=ft.Icons.HOME_OUTLINED,
                     selected_icon=ft.Icons.HOME,
                     label="Home",
-                    data="/home"
+                    data="/home",
                 ),
                 ft.NavigationRailDestination(
                     icon=ft.Icons.FORMAT_LIST_BULLETED_OUTLINED,
                     selected_icon=ft.Icons.FORMAT_LIST_BULLETED,
                     label="Budget",
-                    data="/budget"
+                    data="/budget",
                 ),
                 ft.NavigationRailDestination(
                     icon=ft.Icons.ATTACH_MONEY_OUTLINED,
                     selected_icon=ft.Icons.ATTACH_MONEY,
                     label="Expenses",
-                    data="/expenses"
+                    data="/expenses",
                 ),
                 ft.NavigationRailDestination(
                     icon=ft.Icons.INSERT_CHART_OUTLINED,
                     selected_icon=ft.Icons.INSERT_CHART,
                     label="Reports",
-                    data="/reports"
+                    data="/reports",
                 ),
                 ft.NavigationRailDestination(
                     icon=ft.Icons.SETTINGS_OUTLINED,
                     selected_icon=ft.Icons.SETTINGS,
                     label="Settings",
-                    data="/settings"
+                    data="/settings",
                 ),
             ],
-            on_change=self.__handle_on_change
+            on_change=self.__handle_on_change,
         )
 
         self.__page = page
@@ -51,10 +52,9 @@ class NavRail(ft.NavigationRail):
                 ft.NavigationRailDestination(
                     icon=ft.Icon(ft.Icons.LOGO_DEV, color="red", size=const.ICON_MEDIUM),
                     selected_icon=ft.Icon(ft.Icons.LOGO_DEV, color="red", size=const.ICON_MEDIUM),
-                    label="DEVELOPER MODE"
+                    label="DEVELOPER MODE",
                 )
             )
-
 
     def navigate_to(self, route):
         index = None
@@ -66,7 +66,6 @@ class NavRail(ft.NavigationRail):
         if index:
             self.selected_index = index
             self.__page.go(route)
-
 
     def __handle_on_change(self, event):
         index = event.control.selected_index

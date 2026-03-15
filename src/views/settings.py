@@ -5,6 +5,7 @@ from presenters.settings import Settings as SettingsPresenter
 import utils.constants as const
 from views.base import Base as BaseView
 
+
 class Settings(BaseView):
     def __init__(self, page):
         self.__cfg = page.session.get("config")
@@ -12,7 +13,6 @@ class Settings(BaseView):
         super().__init__(page, SettingsPresenter(self, self.__cfg))
 
         self.notification_bar = NotificationBar(page)
-
 
     def _layout(self):
         self.content = ft.Column(
@@ -24,35 +24,34 @@ class Settings(BaseView):
                         ft.Tab(
                             text="App",
                             icon=ft.Icons.SETTINGS_APPLICATIONS,
-                            content=self.__app_controls()
+                            content=self.__app_controls(),
                         ),
                         ft.Tab(
                             text="Backup",
                             icon=ft.Icons.BACKUP,
-                            content=self.__backup_controls()
-                        )
-                    ]
+                            content=self.__backup_controls(),
+                        ),
+                    ],
                 )
             ]
         )
-
 
     def __backup_controls(self):
         self.keep_text = ft.Text(
             f"{self.__cfg.get('backup:keep')}",
             theme_style=ft.TextThemeStyle.TITLE_LARGE,
             text_align=ft.TextAlign.CENTER,
-            expand=1
+            expand=1,
         )
 
         self.backup_path_text = ft.Text(
             f"{self.__cfg.get('backup:path')}",
             theme_style=ft.TextThemeStyle.TITLE_LARGE,
             text_align=ft.TextAlign.CENTER,
-            expand=10
+            expand=10,
         )
         file_picker = ft.FilePicker(
-            on_result=self._presenter.handle_choose_path
+            on_result=self._presenter.handle_choose_path,
         )
         self._page.overlay.append(file_picker)
 
@@ -66,23 +65,24 @@ class Settings(BaseView):
                                     ft.Text(
                                         "Keep",
                                         weight=ft.FontWeight.BOLD,
-                                        theme_style=ft.TextThemeStyle.TITLE_LARGE
+                                        theme_style=ft.TextThemeStyle.TITLE_LARGE,
                                     ),
                                     ft.Text(
                                         "Number of backup files to keep",
                                     ),
                                 ],
-                                expand=1
+                                expand=1,
                             ),
                             self.keep_text,
                             ft.Slider(
                                 label="Keep {value} Backup Files",
-                                min=1, max=30,
+                                min=1,
+                                max=30,
                                 divisions=30,
                                 value=self.__cfg.get("backup:keep"),
                                 on_change_end=self._presenter.handle_keep_change,
-                                expand=10
-                            )
+                                expand=10,
+                            ),
                         ]
                     ),
                     ft.Row(
@@ -92,20 +92,20 @@ class Settings(BaseView):
                                     ft.Text(
                                         "Path",
                                         weight=ft.FontWeight.BOLD,
-                                        theme_style=ft.TextThemeStyle.TITLE_LARGE
+                                        theme_style=ft.TextThemeStyle.TITLE_LARGE,
                                     ),
                                     ft.Text(
                                         "Save backup files to this directory",
                                     ),
                                 ],
-                                expand=1
+                                expand=1,
                             ),
                             self.backup_path_text,
                             ft.ElevatedButton(
                                 "Choose Path",
                                 on_click=lambda _: file_picker.get_directory_path(),
-                                expand=1
-                            )
+                                expand=1,
+                            ),
                         ]
                     ),
                     ft.Row(
@@ -113,15 +113,14 @@ class Settings(BaseView):
                             ft.ElevatedButton(
                                 "Save",
                                 icon=ft.Icons.SAVE,
-                                on_click=self._presenter.handle_save_click
-                            )
+                                on_click=self._presenter.handle_save_click,
+                            ),
                         ],
-                        alignment=ft.MainAxisAlignment.CENTER
-                    )
+                        alignment=ft.MainAxisAlignment.CENTER,
+                    ),
                 ]
             )
         )
-
 
     def __app_controls(self):
         return ft.Container(
@@ -134,13 +133,13 @@ class Settings(BaseView):
                                     ft.Text(
                                         "Mode",
                                         weight=ft.FontWeight.BOLD,
-                                        theme_style=ft.TextThemeStyle.TITLE_LARGE
+                                        theme_style=ft.TextThemeStyle.TITLE_LARGE,
                                     ),
                                     ft.Text(
                                         "Light, Dark or System Default",
                                     ),
                                 ],
-                                expand=1
+                                expand=1,
                             ),
                             ft.SegmentedButton(
                                 on_change=self._presenter.handle_mode_change,
@@ -149,20 +148,22 @@ class Settings(BaseView):
                                     ft.Segment(
                                         value="light",
                                         label=ft.Text("Light"),
-                                        icon=ft.Icon(ft.Icons.LIGHT_MODE)
+                                        icon=ft.Icon(
+                                            ft.Icons.LIGHT_MODE,
+                                        ),
                                     ),
                                     ft.Segment(
                                         value="dark",
                                         label=ft.Text("Dark"),
-                                        icon=ft.Icon(ft.Icons.DARK_MODE)
+                                        icon=ft.Icon(ft.Icons.DARK_MODE),
                                     ),
                                     ft.Segment(
                                         value="system",
                                         label=ft.Text("System Default"),
-                                        icon=ft.Icon(ft.Icons.SETTINGS_SUGGEST)
-                                    )
-                                ]
-                            )
+                                        icon=ft.Icon(ft.Icons.SETTINGS_SUGGEST),
+                                    ),
+                                ],
+                            ),
                         ]
                     ),
                     ft.Row(
@@ -172,13 +173,13 @@ class Settings(BaseView):
                                     ft.Text(
                                         "Startup View",
                                         weight=ft.FontWeight.BOLD,
-                                        theme_style=ft.TextThemeStyle.TITLE_LARGE
+                                        theme_style=ft.TextThemeStyle.TITLE_LARGE,
                                     ),
                                     ft.Text(
                                         "View to open on App Startup",
                                     ),
                                 ],
-                                expand=1
+                                expand=1,
                             ),
                             ft.Dropdown(
                                 label="Startup View",
@@ -189,8 +190,8 @@ class Settings(BaseView):
                                     ft.DropdownOption(key="/reports", text="Reports"),
                                 ],
                                 value=self.__cfg.get("app:startup_view"),
-                                on_change=self._presenter.handle_startup_view_change
-                            )
+                                on_change=self._presenter.handle_startup_view_change,
+                            ),
                         ]
                     ),
                     ft.Row(
@@ -200,19 +201,19 @@ class Settings(BaseView):
                                     ft.Text(
                                         "Time Zone",
                                         weight=ft.FontWeight.BOLD,
-                                        theme_style=ft.TextThemeStyle.TITLE_LARGE
+                                        theme_style=ft.TextThemeStyle.TITLE_LARGE,
                                     ),
                                     ft.Text(
                                         "IANA Defined Time Zone",
                                     ),
                                 ],
-                                expand=1
+                                expand=1,
                             ),
                             ft.TextField(
                                 label="Time Zone",
                                 value=self.__cfg.get("app:timezone"),
-                                on_blur=self._presenter.handle_timezone_blur
-                            )
+                                on_blur=self._presenter.handle_timezone_blur,
+                            ),
                         ]
                     ),
                     ft.Row(
@@ -222,19 +223,19 @@ class Settings(BaseView):
                                     ft.Text(
                                         "Locale",
                                         weight=ft.FontWeight.BOLD,
-                                        theme_style=ft.TextThemeStyle.TITLE_LARGE
+                                        theme_style=ft.TextThemeStyle.TITLE_LARGE,
                                     ),
                                     ft.Text(
                                         "Language Code Identifier (en_US|es_CL|fr_FR)",
                                     ),
                                 ],
-                                expand=1
+                                expand=1,
                             ),
                             ft.TextField(
                                 label="Locale",
                                 value=self.__cfg.get("app:locale"),
-                                on_blur=self._presenter.handle_locale_blur
-                            )
+                                on_blur=self._presenter.handle_locale_blur,
+                            ),
                         ]
                     ),
                     ft.Row(
@@ -242,23 +243,21 @@ class Settings(BaseView):
                             ft.ElevatedButton(
                                 "Save",
                                 icon=ft.Icons.SAVE,
-                                on_click=self._presenter.handle_save_click
-                            )
+                                on_click=self._presenter.handle_save_click,
+                            ),
                         ],
-                        alignment=ft.MainAxisAlignment.CENTER
-                    )
+                        alignment=ft.MainAxisAlignment.CENTER,
+                    ),
                 ]
             )
         )
-
 
     def _layout_navbar(self):
         self._navbar = ft.AppBar(
             leading=ft.Icon(ft.Icons.SETTINGS, size=const.ICON_MEDIUM),
             title=ft.Text("Settings"),
-            bgcolor=ft.Colors.PRIMARY_CONTAINER
+            bgcolor=ft.Colors.PRIMARY_CONTAINER,
         )
-
 
     def handle_keyboard_event(self, event):
         if event.ctrl or event.meta:

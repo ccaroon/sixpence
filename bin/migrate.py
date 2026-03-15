@@ -12,6 +12,7 @@ from utils.icon_search import IconSearch
 from models.budget import Budget
 from models.tag import Tag
 
+
 class DbMigrator:
     CATEGORY_FIXES = {
         "Bank:Fee": "Bank:Fees",
@@ -202,8 +203,7 @@ class DbMigrator:
 
         cwd = os.path.dirname(__file__)
 
-        self.__config = Config.initialize(
-            f"{cwd}/migration.yml", transient=["session"])
+        self.__config = Config.initialize(f"{cwd}/migration.yml", transient=["session"])
         self.__config.set("session:env", "prod")
         self.__config.set("session:docs_dir", self.__working_dir)
         self.__icon_search = IconSearch()
@@ -216,7 +216,6 @@ class DbMigrator:
             self.__config.set("tags", {})
         self.__tag_cache = self.__config.get("tags")
 
-
     def __read_old_db(self):
         records = []
         with open(self.__old_db_path, "r") as fptr:
@@ -225,7 +224,6 @@ class DbMigrator:
                 records.append(entry)
 
         return records
-
 
     # NOTE: "Borrowed" from src/models/tag.py
     def __normalize_tag(self, name):
@@ -241,12 +239,11 @@ class DbMigrator:
         # Spaces => '-'
         norm_name = re.sub(r"\s+", "-", norm_name)
 
-        fixed_tag =self.TAG_FIXES.get(norm_name)
+        fixed_tag = self.TAG_FIXES.get(norm_name)
         if fixed_tag:
             norm_name = fixed_tag
 
         return norm_name
-
 
     def __note2tags(self, entry):
         cache_key = f"{entry['created_at']}|{entry['category']}|{entry['notes']}"
@@ -276,7 +273,6 @@ class DbMigrator:
             self.__tag_cache[cache_key] = tags
 
         return tags
-
 
     def __find_icon(self, keyword):
         choice = None
@@ -315,20 +311,17 @@ class DbMigrator:
 
         return choice
 
-
-    def __write_tags(self, tags:list[str]):
+    def __write_tags(self, tags: list[str]):
         # Update Tags DB
         for tg_name in tags:
             if not Tag.exists(tg_name):
                 new_tg = Tag(name=tg_name)
                 new_tg.save()
 
-
     def __cleanup_exit(self, msg, code=0):
         self.__config.save()
         print(msg)
         exit(code)
-
 
     def migrate(self):
         if os.path.exists(self.__new_db_path):
@@ -345,7 +338,7 @@ class DbMigrator:
         new_records = []
         for idx, entry in enumerate(old_records):
             try:
-                print(f"Converting: {entry["_id"]} | {idx+1:04}/{num_recs:04}")
+                print(f"Converting: {entry['_id']} | {idx + 1:04}/{num_recs:04}")
                 self.__munge_expenses_fields(entry)
                 self.__munge_budget_fields(entry)
                 self.__munge_shared_fields(entry)
@@ -367,7 +360,6 @@ class DbMigrator:
         db.insert_multiple(new_records)
 
         self.__cleanup_exit(f"Migrated {len(new_records)} entries: {self.__new_db_path}")
-
 
     def __munge_shared_fields(self, entry):
         # delete _id
@@ -405,7 +397,6 @@ class DbMigrator:
 
             self.__write_tags(tags)
 
-
     def __munge_budget_fields(self, entry):
         if "history" in entry:
             for item in entry["history"]:
@@ -414,7 +405,6 @@ class DbMigrator:
         if "firstDue" in entry:
             entry["first_due"] = entry["firstDue"]
             del entry["firstDue"]
-
 
     def __munge_expenses_fields(self, entry):
         # normalize tags
@@ -434,7 +424,7 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Migrate Old DB Format (NedDB) to New DB (TinyDb) format"
+        description="Migrate Old DB Format (NedDB) to New DB (TinyDb) format",
     )
 
     parser.add_argument("old_db_file", type=str)

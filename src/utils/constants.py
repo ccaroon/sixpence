@@ -1,4 +1,5 @@
 from flet import Colors as ftc
+
 # Icon Sizes
 ICON_SMALL = 20
 ICON_MEDIUM = 50
@@ -28,5 +29,5 @@ MONTH_NAMES = [
     "September",
     "October",
     "November",
-    "December"
+    "December",
 ]

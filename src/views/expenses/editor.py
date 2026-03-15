@@ -10,6 +10,7 @@ from utils.icon_search import IconSearch
 import utils.tools as tools
 import utils.constants as const
 
+
 class ExpenseEditor:
     DEFAULT_ICON = ft.Icons.QUESTION_MARK
 
@@ -25,12 +26,11 @@ class ExpenseEditor:
         self.__control = ft.BottomSheet(
             self.__container,
             shape=ft.ContinuousRectangleBorder(radius=25),
-            size_constraints=ft.BoxConstraints(min_width=1)
+            size_constraints=ft.BoxConstraints(min_width=1),
         )
         self.__page.overlay.append(self.__control)
 
-        self.__tag_aliases = self.__page.session.get("config").get("tag_aliases",{})
-
+        self.__tag_aliases = self.__page.session.get("config").get("tag_aliases", {})
 
     def __find_category(self, keyword):
         """
@@ -51,7 +51,6 @@ class ExpenseEditor:
 
         return category
 
-
     def __update_color(self, amount):
         # Change the color of the container based on whether it's
         # and income or expense
@@ -64,7 +63,6 @@ class ExpenseEditor:
 
         self.__container.update()
 
-
     def __on_amount_blur(self, evt):
         if tools.is_numeric(str(evt.control.value)):
             cat_name = self.__category_ctrl.value
@@ -73,14 +71,11 @@ class ExpenseEditor:
             amount = float(evt.control.value) if evt.control.value else 0.0
 
             # If Budget item is Expense, ensure that the amount is negative
-            if (budget_items and
-                budget_items[0].type == Budget.TYPE_EXPENSE and
-                amount > 0.0):
+            if budget_items and budget_items[0].type == Budget.TYPE_EXPENSE and amount > 0.0:
                 amount *= -1
                 evt.control.value = amount
 
             self.__update_color(amount)
-
 
     def __validate(self):
         valid = True
@@ -112,7 +107,6 @@ class ExpenseEditor:
 
         return valid
 
-
     def __populate_model(self):
         # date
         self.__item.date = Locale.as_arrow(self.__date_picker.value)
@@ -135,7 +129,6 @@ class ExpenseEditor:
         new_tags = self.__tags_ctrl.value.split(",")
         self.__item.tags = new_tags
 
-
     def __populate_controls(self):
         # date
         self.__date_picker.value = self.__item.date
@@ -155,7 +148,6 @@ class ExpenseEditor:
         # tags
         self.__tags_ctrl.value = ",".join(self.__item.tag_list())
 
-
     def __on_save(self, evt):
         if self.__validate():
             # Update self.__item with "new" values
@@ -169,12 +161,10 @@ class ExpenseEditor:
             # Close
             self.__page.close(self.__control)
 
-
     def __on_choose_date(self, evt):
         chosen_date = Locale.as_arrow(evt.control.value)
         self.__date_ctrl.text = chosen_date.format("MM-DD-YYYY")
         self.__date_ctrl.update()
-
 
     def __on_category_blur(self, evt):
         cat_kw = self.__find_category(evt.control.value)
@@ -236,7 +226,6 @@ class ExpenseEditor:
                 self.__tags_ctrl.value = ",".join(bdg_tags)
                 self.__tags_ctrl.update()
 
-
     def __on_tags_blur(self, evt):
         tag_str = evt.control.value
         input_tags = tag_str.split(",")
@@ -257,7 +246,7 @@ class ExpenseEditor:
         msg = None
         border_color = None
         if unknown_tags:
-            msg = f"New Tags: {",".join(unknown_tags)}"
+            msg = f"New Tags: {','.join(unknown_tags)}"
             border_color = ft.Colors.AMBER
 
         # Set value as normalized names
@@ -266,11 +255,10 @@ class ExpenseEditor:
         self.__tags_ctrl.border_color = border_color
         self.__tags_ctrl.update()
 
-
     def _layout(self):
         # date
         self.__date_picker = ft.DatePicker(
-            on_change=self.__on_choose_date
+            on_change=self.__on_choose_date,
         )
         self.__date_ctrl = ft.OutlinedButton(
             icon=ft.Icons.CALENDAR_MONTH,
@@ -280,14 +268,12 @@ class ExpenseEditor:
                 shape=ft.RoundedRectangleBorder(radius=5),
                 side=ft.BorderSide(
                     color=ft.Colors.ON_PRIMARY_CONTAINER,
-                    width=1
+                    width=1,
                 ),
                 icon_size=const.ICON_MEDIUM,
-                text_style=ft.TextStyle(
-                    size=18
-                )
+                text_style=ft.TextStyle(size=18),
             ),
-            on_click=lambda e: self.__page.open(self.__date_picker)
+            on_click=lambda e: self.__page.open(self.__date_picker),
         )
         # category
         # - text field
@@ -297,43 +283,48 @@ class ExpenseEditor:
         self.__category_ctrl = ft.TextField(
             label="Category",
             prefix_icon=ft.Icons.CATEGORY,
-            on_blur=self.__on_category_blur
+            on_blur=self.__on_category_blur,
         )
         # amount
         self.__amount_ctrl = ft.TextField(
             label="Amount",
             prefix_icon=ft.Icons.ATTACH_MONEY,
-            on_blur=self.__on_amount_blur
+            on_blur=self.__on_amount_blur,
         )
         # tags
         self.__tags_ctrl = ft.TextField(
             label="Tags",
             prefix_icon=ft.Icons.TAG,
             hint_text="Comma-separted list",
-            on_blur=self.__on_tags_blur
+            on_blur=self.__on_tags_blur,
         )
 
         main_container = ft.Container(
             ft.Row(
                 [
                     # Date
-                    ft.Column([self.__date_ctrl],
+                    ft.Column(
+                        [self.__date_ctrl],
                         expand=2,
-                        alignment=ft.MainAxisAlignment.CENTER),
+                        alignment=ft.MainAxisAlignment.CENTER,
+                    ),
                     # Category
-                    ft.Column([self.__category_ctrl],
+                    ft.Column(
+                        [self.__category_ctrl],
                         expand=3,
-                        alignment=ft.MainAxisAlignment.CENTER
+                        alignment=ft.MainAxisAlignment.CENTER,
                     ),
                     # Amount
-                    ft.Column([self.__amount_ctrl],
+                    ft.Column(
+                        [self.__amount_ctrl],
                         expand=1,
-                        alignment=ft.MainAxisAlignment.CENTER
+                        alignment=ft.MainAxisAlignment.CENTER,
                     ),
                     # Tags
-                    ft.Column([self.__tags_ctrl],
+                    ft.Column(
+                        [self.__tags_ctrl],
                         expand=4,
-                        alignment=ft.MainAxisAlignment.CENTER
+                        alignment=ft.MainAxisAlignment.CENTER,
                     ),
                     # Save Button
                     ft.Column(
@@ -341,22 +332,21 @@ class ExpenseEditor:
                             ft.IconButton(
                                 ft.Icons.SAVE,
                                 icon_size=const.ICON_MEDIUM,
-                                on_click=self.__on_save
-                            )
+                                on_click=self.__on_save,
+                            ),
                         ],
                         alignment=ft.MainAxisAlignment.END,
-                        expand=1
+                        expand=1,
                     ),
                 ],
                 height=75,
                 vertical_alignment=ft.CrossAxisAlignment.CENTER,
             ),
             padding=10,
-            bgcolor=ft.Colors.WHITE
+            bgcolor=ft.Colors.WHITE,
         )
 
         return main_container
-
 
     def edit(self, item, budget, categories):
         """
@@ -382,7 +372,6 @@ class ExpenseEditor:
         self.__populate_controls()
         self.__page.open(self.__control)
 
-
     def handle_keyboard_event(self, evt):
         # Dec/Inc Date
         if evt.key in ("Arrow Up", "Arrow Down"):
@@ -401,12 +390,6 @@ class ExpenseEditor:
             self.__date_picker.value = new_date
             self.__date_ctrl.text = new_date.format("MM-DD-YYYY")
             self.__date_ctrl.update()
-
-
-
-
-
-
 
 
 #

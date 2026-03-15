@@ -4,8 +4,7 @@ import app
 import dev
 
 
-
 ns = Collection(
     app,
-    dev
+    dev,
 )

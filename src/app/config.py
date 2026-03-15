@@ -2,6 +2,7 @@ import copy
 import os
 import yaml
 
+
 # Singleton class
 class Config:
     """Class that represents configuration"""
@@ -10,9 +11,9 @@ class Config:
         "backup:path": None,
         "backup:keep": 5,
         "app:mode": "system",
-        "app:timezone": 'US/Eastern',
+        "app:timezone": "US/Eastern",
         "app:locale": "en_US",
-        "app:startup_view": "/home"
+        "app:startup_view": "/home",
     }
 
     __instance = None
@@ -23,14 +24,11 @@ class Config:
                 raise TypeError("Must Specify a Filename")
             Config.__instance = Config.__Instance(filename, transient)
 
-
     def force_reload(self):
         Config.__instance.reload()
 
-
     def __getattr__(self, name):
         return getattr(Config.__instance, name)
-
 
     @classmethod
     def initialize(cls, conf, transient=None):
@@ -65,23 +63,20 @@ class Config:
             self.__transient = transient
             self.__read_file()
 
-
         def __read_file(self):
-            with open(self.__filename, 'r') as fptr:
+            with open(self.__filename, "r") as fptr:
                 try:
                     self.settings = yaml.safe_load(fptr)
                 except Exception as exc:
-                    raise Exception(F"Error reading config file {exc.message}")
-
+                    raise Exception(f"Error reading config file {exc.message}")
 
         def reload(self):
             self.__read_file()
 
-
         def get(self, name, default=None):
             value = self.settings
 
-            parts = name.split(':')
+            parts = name.split(":")
             for part_name in parts:
                 value = value.get(part_name, default)
                 if value == default:
@@ -89,15 +84,13 @@ class Config:
 
             return value
 
-
         def get_all(self):
             return self.settings
-
 
         def set(self, name, value):
             settings = self.settings
 
-            parts = name.split(':')
+            parts = name.split(":")
             key = parts.pop()
             for sub_section in parts:
                 sub = settings.get(sub_section)
@@ -110,7 +103,6 @@ class Config:
 
             settings[key] = value
 
-
         def save(self):
             # Don't save top-level transient keys
             to_save = copy.deepcopy(self.settings)
@@ -119,17 +111,8 @@ class Config:
                     if key in to_save:
                         del to_save[key]
 
-            with open(self.__filename, 'w') as fptr:
+            with open(self.__filename, "w") as fptr:
                 yaml.safe_dump(to_save, fptr)
-
-
-
-
-
-
-
-
-
 
 
 #

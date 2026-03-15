@@ -9,6 +9,7 @@ from views.reports.report.spending import SpendingReport
 from views.reports.report.yearly_summary import YearlySummaryReport
 from views.reports.report.upcoming import UpcomingReport
 
+
 class Report(BaseView):
     def __init__(self, page):
         super().__init__(page, ReportPresenter(self))
@@ -16,7 +17,7 @@ class Report(BaseView):
         reports = [
             SpendingReport(page),
             UpcomingReport(page),
-            YearlySummaryReport(page)
+            YearlySummaryReport(page),
         ]
 
         for report in reports:
@@ -27,25 +28,23 @@ class Report(BaseView):
                         title=ft.Text(report.name, weight=ft.FontWeight.BOLD),
                         subtitle=ft.Text(report.description),
                         data=report,
-                        on_click=self._presenter.handle_report_click
+                        on_click=self._presenter.handle_report_click,
                     )
                 )
             )
-
 
     def _layout(self):
         self.reports = ft.GridView(
             runs_count=3,
             max_extent=265,
-            child_aspect_ratio=1.75
+            child_aspect_ratio=1.75,
         )
         self.content = self.reports
-
 
     def _layout_navbar(self):
         self._navbar = ReportNavBar(
             self._page,
             callbacks={
-                "report_home": self._presenter.handle_report_home
-            }
+                "report_home": self._presenter.handle_report_home,
+            },
         )

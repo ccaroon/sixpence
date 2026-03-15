@@ -7,19 +7,19 @@ os_map = {
     "Linux": {
         "target": "linux",
         "exe": "sixpence",
-        "install_path": "~/local/sixpence"
+        "install_path": "~/local/sixpence",
     },
     "Darwin": {
         "target": "macos",
         "exe": "Sixpence.app",
-        "install_path": "/Applications"
+        "install_path": "/Applications",
     },
 }
 
 
 @task
 def build(ctx, target=None):
-    """ Build The Application for `target` Platform """
+    """Build The Application for `target` Platform"""
     if not target:
         os_name = platform.system()
         target = os_map.get(os_name).get("target")
@@ -29,7 +29,7 @@ def build(ctx, target=None):
 
 @task
 def run(ctx):
-    """ Run the built Application """
+    """Run the built Application"""
     os_name = platform.system()
     target = os_map.get(os_name).get("target")
     exe = os_map.get(os_name).get("exe")
@@ -42,7 +42,7 @@ def run(ctx):
 
 @task
 def install(ctx):
-    """ Install the Application """
+    """Install the Application"""
     os_name = platform.system()
     target = os_map.get(os_name).get("target")
     install_path = os_map.get(os_name).get("install_path")
@@ -60,6 +60,7 @@ def install(ctx):
     else:
         print(f"=> Error: Don't know to install for {os_name}.")
 
+
 @task
 def package(ctx):
     os_name = platform.system()
@@ -74,8 +75,8 @@ def package(ctx):
 
 
 @task(
-    aliases=["build-clean"]
+    aliases=["build-clean"],
 )
 def clean_build(ctx):
-    """ Clean Up Stuff """
+    """Clean Up Stuff"""
     ctx.run("rm -rf build/")

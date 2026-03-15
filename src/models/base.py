@@ -12,6 +12,8 @@ import models
 from app.config import Config
 from utils.db_helper import DbHelper
 import utils.tools
+
+
 # ------------------------------------------------------------------------------
 # IMPORTANT NOTES:
 # 1. `id` is not stored in the database as part of the record. It is "external"
@@ -25,10 +27,9 @@ class Base(ABC):
     __DATABASE = None
 
     def __init__(self, id=None, **kwargs):
-        kwargs['id'] = id
+        kwargs["id"] = id
         self._cfg = Config()
         self.__unserialize(kwargs)
-
 
     @classmethod
     def __db_name(cls):
@@ -38,7 +39,6 @@ class Base(ABC):
 
         return cls.DATABASE_NAME
 
-
     @property
     def id(self):
         is_valid = False
@@ -47,21 +47,17 @@ class Base(ABC):
 
         return self.__id if is_valid else None
 
-
     @property
     def created_at(self):
         return self.__created_at
-
 
     @property
     def updated_at(self):
         return self.__updated_at
 
-
     @property
     def deleted_at(self):
         return self.__deleted_at
-
 
     @classmethod
     def _database(cls):
@@ -71,13 +67,12 @@ class Base(ABC):
             doc_dir = cfg.get("session:docs_dir")
 
             db_name = cls.__db_name()
-            if (env != "prod"):
+            if env != "prod":
                 db_name += f"-{env}"
 
             cls.__DATABASE = TinyDB(f"{doc_dir}/{db_name}.json")
 
         return cls.__DATABASE.table(cls.TABLE_NAME)
-
 
     def _date_setter(self, date_value, null_ok=False):
         new_date = None
@@ -91,38 +86,34 @@ class Base(ABC):
         elif not date_value and null_ok:
             new_date = None
         else:
-            raise TypeError(F"Date must be of type INT, STR or Arrow; Got: {type(date_value)}")
+            raise TypeError(f"Date must be of type INT, STR or Arrow; Got: {type(date_value)}")
 
         return new_date
-
 
     def _epoch_to_date_obj(self, ts):
         date_obj = arrow.get(datetime.fromtimestamp(ts), self._cfg.get("app:timezone")) if ts else None
         return date_obj
-
 
     def load(self):
         if self.id:
             data = self._database().get(doc_id=self.id)
 
             if data:
-                data['id'] = data.doc_id
+                data["id"] = data.doc_id
                 self.__unserialize(data)
             else:
-                raise ValueError(F"Record Not Found: [{self.id}]")
+                raise ValueError(f"Record Not Found: [{self.id}]")
         else:
-            raise ValueError(F"Valid Object ID required for loading: [{self.id}]")
-
+            raise ValueError(f"Valid Object ID required for loading: [{self.id}]")
 
     def _pre_save(self):
         pass
-
 
     def save(self):
         now = arrow.now(self._cfg.get("app:timezone"))
 
         if self.deleted_at:
-            raise RuntimeError(F"Can't Save ... Object deleted [{self.deleted_at.humanize()}].")
+            raise RuntimeError(f"Can't Save ... Object deleted [{self.deleted_at.humanize()}].")
 
         # Pre Save
         self._pre_save()
@@ -138,15 +129,12 @@ class Base(ABC):
         # Post Save
         self._post_save()
 
-
     def _post_save(self):
         pass
-
 
     def undelete(self):
         self.__deleted_at = None
         self.save()
-
 
     def delete(self, safe=False):
         if self.id:
@@ -157,56 +145,51 @@ class Base(ABC):
                 if safe:
                     # Mark as deleted by setting the `deleted_at` date instead
                     # of actually removing the record.
-                    self._database().update(tyops.set('deleted_at', self.__deleted_at.int_timestamp), doc_ids=[self.id])
+                    self._database().update(tyops.set("deleted_at", self.__deleted_at.int_timestamp), doc_ids=[self.id])
                 else:
                     self._database().remove(doc_ids=[self.id])
                     self.__id = None
 
             except KeyError as ke:
-                raise ValueError(F"Record Not Found: [{self.id}]")
+                raise ValueError(f"Record Not Found: [{self.id}]")
         else:
-            raise ValueError(F"Valid Object ID required for deletion: [{self.id}]")
-
+            raise ValueError(f"Valid Object ID required for deletion: [{self.id}]")
 
     @abstractmethod
     def _serialize(self):
         raise NotImplementedError("_serialize is an Abstract Method and must be overridden")
-
 
     def serialize(self, omit_id=False):
         # Shared Fields
         data = {
             "created_at": self.created_at.int_timestamp if self.created_at else None,
             "updated_at": self.updated_at.int_timestamp if self.updated_at else None,
-            "deleted_at": self.deleted_at.int_timestamp if self.deleted_at else None
+            "deleted_at": self.deleted_at.int_timestamp if self.deleted_at else None,
         }
 
         if not omit_id:
-            data['id'] = self.id
+            data["id"] = self.id
 
         data.update(self._serialize())
 
         return data
 
-
     @abstractmethod
     def update(self, date):
         raise NotImplementedError("update is an Abstract Method and must be overridden")
 
-
     def __unserialize(self, data):
         # Shared Attributes
         ## ID
-        self.__id = data.get('id', None)
+        self.__id = data.get("id", None)
 
         ## Timestamps
-        self.__created_at = self._epoch_to_date_obj(data.get('created_at', None))
-        self.__updated_at = self._epoch_to_date_obj(data.get('updated_at', None))
-        self.__deleted_at = self._epoch_to_date_obj(data.get('deleted_at', None))
+        self.__created_at = self._epoch_to_date_obj(data.get("created_at", None))
+        self.__updated_at = self._epoch_to_date_obj(data.get("updated_at", None))
+        self.__deleted_at = self._epoch_to_date_obj(data.get("deleted_at", None))
 
         # Model Specific
         self.update(data)
-
 
     def clone(self):
         cloned_type = type(self)
@@ -216,7 +199,6 @@ class Base(ABC):
         cloned_obj.update(obj_data)
 
         return cloned_obj
-
 
     @classmethod
     def fetch(cls, offset=0, count=None, sort_by=None):
@@ -244,23 +226,20 @@ class Base(ABC):
 
         return objs
 
-
     @classmethod
     def purge(cls):
         cls._database().truncate()
 
-
     @classmethod
     def count(cls):
         return len(cls._database())
-
 
     @classmethod
     def find(cls, op="or", sort_by=None, **kwargs):
         query_parts = []
         query_builder = Query()
 
-        for (field, query_str) in kwargs.items():
+        for field, query_str in kwargs.items():
             # field=<value>
             # field=<cmp>:<value>
             # <cmp> can be eq|ne|gt|gte|lt|lte|btw
@@ -269,14 +248,14 @@ class Base(ABC):
             # See: DbHelper.parse_query
             (query_op, query_value) = DbHelper.parse_query(query_str)
 
-            if field == 'tags':
-                tags = query_value.split(',')
+            if field == "tags":
+                tags = query_value.split(",")
                 tags = [models.tag.Tag.normalize(tg) for tg in tags]
-                query_parts.append(query_builder['tags'].any(tags))
+                query_parts.append(query_builder["tags"].any(tags))
             else:
                 # Can search in boolean, int and string fields
                 if re.match("(true|false)", query_value, flags=re.IGNORECASE):
-                    query_value = True if query_value.lower() == 'true' else False
+                    query_value = True if query_value.lower() == "true" else False
                     query_parts.append(query_builder[field] == query_value)
                 elif query_op == "btw" or utils.tools.is_numeric(query_value):
                     query_parts.append(query_builder[field].test(DbHelper.cmp_numeric, query_op, query_value))
@@ -287,8 +266,8 @@ class Base(ABC):
                     query_parts.append(
                         query_builder[field].search(
                             query_value,
-                            flags=re.IGNORECASE
-                        )
+                            flags=re.IGNORECASE,
+                        ),
                     )
 
         query = query_parts[0]

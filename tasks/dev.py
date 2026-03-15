@@ -6,10 +6,12 @@ PROD_DATA_DIR = "~/Documents/Sixpence"
 OLD_DATA_DIR = "~/workspace/sixpence/old_data"
 NEW_DATA_DIR = "~/workspace/sixpence/new_data"
 
+
 @task
 def run(ctx):
-    """ Run in Dev Mode """
+    """Run in Dev Mode"""
     ctx.run("flet run")
+
 
 @task
 def migrate(ctx, data_type):

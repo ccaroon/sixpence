@@ -10,6 +10,7 @@ from utils.locale import Locale
 
 from views.reports.report.base import ReportBase
 
+
 class UpcomingReport(ReportBase):
     def __init__(self, page):
         # In Weeks
@@ -23,29 +24,24 @@ class UpcomingReport(ReportBase):
         self.__list_view = ft.ListView()
         self.content = self.__list_view
 
-
     @property
     def icon(self):
         return ft.Icon(ft.Icons.NEXT_PLAN)
-
 
     @property
     def name(self):
         return "Upcoming Income & Expenses"
 
-
     @property
     def description(self):
         return "Upcoming income & expenses for the current month."
 
-
     def __compute_period(self):
         now = Locale.now()
         start = now.floor("day")
-        end = now.shift(weeks=self.__period).ceil('day')
+        end = now.shift(weeks=self.__period).ceil("day")
 
-        return (start,end)
-
+        return (start, end)
 
     def __update_date_display(self):
         start, end = self.__compute_period()
@@ -54,56 +50,54 @@ class UpcomingReport(ReportBase):
         end_date = end.format("MMM DD")
         self._date_display.label.value = f"{start_date} - {end_date}"
 
-
     def _init_actions(self):
         super()._init_actions()
 
         self._date_display = ft.Chip(
             leading=ft.Icon(ft.Icons.DATE_RANGE),
             label=ft.Text(""),
-            on_click=lambda e: None
+            on_click=lambda e: None,
         )
         self.__update_date_display()
 
-        self._actions.extend([
-            ft.SegmentedButton(
-                selected={self.__period},
-                segments=[
-                    ft.Segment(label=ft.Text("1w"), value=1),
-                    ft.Segment(label=ft.Text("2w"), value=2),
-                ],
-                on_change=self.__on_time_period_change
-            ),
-            ft.VerticalDivider(),
-            self._date_display
-        ])
-
+        self._actions.extend(
+            [
+                ft.SegmentedButton(
+                    selected={self.__period},
+                    segments=[
+                        ft.Segment(label=ft.Text("1w"), value=1),
+                        ft.Segment(label=ft.Text("2w"), value=2),
+                    ],
+                    on_change=self.__on_time_period_change,
+                ),
+                ft.VerticalDivider(),
+                self._date_display,
+            ]
+        )
 
     def __init_header(self):
         self.__header = ft.ListTile(
             leading=ft.Icon(ft.Icons.KEYBOARD_DOUBLE_ARROW_RIGHT),
             trailing=ft.Icon(ft.Icons.KEYBOARD_DOUBLE_ARROW_LEFT),
-            title=ft.Row([
-                ft.Text("Category",
-                    color="black",
-                    theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
-                    weight=ft.FontWeight.BOLD,
-                    expand=4),
-                ft.Text(
-                    "Amount",
-                    color="black",
-                    weight=ft.FontWeight.BOLD,
-                    expand=2)
-            ]),
-            bgcolor=ft.Colors.GREY_300
+            title=ft.Row(
+                [
+                    ft.Text(
+                        "Category",
+                        color="black",
+                        theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
+                        weight=ft.FontWeight.BOLD,
+                        expand=4,
+                    ),
+                    ft.Text("Amount", color="black", weight=ft.FontWeight.BOLD, expand=2),
+                ]
+            ),
+            bgcolor=ft.Colors.GREY_300,
         )
-
 
     def __on_time_period_change(self, evt):
         self.__period = int(list(evt.control.selected)[0])
         self.__update_date_display()
         self.render()
-
 
     def __init_footer(self):
         self.__income_ctl = ft.Text(
@@ -111,40 +105,42 @@ class UpcomingReport(ReportBase):
             color="black",
             theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
             weight=ft.FontWeight.BOLD,
-            expand=2
+            expand=2,
         )
         self.__expense_ctl = ft.Text(
             "$0.00",
             color="black",
             theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
             weight=ft.FontWeight.BOLD,
-            expand=2
+            expand=2,
         )
         self.__diff_ctl = ft.Text(
             "$0.00",
             color="black",
             theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
             weight=ft.FontWeight.BOLD,
-            expand=2
+            expand=2,
         )
 
         self.__footer = ft.ListTile(
             leading=ft.Icon(ft.Icons.KEYBOARD_DOUBLE_ARROW_RIGHT),
             trailing=ft.Icon(ft.Icons.KEYBOARD_DOUBLE_ARROW_LEFT),
-            title=ft.Row([
-                ft.Text("Grand Totals",
-                    color="black",
-                    theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
-                    weight=ft.FontWeight.BOLD,
-                    expand=2),
-                self.__income_ctl,
-                self.__expense_ctl,
-                self.__diff_ctl,
-
-            ]),
-            bgcolor=ft.Colors.GREY_300
+            title=ft.Row(
+                [
+                    ft.Text(
+                        "Grand Totals",
+                        color="black",
+                        theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
+                        weight=ft.FontWeight.BOLD,
+                        expand=2,
+                    ),
+                    self.__income_ctl,
+                    self.__expense_ctl,
+                    self.__diff_ctl,
+                ]
+            ),
+            bgcolor=ft.Colors.GREY_300,
         )
-
 
     def __load_data(self):
         now = Locale.now()
@@ -161,7 +157,7 @@ class UpcomingReport(ReportBase):
         start_date = now.floor("month")
         end_date = now.ceil("month")
         curr_expenses = Expense.find(
-            date=f"btw:{start_date.int_timestamp}:{end_date.int_timestamp}"
+            date=f"btw:{start_date.int_timestamp}:{end_date.int_timestamp}",
         )
         curr_exp_map = Expense.collate_by_category(curr_expenses)
 
@@ -170,7 +166,7 @@ class UpcomingReport(ReportBase):
         start_date = period_start.shift(months=-1)
         end_date = start_date.shift(weeks=self.__period).ceil("day")
         period_expenses = Expense.find(
-            date=f"btw:{start_date.int_timestamp}:{end_date.int_timestamp}"
+            date=f"btw:{start_date.int_timestamp}:{end_date.int_timestamp}",
         )
         period_exp_map = Expense.collate_by_category(period_expenses)
 
@@ -190,15 +186,17 @@ class UpcomingReport(ReportBase):
                 #     curr_items = curr_exp_map[category]
                 #     spent_amount = sum([item.amount for item in curr_items])
 
-                data.append({
-                    "type": item["type"],
-                    "icon": item["icon"],
-                    "category": item["category"],
-                    # "spent_amt": spent_amount,
-                    "budget_amt": item["amount"],
-                    # "expected_amt": item["amount"] - spent_amount
-                    "expected_amt": expected_amt
-                })
+                data.append(
+                    {
+                        "type": item["type"],
+                        "icon": item["icon"],
+                        "category": item["category"],
+                        # "spent_amt": spent_amount,
+                        "budget_amt": item["amount"],
+                        # "expected_amt": item["amount"] - spent_amount
+                        "expected_amt": expected_amt,
+                    }
+                )
 
         # # Filter out items where budget amount (or more) has been spent
         # data = filter(lambda item: abs(item["spent_amt"]) < abs(item["budget_amt"]), data)
@@ -206,11 +204,10 @@ class UpcomingReport(ReportBase):
         # Convert into list sorted by type, then category
         data = sorted(
             data,
-            key=lambda item: (item["type"], item["category"])
+            key=lambda item: (item["type"], item["category"]),
         )
 
         return data
-
 
     def render(self):
         self.__list_view.controls.clear()
@@ -236,19 +233,22 @@ class UpcomingReport(ReportBase):
                 leading=ft.Icon(item["icon"], color="black"),
                 title=ft.Row(
                     [
-                        ft.Text(item["category"],
+                        ft.Text(
+                            item["category"],
                             color="black",
                             theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
                             weight=ft.FontWeight.BOLD,
-                            expand=4),
+                            expand=4,
+                        ),
                         ft.Text(
                             Locale.currency(item["expected_amt"]),
                             color="black",
                             weight=ft.FontWeight.BOLD,
-                            expand=2)
+                            expand=2,
+                        ),
                     ]
                 ),
-                bgcolor=bgcolor
+                bgcolor=bgcolor,
             )
 
             self.__list_view.controls.append(tile)
@@ -261,7 +261,6 @@ class UpcomingReport(ReportBase):
 
         self._page.update()
 
-
     def _on_export(self, evt):
         income_total = 0.0
         expense_total = 0.0
@@ -270,7 +269,7 @@ class UpcomingReport(ReportBase):
         data = self.__load_data()
 
         start_date = now.floor("day").format("MMM-DD-YYYY")
-        end_date = now.shift(weeks=self.__period).ceil('day').format("MMM-DD-YYYY")
+        end_date = now.shift(weeks=self.__period).ceil("day").format("MMM-DD-YYYY")
         report_file = f"{evt.path}/sixpence-report_upcoming-{start_date}-{self.__period}w.md"
 
         header = f"""
@@ -297,8 +296,7 @@ class UpcomingReport(ReportBase):
 """
             fptr.write(footer)
 
-
         self._page.session.get("notification_bar").notify(
             ft.Icons.SAVE_ALT,
-            f"Report Exported: {report_file}"
+            f"Report Exported: {report_file}",
         )

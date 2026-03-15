@@ -2,10 +2,10 @@ import unittest
 
 from utils.locale import Locale
 
+
 class UtilTest(unittest.TestCase):
     # def setUp(self):
     #     Locale.init()
-
 
     def test_currency(self):
         amount = 17723.45654
