@@ -1,5 +1,5 @@
-import unittest
 import random
+import unittest
 
 import arrow
 
@@ -70,6 +70,3 @@ class ExpenseTest(unittest.TestCase):
         self.assertIsNotNone(entries)
         self.assertEqual(len(entries), 1)
         self.assertEqual(expected_balance, entries[0].amount)
-
-
-#

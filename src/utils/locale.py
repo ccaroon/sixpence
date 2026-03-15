@@ -1,5 +1,6 @@
-import arrow
 import locale
+
+import arrow
 
 from app.config import Config
 

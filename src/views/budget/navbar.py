@@ -1,10 +1,10 @@
-import flet as ft
-
 import re
 
+import flet as ft
+
 import utils.constants as const
-from utils.locale import Locale
 import utils.tools
+from utils.locale import Locale
 
 
 class BudgetNavBar(ft.AppBar):
@@ -49,21 +49,21 @@ class BudgetNavBar(ft.AppBar):
             leading=ft.Icon(ft.Icons.ATTACH_MONEY, color="black", size=20),
             bgcolor=const.COLOR_INCOME_ALT,
             # `on_click` is required or the Chip default to being disabled
-            on_click=lambda evt: None,
+            on_click=lambda _: None,
         )
         self.__expense_total = ft.Chip(
             label=ft.Text("", color="black", size=18),
             leading=ft.Icon(ft.Icons.MONEY_OFF, color="black", size=20),
             bgcolor=const.COLOR_EXPENSE_ALT,
             # `on_click` is required or the Chip default to being disabled
-            on_click=lambda evt: None,
+            on_click=lambda _: None,
         )
         self.__net_balance = ft.Chip(
             label=ft.Text("", color="black", size=18),
             leading=ft.Icon(ft.Icons.MONEY_ROUNDED, color="black", size=20),
             bgcolor=const.COLOR_INCOME,
             # `on_click` is required or the Chip default to being disabled
-            on_click=lambda evt: None,
+            on_click=lambda _: None,
         )
 
         super().__init__(
@@ -163,7 +163,7 @@ class BudgetNavBar(ft.AppBar):
         evt.control.checked = True
         self.__refresh(deleted_at="gt:0")
 
-    def __on_month_view(self, evt):
+    def __on_month_view(self, _):
         banner = ft.Banner(
             leading=ft.Icon(
                 ft.Icons.WARNING,
@@ -176,7 +176,10 @@ class BudgetNavBar(ft.AppBar):
             ),
             bgcolor=ft.Colors.SECONDARY_CONTAINER,
             actions=[
-                ft.TextButton("Ok", on_click=lambda evt: self.__page.close(banner)),
+                ft.TextButton(
+                    "Ok",
+                    on_click=lambda _: self.__page.close(banner),
+                ),
             ],
         )
         self.__page.open(banner)
@@ -188,7 +191,7 @@ class BudgetNavBar(ft.AppBar):
 
         self.__refresh(frequency=new_freq)
 
-    def __on_search_clear(self, evt):
+    def __on_search_clear(self, _):
         self.__search_control.value = None
         self.__refresh(reset_filters=True)
 
@@ -229,8 +232,6 @@ class BudgetNavBar(ft.AppBar):
 
     def handle_keyboard_event(self, event):
         if event.ctrl or event.meta:
-            if event.key == "F":
-                self.__search_control.focus()
-
-
-#
+            match event.key:
+                case "F":
+                    self.__search_control.focus()

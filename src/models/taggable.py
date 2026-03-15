@@ -30,7 +30,8 @@ class Taggable:
         elif isinstance(tag, Tag):
             self.__tags.add(tag)
         else:
-            raise TypeError("'tag' must be of type `str` or `Tag`")
+            msg = "'tag' must be of type `str` or `Tag`"
+            raise TypeError(msg)
 
     def remove_tag(self, tag):
         if isinstance(tag, str):
@@ -38,7 +39,8 @@ class Taggable:
         elif isinstance(tag, Tag):
             self.__tags.remove(tag)
         else:
-            raise TypeError("'tag' must be of type `str` or `Tag`")
+            msg = "'tag' must be of type `str` or `Tag`"
+            raise TypeError(msg)
 
     def _post_save(self):
         # Add all new tags to Tag DB

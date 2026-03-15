@@ -1,12 +1,10 @@
+import arrow
 import flet as ft
 
-import arrow
-
-from models.budget import Budget
-
-from utils.locale import Locale
 import utils.constants as const
-import utils.tools as tools
+from models.budget import Budget
+from utils import tools
+from utils.locale import Locale
 
 
 class HistoryView(ft.AlertDialog):
@@ -17,7 +15,7 @@ class HistoryView(ft.AlertDialog):
         self.__page = page
         self.__layout()
 
-    def __on_close(self, evt):
+    def __on_close(self, _):
         self.__page.close(self)
 
     def __layout(self):

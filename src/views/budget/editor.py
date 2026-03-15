@@ -1,12 +1,11 @@
 import flet as ft
 
+import utils.constants as const
 from controls.icon_select import IconSelect
-from views.budget.history.prompt import HistoryPrompt
-
 from models.budget import Budget
 from models.tag import Tag
-import utils.tools as tools
-import utils.constants as const
+from utils import tools
+from views.budget.history.prompt import HistoryPrompt
 
 
 class BudgetEditor:
@@ -55,17 +54,14 @@ class BudgetEditor:
         input_tags = tag_str.split(",")
 
         tag_names = []
-        for tg in input_tags:
-            tg = Tag.normalize(tg)
-            if tg in self.__tag_aliases:
-                tg = Tag.normalize(self.__tag_aliases.get(tg))
+        for tag in input_tags:
+            norm_tag = Tag.normalize(tag)
+            if norm_tag in self.__tag_aliases:
+                norm_tag = Tag.normalize(self.__tag_aliases.get(norm_tag))
 
-            tag_names.append(tg)
+            tag_names.append(norm_tag)
 
-        unknown_tags = []
-        for tg_name in tag_names:
-            if not Tag.exists(tg_name):
-                unknown_tags.append(tg_name)
+        unknown_tags = [tg_name for tg_name in tag_names if not Tag.exists(tg_name)]
 
         msg = None
         border_color = None
@@ -143,7 +139,7 @@ class BudgetEditor:
         self.__first_due_ctrl.value = self.__item.first_due
         self.__tags_ctrl.value = ",".join(self.__item.tag_list())
 
-    def __on_save(self, evt):
+    def __on_save(self, _):
         if self.__validate():
             # Clone with "old" values
             old_item = self.__item.clone()

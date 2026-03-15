@@ -1,4 +1,5 @@
 import os
+
 from app.config import Config
 
 TEST_DIR = os.path.abspath(os.path.dirname(__file__))

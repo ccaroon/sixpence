@@ -1,7 +1,7 @@
-import flet as ft
+import platform
 
 import arrow
-import platform
+import flet as ft
 
 import app.version
 

@@ -1,6 +1,6 @@
-import flet as ft
-
 from abc import abstractmethod
+
+import flet as ft
 
 
 class Base(ft.Container):
@@ -21,7 +21,8 @@ class Base(ft.Container):
     @abstractmethod
     def _layout(self):
         """Override to define the layout of the View"""
-        raise NotImplementedError("_layout must be defined in your sub-class")
+        msg = "_layout must be defined in your sub-class"
+        raise NotImplementedError(msg)
 
     def _layout_navbar(self):
         """Override to define a NavBar for the View"""

@@ -1,7 +1,6 @@
 import flet as ft
 
 from presenters.budget import Budget as BudgetPresenter
-
 from views.base import Base as BaseView
 from views.budget.editor import BudgetEditor
 from views.budget.history.view import HistoryView

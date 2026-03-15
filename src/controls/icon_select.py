@@ -32,11 +32,7 @@ class IconSelect(ft.Dropdown):
         self.update()
 
     def __build_options(self, icon_list):
-        options = []
-        for icon in icon_list:
-            options.append(
-                ft.DropdownOption(text=" ", key=icon, leading_icon=icon),
-            )
+        options = [ft.DropdownOption(text=" ", key=icon, leading_icon=icon) for icon in icon_list]
         return options
 
     def __on_change(self, evt):

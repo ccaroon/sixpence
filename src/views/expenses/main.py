@@ -1,7 +1,6 @@
 import flet as ft
 
 from presenters.expenses import Expenses as ExpensesPresenter
-
 from views.base import Base as BaseView
 from views.expenses.editor import ExpenseEditor
 from views.expenses.navbar import ExpenseNavBar

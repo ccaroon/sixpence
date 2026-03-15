@@ -8,7 +8,7 @@ class UtilTest(unittest.TestCase):
         items = ["zero", "one", "two"]
         count = len(items)
 
-        for idx in range(0, 42):
+        for idx in range(42):
             value = utils.tools.cycle(items, idx)
             self.assertIsNotNone(value)
             self.assertIn(value, items)

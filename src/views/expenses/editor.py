@@ -1,14 +1,11 @@
 import flet as ft
 
-import pprint
-
-from models.tag import Tag
-from models.budget import Budget
-
-from utils.locale import Locale
-from utils.icon_search import IconSearch
-import utils.tools as tools
 import utils.constants as const
+from models.budget import Budget
+from models.tag import Tag
+from utils import tools
+from utils.icon_search import IconSearch
+from utils.locale import Locale
 
 
 class ExpenseEditor:
@@ -43,7 +40,7 @@ class ExpenseEditor:
         category = keyword
         kw_cmp = keyword.lower()
 
-        for cat_name in self.__categories.keys():
+        for cat_name in self.__categories:
             cn_cmp = cat_name.lower()
             if kw_cmp in cn_cmp:
                 category = cat_name
@@ -148,7 +145,7 @@ class ExpenseEditor:
         # tags
         self.__tags_ctrl.value = ",".join(self.__item.tag_list())
 
-    def __on_save(self, evt):
+    def __on_save(self, _):
         if self.__validate():
             # Update self.__item with "new" values
             self.__populate_model()
@@ -221,27 +218,23 @@ class ExpenseEditor:
         self.__amount_ctrl.update()
 
         # Update tags
-        if bdg_tags:
-            if not self.__tags_ctrl.value:
-                self.__tags_ctrl.value = ",".join(bdg_tags)
-                self.__tags_ctrl.update()
+        if bdg_tags and not self.__tags_ctrl.value:
+            self.__tags_ctrl.value = ",".join(bdg_tags)
+            self.__tags_ctrl.update()
 
     def __on_tags_blur(self, evt):
         tag_str = evt.control.value
         input_tags = tag_str.split(",")
 
         tag_names = []
-        for tg in input_tags:
-            tg = Tag.normalize(tg)
-            if tg in self.__tag_aliases:
-                tg = Tag.normalize(self.__tag_aliases.get(tg))
+        for tag in input_tags:
+            norm_tag = Tag.normalize(tag)
+            if norm_tag in self.__tag_aliases:
+                norm_tag = Tag.normalize(self.__tag_aliases.get(norm_tag))
 
-            tag_names.append(tg)
+            tag_names.append(norm_tag)
 
-        unknown_tags = []
-        for tg_name in tag_names:
-            if not Tag.exists(tg_name):
-                unknown_tags.append(tg_name)
+        unknown_tags = [tg_name for tg_name in tag_names if not Tag.exists(tg_name)]
 
         msg = None
         border_color = None
@@ -273,7 +266,7 @@ class ExpenseEditor:
                 icon_size=const.ICON_MEDIUM,
                 text_style=ft.TextStyle(size=18),
             ),
-            on_click=lambda e: self.__page.open(self.__date_picker),
+            on_click=lambda _: self.__page.open(self.__date_picker),
         )
         # category
         # - text field
@@ -376,10 +369,7 @@ class ExpenseEditor:
         # Dec/Inc Date
         if evt.key in ("Arrow Up", "Arrow Down"):
             date = self.__date_picker.value
-            if date:
-                date = Locale.as_arrow(date)
-            else:
-                date = Locale.now()
+            date = Locale.as_arrow(date) if date else Locale.now()
 
             new_date = None
             if evt.key == "Arrow Down":
@@ -390,6 +380,3 @@ class ExpenseEditor:
             self.__date_picker.value = new_date
             self.__date_ctrl.text = new_date.format("MM-DD-YYYY")
             self.__date_ctrl.update()
-
-
-#

@@ -1,12 +1,11 @@
-import flet as ft
-
 import re
 
-from models.expense import Expense
+import flet as ft
 
 import utils.constants as const
-from utils.locale import Locale
 import utils.tools
+from models.expense import Expense
+from utils.locale import Locale
 
 
 class ExpenseNavBar(ft.AppBar):
@@ -55,7 +54,7 @@ class ExpenseNavBar(ft.AppBar):
 
         self.__date_picker = ft.ElevatedButton(
             self.__parent.current_date.format("MMM YYYY"),
-            on_click=lambda e: self.__page.open(
+            on_click=lambda _: self.__page.open(
                 ft.DatePicker(
                     current_date=self.__parent.current_date,
                     on_change=self.__on_change_month,
@@ -74,21 +73,21 @@ class ExpenseNavBar(ft.AppBar):
             leading=ft.Icon(ft.Icons.ATTACH_MONEY, color="black", size=20),
             bgcolor=const.COLOR_INCOME_ALT,
             # `on_click` is required or the Chip default to being disabled
-            on_click=lambda evt: None,
+            on_click=lambda _: None,
         )
         self.__expense_total = ft.Chip(
             label=ft.Text("", color="black", size=18),
             leading=ft.Icon(ft.Icons.MONEY_OFF, color="black", size=20),
             bgcolor=const.COLOR_EXPENSE_ALT,
             # `on_click` is required or the Chip default to being disabled
-            on_click=lambda evt: None,
+            on_click=lambda _: None,
         )
         self.__net_balance = ft.Chip(
             label=ft.Text("", color="black", size=18),
             leading=ft.Icon(ft.Icons.MONEY_ROUNDED, color="black", size=20),
             bgcolor=const.COLOR_INCOME,
             # `on_click` is required or the Chip default to being disabled
-            on_click=lambda evt: None,
+            on_click=lambda _: None,
         )
 
         self.__view_control = ft.SegmentedButton(
@@ -219,7 +218,7 @@ class ExpenseNavBar(ft.AppBar):
         self.__active_menu_item = evt.control
         self.__refresh(view_opts=evt.control.data)
 
-    def __on_recalc_rollover(self, evt):
+    def __on_recalc_rollover(self, _):
         Expense.update_rollover(self.__parent.current_date, force_update=True)
         self.__refresh(view_opts=self.__active_menu_item.data)
 
@@ -228,7 +227,7 @@ class ExpenseNavBar(ft.AppBar):
         self.__search_control.value = None
         self.__refresh(reset_filters=True, view=new_view)
 
-    def __on_search_clear(self, evt):
+    def __on_search_clear(self, _):
         self.__search_control.value = None
         self.__refresh(
             reset_filters=True,
@@ -275,5 +274,6 @@ class ExpenseNavBar(ft.AppBar):
 
     def handle_keyboard_event(self, event):
         if event.ctrl or event.meta:
-            if event.key == "F":
-                self.__search_control.focus()
+            match event.key:
+                case "F":
+                    self.__search_control.focus()

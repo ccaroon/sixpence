@@ -1,5 +1,5 @@
-import unittest
 import random
+import unittest
 
 from models.budget import Budget
 
@@ -80,7 +80,7 @@ class BudgetTest(unittest.TestCase):
             },
         }
 
-        for label, data in test_data.items():
+        for data in test_data.values():
             item = Budget(**data["fields"])
             self.assertEqual(item.monthly_avg, data["expected"])
 
@@ -239,6 +239,3 @@ class BudgetTest(unittest.TestCase):
             for month in range(1, 13):
                 expected_amount = test_case["expected"][month - 1]
                 self.assertEqual(item.predict_spending(month), expected_amount, f"Month ==> {month}")
-
-
-#

@@ -1,5 +1,6 @@
 import re
 
+import utils.constants as const
 from models.base import Base
 from models.budget_group import BudgetGroup
 from models.taggable import Taggable
@@ -127,8 +128,8 @@ class Budget(Taggable, Base):
             if re.search(r"\s", part):
                 sub_parts = part.split()
                 sub_values = []
-                for sub_part in sub_parts:
-                    sub_part = sub_part.strip()
+                for spart in sub_parts:
+                    sub_part = spart.strip()
                     # Preserve case if is all uppercase string
                     # E.g. Personal:HABA != Personal:Haba
                     if sub_part.isupper():
@@ -136,13 +137,12 @@ class Budget(Taggable, Base):
                     else:
                         sub_values.append(sub_part.capitalize())
                 cat_parts.append(" ".join(sub_values))
+            # Preserve case if is all uppercase string
+            # E.g. Personal:HABA != Personal:Haba
+            elif part.isupper():
+                cat_parts.append(part)
             else:
-                # Preserve case if is all uppercase string
-                # E.g. Personal:HABA != Personal:Haba
-                if part.isupper():
-                    cat_parts.append(part)
-                else:
-                    cat_parts.append(part.capitalize())
+                cat_parts.append(part.capitalize())
 
         category = ":".join(cat_parts)
         return category
@@ -176,14 +176,14 @@ class Budget(Taggable, Base):
         more_needed = 12 - will_get
 
         for m in range(self.first_due, 12 + more_needed + 1, self.frequency):
-            month = m if m <= 12 else m - 12
+            month = m if m <= const.MONTHS_PER_YEAR else m - 12
             due_months.append(month)
 
         return due_months
 
     # TODO: Get rid of this in favor of Budget.group()
     @classmethod
-    def collate_by_category(self, budget: list):
+    def collate_by_category(cls, budget: list):
         """
         Given a list of Budget items collate them by their category.
 
@@ -209,7 +209,7 @@ class Budget(Taggable, Base):
         return budget_map
 
     @classmethod
-    def group(self, budget: list):
+    def group(cls, budget: list):
         """
         Given a list of Budget items group them by their category.
 
@@ -249,6 +249,6 @@ class Budget(Taggable, Base):
         wanted_items = []
         for itm in items:
             if month_num in itm.due_months():
-                wanted_items.append(itm)
+                wanted_items.append(itm)  # noqa: PERF401
 
         return wanted_items

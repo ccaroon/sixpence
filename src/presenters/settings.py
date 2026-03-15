@@ -6,7 +6,7 @@ class Settings:
         self.__view = view
         self.__cfg = config
 
-    def handle_save_click(self, evt):
+    def handle_save_click(self, _):
         self.__cfg.save()
         self.__view.notification_bar.info("Settings Saved")
 

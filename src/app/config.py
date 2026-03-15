@@ -1,5 +1,6 @@
 import copy
 import os
+
 import yaml
 
 
@@ -20,8 +21,9 @@ class Config:
 
     def __init__(self, filename=None, transient=None):
         if not Config.__instance:
-            if filename == None:
-                raise TypeError("Must Specify a Filename")
+            if filename is None:
+                msg = "Must Specify a Filename"
+                raise TypeError(msg)
             Config.__instance = Config.__Instance(filename, transient)
 
     def force_reload(self):
@@ -64,11 +66,12 @@ class Config:
             self.__read_file()
 
         def __read_file(self):
-            with open(self.__filename, "r") as fptr:
+            with open(self.__filename) as fptr:
                 try:
                     self.settings = yaml.safe_load(fptr)
                 except Exception as exc:
-                    raise Exception(f"Error reading config file {exc.message}")
+                    msg = f"Error reading config file {exc.message}"
+                    raise RuntimeError(msg) from exc
 
         def reload(self):
             self.__read_file()
@@ -113,6 +116,3 @@ class Config:
 
             with open(self.__filename, "w") as fptr:
                 yaml.safe_dump(to_save, fptr)
-
-
-#

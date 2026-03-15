@@ -3,14 +3,16 @@ import argparse
 import json
 import os
 import re
-import arrow
+import sys
+import tempfile
 
+import arrow
 from tinydb import TinyDB
 
 from app.config import Config
-from utils.icon_search import IconSearch
 from models.budget import Budget
 from models.tag import Tag
+from utils.icon_search import IconSearch
 
 
 class DbMigrator:
@@ -186,7 +188,6 @@ class DbMigrator:
         "wasp-automotive": "wasp-auto",
         "wikimedia-foundation-inc": "wikimedia-foundation",
         "wikipedia": "wikimedia-foundation",
-        "wikipedia": "wikimedia-foundation",
         "windows": "ms-windows",
         "windows10": "ms-windows",
         "wounded-warriors-project": "wounded-warrior-project",
@@ -196,7 +197,10 @@ class DbMigrator:
 
     def __init__(self, old_db_path, **kwargs):
         self.__old_db_path = old_db_path
-        self.__working_dir = kwargs.get("working_dir", "/tmp")
+        self.__working_dir = kwargs.get(
+            "working_dir",
+            tempfile.mkdtemp(),
+        )
 
         file_name = os.path.basename(self.__old_db_path)
         self.__new_db_path = f"{self.__working_dir}/{file_name.capitalize()}.json"
@@ -218,7 +222,7 @@ class DbMigrator:
 
     def __read_old_db(self):
         records = []
-        with open(self.__old_db_path, "r") as fptr:
+        with open(self.__old_db_path) as fptr:
             while line := fptr.readline():
                 entry = json.loads(line)
                 records.append(entry)
@@ -258,9 +262,10 @@ class DbMigrator:
             print(f"\t=> {entry['notes']}")
             tag_str = ""
             while not tag_str:
-                tag_str = input(f"Note2Tags> ")
+                tag_str = input("Note2Tags> ")
                 if tag_str == "Q":
-                    raise RuntimeError("note2tag -- user exit")
+                    msg = "note2tag -- user exit"
+                    raise RuntimeError(msg)
 
                 if tag_str:
                     if tag_str == "--":
@@ -291,21 +296,21 @@ class DbMigrator:
                 for idx, icon in enumerate(matches):
                     print(f"{idx}) {icon}")
 
-                response = input(f"Icon # | New Keyword> ")
+                response = input("Icon # | New Keyword> ")
 
                 if response.isdigit():
                     idx = int(response)
                     while idx >= len(matches):
-                        response = input(f"Invalid Choice> ")
+                        response = input("Invalid Choice> ")
                         idx = int(response)
 
                     choice = matches[idx]
+                elif response == "Q":
+                    msg = "find_icon -- user exit"
+                    raise RuntimeError(msg)
                 else:
-                    if response == "Q":
-                        raise RuntimeError("find_icon -- user exit")
-                    else:
-                        choice = None
-                        search_term = response
+                    choice = None
+                    search_term = response
 
             self.__icon_cache[keyword] = choice
 
@@ -321,7 +326,7 @@ class DbMigrator:
     def __cleanup_exit(self, msg, code=0):
         self.__config.save()
         print(msg)
-        exit(code)
+        sys.exit(code)
 
     def migrate(self):
         if os.path.exists(self.__new_db_path):
@@ -344,7 +349,7 @@ class DbMigrator:
                 self.__munge_shared_fields(entry)
 
                 new_records.append(entry)
-            except Exception as err:
+            except Exception as err:  # noqa: BLE001
                 # don't really care to much what error is here
                 # just break so to write converted records, cache
                 # and exit cleanly
@@ -379,7 +384,7 @@ class DbMigrator:
                 new_value = value["$$date"] // 1000 if value else None
                 del entry[field]
 
-                if field == "archivedAt":
+                if field == "archivedAt":  # noqa: SIM108
                     new_field = "deleted_at"
                 else:
                     new_field = field.replace("At", "_at")
@@ -409,9 +414,7 @@ class DbMigrator:
     def __munge_expenses_fields(self, entry):
         # normalize tags
         if "tags" in entry:
-            new_tags = []
-            for tag in entry["tags"]:
-                new_tags.append(self.__normalize_tag(tag))
+            new_tags = [self.__normalize_tag(tag) for tag in entry["tags"]]
 
             entry["tags"] = new_tags
             self.__write_tags(new_tags)

@@ -1,13 +1,10 @@
 import flet as ft
 
-import utils.tools
 import utils.constants as const
-
+import utils.tools
 from models.budget import Budget
 from models.expense import Expense
-
 from utils.locale import Locale
-
 from views.reports.report.base import ReportBase
 
 
@@ -56,7 +53,7 @@ class UpcomingReport(ReportBase):
         self._date_display = ft.Chip(
             leading=ft.Icon(ft.Icons.DATE_RANGE),
             label=ft.Text(""),
-            on_click=lambda e: None,
+            on_click=lambda _: None,
         )
         self.__update_date_display()
 
@@ -147,7 +144,7 @@ class UpcomingReport(ReportBase):
 
         # Start/End dates of define period
         # I.e. Start/End dates of last N weeks
-        (period_start, period_end) = self.__compute_period()
+        (period_start, _) = self.__compute_period()
 
         # Load this month's budget
         budget = Budget.for_month(now.month)
@@ -156,10 +153,10 @@ class UpcomingReport(ReportBase):
         # Load expenses for current month
         start_date = now.floor("month")
         end_date = now.ceil("month")
-        curr_expenses = Expense.find(
-            date=f"btw:{start_date.int_timestamp}:{end_date.int_timestamp}",
-        )
-        curr_exp_map = Expense.collate_by_category(curr_expenses)
+        # curr_expenses = Expense.find(
+        #     date=f"btw:{start_date.int_timestamp}:{end_date.int_timestamp}",
+        # )
+        # curr_exp_map = Expense.collate_by_category(curr_expenses)
 
         # Load expenses from the period of LAST month
         # I.e. the last N weeks of LAST month

@@ -1,6 +1,6 @@
-import flet as ft
-
 from abc import ABC, abstractmethod
+
+import flet as ft
 
 
 class ReportBase(ABC, ft.Container):

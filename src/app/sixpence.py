@@ -1,22 +1,18 @@
+import os
+
 import flet as ft
 import screeninfo
 
-import os
-import pprint
-
-from app.config import Config
-
-from controls.notification_bar import NotificationBar
-from controls.nav_rail import NavRail
-from controls.router import Router
-
-from utils.locale import Locale
-from utils.archive import Archive
-
 from app.about import About
-from views.home import Home
+from app.config import Config
+from controls.nav_rail import NavRail
+from controls.notification_bar import NotificationBar
+from controls.router import Router
+from utils.archive import Archive
+from utils.locale import Locale
 from views.budget.main import Budget as BudgetView
 from views.expenses.main import Expense as ExpenseView
+from views.home import Home
 from views.reports.main import Report as ReportView
 from views.settings import Settings
 
@@ -200,6 +196,3 @@ class Sixpence:
         if evt.data == "close":
             self.__backup_data()
             evt.page.window.destroy()
-
-
-#

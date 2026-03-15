@@ -39,14 +39,14 @@ class DbHelper:
         sort_flds = sort_desc
         if ":" in sort_desc:
             (sort_flds, sort_dir) = sort_desc.split(":", 2)
-            reverse = True if sort_dir == "desc" else False
+            reverse = sort_dir == "desc"
 
         sort_attrs = sort_flds.split(",")
 
         types = cls.__model_attr_type(sort_attrs, items)
 
         def key_smith(o):
-            key_ring = [cls.__DEFAULT_SORT_VALUE[types[i]] if o[f] == None else o[f] for i, f in enumerate(sort_attrs)]
+            key_ring = [cls.__DEFAULT_SORT_VALUE[types[i]] if o[f] is None else o[f] for i, f in enumerate(sort_attrs)]
             return key_ring
 
         # In Place
@@ -76,7 +76,8 @@ class DbHelper:
             query_op = match.group(1)
             query_val = match.group(2)
         else:
-            raise ValueError(f"Invalid Search Query: [{query_str}]")
+            msg = f"Invalid Search Query: [{query_str}]"
+            raise ValueError(msg)
 
         # Query OP can be omitted; Default to "eq"
         # Also, strip off the ending ":" if present

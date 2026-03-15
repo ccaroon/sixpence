@@ -1,13 +1,11 @@
 import flet as ft
 
 from presenters.reports import Reports as ReportPresenter
-
 from views.base import Base as BaseView
 from views.reports.navbar import ReportNavBar
-
 from views.reports.report.spending import SpendingReport
-from views.reports.report.yearly_summary import YearlySummaryReport
 from views.reports.report.upcoming import UpcomingReport
+from views.reports.report.yearly_summary import YearlySummaryReport
 
 
 class Report(BaseView):

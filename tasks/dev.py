@@ -1,6 +1,5 @@
-from invoke import task
-
 import util
+from invoke import task
 
 PROD_DATA_DIR = "~/Documents/Sixpence"
 OLD_DATA_DIR = "~/workspace/sixpence/old_data"

@@ -1,8 +1,8 @@
 import flet as ft
 
+import utils.constants as const
 from controls.notification_bar import NotificationBar
 from presenters.settings import Settings as SettingsPresenter
-import utils.constants as const
 from views.base import Base as BaseView
 
 
@@ -261,5 +261,6 @@ class Settings(BaseView):
 
     def handle_keyboard_event(self, event):
         if event.ctrl or event.meta:
-            if event.key == "S":
-                self._presenter.handle_save_click(None)
+            match event.key:
+                case "S":
+                    self._presenter.handle_save_click(None)

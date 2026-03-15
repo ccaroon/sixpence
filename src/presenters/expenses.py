@@ -1,11 +1,11 @@
+# ruff: noqa: SLF001
 import flet as ft
 
-import utils.tools
-from utils.locale import Locale
 import utils.constants as const
-
+import utils.tools
 from models.budget import Budget
 from models.expense import Expense
+from utils.locale import Locale
 
 
 class Expenses:
@@ -42,7 +42,7 @@ class Expenses:
         expense = evt.control.data
         self.__view.editor.edit(expense, self.__budget, self.__categories)
 
-    def handle_new(self, evt):
+    def handle_new(self, _):
         expense = Expense(date=Locale.now())
         self.__view.editor.edit(expense, self.__budget, self.__categories)
 
@@ -229,7 +229,7 @@ class Expenses:
 
         return (budgeted, unbudgeted)
 
-    def __view_calendar(self, expenses):
+    def __view_calendar(self, expenses):  # noqa: ARG002
         placeholder = ft.ListTile(ft.Text("CALENDAR VIEW NOT IMPLEMENTED"))
         self.__view.list_view.controls.append(placeholder)
 
@@ -242,9 +242,9 @@ class Expenses:
             percent_display = round(abs(progress_percent) * 100.00)
 
             progress_color = const.COLOR_INCOME
-            if progress_percent > 0.9 and progress_percent < 1.0:
+            if progress_percent > const.PERCENT_90 and progress_percent < const.PERCENT_100:
                 progress_color = ft.Colors.YELLOW
-            if progress_percent > 1.0:
+            if progress_percent > const.PERCENT_100:
                 progress_color = const.COLOR_EXPENSE
 
             tile = ft.ListTile(
@@ -382,7 +382,7 @@ class Expenses:
 
             tags = []
             for tag_name in item.tag_list():
-                tags.append(
+                tags.append(  # noqa: PERF401
                     ft.Chip(
                         label=ft.Text(tag_name),
                         bgcolor=tag_color,

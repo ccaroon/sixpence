@@ -1,10 +1,9 @@
-from flet import Icons as FletIcons
-
 import inflector
+from flet import Icons as FletIcons
 
 
 class IconSearch:
-    IGNORE_WORDS = [
+    IGNORE_WORDS: tuple[str] = (
         "as",
         "do",
         "in",
@@ -19,10 +18,10 @@ class IconSearch:
         "for",
         "or",
         "the",
-    ]
+    )
 
     # KNOWN-ICON-KW -> PERSONAL-KW
-    KEYWORD_MAP = {
+    KEYWORD_MAP: dict[str, list[str]] = {
         "account_balance": ["bank", "loan"],
         "airplane_ticket": ["transportation"],
         "apartment": ["housing"],
@@ -71,7 +70,7 @@ class IconSearch:
         "water_drop": ["water", "water/sewer"],
     }
 
-    def __init__(self, **kwargs):
+    def __init__(self):
         self.__icons = [icn.value for icn in list(FletIcons)]
         self.__inflect = inflector.Inflector()
 
@@ -97,7 +96,7 @@ class IconSearch:
                 else:
                     singular = self.__inflect.singularize(word)
                     plural = self.__inflect.pluralize(word)
-                    keywords.extend(set([word, singular, plural]))
+                    keywords.extend({word, singular, plural})
 
         # Find Icons base on each keyword
         for kw in keywords:

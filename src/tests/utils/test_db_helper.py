@@ -1,6 +1,7 @@
-import faker
 import time
 import unittest
+
+import faker
 
 from utils.db_helper import DbHelper
 
@@ -81,7 +82,7 @@ class UtilTest(unittest.TestCase):
                     sub_list[i + 1].get("name"),
                 )
 
-    def test_sort_list_with_None(self):
+    def test_sort_list_with_none(self):
         count = 5
         data = [self.__random_obj() for i in range(count)]
 
@@ -179,6 +180,3 @@ class UtilTest(unittest.TestCase):
         self.assertFalse(DbHelper.cmp_numeric(-42, "eq", "-77"))
 
         self.assertFalse(DbHelper.cmp_numeric(42, "btw", "-42:41.99"))
-
-
-#

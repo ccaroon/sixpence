@@ -1,17 +1,17 @@
-import arrow
-import inflector
 import itertools
 import re
-
 from abc import ABC, abstractmethod
 from datetime import datetime
-from tinydb import TinyDB, Query
+
+import arrow
+import inflector
 import tinydb.operations as tyops
+from tinydb import Query, TinyDB
 
 import models
+import utils.tools
 from app.config import Config
 from utils.db_helper import DbHelper
-import utils.tools
 
 
 # ------------------------------------------------------------------------------
@@ -74,7 +74,7 @@ class Base(ABC):
 
         return cls.__DATABASE.table(cls.TABLE_NAME)
 
-    def _date_setter(self, date_value, null_ok=False):
+    def _date_setter(self, date_value, *, null_ok=False):
         new_date = None
 
         if isinstance(date_value, arrow.Arrow):
@@ -86,12 +86,13 @@ class Base(ABC):
         elif not date_value and null_ok:
             new_date = None
         else:
-            raise TypeError(f"Date must be of type INT, STR or Arrow; Got: {type(date_value)}")
+            msg = f"Date must be of type INT, STR or Arrow; Got: {type(date_value)}"
+            raise TypeError(msg)
 
         return new_date
 
     def _epoch_to_date_obj(self, ts):
-        date_obj = arrow.get(datetime.fromtimestamp(ts), self._cfg.get("app:timezone")) if ts else None
+        date_obj = arrow.get(datetime.fromtimestamp(ts), self._cfg.get("app:timezone")) if ts else None  # noqa: DTZ006
         return date_obj
 
     def load(self):
@@ -102,9 +103,11 @@ class Base(ABC):
                 data["id"] = data.doc_id
                 self.__unserialize(data)
             else:
-                raise ValueError(f"Record Not Found: [{self.id}]")
+                msg = f"Record Not Found: [{self.id}]"
+                raise ValueError(msg)
         else:
-            raise ValueError(f"Valid Object ID required for loading: [{self.id}]")
+            msg = f"Valid Object ID required for loading: [{self.id}]"
+            raise ValueError(msg)
 
     def _pre_save(self):
         pass
@@ -113,7 +116,8 @@ class Base(ABC):
         now = arrow.now(self._cfg.get("app:timezone"))
 
         if self.deleted_at:
-            raise RuntimeError(f"Can't Save ... Object deleted [{self.deleted_at.humanize()}].")
+            msg = f"Can't Save ... Object deleted [{self.deleted_at.humanize()}]."
+            raise RuntimeError(msg)
 
         # Pre Save
         self._pre_save()
@@ -136,7 +140,7 @@ class Base(ABC):
         self.__deleted_at = None
         self.save()
 
-    def delete(self, safe=False):
+    def delete(self, *, safe=False):
         if self.id:
             now = arrow.now(self._cfg.get("app:timezone"))
             self.__deleted_at = now
@@ -150,16 +154,19 @@ class Base(ABC):
                     self._database().remove(doc_ids=[self.id])
                     self.__id = None
 
-            except KeyError as ke:
-                raise ValueError(f"Record Not Found: [{self.id}]")
+            except KeyError:
+                msg = f"Record Not Found: [{self.id}]"
+                raise ValueError(msg) from None
         else:
-            raise ValueError(f"Valid Object ID required for deletion: [{self.id}]")
+            msg = f"Valid Object ID required for deletion: [{self.id}]"
+            raise ValueError(msg)
 
     @abstractmethod
     def _serialize(self):
-        raise NotImplementedError("_serialize is an Abstract Method and must be overridden")
+        msg = "_serialize is an Abstract Method and must be overridden"
+        raise NotImplementedError(msg)
 
-    def serialize(self, omit_id=False):
+    def serialize(self, *, omit_id=False):
         # Shared Fields
         data = {
             "created_at": self.created_at.int_timestamp if self.created_at else None,
@@ -176,7 +183,8 @@ class Base(ABC):
 
     @abstractmethod
     def update(self, date):
-        raise NotImplementedError("update is an Abstract Method and must be overridden")
+        msg = "update is an Abstract Method and must be overridden"
+        raise NotImplementedError(msg)
 
     def __unserialize(self, data):
         # Shared Attributes
@@ -212,17 +220,12 @@ class Base(ABC):
         if offset == 0 and count is None:
             pass
         else:
-            if count is None:
-                end = None
-            else:
-                end = offset + count
+            end = None if count is None else offset + count
 
             db_iter = iter(docs)
             docs = itertools.islice(db_iter, offset, end)
 
-        objs = []
-        for doc in docs:
-            objs.append(cls(id=doc.doc_id, **doc))
+        objs = [cls(id=doc.doc_id, **doc) for doc in docs]
 
         return objs
 
@@ -252,23 +255,22 @@ class Base(ABC):
                 tags = query_value.split(",")
                 tags = [models.tag.Tag.normalize(tg) for tg in tags]
                 query_parts.append(query_builder["tags"].any(tags))
+            # Can search in boolean, int and string fields
+            elif re.match("(true|false)", query_value, flags=re.IGNORECASE):
+                query_value = query_value.lower() == "true"
+                query_parts.append(query_builder[field] == query_value)
+            elif query_op == "btw" or utils.tools.is_numeric(query_value):
+                query_parts.append(query_builder[field].test(DbHelper.cmp_numeric, query_op, query_value))
+            elif query_value == "null":
+                query_parts.append(query_builder[field] == None)  # noqa: E711
             else:
-                # Can search in boolean, int and string fields
-                if re.match("(true|false)", query_value, flags=re.IGNORECASE):
-                    query_value = True if query_value.lower() == "true" else False
-                    query_parts.append(query_builder[field] == query_value)
-                elif query_op == "btw" or utils.tools.is_numeric(query_value):
-                    query_parts.append(query_builder[field].test(DbHelper.cmp_numeric, query_op, query_value))
-                elif query_value == "null":
-                    query_parts.append(query_builder[field] == None)
-                else:
-                    # Assume query_value is a string
-                    query_parts.append(
-                        query_builder[field].search(
-                            query_value,
-                            flags=re.IGNORECASE,
-                        ),
-                    )
+                # Assume query_value is a string
+                query_parts.append(
+                    query_builder[field].search(
+                        query_value,
+                        flags=re.IGNORECASE,
+                    ),
+                )
 
         query = query_parts[0]
         if op == "or":
@@ -283,8 +285,6 @@ class Base(ABC):
             # sort_by: attr1,attr2,attr3:asc|desc
             docs = DbHelper.sort(docs, sort_by)
 
-        objs = []
-        for doc in docs:
-            objs.append(cls(id=doc.doc_id, **doc))
+        objs = [cls(id=doc.doc_id, **doc) for doc in docs]
 
         return objs

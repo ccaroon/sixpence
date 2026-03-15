@@ -115,7 +115,7 @@ class Expense(Taggable, Base):
         self.tags = data.get("tags", self.tags)
 
     @classmethod
-    def collate_by_category(self, expenses: list):
+    def collate_by_category(cls, expenses: list):
         """
         Given a list of Expense items collate them by their category.
 

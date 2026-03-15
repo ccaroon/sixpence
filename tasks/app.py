@@ -1,6 +1,6 @@
-import arrow
 import platform
 
+import arrow
 from invoke import task
 
 os_map = {
@@ -51,8 +51,8 @@ def install(ctx):
         date_stamp = arrow.now().format("YYYYMMDD_HHmmss")
         ctx.run(f"mv {install_path} {install_path}-{date_stamp}", echo=True)
         ctx.run(f"cp -a build/{target} {install_path}", echo=True)
-        ctx.run(f"cp etc/sixpence.desktop ~/.local/share/applications")
-        ctx.run(f"cp src/assets/icon.png ~/.local/share/icons")
+        ctx.run("cp etc/sixpence.desktop ~/.local/share/applications")
+        ctx.run("cp src/assets/icon.png ~/.local/share/icons")
         ctx.run("update-desktop-database ~/.local/share/icons/ ~/.local/share/applications/")
     elif os_name == "Darwin":
         exe = os_map.get(os_name).get("exe")
@@ -69,7 +69,7 @@ def package(ctx):
     if os_name == "Linux":
         with ctx.cd("build"):
             ctx.run(f"mv {target} sixpence", echo=True)
-            ctx.run(f"tar cvfz sixpence.tgz sixpence", echo=True)
+            ctx.run("tar cvfz sixpence.tgz sixpence", echo=True)
     else:
         print("=> Error: Don't know how to create a package for {os_name}.")
 

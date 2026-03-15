@@ -1,18 +1,17 @@
-import flet as ft
-
 import arrow
+import flet as ft
 
 import utils.constants as const
 
 
 class HistoryPrompt(ft.AlertDialog):
-    def __init__(self, page, **kwargs):
+    def __init__(self, page):
         super().__init__(modal=True)
 
         self.__page = page
         self.__layout()
 
-    def __on_continue(self, evt):
+    def __on_continue(self, _):
         reason = self.__reason_ctrl.value
 
         if not reason:

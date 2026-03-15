@@ -1,11 +1,10 @@
 import flet as ft
 
-import utils.tools
 import utils.constants as const
-from utils.locale import Locale
+import utils.tools
 from models.budget import Budget
 from models.expense import Expense
-
+from utils.locale import Locale
 from views.reports.report.base import ReportBase
 
 
@@ -221,9 +220,9 @@ class YearlySummaryReport(ReportBase):
             if budget_group:
                 progress_value = item["total"] / bg_amount
                 progress_color = ft.Colors.GREEN_ACCENT_200
-                if progress_value > 0.9 and progress_value < 1.0:
+                if progress_value > const.PERCENT_90 and progress_value < const.PERCENT_100:
                     progress_color = ft.Colors.YELLOW_ACCENT_200
-                if progress_value > 1.0:
+                if progress_value > const.PERCENT_100:
                     progress_color = ft.Colors.RED_ACCENT_200
 
                 progress_control = ft.ProgressBar(
@@ -299,7 +298,7 @@ class YearlySummaryReport(ReportBase):
 
         self._page.update()
 
-    def __on_year_display_click(self, evt):
+    def __on_year_display_click(self, _):
         self.__report_date = Locale.now()
         self.__year_display.label.value = self.__report_date.year
         self.__year_display.update()
@@ -314,7 +313,7 @@ class YearlySummaryReport(ReportBase):
 
         self.render()
 
-    def __on_search_submit(self, evt):
+    def __on_search_submit(self, _):
         self.render()
         self.__search_control.focus()
 

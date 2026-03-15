@@ -43,7 +43,7 @@ class Router:
         self.__page.update()
 
     # TODO: not tested
-    def __handle_view_pop(self, event):
+    def __handle_view_pop(self, _):
         if self.__page.views:
             self.__page.views.pop()
 

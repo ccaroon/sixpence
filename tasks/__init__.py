@@ -1,8 +1,7 @@
-from invoke import task, Collection
+import dev
+from invoke import Collection
 
 import app
-import dev
-
 
 ns = Collection(
     app,

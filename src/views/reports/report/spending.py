@@ -1,10 +1,9 @@
 import flet as ft
 
-import utils.tools
 import utils.constants as const
-from utils.locale import Locale
+import utils.tools
 from models.expense import Expense
-
+from utils.locale import Locale
 from views.reports.report.base import ReportBase
 
 

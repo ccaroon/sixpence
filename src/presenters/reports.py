@@ -1,3 +1,4 @@
+# ruff: noqa: SLF001
 class Reports:
     def __init__(self, view):
         self.__view = view
@@ -15,7 +16,7 @@ class Reports:
         self.__view.content = report
         self.__view.update()
 
-    def handle_report_home(self, evt):
+    def handle_report_home(self, _):
         # Reset NavBar
         self.__view._navbar.set_title("All")
         self.__view._navbar.reset_actions()

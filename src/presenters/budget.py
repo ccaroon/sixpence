@@ -1,8 +1,8 @@
+# ruff: noqa: SLF001
 import flet as ft
 
 import utils.constants as const
 import utils.tools
-
 from models.budget import Budget as BudgetModel
 from utils.locale import Locale
 
@@ -39,7 +39,7 @@ class Budget:
         budget_item.undelete()
         self.refresh()
 
-    def refresh(self, reset_filters=False, **kwargs):
+    def refresh(self, *, reset_filters=False, **kwargs):
         self.__view.list_view.controls.clear()
 
         if reset_filters:
@@ -88,7 +88,7 @@ class Budget:
 
             tags = []
             for tag_name in item.tag_list():
-                tags.append(
+                tags.append(  # noqa: PERF401
                     ft.Chip(
                         label=ft.Text(tag_name),
                         bgcolor=tag_color,
