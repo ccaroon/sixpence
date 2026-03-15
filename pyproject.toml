@@ -68,5 +68,5 @@ ignore = [
     "PT009",  # Use regular asset
     "A002",   # `id` is shadowing built-in; Needs bigger refactor
     # TODO: research below, then fix
-    "RUF015", # perfer next(iter()) over list()
+    "RUF015", # prefer next(iter()) over list()
 ]

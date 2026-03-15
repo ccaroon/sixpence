@@ -124,10 +124,11 @@ class Sixpence:
         os.makedirs(cache_dir, exist_ok=True)
 
         # Where to Store main files
-        data_home = os.getenv(
-            "XDG_DATA_HOME",
-            os.getenv("HOME") + "/Documents",
-        )
+        # data_home = os.getenv(
+        #     "XDG_DATA_HOME",
+        #     os.getenv("HOME") + "/Documents",
+        # )
+        data_home = os.getenv("HOME") + "/Documents"
         docs_dir = f"{data_home}/{self.__app_name}"
         os.makedirs(docs_dir, exist_ok=True)
 
