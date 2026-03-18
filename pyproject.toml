@@ -1,3 +1,7 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
 name = "sixpence"
 version = "2.1.0"
@@ -5,16 +9,64 @@ description = "Simple Budget Manager"
 readme = "README.md"
 requires-python = ">=3.13,<4.0.0"
 authors = [{ name = "Craig N. Caroon", email = "craig@caroon.org" }]
-# NOTE: currently using requirements.txt
-# dependencies = []
+dependencies = [
+    "arrow ~= 1.4",
+    "flet[all] ~= 0.28.3",
+    "inflector ~= 3.1.1",
+    "PyYAML ~= 6.0",
+    "screeninfo ~= 0.8.1",
+    "tinydb ~= 4.8.2",
+]
+
+[tool.hatch.version]
+path = "src/app/version.py"
+
+[tool.hatch.envs.default]
+extra-dependencies = ["invoke ~= 2.2"]
+
+[tool.hatch.envs.hatch-test]
+default-args = ["src/tests"]
+extra-dependencies = ["faker ~= 40.11"]
+
+[tool.hatch.envs.hatch-test.scripts]
+run = "pytest{env:HATCH_TEST_ARGS:} {args}"
+run-cov = "coverage run -m pytest{env:HATCH_TEST_ARGS:} {args}"
+cov-combine = "coverage combine"
+cov-report = "coverage report; coverage html"
+
+[tool.hatch.build.targets.sdist]
+include = ["src/"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/"]
+
+[tool.coverage.run]
+omit = ["src/tests/*"]
+
+[tool.coverage.report]
+fail_under = 90
+include = ["src/*"]
 
 [tool.flet]
 org = "org.caroon"
 product = "Sixpence"
 company = "Caroon Dot Org"
-copyright = "Copyright (C) 2025 by Craig N. Caroon"
+copyright = "Copyright (C) 2025-26 by Craig N. Caroon"
 # NOTE: YYMMDD
-build_number = 250818
+build_number = 260315
 
 [tool.flet.app]
 path = "src"
+
+
+# https://docs.astral.sh/ruff/configuration/
+[tool.ruff.lint]
+ignore = [
+    "T201",   # `print` found
+    "RET504", # unnecessary assign before return
+    "RUF012", # Mutable class attr
+    "PT009",  # Use regular asset
+    "A002",   # `id` is shadowing built-in; Needs bigger refactor
+    # TODO: research below, then fix
+    "RUF015", # prefer next(iter()) over list()
+]

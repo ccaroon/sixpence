@@ -1,25 +1,25 @@
-import arrow
 import platform
 
+import arrow
 from invoke import task
 
 os_map = {
     "Linux": {
         "target": "linux",
         "exe": "sixpence",
-        "install_path": "~/local/sixpence"
+        "install_path": "~/local/sixpence",
     },
     "Darwin": {
         "target": "macos",
         "exe": "Sixpence.app",
-        "install_path": "/Applications"
+        "install_path": "/Applications",
     },
 }
 
 
 @task
 def build(ctx, target=None):
-    """ Build The Application for `target` Platform """
+    """Build The Application for `target` Platform"""
     if not target:
         os_name = platform.system()
         target = os_map.get(os_name).get("target")
@@ -29,7 +29,7 @@ def build(ctx, target=None):
 
 @task
 def run(ctx):
-    """ Run the built Application """
+    """Run the built Application"""
     os_name = platform.system()
     target = os_map.get(os_name).get("target")
     exe = os_map.get(os_name).get("exe")
@@ -42,7 +42,7 @@ def run(ctx):
 
 @task
 def install(ctx):
-    """ Install the Application """
+    """Install the Application"""
     os_name = platform.system()
     target = os_map.get(os_name).get("target")
     install_path = os_map.get(os_name).get("install_path")
@@ -51,14 +51,15 @@ def install(ctx):
         date_stamp = arrow.now().format("YYYYMMDD_HHmmss")
         ctx.run(f"mv {install_path} {install_path}-{date_stamp}", echo=True)
         ctx.run(f"cp -a build/{target} {install_path}", echo=True)
-        ctx.run(f"cp etc/sixpence.desktop ~/.local/share/applications")
-        ctx.run(f"cp src/assets/icon.png ~/.local/share/icons")
+        ctx.run("cp etc/sixpence.desktop ~/.local/share/applications")
+        ctx.run("cp src/assets/icon.png ~/.local/share/icons")
         ctx.run("update-desktop-database ~/.local/share/icons/ ~/.local/share/applications/")
     elif os_name == "Darwin":
         exe = os_map.get(os_name).get("exe")
         ctx.run(f"cp -a build/{target}/{exe} {install_path}", echo=True)
     else:
         print(f"=> Error: Don't know to install for {os_name}.")
+
 
 @task
 def package(ctx):
@@ -68,14 +69,14 @@ def package(ctx):
     if os_name == "Linux":
         with ctx.cd("build"):
             ctx.run(f"mv {target} sixpence", echo=True)
-            ctx.run(f"tar cvfz sixpence.tgz sixpence", echo=True)
+            ctx.run("tar cvfz sixpence.tgz sixpence", echo=True)
     else:
         print("=> Error: Don't know how to create a package for {os_name}.")
 
 
 @task(
-    aliases=["build-clean"]
+    aliases=["build-clean"],
 )
 def clean_build(ctx):
-    """ Clean Up Stuff """
+    """Clean Up Stuff"""
     ctx.run("rm -rf build/")

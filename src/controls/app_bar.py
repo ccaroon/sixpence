@@ -1,5 +1,6 @@
 import flet as ft
 
+
 class AppBar(ft.AppBar):
     def __init__(self, page):
         super().__init__(
@@ -8,6 +9,6 @@ class AppBar(ft.AppBar):
             color="black",
             bgcolor=ft.Colors.PRIMARY,
             actions=[
-                ft.IconButton(ft.Icons.WB_SUNNY_OUTLINED)
-            ]
+                ft.IconButton(ft.Icons.WB_SUNNY_OUTLINED),
+            ],
         )

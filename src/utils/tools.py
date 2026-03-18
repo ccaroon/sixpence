@@ -1,6 +1,7 @@
 import re
 
-def cycle(items:tuple, idx):
+
+def cycle(items: tuple, idx):
     """
     Cycle between each item in the `items` list based on the give index `idx`
     """
@@ -9,7 +10,7 @@ def cycle(items:tuple, idx):
     return items[choice]
 
 
-def is_numeric(value:str):
+def is_numeric(value: str):
     """
     Is the given string value number-like?
     """

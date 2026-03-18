@@ -3,8 +3,8 @@ import unittest
 from models.budget import Budget
 from models.budget_group import BudgetGroup
 
-class BudgetGroupTest(unittest.TestCase):
 
+class BudgetGroupTest(unittest.TestCase):
     def test_constructor(self):
         group = BudgetGroup("Auto:Fuel")
 
@@ -16,26 +16,25 @@ class BudgetGroupTest(unittest.TestCase):
         self.assertEqual(group.icon, None)
         self.assertEqual(group.amount, 0.0)
 
-
     def test_basics(self):
         items = [
             Budget(
                 category="Auto:Fuel",
                 icon="fuel-pump",
                 amount=-75.00,
-                frequency=1
+                frequency=1,
             ),
             Budget(
                 category="Auto:Fuel",
                 icon="fuel-pump",
                 amount=-30.00,
-                frequency=1
+                frequency=1,
             ),
             Budget(
                 category="Auto:Fuel",
                 icon="fuel-pump",
                 amount=-50.00,
-                frequency=6
+                frequency=6,
             ),
         ]
         # single item

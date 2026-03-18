@@ -8,6 +8,9 @@
 * Upgraded to Flet 0.28.3
   - Navigation was broken between 0.27.6 and 0.28.2. Flet ChangeLog indicates it was fixed in 0.28.3
 * Upgraded some of the `dev` packages
+* Converted to use `hatch` for build/project management (Mar 15, 2026)
+  - formatted all files
+  - fixed most linting issues
 
 ## v2.0.0 - Pristine Penny (June 04, 2025)
 Complete rewrite using Flet/Flutter

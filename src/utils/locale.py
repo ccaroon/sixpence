@@ -1,11 +1,13 @@
-import arrow
 import locale
+
+import arrow
 
 from app.config import Config
 
+
 class Locale:
     @classmethod
-    def init(cls, lcid=''):
+    def init(cls, lcid=""):
         """
         Initialze the locale to the given `lcid` for all categories.
 
@@ -22,14 +24,13 @@ class Locale:
             None
         """
         if not lcid:
-            locale.setlocale(locale.LC_ALL, '')
+            locale.setlocale(locale.LC_ALL, "")
         else:
             normal_lcid = locale.normalize(lcid)
             locale.setlocale(locale.LC_ALL, normal_lcid)
 
         # for key, value in locale.localeconv().items():
         #     print("%s: %s" % (key, value))
-
 
     @classmethod
     def currency(cls, value):
@@ -44,7 +45,6 @@ class Locale:
         """
         return locale.currency(value, grouping=True)
 
-
     @classmethod
     def now(cls):
         """
@@ -54,7 +54,6 @@ class Locale:
             Arrow: The current date/time as an Arrow object
         """
         return arrow.now(Config().get("app:timezone"))
-
 
     @classmethod
     def as_arrow(cls, date_time):

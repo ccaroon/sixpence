@@ -1,15 +1,14 @@
 from models.tag import Tag
 
+
 class Taggable:
     def __init__(self, id=None, **kwargs):
         self.__tags = set()
         super().__init__(id=id, **kwargs)
 
-
     @property
     def tags(self):
         return self.__tags
-
 
     @tags.setter
     def tags(self, new_tags):
@@ -18,14 +17,12 @@ class Taggable:
             if tag:
                 self.tag(tag)
 
-
     def tag_list(self):
-        """ Tag names in a sorted list """
+        """Tag names in a sorted list"""
         sorted_tags = list(self.__tags)
         sorted_tags.sort()
 
         return [tg.name for tg in sorted_tags]
-
 
     def tag(self, tag):
         if isinstance(tag, str):
@@ -33,8 +30,8 @@ class Taggable:
         elif isinstance(tag, Tag):
             self.__tags.add(tag)
         else:
-            raise TypeError("'tag' must be of type `str` or `Tag`")
-
+            msg = "'tag' must be of type `str` or `Tag`"
+            raise TypeError(msg)
 
     def remove_tag(self, tag):
         if isinstance(tag, str):
@@ -42,8 +39,8 @@ class Taggable:
         elif isinstance(tag, Tag):
             self.__tags.remove(tag)
         else:
-            raise TypeError("'tag' must be of type `str` or `Tag`")
-
+            msg = "'tag' must be of type `str` or `Tag`"
+            raise TypeError(msg)
 
     def _post_save(self):
         # Add all new tags to Tag DB
@@ -51,9 +48,6 @@ class Taggable:
             if not Tag.exists(tag.name):
                 tag.save()
 
-
     def _serialize(self):
         # Store Tags that are part of the Object as strings only
-        return {
-            "tags": [str(tag) for tag in self.tags]
-        }
+        return {"tags": [str(tag) for tag in self.tags]}

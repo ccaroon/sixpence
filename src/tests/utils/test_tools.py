@@ -1,19 +1,18 @@
-
 import unittest
 
 import utils.tools
-class UtilTest(unittest.TestCase):
 
+
+class UtilTest(unittest.TestCase):
     def test_cycle(self):
         items = ["zero", "one", "two"]
         count = len(items)
 
-        for idx in range(0, 42):
+        for idx in range(42):
             value = utils.tools.cycle(items, idx)
             self.assertIsNotNone(value)
             self.assertIn(value, items)
             self.assertEqual(value, items[idx % count])
-
 
     def test_is_numeric(self):
         self.assertTrue(utils.tools.is_numeric("123"))

@@ -1,11 +1,12 @@
+# ruff: noqa: SLF001
 import flet as ft
 
-import utils.tools
-from utils.locale import Locale
 import utils.constants as const
-
+import utils.tools
 from models.budget import Budget
 from models.expense import Expense
+from utils.locale import Locale
+
 
 class Expenses:
     VIEW_PROGRESS = "progress"
@@ -24,36 +25,26 @@ class Expenses:
 
         Expense.update_rollover(now)
 
-
     @property
     def current_date(self):
         return self.__curr_date
 
-
     def __default_search_filters(self):
         end_date = self.__curr_date.ceil("month")
         return {
-            "date": f"btw:{self.__curr_date.int_timestamp}:{end_date.int_timestamp}"
+            "date": f"btw:{self.__curr_date.int_timestamp}:{end_date.int_timestamp}",
         }
 
-
     def handle_filter_by_tag(self, evt):
-        self.refresh(
-            tags=evt.control.label.value
-        )
-
+        self.refresh(tags=evt.control.label.value)
 
     def handle_edit(self, evt):
         expense = evt.control.data
         self.__view.editor.edit(expense, self.__budget, self.__categories)
 
-
-    def handle_new(self, evt):
-        expense = Expense(
-            date=Locale.now()
-        )
+    def handle_new(self, _):
+        expense = Expense(date=Locale.now())
         self.__view.editor.edit(expense, self.__budget, self.__categories)
-
 
     def handle_delete(self, evt):
         self.__view._page.close(self.__view.confirm_dlg)
@@ -63,7 +54,6 @@ class Expenses:
             expense.delete()
             self.refresh()
 
-
     def handle_delete_confirm(self, evt):
         item = evt.control.data
 
@@ -71,25 +61,23 @@ class Expenses:
             [
                 ft.Text("Are you sure you want to delete this Expense?"),
                 ft.Text(
-                    f"{item.date.format("MMM DD, YYYY")} | {item.category} | {Locale.currency(item.amount)}?",
-                    weight=ft.FontWeight.BOLD
-                )
+                    f"{item.date.format('MMM DD, YYYY')} | {item.category} | {Locale.currency(item.amount)}?",
+                    weight=ft.FontWeight.BOLD,
+                ),
             ],
-            tight=True
+            tight=True,
         )
 
         self.__view.confirm_dlg.data = item
         self.__view._page.open(self.__view.confirm_dlg)
-
 
     def handle_tile_click(self, evt):
         self.__view._navbar.change_view(self.VIEW_ITEMIZED)
         self.refresh(
             reset_filters=True,
             view=self.VIEW_ITEMIZED,
-            category=evt.control.data
+            category=evt.control.data,
         )
-
 
     def refresh(self, **kwargs):
         reset_filters = kwargs.pop("reset_filters", False)
@@ -122,13 +110,13 @@ class Expenses:
         self.__categories = Budget.categories()
         self.__budget = Budget.for_month(
             self.__curr_date.month,
-            **bdg_filters
+            **bdg_filters,
         )
 
         expenses = Expense.find(
             op="and",
             sort_by="type,date",
-            **self.__filters
+            **self.__filters,
         )
 
         inc_total = 0.0
@@ -150,14 +138,12 @@ class Expenses:
             case self.VIEW_CALENDAR:
                 self.__view_calendar(expenses)
             case self.VIEW_PROGRESS:
-                budgeted, unbudgeted = self.__collate_progress_data(
-                    expenses, **view_opts)
+                budgeted, unbudgeted = self.__collate_progress_data(expenses, **view_opts)
                 self.__view_progress(budgeted, unbudgeted)
             case _:
                 pass
 
         self.__view._page.update()
-
 
     def set_month(self, date):
         self.__curr_date = date.floor("month")
@@ -167,9 +153,8 @@ class Expenses:
 
         self.__budget = Budget.for_month(self.__curr_date.month)
         self.refresh(
-            date=f"btw:{self.__curr_date.int_timestamp}:{end_date.int_timestamp}"
+            date=f"btw:{self.__curr_date.int_timestamp}:{end_date.int_timestamp}",
         )
-
 
     def handle_month_change(self, evt):
         if isinstance(evt.control, ft.DatePicker):
@@ -185,7 +170,6 @@ class Expenses:
                 new_month = self.__curr_date.shift(months=offset)
                 self.set_month(new_month)
 
-
     def __collate_progress_data(self, expenses, **kwargs):
         only_overbudget = kwargs.get("over_budget", False)
         only_zero_spent = kwargs.get("zero_spent", False)
@@ -199,7 +183,7 @@ class Expenses:
         unbudgeted = {
             "items": {},
             "inc_total": 0.0,
-            "exp_total": 0.0
+            "exp_total": 0.0,
         }
         for exp in expenses:
             if exp.category == Expense.ROLLOVER_CATEGORY:
@@ -214,7 +198,7 @@ class Expenses:
                         "icon": exp.icon,
                         "category": exp.category,
                         "spent": exp.amount,
-                        "count": 1
+                        "count": 1,
                     }
                 else:
                     unbudgeted["items"][exp.category]["spent"] += exp.amount
@@ -225,11 +209,10 @@ class Expenses:
                 elif exp.type == Expense.TYPE_EXPENSE:
                     unbudgeted["exp_total"] += exp.amount
 
-
         # Convert into list sorted by type, then category
         budgeted = sorted(
             budgeted.values(),
-            key=lambda item: (item["type"], item["category"])
+            key=lambda item: (item["type"], item["category"]),
         )
 
         # Additional budgeted items filtering
@@ -241,45 +224,46 @@ class Expenses:
         # Convert into list sorted by type, then category
         unbudgeted["items"] = sorted(
             unbudgeted["items"].values(),
-            key=lambda item: (item["type"], item["category"])
+            key=lambda item: (item["type"], item["category"]),
         )
 
         return (budgeted, unbudgeted)
 
-
-    def __view_calendar(self, expenses):
+    def __view_calendar(self, expenses):  # noqa: ARG002
         placeholder = ft.ListTile(ft.Text("CALENDAR VIEW NOT IMPLEMENTED"))
         self.__view.list_view.controls.append(placeholder)
-
 
     def __view_progress(self, budgeted, unbudgeted):
         self.__view.list_view.spacing = 4
 
         for item in budgeted:
             bgcolor = ft.Colors.WHITE if item["spent"] == 0.0 else ft.Colors.GREY_200
-            progress_percent = round(item["spent"]/item["amount"], 2)
+            progress_percent = round(item["spent"] / item["amount"], 2)
             percent_display = round(abs(progress_percent) * 100.00)
 
             progress_color = const.COLOR_INCOME
-            if progress_percent > .9 and progress_percent < 1.0:
+            if progress_percent > const.PERCENT_90 and progress_percent < const.PERCENT_100:
                 progress_color = ft.Colors.YELLOW
-            if progress_percent > 1.0:
+            if progress_percent > const.PERCENT_100:
                 progress_color = const.COLOR_EXPENSE
 
             tile = ft.ListTile(
                 leading=ft.Icon(item["icon"], color="black"),
                 title=ft.Row(
                     [
-                        ft.Text(item["category"],
+                        ft.Text(
+                            item["category"],
                             color="black",
                             theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
                             weight=ft.FontWeight.BOLD,
-                            expand=3),
+                            expand=3,
+                        ),
                         ft.Text(
                             f"{Locale.currency(item['spent'])} / {Locale.currency(item['amount'])}",
                             color="black",
                             weight=ft.FontWeight.BOLD,
-                            expand=2),
+                            expand=2,
+                        ),
                         ft.ProgressBar(
                             height=25,
                             color=progress_color,
@@ -291,12 +275,13 @@ class Expenses:
                             f"{percent_display}%",
                             color="black",
                             weight=ft.FontWeight.BOLD,
-                            expand=1),
+                            expand=1,
+                        ),
                     ],
                 ),
                 bgcolor=bgcolor,
                 data=item["category"],
-                on_click=self.handle_tile_click
+                on_click=self.handle_tile_click,
             )
 
             self.__view.list_view.controls.append(tile)
@@ -307,23 +292,26 @@ class Expenses:
             leading=ft.Icon(ft.Icons.HELP_CENTER),
             title=ft.Row(
                 [
-                    ft.Text("Unbudgeted",
+                    ft.Text(
+                        "Unbudgeted",
                         color="black",
                         theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
                         weight=ft.FontWeight.BOLD,
-                        expand=3
+                        expand=3,
                     ),
-                    ft.Text(Locale.currency(unbudgeted["inc_total"]),
+                    ft.Text(
+                        Locale.currency(unbudgeted["inc_total"]),
                         color=const.COLOR_INCOME,
                         theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
                         weight=ft.FontWeight.BOLD,
-                        expand=2
+                        expand=2,
                     ),
-                    ft.Text(Locale.currency(unbudgeted["exp_total"]),
+                    ft.Text(
+                        Locale.currency(unbudgeted["exp_total"]),
                         color=const.COLOR_EXPENSE,
                         theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
                         weight=ft.FontWeight.BOLD,
-                        expand=6
+                        expand=6,
                     ),
                 ]
             ),
@@ -345,38 +333,41 @@ class Expenses:
                 leading=ft.Icon(item["icon"], color="black"),
                 title=ft.Row(
                     [
-                        ft.Text(item["category"],
+                        ft.Text(
+                            item["category"],
                             color="black",
                             theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
                             weight=ft.FontWeight.BOLD,
-                            expand=3),
+                            expand=3,
+                        ),
                         ft.Text(
                             f"{Locale.currency(item['spent'])}",
                             color="black",
                             weight=ft.FontWeight.BOLD,
-                            expand=2),
+                            expand=2,
+                        ),
                         ft.Text(
                             item["count"],
                             color="black",
                             weight=ft.FontWeight.BOLD,
-                            expand=6),
+                            expand=6,
+                        ),
                     ],
                 ),
                 bgcolor=bgcolor,
                 data=item["category"],
-                on_click=self.handle_tile_click
+                on_click=self.handle_tile_click,
             )
             unbudgeted_tile.controls.append(tile)
-
 
     def __view_itemized(self, expenses):
         self.__view.list_view.spacing = 0
 
         for idx, item in enumerate(expenses):
             inc_color = utils.tools.cycle(const.INCOME_COLORS, idx)
-            inc_color_alt = utils.tools.cycle(const.INCOME_COLORS, idx+1)
+            inc_color_alt = utils.tools.cycle(const.INCOME_COLORS, idx + 1)
             exp_color = utils.tools.cycle(const.EXPENSE_COLORS, idx)
-            exp_color_alt = utils.tools.cycle(const.EXPENSE_COLORS, idx+1)
+            exp_color_alt = utils.tools.cycle(const.EXPENSE_COLORS, idx + 1)
 
             bgcolor = None
             tag_color = None
@@ -391,12 +382,12 @@ class Expenses:
 
             tags = []
             for tag_name in item.tag_list():
-                tags.append(
+                tags.append(  # noqa: PERF401
                     ft.Chip(
                         label=ft.Text(tag_name),
                         bgcolor=tag_color,
                         on_click=self.handle_filter_by_tag,
-                        padding=ft.padding.all(0)
+                        padding=ft.padding.all(0),
                     )
                 )
 
@@ -404,40 +395,46 @@ class Expenses:
                 leading=ft.Icon(item.icon, color="black"),
                 title=ft.Row(
                     [
-                        ft.Text(item.category,
+                        ft.Text(
+                            item.category,
                             color="black",
                             theme_style=ft.TextThemeStyle.TITLE_MEDIUM,
                             weight=ft.FontWeight.BOLD,
-                            expand=3),
+                            expand=3,
+                        ),
                         ft.Text(
                             display_amt,
                             color="black",
                             weight=ft.FontWeight.BOLD,
-                            expand=3),
+                            expand=3,
+                        ),
                         ft.Row(tags, expand=4),
                         ft.VerticalDivider(),
                         # NOTE: if icon_color is set, then disabled_color has
                         #       no effect
                         #       Instead, have to adjust icon_color accoriding
                         #       to if the button is disabled
-                        ft.IconButton(ft.Icons.EDIT,
+                        ft.IconButton(
+                            ft.Icons.EDIT,
                             data=item,
                             icon_color=ft.Colors.GREY_500 if item.deleted_at else ft.Colors.GREY_800,
                             on_click=self.handle_edit,
                             disabled=item.deleted_at is not None,
                         ),
-                        ft.IconButton(ft.Icons.DELETE_FOREVER,
+                        ft.IconButton(
+                            ft.Icons.DELETE_FOREVER,
                             data=item,
                             icon_color=ft.Colors.GREY_500 if item.deleted_at else ft.Colors.GREY_800,
                             on_click=self.handle_delete_confirm,
-                            disabled=item.deleted_at is not None
-                        )
+                            disabled=item.deleted_at is not None,
+                        ),
                     ],
                 ),
                 subtitle=ft.Text(
                     item.date.format("MMM DD, YYYY"),
-                    color="black"),
-                bgcolor=bgcolor
+                    color="black",
+                ),
+                bgcolor=bgcolor,
             )
 
             self.__view.list_view.controls.append(tile)

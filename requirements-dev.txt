@@ -1,6 +1,0 @@
--r requirements.txt
-
-coverage ~= 7.10
-faker ~= 37.5
-invoke ~= 2.2.0
-nose2 ~= 0.15

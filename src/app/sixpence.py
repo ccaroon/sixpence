@@ -1,28 +1,25 @@
+import os
+
 import flet as ft
 import screeninfo
 
-import os
-import pprint
-
-from app.config import Config
-
-from controls.notification_bar import NotificationBar
-from controls.nav_rail import NavRail
-from controls.router import Router
-
-from utils.locale import Locale
-from utils.archive import Archive
-
 from app.about import About
-from views.home import Home
+from app.config import Config
+from controls.nav_rail import NavRail
+from controls.notification_bar import NotificationBar
+from controls.router import Router
+from utils.archive import Archive
+from utils.locale import Locale
 from views.budget.main import Budget as BudgetView
 from views.expenses.main import Expense as ExpenseView
+from views.home import Home
 from views.reports.main import Report as ReportView
 from views.settings import Settings
 
+
 class Sixpence:
-    SCREEN_SCALE_WIDTH  = .60 #.70
-    SCREEN_SCALE_HEIGHT = .80 #.90
+    SCREEN_SCALE_WIDTH = 0.60  # .70
+    SCREEN_SCALE_HEIGHT = 0.80  # .90
 
     def __init__(self, page):
         self.__app_name = "sixpence"
@@ -62,11 +59,10 @@ class Sixpence:
                 "/budget": BudgetView(self.__page),
                 "/expenses": ExpenseView(self.__page),
                 "/reports": ReportView(self.__page),
-                "/settings": Settings(self.__page)
-            }
+                "/settings": Settings(self.__page),
+            },
         )
         self.__appbar.navigate_to(config.get("app:startup_view", "/home"))
-
 
     def __init_window(self):
         monitors = screeninfo.get_monitors()
@@ -89,8 +85,6 @@ class Sixpence:
         self.__page.window.prevent_close = True
         self.__page.window.on_event = self.__handle_window_event
 
-
-
     # FLET_APP_STORAGE_DATA
     # * linux:
     #   - dev   -> ~/src/github/sixpence/storage/data
@@ -110,14 +104,13 @@ class Sixpence:
 
         return env
 
-
     def __init_settings(self):
         env = self.__determine_env()
 
         # Where to look for sixpence.yml config/settings file
         config_home = os.getenv(
             "XDG_CONFIG_HOME",
-            os.getenv("HOME") + "/.config"
+            os.getenv("HOME") + "/.config",
         )
         config_dir = f"{config_home}/{self.__app_name}"
         os.makedirs(config_dir, exist_ok=True)
@@ -125,16 +118,17 @@ class Sixpence:
         # Temp Storage
         cache_home = os.getenv(
             "XDG_CACHE_HOME",
-            os.getenv("HOME") + "/.cache"
+            os.getenv("HOME") + "/.cache",
         )
         cache_dir = f"{cache_home}/{self.__app_name}"
         os.makedirs(cache_dir, exist_ok=True)
 
         # Where to Store main files
-        data_home = os.getenv(
-            "XDG_DATA_HOME",
-            os.getenv("HOME") + "/Documents"
-        )
+        # data_home = os.getenv(
+        #     "XDG_DATA_HOME",
+        #     os.getenv("HOME") + "/Documents",
+        # )
+        data_home = os.getenv("HOME") + "/Documents"
         docs_dir = f"{data_home}/{self.__app_name}"
         os.makedirs(docs_dir, exist_ok=True)
 
@@ -142,7 +136,7 @@ class Sixpence:
         suffix = f"-{env}" if env != "prod" else ""
         config = Config.initialize(
             f"{config_dir}/settings{suffix}.yml",
-            transient=["session"]
+            transient=["session"],
         )
         self.__page.session.set("config", config)
 
@@ -152,7 +146,6 @@ class Sixpence:
         config.set("session:cache_dir", cache_dir)
         config.set("session:config_dir", config_dir)
         config.set("session:docs_dir", docs_dir)
-
 
     def __backup_data(self):
         config = self.__page.session.get("config")
@@ -168,7 +161,6 @@ class Sixpence:
 
         backup.clean(older_than=keep)
 
-
     def __handle_on_keyboard(self, event):
         # import pprint
         # pprint.pprint(event)
@@ -176,7 +168,6 @@ class Sixpence:
         # TODO: simple way to denote cmd-KEY on MacOS &  ctrl-KEY others
         # MacOS -- cmd == event.meta
         # Linux -- ??? == event.meta
-
 
         # First, handle "global" keyboard events
         # TODO: better organize "global" events
@@ -195,22 +186,14 @@ class Sixpence:
         # I.e. window.destroy() has already been initiated by the time
         # this code start to run.
         # elif (event.ctrl or event.meta) and event.key == "Q":
-            # self.__backup_data()
-            # self.__page.window.destroy() <-- not even necessary
+        #   self.__backup_data()
+        #   self.__page.window.destroy() <-- not even necessary
         # --------------------------------------------------------------------
         # If not handled, passed to router to distribute to correct View
         else:
             self.__router.handle_keyboard_event(event)
 
-
     def __handle_window_event(self, evt):
         if evt.data == "close":
             self.__backup_data()
             evt.page.window.destroy()
-
-
-
-
-
-
-#

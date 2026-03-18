@@ -3,6 +3,7 @@ import tarfile
 
 from utils.locale import Locale
 
+
 # https://docs.python.org/3/library/archiving.html
 class Archive:
     def __init__(self, path):
@@ -25,17 +26,17 @@ class Archive:
 
         self.__items = []
 
-
     def add(self, name):
         """Add a new file or directory to the Archive"""
         self.__items.append(name)
 
-
     def write(self):
-        with tarfile.open(self.__path, "x:gz", ) as tf:
+        with tarfile.open(
+            self.__path,
+            "x:gz",
+        ) as tf:
             for item in self.__items:
                 tf.add(item)
-
 
     def clean(self, older_than):
         """Clean up the Archive"""

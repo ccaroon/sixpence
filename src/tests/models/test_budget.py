@@ -1,10 +1,10 @@
-import unittest
 import random
+import unittest
 
 from models.budget import Budget
 
-class BudgetTest(unittest.TestCase):
 
+class BudgetTest(unittest.TestCase):
     def __populate_db(self, dist):
         """
         Generate some Budget items
@@ -26,10 +26,9 @@ class BudgetTest(unittest.TestCase):
                     category=f"Test:Freq{freq}Due{fdue}:Item{i}",
                     amount=random.random() * 100.00 * -1,
                     first_due=fdue,
-                    frequency=freq
+                    frequency=freq,
                 )
                 item.save()
-
 
     def test_constructor(self):
         fields = {
@@ -37,7 +36,7 @@ class BudgetTest(unittest.TestCase):
             "category": "Auto:Fuel",
             "amount": -60.00,
             "first_due": 1,
-            "frequency": 1
+            "frequency": 1,
         }
         item = Budget(**fields)
 
@@ -47,7 +46,6 @@ class BudgetTest(unittest.TestCase):
         self.assertEqual(item.first_due, fields["first_due"])
         self.assertEqual(item.frequency, fields["frequency"])
 
-
     def test_monthly_avg(self):
         test_data = {
             "monthly": {
@@ -56,9 +54,9 @@ class BudgetTest(unittest.TestCase):
                     "category": "Auto:Fuel",
                     "amount": -60.00,
                     "first_due": 1,
-                    "frequency": 1
+                    "frequency": 1,
                 },
-                "expected": -60.00
+                "expected": -60.00,
             },
             "quarterly": {
                 "fields": {
@@ -66,9 +64,9 @@ class BudgetTest(unittest.TestCase):
                     "category": "Home:Pest Control",
                     "amount": -75.00,
                     "first_due": 1,
-                    "frequency": 3
+                    "frequency": 3,
                 },
-                "expected": -25.00
+                "expected": -25.00,
             },
             "yearly": {
                 "fields": {
@@ -76,22 +74,21 @@ class BudgetTest(unittest.TestCase):
                     "category": "Subscriptions:Amazon Prime",
                     "amount": -149.00,
                     "first_due": 1,
-                    "frequency": 12
+                    "frequency": 12,
                 },
-                "expected": -12.42
-            }
+                "expected": -12.42,
+            },
         }
 
-        for label, data in test_data.items():
+        for data in test_data.values():
             item = Budget(**data["fields"])
             self.assertEqual(item.monthly_avg, data["expected"])
-
 
     def test_due_months(self):
         fields = {
             "icon": "alien",
             "category": "Test:Due Months",
-            "amount": -42.77
+            "amount": -42.77,
         }
         item = Budget(**fields)
 
@@ -99,52 +96,52 @@ class BudgetTest(unittest.TestCase):
         item.first_due = 1
         item.frequency = 1
         months = item.due_months()
-        self.assertListEqual(months, [1,2,3,4,5,6,7,8,9,10,11,12])
+        self.assertListEqual(months, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
 
         # bi-monthly
         # --> start jan
         item.first_due = 1
         item.frequency = 2
         months = item.due_months()
-        self.assertListEqual(months, [1,3,5,7,9,11])
+        self.assertListEqual(months, [1, 3, 5, 7, 9, 11])
 
         # --> start feb
         item.first_due = 2
         item.frequency = 2
         months = item.due_months()
-        self.assertListEqual(months, [2,4,6,8,10,12])
+        self.assertListEqual(months, [2, 4, 6, 8, 10, 12])
 
         # --> start march
         item.first_due = 3
         item.frequency = 2
         months = item.due_months()
-        self.assertListEqual(months, [3,5,7,9,11,1])
+        self.assertListEqual(months, [3, 5, 7, 9, 11, 1])
 
         # quarterly
         # --> start jan
         item.first_due = 1
         item.frequency = 3
         months = item.due_months()
-        self.assertListEqual(months, [1,4,7,10])
+        self.assertListEqual(months, [1, 4, 7, 10])
 
         # --> start feb
         item.first_due = 2
         item.frequency = 3
         months = item.due_months()
-        self.assertListEqual(months, [2,5,8,11])
+        self.assertListEqual(months, [2, 5, 8, 11])
 
         # bi-yearly
         # --> start jan
         item.first_due = 1
         item.frequency = 6
         months = item.due_months()
-        self.assertListEqual(months, [1,7])
+        self.assertListEqual(months, [1, 7])
 
         # --> start apr
         item.first_due = 4
         item.frequency = 6
         months = item.due_months()
-        self.assertListEqual(months, [4,10])
+        self.assertListEqual(months, [4, 10])
 
         # yearly
         # --> start jan
@@ -165,7 +162,6 @@ class BudgetTest(unittest.TestCase):
         months = item.due_months()
         self.assertListEqual(months, [10])
 
-
     # Month x Freq Table (First Due = 1)
     #    -----------------------------------
     #    01 02 03 04 05 06 07 08 09 10 11 12
@@ -177,21 +173,31 @@ class BudgetTest(unittest.TestCase):
     #    ------------------------------------
     #     5  1  2  2  2  1  4  1  2  2  2  1
     def test_for_month(self):
-        self.__populate_db([
-            # count, freq, first_due
-            (5, 1, 1),
-            (5, 2, 1),
-            (5, 3, 1),
-            (5, 6, 1),
-            (5, 12, 1)
-        ])
+        self.__populate_db(
+            [
+                # count, freq, first_due
+                (5, 1, 1),
+                (5, 2, 1),
+                (5, 3, 1),
+                (5, 6, 1),
+                (5, 12, 1),
+            ]
+        )
 
         # month, expected count
         tests = [
-            (1, 25),  (2, 5),   (3, 10),
-            (4, 10),  (5, 10),  (6, 5),
-            (7, 20),  (8, 5),   (9, 10),
-            (10, 10), (11, 10), (12, 5),
+            (1, 25),
+            (2, 5),
+            (3, 10),
+            (4, 10),
+            (5, 10),
+            (6, 5),
+            (7, 20),
+            (8, 5),
+            (9, 10),
+            (10, 10),
+            (11, 10),
+            (12, 5),
         ]
 
         for test in tests:
@@ -199,20 +205,25 @@ class BudgetTest(unittest.TestCase):
             self.assertIsNotNone(items)
             self.assertEqual(len(items), test[1])
 
-
     def test_predict_spending(self):
         tests = (
             {
-                "amt": 25.00, "freq": 1, "fdue": 1,
-                "expected": [25.0 * i for i in range(1,13)]
+                "amt": 25.00,
+                "freq": 1,
+                "fdue": 1,
+                "expected": [25.0 * i for i in range(1, 13)],
             },
             {
-                "amt": 75.00, "freq": 3, "fdue": 1,
-                "expected": [75,75,75,150,150,150,225,225,225,300,300,300]
+                "amt": 75.00,
+                "freq": 3,
+                "fdue": 1,
+                "expected": [75, 75, 75, 150, 150, 150, 225, 225, 225, 300, 300, 300],
             },
             {
-                "amt": 171.99, "freq": 12, "fdue": 7,
-                "expected": [0,0,0,0,0,0,171.99,171.99,171.99,171.99,171.99,171.99]
+                "amt": 171.99,
+                "freq": 12,
+                "fdue": 7,
+                "expected": [0, 0, 0, 0, 0, 0, 171.99, 171.99, 171.99, 171.99, 171.99, 171.99],
             },
         )
 
@@ -220,14 +231,11 @@ class BudgetTest(unittest.TestCase):
             amount = test_case["amt"]
             fdue = test_case["fdue"]
             item = Budget(
-                amount=amount, frequency=test_case["freq"], first_due=fdue)
+                amount=amount,
+                frequency=test_case["freq"],
+                first_due=fdue,
+            )
 
             for month in range(1, 13):
-                expected_amount = test_case["expected"][month-1]
+                expected_amount = test_case["expected"][month - 1]
                 self.assertEqual(item.predict_spending(month), expected_amount, f"Month ==> {month}")
-
-
-
-
-
-#

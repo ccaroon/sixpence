@@ -1,6 +1,7 @@
 from models.base import Base
 from models.taggable import Taggable
 
+
 class Expense(Taggable, Base):
     TYPE_INCOME = 0
     TYPE_EXPENSE = 1
@@ -18,28 +19,24 @@ class Expense(Taggable, Base):
 
         super().__init__(id=id, **kwargs)
 
-
     @property
     def date(self):
         return self.__date
-
 
     @date.setter
     def date(self, new_date):
         self.__date = self._date_setter(new_date)
 
-
     def __str__(self):
         return f"{self.id} | {self.date} | {self.category} | {self.amount}"
 
-
     def _serialize(self):
-        data =  {
+        data = {
             "type": self.TYPE_EXPENSE if self.amount < 0.0 else self.TYPE_INCOME,
             "date": self.date.int_timestamp if self.date else None,
-            "icon":self.icon,
+            "icon": self.icon,
             "category": self.category,
-            "amount": self.amount
+            "amount": self.amount,
         }
 
         # Tags
@@ -73,7 +70,7 @@ class Expense(Taggable, Base):
         entries = Expense.find(
             op="and",
             category=cls.ROLLOVER_CATEGORY,
-            date=f"btw:{month_start.int_timestamp}:{month_end.int_timestamp}"
+            date=f"btw:{month_start.int_timestamp}:{month_end.int_timestamp}",
         )
         if entries and len(entries) == 1:
             existing_entry = entries[0]
@@ -81,7 +78,7 @@ class Expense(Taggable, Base):
         if not existing_entry or force_update:
             # Load data for prev month
             entries = Expense.find(
-                date=f"btw:{prev_start.int_timestamp}:{prev_end.int_timestamp}"
+                date=f"btw:{prev_start.int_timestamp}:{prev_end.int_timestamp}",
             )
 
             # Compute ending balance for Previous Month
@@ -103,11 +100,10 @@ class Expense(Taggable, Base):
                     icon=cls.ROLLOVER_ICON,
                     category=cls.ROLLOVER_CATEGORY,
                     amount=round(income + expense, 2),
-                    tags=['Sixpence', 'Balance Rollover']
+                    tags=["Sixpence", "Balance Rollover"],
                 )
 
             entry_to_save.save()
-
 
     def update(self, data):
         self.type = data.get("type", self.type)
@@ -118,9 +114,8 @@ class Expense(Taggable, Base):
 
         self.tags = data.get("tags", self.tags)
 
-
     @classmethod
-    def collate_by_category(self, expenses:list):
+    def collate_by_category(cls, expenses: list):
         """
         Given a list of Expense items collate them by their category.
 

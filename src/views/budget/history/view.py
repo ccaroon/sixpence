@@ -1,12 +1,11 @@
+import arrow
 import flet as ft
 
-import arrow
-
-from models.budget import Budget
-
-from utils.locale import Locale
 import utils.constants as const
-import utils.tools as tools
+from models.budget import Budget
+from utils import tools
+from utils.locale import Locale
+
 
 class HistoryView(ft.AlertDialog):
     def __init__(self, page):
@@ -16,45 +15,46 @@ class HistoryView(ft.AlertDialog):
         self.__page = page
         self.__layout()
 
-
-    def __on_close(self, evt):
+    def __on_close(self, _):
         self.__page.close(self)
-
 
     def __layout(self):
         self.__title_fld = ft.Text(
             "",
             weight=ft.FontWeight.BOLD,
-            theme_style=ft.TextThemeStyle.DISPLAY_SMALL
+            theme_style=ft.TextThemeStyle.DISPLAY_SMALL,
         )
         self.__history_list = ft.ListView()
 
         self.title = self.__title_fld
         self.content = ft.Column(
-                [
-                    self.__history_list,
-                ],
-                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                width=self.__page.window.width // 2,
-                height=self.__page.window.height // 2,
-                scroll=ft.ScrollMode.AUTO
-            )
+            [
+                self.__history_list,
+            ],
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            width=self.__page.window.width // 2,
+            height=self.__page.window.height // 2,
+            scroll=ft.ScrollMode.AUTO,
+        )
         self.actions = [
             ft.ElevatedButton(
                 "Close",
                 color=ft.Colors.PRIMARY,
-                on_click=self.__on_close
-            )
+                on_click=self.__on_close,
+            ),
         ]
-
 
     def __update_history(self):
         self.__history_list.controls.clear()
 
         for idx, hst in enumerate(self.__item.history):
-            bgcolor = tools.cycle([
-                ft.Colors.GREY_200, ft.Colors.GREY_400
-            ], idx)
+            bgcolor = tools.cycle(
+                [
+                    ft.Colors.GREY_200,
+                    ft.Colors.GREY_400,
+                ],
+                idx,
+            )
             date = arrow.get(hst["date"])
 
             amount = float(hst["amount"])
@@ -79,37 +79,44 @@ class HistoryView(ft.AlertDialog):
                 leading=ft.Icon(icon, color=icon_color),
                 title=ft.Row(
                     [
-                        ft.Text(date.format("MMM DD, YYYY"),
+                        ft.Text(
+                            date.format("MMM DD, YYYY"),
                             color="black",
                             weight=ft.FontWeight.BOLD,
-                            expand=2),
+                            expand=2,
+                        ),
                         ft.Text(
                             Locale.currency(amount),
                             color="black",
                             # weight=ft.FontWeight.BOLD,
-                            expand=1),
-                        ft.Text(hst.get("note", "?????"),
+                            expand=1,
+                        ),
+                        ft.Text(
+                            hst.get("note", "?????"),
                             color="black",
-                            expand=3),
+                            expand=3,
+                        ),
                         ft.Text(
                             Locale.currency(next_amt),
                             color="black",
                             # weight=ft.FontWeight.BOLD,
-                            expand=1),
+                            expand=1,
+                        ),
                     ],
                 ),
-                bgcolor=bgcolor
+                bgcolor=bgcolor,
             )
 
             self.__history_list.controls.append(tile)
 
         self.__history_list.update()
 
-
     def display(self, budget_item):
         self.__item = budget_item
 
-        self.__title_fld.value = f"{self.__item.category} | {Locale.currency(self.__item.amount)}/{self.__item.frequency_desc()}"
+        self.__title_fld.value = (
+            f"{self.__item.category} | {Locale.currency(self.__item.amount)}/{self.__item.frequency_desc()}"
+        )
         self.__update_history()
 
         self.__page.open(self)
